@@ -30,12 +30,12 @@ public class Menu extends javax.swing.JPanel {
     public void initMenu(EventMenu event) {
         this.event = event;
         addMenu(new ImageIcon(getClass().getResource("/UI/main_interface/icon/1.png")), "Đặt Phòng", 0);
+        addMenu(new ImageIcon(getClass().getResource("/UI/main_interface/icon/5.png")), "Sử Dụng Dịch Vụ", 1);
         addMenu(new ImageIcon(getClass().getResource("/UI/main_interface/icon/3.png")), "Khách Hàng ", 2);
         addMenu(new ImageIcon(getClass().getResource("/UI/main_interface/icon/3.png")), "Nhân Viên", 3);
-        addMenu(new ImageIcon(getClass().getResource("/UI/main_interface/icon/6.png")), "Loại Phòng", 4);
         addMenu(new ImageIcon(getClass().getResource("/UI/main_interface/icon/6.png")), "Phòng", 5);
         addMenu(new ImageIcon(getClass().getResource("/UI/main_interface/icon/7.png")), "Dịch Vụ", 6);
-        addMenu(new ImageIcon(getClass().getResource("/UI/main_interface/icon/7.png")), "Hàng hóa", 7);
+        addMenu(new ImageIcon(getClass().getResource("/UI/main_interface/icon/7.png")), "Kho", 7);
         addMenu(new ImageIcon(getClass().getResource("/UI/main_interface/icon/4.png")), "Hóa Đơn", 8);
         addMenu(new ImageIcon(getClass().getResource("/UI/main_interface/icon/8.png")), "Thống Kê", 9);
         addEmpty();

@@ -1,10 +1,9 @@
 package UI.main_interface;
 import UI.main_interface.component.Header;
 import UI.main_interface.component.Menu;
-import UI.main_interface.component.DatPhong;
+import UI.main_interface.component.KaraokeBooking;
 import UI.main_interface.event.EventMenu;
 import UI.main_interface.form.Form;
-import UI.main_interface.form.Form_1;
 import UI.main_interface.swing.RoundPanel;
 
 import javax.swing.*;
@@ -12,9 +11,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Main extends JFrame {
+public class Main extends JFrame{
     private JButton minimizeButton;
     private JButton exitButton;
+
     public Main() {
         initComponents();
         setBackground(new Color(0, 0, 0, 0));
@@ -22,7 +22,7 @@ public class Main extends JFrame {
             @Override
             public void selected(int index) {
                 if (index == 0) {
-                    showForm(new DatPhong());
+                    showForm(new KaraokeBooking());
                 } else if (index == 8) {
                     System.out.println("Đăng Xuất");
                 } else {
@@ -31,9 +31,8 @@ public class Main extends JFrame {
             }
         };
         menu1.initMenu(event);
-        showForm(new DatPhong());
+        showForm(new KaraokeBooking());
     }
-
     private void showForm(Component com) {
         body.removeAll();
         body.add(com);
@@ -49,6 +48,7 @@ public class Main extends JFrame {
         header2 = new Header();
         menu1 = new Menu();
         body = new JPanel();
+        body.setBackground(Color.WHITE);
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -173,10 +173,8 @@ public class Main extends JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
+        SwingUtilities.invokeLater( () -> {
                 new Main().setVisible(true);
-            }
         });
     }
 

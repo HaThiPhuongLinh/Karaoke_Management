@@ -19,6 +19,7 @@ public class LoginUI extends JFrame{
 
     private LoginDAO logInDAO = new LoginDAO();
     private Login login;
+    private Main main;
 
     public LoginUI() {
         setTitle("Login Form");
@@ -37,7 +38,7 @@ public class LoginUI extends JFrame{
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                ImageIcon karaokeImage = new ImageIcon(getClass().getResource("/image/bgLogIn.png"));
+                ImageIcon karaokeImage = new ImageIcon(getClass().getResource("/images/bgLogIn.png"));
                 g.drawImage(karaokeImage.getImage(), 0, 0, getWidth(), getHeight(), null);
             }
         };
@@ -137,11 +138,25 @@ public class LoginUI extends JFrame{
 
                 int tinhTrang = logInDAO.checkLogin(user);
                 if (tinhTrang == 1) {
-                    errorMessageLabel.setForeground(Color.GREEN);
-                    errorMessageLabel.setText("Thành công.");
-                    dispose();
-                    Main main = new Main();
-                    main.setVisible(true);
+                    try {
+                        for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                            if ("Nimbus".equals(info.getName())) {
+                                UIManager.setLookAndFeel(info.getClassName());
+                                break;
+                            }
+                        }
+                    } catch (ClassNotFoundException ex) {
+                        java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                    } catch (InstantiationException ex) {
+                        java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                    } catch (IllegalAccessException ex) {
+                        java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                    } catch (UnsupportedLookAndFeelException ex) {
+                        java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                    }
+                    SwingUtilities.invokeLater( () -> {
+                        new Main().setVisible(true);
+                    });
                 } else if (tinhTrang == 0) {
                     errorMessageLabel.setForeground(Color.RED);
                     errorMessageLabel.setText("Tài khoản đã bị vô hiệu hóa.");
