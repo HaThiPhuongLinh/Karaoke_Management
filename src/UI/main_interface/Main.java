@@ -1,7 +1,8 @@
 package UI.main_interface;
-import UI.main_interface.component.Header;
+import Entity.Login;
+import UI.CustomUI.LoginUI;
+import UI.main_interface.component.*;
 import UI.main_interface.component.Menu;
-import UI.main_interface.component.KaraokeBooking;
 import UI.main_interface.event.EventMenu;
 import UI.main_interface.form.Form;
 import UI.main_interface.swing.RoundPanel;
@@ -23,10 +24,25 @@ public class Main extends JFrame{
             public void selected(int index) {
                 if (index == 0) {
                     showForm(new KaraokeBooking());
-                } else if (index == 8) {
+                } if (index == 1) {
+                    showForm(new ServiceUser());
+                } if (index == 2) {
+                    showForm(new Customer());
+                } if (index == 3) {
+                    showForm(new Staff());
+                } if (index == 4) {
+                    showForm(new Room());
+                } if (index == 5) {
+                    showForm(new Service());
+                } if (index == 6) {
+                    showForm(new Bill());
+                } if (index == 7) {
+                    showForm(new Statistic());
+                } if (index == 8) {
                     System.out.println("Đăng Xuất");
-                } else {
-                    showForm(new Form(index));
+                    dispose();
+                    LoginUI login = new LoginUI();
+                    login.setVisible(true);
                 }
             }
         };
