@@ -154,6 +154,7 @@ public class LoginUI extends JFrame{
                     } catch (UnsupportedLookAndFeelException ex) {
                         java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
                     }
+                    dispose();
                     SwingUtilities.invokeLater( () -> {
                         new Main().setVisible(true);
                     });
