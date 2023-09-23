@@ -1,34 +1,34 @@
 package Entity;
 import java.util.Date;
 import java.util.Objects;
-//Test
+
 public class Customer {
-    private String maKH, hoTen;
-    private boolean gioiTinh;
-    private String cmnd;
-    private Date ngaySinh;
+    private String maKhachHang, tenKhachHang;
     private String soDienThoai;
+    private String CCCD;
+    private boolean gioiTinh;
+    private Date ngaySinh;
 
     public Customer(){
 
     }
 
-    public Customer(String maKH){
-        this.maKH=maKH;
+    public Customer(String maKhachHang){
+        this.maKhachHang = maKhachHang;
     }
 
-    public String getMaKH() {
-        return maKH;
+    public String getMaKhachHang() {
+        return maKhachHang;
     }
 
-    public String getHoTen() {
-        return hoTen;
+    public String getTenKhachHang() {
+        return tenKhachHang;
     }
 
 
 
-    public String getCmnd() {
-        return cmnd;
+    public String getCCCD() {
+        return CCCD;
     }
 
     public Date getNgaySinh() {
@@ -39,19 +39,19 @@ public class Customer {
         return soDienThoai;
     }
 
-    public void setMaKH(String maKH) {
-        if(!maKH.trim().equals("")) {
-            this.maKH = maKH;
+    public void setMaKhachHang(String maKhachHang) {
+        if(!maKhachHang.trim().equals("")) {
+            this.maKhachHang = maKhachHang;
         }else {
-            this.maKH = "Un-known";
+            this.maKhachHang = "Un-known";
         }
     }
 
-    public void setHoTen(String hoTen) {
-        if(!hoTen.trim().equals("")) {
-            this.hoTen = hoTen;
+    public void setTenKhachHang(String tenKhachHang) {
+        if(!tenKhachHang.trim().equals("")) {
+            this.tenKhachHang = tenKhachHang;
         }else {
-            this.hoTen = "Un-known";
+            this.tenKhachHang = "Un-known";
         }
     }
 
@@ -63,11 +63,11 @@ public class Customer {
         this.gioiTinh = gioiTinh;
     }
 
-    public void setCmnd(String cmnd) {
-        if(!cmnd.trim().equals("")) {
-            this.cmnd = cmnd;
+    public void setCCCD(String CCCD) {
+        if(!CCCD.trim().equals("")) {
+            this.CCCD = CCCD;
         }else {
-            this.cmnd = "Un-known";
+            this.CCCD = "Un-known";
         }
     }
 
@@ -83,32 +83,32 @@ public class Customer {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Customer customer)) return false;
-        return Objects.equals(getMaKH(), customer.getMaKH());
+        return Objects.equals(getMaKhachHang(), customer.getMaKhachHang());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getMaKH());
+        return Objects.hash(getMaKhachHang());
     }
 
-    public Customer(String maKH, String hoTen, boolean gioiTinh, String cmnd, Date ngaySinh, String soDienThoai) {
-        setMaKH(maKH);
-        setHoTen(hoTen);
-        setGioiTinh(gioiTinh);
-        setCmnd(cmnd);
-        setNgaySinh(ngaySinh);
-        setSoDienThoai(soDienThoai);
+    public Customer(String maKhachHang, String tenKhachHang, String soDienThoai, String CCCD, boolean gioiTinh, Date ngaySinh) {
+        this.maKhachHang = maKhachHang;
+        this.tenKhachHang = tenKhachHang;
+        this.soDienThoai = soDienThoai;
+        this.CCCD = CCCD;
+        this.gioiTinh = gioiTinh;
+        this.ngaySinh = ngaySinh;
     }
 
     @Override
     public String toString() {
         return "Customer{" +
-                "maKH='" + maKH + '\'' +
-                ", hoTen='" + hoTen + '\'' +
-                ", gioiTinh='" + gioiTinh + '\'' +
-                ", cmnd='" + cmnd + '\'' +
-                ", ngaySinh=" + ngaySinh +
+                "maKhachHang='" + maKhachHang + '\'' +
+                ", tenKhachHang='" + tenKhachHang + '\'' +
                 ", soDienThoai='" + soDienThoai + '\'' +
+                ", CCCD='" + CCCD + '\'' +
+                ", gioiTinh=" + gioiTinh +
+                ", ngaySinh=" + ngaySinh +
                 '}';
     }
 }
