@@ -29,7 +29,7 @@ public class StaffDAO {
             // Duyệt trên kết quả trả về
             while (rs.next()) {
                 String maNhanVien = rs.getString(1);
-                String hoTen = rs.getString(2);
+                String tenNhanVien = rs.getString(2);
                 String CCCD = rs.getString(3);
                 boolean gioiTinh = rs.getBoolean(4);
                 Date ngaySinh = rs.getDate(5);
@@ -38,7 +38,7 @@ public class StaffDAO {
                 String trangThai = rs.getString(8);
                 String taiKhoan = rs.getString(9);
 
-                Staff nhanVien = new Staff(maNhanVien,hoTen,CCCD,gioiTinh,ngaySinh,soDienThoai,chucVu,trangThai,taiKhoan);
+                Staff nhanVien = new Staff(maNhanVien,tenNhanVien,CCCD,gioiTinh,ngaySinh,soDienThoai,chucVu,trangThai,taiKhoan);
 
                 dsStaff.add(nhanVien);
             }

@@ -2,8 +2,8 @@ package UI.CustomUI;
 import ConnectDB.ConnectDB;
 import javax.swing.*;
 import javax.swing.border.Border;
-import DAOs.LoginDAO;
-import Entity.Login;
+import DAOs.AccountDAO;
+import Entity.Account;
 import UI.main_interface.Main;
 
 import java.awt.*;
@@ -17,8 +17,8 @@ public class LoginUI extends JFrame{
     private final Border borderBottomFocus = BorderFactory.createMatteBorder(0, 0, 1, 0, Color.decode("#b775d5"));
     private final Border borderBottomFocusDark = BorderFactory.createMatteBorder(0, 0, 1, 0, Color.decode("#321a3d"));
 
-    private LoginDAO logInDAO = new LoginDAO();
-    private Login login;
+    private AccountDAO logInDAO = new AccountDAO();
+    private Account account;
     private Main main;
 
     public LoginUI() {
@@ -134,7 +134,7 @@ public class LoginUI extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 String enteredUsername = usernameField.getText();
                 String enteredPassword = new String(passwordField.getPassword());
-                Login user = new Login(enteredUsername,enteredPassword,null);
+                Account user = new Account(enteredUsername,enteredPassword,null);
 
                 int tinhTrang = logInDAO.checkLogin(user);
                 if (tinhTrang == 1) {

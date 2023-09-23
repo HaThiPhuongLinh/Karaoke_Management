@@ -6,10 +6,7 @@ import Entity.Customer;
 import Entity.Room;
 import Entity.Staff;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -36,8 +33,8 @@ public class BillDAO {
                 Customer maKhachHang = new Customer(rs.getString(3));
                 Room maPhong = new Room(rs.getString(4));
                 double giaPhong = rs.getDouble(5);
-                Date ngayGioDat = rs.getDate(6);
-                Date ngayGioTra = rs.getDate(7);
+                Timestamp ngayGioDat = rs.getTimestamp(6);
+                Timestamp ngayGioTra = rs.getTimestamp(7);
                 int tinhTrang = rs.getInt(8);
                 String khuyenMai = rs.getString(9);
                 double tongTienHD = rs.getDouble(10);

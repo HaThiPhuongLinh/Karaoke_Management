@@ -1,19 +1,19 @@
 package Entity;
 
-public class detailOfService {
+public class DetailOfService {
     private Bill maHoaDon;
     private Service maDichVu;
-    private int soLuongDat;
+    private int soLuong;
     private double donGia;
 
-    public detailOfService(){
+    public DetailOfService(){
 
     }
 
-    public detailOfService(Bill maHoaDon, Service maDichVu, int soLuongDat, double donGia){
+    public DetailOfService(Bill maHoaDon, Service maDichVu, int soLuong, double donGia){
         this.maHoaDon = maHoaDon;
         this.maDichVu = maDichVu;
-        this.soLuongDat=soLuongDat;
+        this.soLuong = soLuong;
         this.donGia=donGia;
     }
 
@@ -41,11 +41,11 @@ public class detailOfService {
         this.donGia = donGia;
     }
 
-    public int getSoLuongDat() {
-        return soLuongDat;
+    public int getSoLuong() {
+        return soLuong;
     }
 
-    public void setSoLuongDat(int soLuongDat) {
-        this.soLuongDat = soLuongDat;
+    public void setSoLuong(int soLuong) {
+        this.soLuong = soLuong;
     }
 }

@@ -2,6 +2,7 @@ package Entity;
 
 import UI.main_interface.component.Customer;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class Bill {
@@ -10,8 +11,8 @@ public class Bill {
     private Customer maKhachHang;
     private Room maPhong;
     private double giaPhong;
-    private Date ngayGioDat;
-    private Date ngayGioTra;
+    private Timestamp ngayGioDat;
+    private Timestamp ngayGioTra;
     private int tinhTrangHD;
     private String khuyenMai;
     private double tongTienHD;
@@ -24,7 +25,7 @@ public class Bill {
         this.maHoaDon =maHoaDon;
     }
 
-    public Bill(String maHoaDon, Staff maNhanVien, Customer maKH, Room maPhong, double giaPhong, Date ngayGioDat, Date ngayGioTra, int tinhTrangHD, String khuyenMai, double tongTienHD){
+    public Bill(String maHoaDon, Staff maNhanVien, Customer maKH, Room maPhong, double giaPhong, Timestamp ngayGioDat, Timestamp ngayGioTra, int tinhTrangHD, String khuyenMai, double tongTienHD){
         this.maHoaDon= maHoaDon;
         this.maNhanVien=maNhanVien;
         this.maKhachHang=maKH;
@@ -37,7 +38,7 @@ public class Bill {
         this.tongTienHD = tongTienHD;
     }
 
-    public Bill(String maHoaDon, Staff maNhanVien, Entity.Customer maKH, Room maPhong, double giaPhong, Date ngayGioDat, Date ngayGioTra, int tinhTrang, String maKM, double tinhTongTien) {
+    public Bill(String maHoaDon, Staff maNhanVien, Entity.Customer maKH, Room maPhong, double giaPhong, Timestamp ngayGioDat, Timestamp ngayGioTra, int tinhTrang, String maKM, double tinhTongTien) {
     }
 
     public String getMaHoaDon() {
@@ -84,7 +85,7 @@ public class Bill {
         return ngayGioDat;
     }
 
-    public void setNgayGioDat(Date ngayGioDat) {
+    public void setNgayGioDat(Timestamp ngayGioDat) {
         this.ngayGioDat = ngayGioDat;
     }
 
@@ -92,7 +93,7 @@ public class Bill {
         return ngayGioTra;
     }
 
-    public void setNgayGioTra(Date ngayGioTra) {
+    public void setNgayGioTra(Timestamp ngayGioTra) {
         this.ngayGioTra = ngayGioTra;
     }
 

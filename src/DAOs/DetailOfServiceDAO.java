@@ -3,7 +3,7 @@ package DAOs;
 import ConnectDB.ConnectDB;
 import Entity.Bill;
 import Entity.Service;
-import Entity.detailOfService;
+import Entity.DetailOfService;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -11,14 +11,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-public class detailOfServiceDAO {
-    private static detailOfServiceDAO instance = new detailOfServiceDAO();
+public class DetailOfServiceDAO {
+    private static DetailOfServiceDAO instance = new DetailOfServiceDAO();
 
-    public static detailOfServiceDAO getInstance() {
+    public static DetailOfServiceDAO getInstance() {
         return instance;
     }
-    public ArrayList<detailOfService> getAllStaff(){
-        ArrayList<detailOfService> dsDOS = new ArrayList<detailOfService>();
+    public ArrayList<DetailOfService> getAllStaff(){
+        ArrayList<DetailOfService> dsDOS = new ArrayList<DetailOfService>();
         try {
             ConnectDB.getInstance();
             Connection con = ConnectDB.getConnection();
@@ -29,12 +29,12 @@ public class detailOfServiceDAO {
             ResultSet rs = statement.executeQuery(sql);
             // Duyệt trên kết quả trả về
             while (rs.next()) {
-                Bill maHD = new Bill(rs.getString(1));
-                Service maDV = new Service(rs.getString(2));
-                int soLuongDat = rs.getInt(3);
+                Bill maHoaDon = new Bill(rs.getString(1));
+                Service maDichVu = new Service(rs.getString(2));
+                int soLuong = rs.getInt(3);
                 double donGia = rs.getDouble(4);
 
-                detailOfService dos = new detailOfService(maHD,maDV,soLuongDat,donGia);
+                DetailOfService dos = new DetailOfService(maHoaDon,maDichVu,soLuong,donGia);
 
                 dsDOS.add(dos);
             }
