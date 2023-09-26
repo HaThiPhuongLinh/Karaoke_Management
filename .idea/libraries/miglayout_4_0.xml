@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="jfreechart-1.5.31">
+  <library name="miglayout-4.0">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/jfreechart-1.5.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/miglayout-4.0.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
