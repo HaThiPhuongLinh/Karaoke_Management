@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="TimingFramework-0.55">
+  <library name="jfreechart-1.5.31">
     <CLASSES>
-      <root url="jar://$USER_HOME$/Downloads/TimingFramework-0.55.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jfreechart-1.5.3.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
