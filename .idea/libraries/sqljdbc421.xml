@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="TimingFramework-0.55">
+  <library name="sqljdbc421">
     <CLASSES>
-      <root url="jar://$USER_HOME$/Downloads/TimingFramework-0.55.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/sqljdbc42.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
