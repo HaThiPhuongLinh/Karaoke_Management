@@ -1,11 +1,12 @@
 package Entity;
-import java.util.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Objects;
 
 public class Room {
     private String maPhong;
     private TypeOfRoom maLoaiPhong;
-    private int tinhTrang;
+    private String tinhTrang;
     private String viTri;
 
     public Room(){
@@ -16,23 +17,27 @@ public class Room {
         this.maPhong=maPhong;
     }
 
+    public Room(ResultSet rs) throws SQLException {
+        this(rs.getString(1), new TypeOfRoom(rs.getString(2)), rs.getString(3), rs.getString(4));
+    }
+
     public String getMaPhong() {
         return maPhong;
     }
 
     public void setMaPhong(String maPhong) {
-        if(maPhong.trim().equals("")) {
+        if(!(maPhong.trim().equals(""))) {
             this.maPhong = maPhong;
         }else {
             this.maPhong = "Un-known";
         }
     }
 
-    public int getTinhTrang() {
+    public String getTinhTrang() {
         return tinhTrang;
     }
 
-    public void setTinhTrang(int tinhTrang) {
+    public void setTinhTrang(String tinhTrang) {
         this.tinhTrang = tinhTrang;
     }
 
@@ -41,7 +46,7 @@ public class Room {
     }
 
     public void setViTri(String viTri) {
-        if(viTri.trim().equals("")) {
+        if(!(viTri.trim().equals(""))) {
             this.viTri = viTri;
         }else {
             this.viTri = "Un-known";
@@ -79,7 +84,7 @@ public class Room {
                 '}';
     }
 
-    public Room(String maPhong, TypeOfRoom maLoaiPhong, int tinhTrang, String viTri) {
+    public Room(String maPhong, TypeOfRoom maLoaiPhong, String tinhTrang, String viTri) {
         setMaPhong(maPhong);
         this.tinhTrang = tinhTrang;
         setViTri(viTri);

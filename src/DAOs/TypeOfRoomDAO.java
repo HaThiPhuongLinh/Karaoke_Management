@@ -1,14 +1,14 @@
 package DAOs;
-import java.sql.SQLException;
+
+import java.sql.*;
 import java.util.List;
+
 import ConnectDB.ConnectDB;
 import Entity.Room;
 import Entity.TypeOfRoom;
 
 import java.util.ArrayList;
-import java.sql.Connection;
-import java.sql.Statement;
-import java.sql.ResultSet;
+
 public class TypeOfRoomDAO {
     public List<TypeOfRoom> getAllLoaiPhong() {
         List<TypeOfRoom> dsLoaiPhong = new ArrayList<TypeOfRoom>();
@@ -27,4 +27,27 @@ public class TypeOfRoomDAO {
         }
         return dsLoaiPhong;
     }
+
+    public String getRoomTypeNameByRoomID(String roomID) {
+        String name = null;
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        PreparedStatement stmt = null;
+        try {
+            String sql = "SELECT tenLoaiPhong FROM LoaiPhong WHERE maLoaiPhong = (SELECT maLoaiPhong FROM Phong WHERE maPhong = ?)";
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, roomID);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                name = rs.getString("tenLoaiPhong");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return name;
+    }
+
+
 }

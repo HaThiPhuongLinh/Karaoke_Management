@@ -1,5 +1,7 @@
 package Entity;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Objects;
 
 public class TypeOfRoom {
@@ -7,6 +9,10 @@ public class TypeOfRoom {
     private String tenLoaiPhong;
     private int sucChua;
     private double giaTien;
+
+    public TypeOfRoom(ResultSet rs) throws SQLException {
+        this(rs.getString(1), rs.getString(2), rs.getInt(3), rs.getDouble(4));
+    }
 
     public String getMaLoaiPhong() {
         return maLoaiPhong;
@@ -25,7 +31,7 @@ public class TypeOfRoom {
     }
 
     public void setTenLoaiPhong(String tenLoaiPhong) {
-        if(tenLoaiPhong.trim().equals("")) {
+        if(!tenLoaiPhong.trim().equals("")) {
             this.tenLoaiPhong = tenLoaiPhong;
         }else {
             this.tenLoaiPhong = "Un-known";
