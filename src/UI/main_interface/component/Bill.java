@@ -16,7 +16,7 @@ public class Bill extends JPanel {
         setBounds(0, 0, 1175, 770);
 
         //phan viet code
-        JLabel labelHeader = new JLabel("QUẢN LÍ HÓA ĐƠN");
+        JLabel labelHeader = new JLabel("QUẢN LÝ HÓA ĐƠN");
         labelHeader.setBounds(520, 10, 1175, 40);
         labelHeader.setFont(new Font("Arial", Font.BOLD, 25));
         labelHeader.setForeground(Color.WHITE);

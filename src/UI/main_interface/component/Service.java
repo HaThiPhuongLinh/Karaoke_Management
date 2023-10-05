@@ -17,7 +17,7 @@ public class Service extends JPanel {
 
         //phan viet code
         JPanel panel1 =  new JPanel();
-        panel1.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "QUẢN LÍ LOẠI DỊCH VỤ",
+        panel1.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "QUẢN LÝ LOẠI DỊCH VỤ",
                 TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
         panel1.setBounds(10, 10, 1120, 330);
         panel1.setOpaque(false);
@@ -140,7 +140,7 @@ public class Service extends JPanel {
         /////////////////////////////////////////////////////////////////////////
 
         JPanel panel2 =  new JPanel();
-        panel2.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "QUẢN LÍ DỊCH VỤ",
+        panel2.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "QUẢN LÝ DỊCH VỤ",
                 TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
         panel2.setBounds(10, 350, 1120, 340);
         panel2.setOpaque(false);
