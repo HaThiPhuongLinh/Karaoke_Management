@@ -1,7 +1,5 @@
 package Entity;
 
-import UI.main_interface.component.Customer;
-
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -15,7 +13,6 @@ public class Bill {
     private Timestamp ngayGioTra;
     private int tinhTrangHD;
     private String khuyenMai;
-    private double tongTienHD;
 
     public Bill(){
 
@@ -25,7 +22,7 @@ public class Bill {
         this.maHoaDon =maHoaDon;
     }
 
-    public Bill(String maHoaDon, Staff maNhanVien, Customer maKH, Room maPhong, double giaPhong, Timestamp ngayGioDat, Timestamp ngayGioTra, int tinhTrangHD, String khuyenMai, double tongTienHD){
+    public Bill(String maHoaDon, Staff maNhanVien, Customer maKH, Room maPhong, double giaPhong, Timestamp ngayGioDat, Timestamp ngayGioTra, int tinhTrangHD, String khuyenMai){
         this.maHoaDon= maHoaDon;
         this.maNhanVien=maNhanVien;
         this.maKhachHang=maKH;
@@ -35,11 +32,8 @@ public class Bill {
         this.ngayGioTra=ngayGioTra;
         this.tinhTrangHD = tinhTrangHD;
         this.khuyenMai = khuyenMai;
-        this.tongTienHD = tongTienHD;
     }
 
-    public Bill(String maHoaDon, Staff maNhanVien, Entity.Customer maKH, Room maPhong, double giaPhong, Timestamp ngayGioDat, Timestamp ngayGioTra, int tinhTrang, String maKM, double tinhTongTien) {
-    }
 
     public String getMaHoaDon() {
         return maHoaDon;
@@ -113,11 +107,5 @@ public class Bill {
         this.khuyenMai = khuyenMai;
     }
 
-    public double getTongTienHD() {
-        return tongTienHD;
-    }
 
-    public void setTongTienHD(double tongTienHD) {
-        this.tongTienHD = tongTienHD;
-    }
 }

@@ -26,7 +26,7 @@ import java.util.Date;
  * KaraokeBooking (Giao diện quản lý đặt phòng)
  * Author: Hà Thị Phương Linh
  */
-public class KaraokeBooking extends JPanel {
+public class KaraokeBooking_UI extends JPanel {
     private DefaultTableModel tableModel;
     private JPanel pnlShowRoom, pnlRoomList, timeNow, pnlRoomControl, pnlShowCustomer, pnlShowDetails;
     private JLabel backgroundLabel, timeLabel, roomLabel, statusLabel, customerLabel, billLable, room2Label, locationLabel, nameLabel, startLabel, endLabel, sumLabel;
@@ -41,7 +41,7 @@ public class KaraokeBooking extends JPanel {
     private RoomDAO roomDAO;
     private JComboBox<String> cboRoomType, cboStatus;
 
-    public KaraokeBooking() {
+    public KaraokeBooking_UI() {
         setLayout(null);
         setBounds(0, 0, 1175, 770);
 
@@ -263,17 +263,17 @@ public class KaraokeBooking extends JPanel {
         txtSum.setBounds(140, 273, 220, 26);
         pnlShowDetails.add(txtSum);
 
-        btnUseService = new JButton("Sử dụng dịch vụ");
-        btnUseService.setFont(new Font("Arial", Font.BOLD, 14));
-        Custom.setCustomBtn(btnUseService);
-        btnUseService.setBounds(50, 320, 155, 30);
-        pnlShowDetails.add(btnUseService);
-
-        btnPayment = new JButton("Thanh toán");
-        btnPayment.setFont(new Font("Arial", Font.BOLD, 14));
-        Custom.setCustomBtn(btnPayment);
-        btnPayment.setBounds(240, 320, 155, 30);
-        pnlShowDetails.add(btnPayment);
+//        btnUseService = new JButton("Sử dụng dịch vụ");
+//        btnUseService.setFont(new Font("Arial", Font.BOLD, 14));
+//        Custom.setCustomBtn(btnUseService);
+//        btnUseService.setBounds(50, 320, 155, 30);
+//        pnlShowDetails.add(btnUseService);
+//
+//        btnPayment = new JButton("Thanh toán");
+//        btnPayment.setFont(new Font("Arial", Font.BOLD, 14));
+//        Custom.setCustomBtn(btnPayment);
+//        btnPayment.setBounds(240, 320, 155, 30);
+//        pnlShowDetails.add(btnPayment);
 
         String[] colsService = {"Tên DV", "Số lượng", "Giá bán",};
         DefaultTableModel modelService = new DefaultTableModel(colsService, 0);
@@ -286,7 +286,7 @@ public class KaraokeBooking extends JPanel {
         tblService.getTableHeader().setForeground(Color.BLUE);
 
         pnlShowDetails.add(scrService = new JScrollPane(tblService, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
-        scrService.setBounds(10, 365, 430, 170);
+        scrService.setBounds(10, 325, 430, 210);
         scrService.setOpaque(false);
         scrService.getViewport().setOpaque(false);
         scrService.getViewport().setBackground(Color.WHITE);
@@ -342,21 +342,21 @@ public class KaraokeBooking extends JPanel {
             case "Trống":
                 btnRoomList[index].setBackground(Color.decode("#004678"));
                 btnBookRoom.setEnabled(true);
-                btnPayment.setEnabled(false);
+                //btnPayment.setEnabled(false);
                 btnChooseCustomer.setEnabled(true);
                 btnSwitchRoom.setEnabled(false);
                 break;
             case "Chờ":
                 btnRoomList[index].setBackground(Color.decode("#A3AB00"));
                 btnBookRoom.setEnabled(true);
-                btnPayment.setEnabled(false);
+                //btnPayment.setEnabled(false);
                 btnChooseCustomer.setEnabled(true);
                 btnSwitchRoom.setEnabled(false);
                 break;
             default:
                 btnRoomList[index].setBackground(Color.decode("#00a65a"));
                 btnBookRoom.setEnabled(false);
-                btnPayment.setEnabled(true);
+                //btnPayment.setEnabled(true);
                 btnChooseCustomer.setEnabled(false);
                 btnSwitchRoom.setEnabled(true);
                 break;

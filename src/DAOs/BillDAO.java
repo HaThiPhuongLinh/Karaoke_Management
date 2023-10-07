@@ -37,9 +37,8 @@ public class BillDAO {
                 Timestamp ngayGioTra = rs.getTimestamp(7);
                 int tinhTrang = rs.getInt(8);
                 String khuyenMai = rs.getString(9);
-                double tongTienHD = rs.getDouble(10);
 
-                Bill bill = new Bill(maHoaDon,maNhanVien,maKhachHang,maPhong,giaPhong,ngayGioDat,ngayGioTra,tinhTrang,khuyenMai,tongTienHD);
+                Bill bill = new Bill(maHoaDon,maNhanVien,maKhachHang,maPhong,giaPhong,ngayGioDat,ngayGioTra,tinhTrang,khuyenMai);
 
                 dsStaff.add(bill);
             }

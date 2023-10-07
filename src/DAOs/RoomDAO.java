@@ -23,7 +23,7 @@ public class RoomDAO {
             ResultSet rs = statement.executeQuery(sql);
             while (rs.next()) {
                 dsPhong.add(
-                        new Room(rs.getString(1), new TypeOfRoom(rs.getString(2)), rs.getString(3), rs.getString(4)));
+                        new Room(rs.getString(1), new TypeOfRoom(rs.getString(2)), rs.getString(3), rs.getString(4), rs.getInt(5)));
             }
         } catch (SQLException e) {
             e.printStackTrace();

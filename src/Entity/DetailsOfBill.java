@@ -4,15 +4,25 @@ public class DetailsOfBill {
     private Bill maHoaDon;
     private Room maPhong;
     private int thoiGianSuDung;
+    private int giaPhong;
 
     public DetailsOfBill(Bill maHoaDon) {
         this.maHoaDon = maHoaDon;
     }
 
-    public DetailsOfBill(Bill maHoaDon, Room maPhong, int thoiGianSuDung) {
+    public int getGiaPhong() {
+        return giaPhong;
+    }
+
+    public void setGiaPhong(int giaPhong) {
+        this.giaPhong = giaPhong;
+    }
+
+    public DetailsOfBill(Bill maHoaDon, Room maPhong, int thoiGianSuDung, int giaPhong) {
         this.maHoaDon = maHoaDon;
         this.maPhong = maPhong;
         this.thoiGianSuDung = thoiGianSuDung;
+        this.giaPhong = giaPhong;
     }
 
     public Bill getMaHoaDon() {

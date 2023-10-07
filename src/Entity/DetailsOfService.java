@@ -1,20 +1,22 @@
 package Entity;
 
-public class DetailOfService {
+public class DetailsOfService {
     private Bill maHoaDon;
     private Service maDichVu;
+    private ServiceForm serviceForm;
     private int soLuong;
-    private double donGia;
+    private double giaBan;
 
-    public DetailOfService(){
+    public DetailsOfService(){
 
     }
 
-    public DetailOfService(Bill maHoaDon, Service maDichVu, int soLuong, double donGia){
+    public DetailsOfService(Bill maHoaDon, Service maDichVu, ServiceForm serviceForm, int soLuong, double giaBan) {
         this.maHoaDon = maHoaDon;
         this.maDichVu = maDichVu;
+        this.serviceForm = serviceForm;
         this.soLuong = soLuong;
-        this.donGia=donGia;
+        this.giaBan = giaBan;
     }
 
     public Bill getMaHoaDon() {
@@ -33,12 +35,12 @@ public class DetailOfService {
         this.maDichVu = maDichVu;
     }
 
-    public double getDonGia() {
-        return donGia;
+    public double getGiaBan() {
+        return giaBan;
     }
 
-    public void setDonGia(double donGia) {
-        this.donGia = donGia;
+    public void setGiaBan(double giaBan) {
+        this.giaBan = giaBan;
     }
 
     public int getSoLuong() {
@@ -47,5 +49,13 @@ public class DetailOfService {
 
     public void setSoLuong(int soLuong) {
         this.soLuong = soLuong;
+    }
+
+    public ServiceForm getServiceForm() {
+        return serviceForm;
+    }
+
+    public void setServiceForm(ServiceForm serviceForm) {
+        this.serviceForm = serviceForm;
     }
 }

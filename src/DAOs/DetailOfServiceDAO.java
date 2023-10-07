@@ -3,7 +3,8 @@ package DAOs;
 import ConnectDB.ConnectDB;
 import Entity.Bill;
 import Entity.Service;
-import Entity.DetailOfService;
+import Entity.DetailsOfService;
+import Entity.ServiceForm;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -17,8 +18,8 @@ public class DetailOfServiceDAO {
     public static DetailOfServiceDAO getInstance() {
         return instance;
     }
-    public ArrayList<DetailOfService> getAllStaff(){
-        ArrayList<DetailOfService> dsDOS = new ArrayList<DetailOfService>();
+    public ArrayList<DetailsOfService> getAllStaff(){
+        ArrayList<DetailsOfService> dsDOS = new ArrayList<DetailsOfService>();
         try {
             ConnectDB.getInstance();
             Connection con = ConnectDB.getConnection();
@@ -31,10 +32,11 @@ public class DetailOfServiceDAO {
             while (rs.next()) {
                 Bill maHoaDon = new Bill(rs.getString(1));
                 Service maDichVu = new Service(rs.getString(2));
-                int soLuong = rs.getInt(3);
-                double donGia = rs.getDouble(4);
+                ServiceForm phieuDichVu = new ServiceForm(rs.getString(3));
+                int soLuong = rs.getInt(4);
+                double donGia = rs.getDouble(5);
 
-                DetailOfService dos = new DetailOfService(maHoaDon,maDichVu,soLuong,donGia);
+                DetailsOfService dos = new DetailsOfService(maHoaDon,maDichVu,phieuDichVu,soLuong,donGia);
 
                 dsDOS.add(dos);
             }

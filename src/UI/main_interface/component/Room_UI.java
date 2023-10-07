@@ -7,17 +7,13 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
-public class Room extends JPanel {
+public class Room_UI extends JPanel {
 
     private JPanel pnlShowRoom, pnlRoomList, timeNow, pnlRoomControl, pnlShowCustomer, pnlShowDetails;
     private JLabel backgroundLabel, timeLabel, roomLabel, statusLabel, customerLabel;
 
-    public Room(){
+    public Room_UI(){
         setLayout(null);
         setBounds(0, 0, 1175, 770);
 

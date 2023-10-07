@@ -20,55 +20,55 @@ public class Main extends JFrame {
         menu21.addMenuEvent((int index, int subIndex, MenuAction action) -> {
             if (index == 0) {
                 if (subIndex == 1) {
-                    showForm(new Customer());
+                    showForm(new SearchingCustomer_UI());
                 } else if (subIndex == 2) {
-                    showForm(new Customer());
+                    showForm(new Customer_UI());
                 }
             } else if (index == 1) {
                 if (subIndex == 1) {
-                    showForm(new Staff());
+                    showForm(new SearchingStaff_UI());
                 } else if (subIndex == 2) {
-                    showForm(new Staff());
+                    showForm(new Staff_UI());
                 }
             } else if (index == 2) {
                 if (subIndex == 1) {
-                    showForm(new Room());
+                    showForm(new Room_UI());
                 } else if (subIndex == 2) {
-                    showForm(new Room());
+                    showForm(new Room_UI());
 
                 } else if (subIndex == 3) {
-                    showForm(new Room());
+                    showForm(new Room_UI());
 
                 } else if (subIndex == 4) {
-                    showForm(new KaraokeBooking());
+                    showForm(new KaraokeBooking_UI());
                 }
             } else if (index == 3) {
                 if (subIndex == 1) {
-                    showForm(new Service());
+                    showForm(new Service_UI());
                 } else if (subIndex == 2) {
-                    showForm(new Service());
+                    showForm(new Service_UI());
                 }
             } else if (subIndex == 2) {
-                showForm(new Service());
+                showForm(new Service_UI());
             } else if (subIndex == 2) {
-                showForm(new Service());
+                showForm(new Service_UI());
             } else if (index == 4) {
                 if (subIndex == 1) {
-                    showForm(new Bill());
+                    showForm(new Bill_UI());
                 } else if (subIndex == 2) {
-                    showForm(new Bill());
+                    showForm(new Bill_UI());
                 }
             } else if (index == 5) {
                 if (subIndex == 1) {
-                    showForm(new Statistic());
+                    showForm(new Statistic_UI());
                 } else if (subIndex == 2) {
-                    showForm(new Statistic());
+                    showForm(new Statistic_UI());
                 }
             } else {
                 action.cancel();
             }
         });
-        showForm(new KaraokeBooking());
+        showForm(new KaraokeBooking_UI());
     }
 
     private void showForm(Component com) {

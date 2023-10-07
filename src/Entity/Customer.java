@@ -25,8 +25,6 @@ public class Customer {
         return tenKhachHang;
     }
 
-
-
     public String getCCCD() {
         return CCCD;
     }

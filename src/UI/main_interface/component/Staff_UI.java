@@ -12,23 +12,17 @@ import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Staff extends JPanel {
+public class Staff_UI extends JPanel {
 
-    private JLabel backgroundLabel,ChucVuLabel,taiKhoanLabel,tinhTrangLabel,timeLabel,maNVLabel,tenNVLabel,gioitinhNVLabel,sdtNVLabel,ngaySinhLabel,cmndLabel,search1Label,search2Label,search3Label;
-    private JTextField txtMaNV,txtTenNV,txtSDTNV,txtCMNDNV,txtTaiKhoan,txtChucVu,txttinhTrang;
-    private JComboBox cboGioiTinhNV,cboChucVu,cbotinhTrang;
-    private  JPanel timeNow,pnlStaffList,pnlStaffControl,panelDSNV;
+    private JLabel backgroundLabel, ChucVuLabel, taiKhoanLabel, tinhTrangLabel, timeLabel, maNVLabel, tenNVLabel, gioitinhNVLabel, sdtNVLabel, ngaySinhLabel, cmndLabel, search1Label, search2Label, search3Label;
+    private JTextField txtMaNV, txtTenNV, txtSDTNV, txtCMNDNV, txtTaiKhoan, txtChucVu, txttinhTrang;
+    private JComboBox cboGioiTinhNV, cboChucVu, cbotinhTrang;
+    private JPanel timeNow, pnlStaffList, pnlStaffControl, panelDSNV;
     private DatePicker dpNgaySinhNV;
-    private ImageIcon iconThem = new ImageIcon(new ImageIcon("src/images/add-icon.png").getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
-    private ImageIcon iconXoa = new ImageIcon(new ImageIcon("src/images/delete-icon.png").getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
-    private ImageIcon iconSua = new ImageIcon(new ImageIcon("src/images/update-icon.png").getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
-    Icon iconLamMoi = new ImageIcon(new ImageIcon("src/images/refesh-icon.png").getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
-    private ImageIcon iconTim = new ImageIcon(new ImageIcon("src/images/search-icon.png").getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
-    private ImageIcon iconXemTatCa = new ImageIcon(new ImageIcon("src/images/see_all-icon.png").getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
     private DefaultTableModel tableModelNV;
-    private JButton btnThem ,btnXoa,btnSua,btnTim1,btnTim2,btnTim3,btnLamMoi,btnXemHet;
+    private JButton btnThem, btnXoa, btnSua, btnTim1, btnTim2, btnTim3, btnLamMoi, btnXemHet;
 
-    public Staff(){
+    public Staff_UI() {
         setLayout(null);
         setBounds(0, 0, 1175, 770);
 
@@ -37,7 +31,7 @@ public class Staff extends JPanel {
         headerLabel.setBounds(470, 10, 1175, 40);
         headerLabel.setFont(new Font("Arial", Font.BOLD, 25));
         headerLabel.setForeground(Color.WHITE);
-        Component add =add(headerLabel);
+        Component add = add(headerLabel);
 
         timeNow = new JPanel();
         timeNow.setBorder(new TitledBorder(
@@ -60,43 +54,42 @@ public class Staff extends JPanel {
         timer.start();
 
         pnlStaffList = new JPanel();
-        pnlStaffList .setBorder(new TitledBorder(
+        pnlStaffList.setBorder(new TitledBorder(
                 new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Nhân Viên",
                 TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
-        pnlStaffList .setBounds(10, 70, 1120, 620);
-        pnlStaffList .setOpaque(false);
-        add(pnlStaffList );
-        pnlStaffList .setLayout(new BorderLayout(0, 0));
-
+        pnlStaffList.setBounds(10, 70, 1120, 620);
+        pnlStaffList.setOpaque(false);
+        add(pnlStaffList);
+        pnlStaffList.setLayout(new BorderLayout(0, 0));
 
         pnlStaffControl = new JPanel();
         pnlStaffControl.setOpaque(false);
         pnlStaffControl.setBackground(Color.WHITE);
-        pnlStaffList .add(pnlStaffControl, BorderLayout.NORTH);
+        pnlStaffList.add(pnlStaffControl, BorderLayout.NORTH);
         pnlStaffControl.setLayout(null);
         pnlStaffControl.setPreferredSize(new Dimension(1100, 250));
 
         maNVLabel = new JLabel("Mã Nhân Viên: ");
-        maNVLabel.setFont( new Font("Arial", Font.PLAIN, 14));
+        maNVLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         maNVLabel.setBounds(30, 20, 120, 30);
         maNVLabel.setForeground(Color.WHITE);
         pnlStaffControl.add(maNVLabel);
-        txtMaNV =new JTextField();
-        txtMaNV.setBounds(145,20,350,30);
+        txtMaNV = new JTextField();
+        txtMaNV.setBounds(145, 20, 350, 30);
         txtMaNV.setEditable(false);
         pnlStaffControl.add(txtMaNV);
 
         tenNVLabel = new JLabel("Tên Nhân Viên: ");
-        tenNVLabel.setFont( new Font("Arial", Font.PLAIN, 14));
+        tenNVLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         tenNVLabel.setBounds(30, 70, 120, 30);
         tenNVLabel.setForeground(Color.WHITE);
         pnlStaffControl.add(tenNVLabel);
-        txtTenNV =new JTextField();
-        txtTenNV.setBounds(145,70,350,30);
-       pnlStaffControl.add(txtTenNV);
+        txtTenNV = new JTextField();
+        txtTenNV.setBounds(145, 70, 350, 30);
+        pnlStaffControl.add(txtTenNV);
 
         gioitinhNVLabel = new JLabel("Giới Tính: ");
-        gioitinhNVLabel.setFont( new Font("Arial", Font.PLAIN, 14));
+        gioitinhNVLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         gioitinhNVLabel.setBounds(315, 120, 70, 30);
         gioitinhNVLabel.setForeground(Color.WHITE);
         pnlStaffControl.add(gioitinhNVLabel);
@@ -109,17 +102,17 @@ public class Staff extends JPanel {
         pnlStaffControl.add(cboGioiTinhNV);
 
         sdtNVLabel = new JLabel("SDT: ");
-        sdtNVLabel.setFont( new Font("Arial", Font.PLAIN, 14));
+        sdtNVLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         sdtNVLabel.setBounds(30, 120, 50, 30);
         sdtNVLabel.setForeground(Color.WHITE);
         pnlStaffControl.add(sdtNVLabel);
 
-        txtSDTNV =new JTextField();
-        txtSDTNV.setBounds(145,120,165,30);
+        txtSDTNV = new JTextField();
+        txtSDTNV.setBounds(145, 120, 165, 30);
         pnlStaffControl.add(txtSDTNV);
 
         ngaySinhLabel = new JLabel("Ngày Sinh: ");
-        ngaySinhLabel.setFont( new Font("Arial", Font.PLAIN, 14));
+        ngaySinhLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         ngaySinhLabel.setBounds(30, 170, 100, 30);
         ngaySinhLabel.setForeground(Color.WHITE);
         pnlStaffControl.add(ngaySinhLabel);
@@ -129,26 +122,24 @@ public class Staff extends JPanel {
         pnlStaffControl.add(dpNgaySinhNV);
 
         cmndLabel = new JLabel("CMND: ");
-        cmndLabel.setFont( new Font("Arial", Font.PLAIN, 14));
+        cmndLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         cmndLabel.setBounds(30, 220, 60, 30);
         cmndLabel.setForeground(Color.WHITE);
         pnlStaffControl.add(cmndLabel);
 
-        txtCMNDNV =new JTextField();
-        txtCMNDNV.setBounds(145,220,350,30);
+        txtCMNDNV = new JTextField();
+        txtCMNDNV.setBounds(145, 220, 350, 30);
         pnlStaffControl.add(txtCMNDNV);
 
         btnThem = new JButton("Thêm");
         btnThem.setFont(new Font("Arial", Font.PLAIN, 15));
         Custom.setCustomBtn(btnThem);
         btnThem.setBounds(550, 20, 100, 30);
-        btnThem.setIcon(iconThem);
         pnlStaffControl.add(btnThem);
 
         btnXoa = new JButton("Xóa");
         btnXoa.setFont(new Font("Arial", Font.PLAIN, 15));
         btnXoa.setBounds(690, 20, 100, 30);
-        btnXoa.setIcon(iconLamMoi);
         Custom.setCustomBtn(btnXoa);
         pnlStaffControl.add(btnXoa);
 
@@ -156,18 +147,16 @@ public class Staff extends JPanel {
         btnSua.setFont(new Font("Arial", Font.PLAIN, 15));
         Custom.setCustomBtn(btnSua);
         btnSua.setBounds(830, 20, 100, 30);
-        btnSua.setIcon(iconSua);
         pnlStaffControl.add(btnSua);
 
         btnLamMoi = new JButton("Làm Mới");
         Custom.setCustomBtn(btnLamMoi);
         btnLamMoi.setFont(new Font("Arial", Font.PLAIN, 15));
         btnLamMoi.setBounds(970, 20, 100, 30);
-        btnLamMoi.setIcon(iconXemTatCa);
         pnlStaffControl.add(btnLamMoi);
 
         ChucVuLabel = new JLabel("Chức Vụ: ");
-        ChucVuLabel.setFont( new Font("Arial",Font.PLAIN, 14));
+        ChucVuLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         ChucVuLabel.setBounds(550, 85, 120, 30);
         ChucVuLabel.setForeground(Color.WHITE);
         pnlStaffControl.add(ChucVuLabel);
@@ -180,11 +169,8 @@ public class Staff extends JPanel {
         Custom.setCustomComboBox(cboChucVu);
         pnlStaffControl.add(cboChucVu);
 
-
-
-        //-
         tinhTrangLabel = new JLabel("Tình Trạng: ");
-        tinhTrangLabel.setFont( new Font("Arial", Font.PLAIN, 14));
+        tinhTrangLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         tinhTrangLabel.setBounds(550, 155, 120, 30);
         tinhTrangLabel.setForeground(Color.WHITE);
         pnlStaffControl.add(tinhTrangLabel);
@@ -196,21 +182,16 @@ public class Staff extends JPanel {
         Custom.setCustomComboBox(cbotinhTrang);
         pnlStaffControl.add(cbotinhTrang);
 
-
-
-        //=-
         taiKhoanLabel = new JLabel("Tài Khoản: ");
-        taiKhoanLabel.setFont( new Font("Arial", Font.PLAIN, 14));
+        taiKhoanLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         taiKhoanLabel.setBounds(550, 220, 120, 30);
         taiKhoanLabel.setForeground(Color.WHITE);
         pnlStaffControl.add(taiKhoanLabel);
 
-        txtTaiKhoan =new JTextField();
-        txtTaiKhoan .setBounds(665,220,200,30);
-        pnlStaffControl.add( txtTaiKhoan );
+        txtTaiKhoan = new JTextField();
+        txtTaiKhoan.setBounds(665, 220, 200, 30);
+        pnlStaffControl.add(txtTaiKhoan);
 
-
-        //table KH
         JPanel panelDSNV = new JPanel();
         panelDSNV.setLayout(null);
         panelDSNV.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DANH SÁCH NHÂN VIÊN",
@@ -218,8 +199,8 @@ public class Staff extends JPanel {
         panelDSNV.setBounds(30, 290, 1100, 320);
         panelDSNV.setOpaque(false);
 
-        String[] colsNV = { "STT", "Mã NV", "Tên NV","SDT","CCCD","Giới Tính","Ngày Sinh","Chức Vụ","Tình Trạng","Tài Khoản" };
-        DefaultTableModel modelTableNV = new DefaultTableModel(colsNV, 0) ;
+        String[] colsNV = {"STT", "Mã NV", "Tên NV", "SDT", "CCCD", "Giới Tính", "Ngày Sinh", "Chức Vụ", "Tình Trạng", "Tài Khoản"};
+        DefaultTableModel modelTableNV = new DefaultTableModel(colsNV, 0);
         JScrollPane scrollPaneNV;
 
         JTable tableNV = new JTable(modelTableNV);
@@ -228,29 +209,21 @@ public class Staff extends JPanel {
         tableNV.setForeground(new Color(255, 255, 255));
         tableNV.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
         tableNV.getTableHeader().setForeground(Color.BLUE);
-//        tableLDV.getTableHeader().setBackground(new Color(255, 255, 255));
 
-        panelDSNV.add(scrollPaneNV = new JScrollPane(tableNV,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
+        panelDSNV.add(scrollPaneNV = new JScrollPane(tableNV, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
                 BorderLayout.CENTER);
-        scrollPaneNV.setBounds(10,20,1090,330);
+        scrollPaneNV.setBounds(10, 20, 1090, 330);
         scrollPaneNV.setOpaque(false);
         scrollPaneNV.getViewport().setOpaque(false);
         scrollPaneNV.getViewport().setBackground(Color.WHITE);
         pnlStaffList.add(panelDSNV);
 
-
-
-
-
-
-
-
-        //
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/images/background.png"));
         backgroundLabel = new JLabel(backgroundImage);
         backgroundLabel.setBounds(0, 0, getWidth(), getHeight());
         add(backgroundLabel);
     }
+
     private void updateTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String time = sdf.format(new Date());

@@ -8,6 +8,7 @@ public class Room {
     private TypeOfRoom maLoaiPhong;
     private String tinhTrang;
     private String viTri;
+    private int giaPhong;
 
     public Room(){
 
@@ -18,7 +19,7 @@ public class Room {
     }
 
     public Room(ResultSet rs) throws SQLException {
-        this(rs.getString(1), new TypeOfRoom(rs.getString(2)), rs.getString(3), rs.getString(4));
+        this(rs.getString(1), new TypeOfRoom(rs.getString(2)), rs.getString(3), rs.getString(4), rs.getInt(5));
     }
 
     public String getMaPhong() {
@@ -84,10 +85,19 @@ public class Room {
                 '}';
     }
 
-    public Room(String maPhong, TypeOfRoom maLoaiPhong, String tinhTrang, String viTri) {
-        setMaPhong(maPhong);
-        this.tinhTrang = tinhTrang;
-        setViTri(viTri);
+    public Room(String maPhong, TypeOfRoom maLoaiPhong, String tinhTrang, String viTri, int giaPhong) {
+        this.maPhong = maPhong;
         this.maLoaiPhong = maLoaiPhong;
+        this.tinhTrang = tinhTrang;
+        this.viTri = viTri;
+        this.giaPhong = giaPhong;
+    }
+
+    public int getGiaPhong() {
+        return giaPhong;
+    }
+
+    public void setGiaPhong(int giaPhong) {
+        this.giaPhong = giaPhong;
     }
 }

@@ -2,10 +2,10 @@ package UI.main_interface.component;
 
 import javax.swing.*;
 
-public class ServiceUser extends JPanel {
+public class ServiceUser_UI extends JPanel {
     private JLabel backgroundLabel;
 
-    public ServiceUser(){
+    public ServiceUser_UI(){
         setLayout(null);
         setBounds(0, 0, 1175, 770);
 

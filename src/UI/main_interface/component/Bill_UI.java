@@ -8,10 +8,10 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
-public class Bill extends JPanel {
+public class Bill_UI extends JPanel {
     private JLabel backgroundLabel;
 
-    public Bill(){
+    public Bill_UI(){
         setLayout(null);
         setBounds(0, 0, 1175, 770);
 

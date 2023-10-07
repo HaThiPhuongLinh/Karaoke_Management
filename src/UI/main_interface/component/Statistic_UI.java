@@ -13,10 +13,10 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
-public class Statistic extends JPanel {
+public class Statistic_UI extends JPanel {
     private JLabel backgroundLabel;
 
-    public Statistic(){
+    public Statistic_UI(){
         setLayout(null);
         setBounds(0, 0, 1175, 770);
 

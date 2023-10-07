@@ -8,10 +8,9 @@ public class TypeOfRoom {
     private String maLoaiPhong;
     private String tenLoaiPhong;
     private int sucChua;
-    private double giaTien;
 
     public TypeOfRoom(ResultSet rs) throws SQLException {
-        this(rs.getString(1), rs.getString(2), rs.getInt(3), rs.getDouble(4));
+        this(rs.getString(1), rs.getString(2), rs.getInt(3));
     }
 
     public String getMaLoaiPhong() {
@@ -50,17 +49,6 @@ public class TypeOfRoom {
             this.sucChua=sucChua;
     }
 
-    public double getGiaTien() {
-        return giaTien;
-    }
-
-    public void setGiaTien(double giaTien) {
-        if(giaTien<0) {
-            this.giaTien=0;
-        }
-        else
-            this.giaTien=giaTien;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -75,7 +63,6 @@ public class TypeOfRoom {
                 "maLP='" + maLoaiPhong + '\'' +
                 ", tenLP='" + tenLoaiPhong + '\'' +
                 ", sucChua=" + sucChua +
-                ", giaTien=" + giaTien +
                 '}';
     }
 
@@ -84,11 +71,11 @@ public class TypeOfRoom {
         return Objects.hash(getMaLoaiPhong());
     }
 
-    public TypeOfRoom(String maLoaiPhong, String tenLoaiPhong, int sucChua, double giaTien) {
+    public TypeOfRoom(String maLoaiPhong, String tenLoaiPhong, int sucChua) {
         setMaLoaiPhong(maLoaiPhong);
         setTenLoaiPhong(tenLoaiPhong);
         setSucChua(sucChua);
-        setGiaTien(giaTien);
+
     }
 
     public TypeOfRoom(String maLoaiPhong) {
