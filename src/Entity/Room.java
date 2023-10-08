@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class Room {
     private String maPhong;
-    private TypeOfRoom maLoaiPhong;
+    private TypeOfRoom loaiPhong;
     private String tinhTrang;
     private String viTri;
     private int giaPhong;
@@ -54,12 +54,12 @@ public class Room {
         }
     }
 
-    public TypeOfRoom getMaLoaiPhong() {
-        return maLoaiPhong;
+    public TypeOfRoom getLoaiPhong() {
+        return loaiPhong;
     }
 
-    public void setMaLoaiPhong(TypeOfRoom maLoaiPhong) {
-        this.maLoaiPhong = maLoaiPhong;
+    public void setLoaiPhong(TypeOfRoom loaiPhong) {
+        this.loaiPhong = loaiPhong;
     }
 
 
@@ -81,13 +81,13 @@ public class Room {
                 "maPhong='" + maPhong + '\'' +
                 ", tinhTrang=" + tinhTrang +
                 ", viTri='" + viTri + '\'' +
-                ", maLP=" + maLoaiPhong +
+                ", maLP=" + loaiPhong +
                 '}';
     }
 
-    public Room(String maPhong, TypeOfRoom maLoaiPhong, String tinhTrang, String viTri, int giaPhong) {
+    public Room(String maPhong, TypeOfRoom loaiPhong, String tinhTrang, String viTri, int giaPhong) {
         this.maPhong = maPhong;
-        this.maLoaiPhong = maLoaiPhong;
+        this.loaiPhong = loaiPhong;
         this.tinhTrang = tinhTrang;
         this.viTri = viTri;
         this.giaPhong = giaPhong;

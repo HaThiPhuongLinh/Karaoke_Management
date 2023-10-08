@@ -48,14 +48,12 @@ public class Main extends JFrame {
                 } else if (subIndex == 2) {
                     showForm(new Service_UI());
                 }
-            } else if (subIndex == 2) {
+             else if (subIndex == 3) {
                 showForm(new Service_UI());
-            } else if (subIndex == 2) {
-                showForm(new Service_UI());
+            } else if (subIndex == 4) {
+                showForm(new ServiceForm_UI());}
             } else if (index == 4) {
                 if (subIndex == 1) {
-                    showForm(new Bill_UI());
-                } else if (subIndex == 2) {
                     showForm(new Bill_UI());
                 }
             } else if (index == 5) {
@@ -63,7 +61,8 @@ public class Main extends JFrame {
                     showForm(new Statistic_UI());
                 } else if (subIndex == 2) {
                     showForm(new Statistic_UI());
-                }
+                } else if (subIndex == 2) {
+                showForm(new Statistic_UI());}
             } else {
                 action.cancel();
             }

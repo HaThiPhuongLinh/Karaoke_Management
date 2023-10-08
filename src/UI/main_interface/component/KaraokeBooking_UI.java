@@ -29,10 +29,10 @@ import java.util.Date;
 public class KaraokeBooking_UI extends JPanel {
     private DefaultTableModel tableModel;
     private JPanel pnlShowRoom, pnlRoomList, timeNow, pnlRoomControl, pnlShowCustomer, pnlShowDetails;
-    private JLabel backgroundLabel, timeLabel, roomLabel, statusLabel, customerLabel, billLable, room2Label, locationLabel, nameLabel, startLabel, endLabel, sumLabel;
-    private JTextField txtCustomer, txtBill, txtRoom, txtLocation, txtName, txtStart, txtEnd, txtSum;
+    private JLabel backgroundLabel, timeLabel, roomLabel, statusLabel, customerLabel, room2Label, typeRoomLabel, locationLabel, nameLabel, startLabel, receiveLabel;
+    private JTextField txtCustomer, txtRoom, txtLocation, txtName, txtStart, txtReceive, txtTypeRoom;
     private JScrollPane scrShowRoom, scrService;
-    private JButton btnSwitchRoom, btnBookRoom, btnPresetRoom, btnCancelRoom, btnReceiveRoom, btnChooseCustomer, btnUseService, btnPayment;
+    private JButton btnSwitchRoom, btnBookRoom, btnPresetRoom, btnCancelRoom, btnReceiveRoom, btnChooseCustomer;
     private JButton[] btnRoomList;
     private int heightTable = 140;
     private int location = -1;
@@ -193,25 +193,25 @@ public class KaraokeBooking_UI extends JPanel {
         pnlShowDetails.setOpaque(false);
         add(pnlShowDetails);
 
-        billLable = new JLabel("Mã hóa đơn: ");
-        billLable.setFont(new Font("Arial", Font.PLAIN, 14));
-        billLable.setBounds(40, 37, 100, 20);
-        billLable.setForeground(Color.WHITE);
-        pnlShowDetails.add(billLable);
-
-        txtBill = new JTextField();
-        txtBill.setBounds(140, 33, 220, 26);
-        pnlShowDetails.add(txtBill);
-
         room2Label = new JLabel("Mã phòng: ");
         room2Label.setFont(new Font("Arial", Font.PLAIN, 14));
-        room2Label.setBounds(40, 77, 100, 20);
+        room2Label.setBounds(40, 37, 100, 20);
         room2Label.setForeground(Color.WHITE);
         pnlShowDetails.add(room2Label);
 
         txtRoom = new JTextField();
-        txtRoom.setBounds(140, 73, 220, 26);
+        txtRoom.setBounds(140, 33, 220, 26);
         pnlShowDetails.add(txtRoom);
+
+        typeRoomLabel = new JLabel("Loại phòng: ");
+        typeRoomLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        typeRoomLabel.setBounds(40, 77, 100, 20);
+        typeRoomLabel.setForeground(Color.WHITE);
+        pnlShowDetails.add(typeRoomLabel);
+
+        txtTypeRoom = new JTextField();
+        txtTypeRoom.setBounds(140, 73, 220, 26);
+        pnlShowDetails.add(txtTypeRoom);
 
         locationLabel = new JLabel("Vị trí: ");
         locationLabel.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -233,7 +233,7 @@ public class KaraokeBooking_UI extends JPanel {
         txtName.setBounds(140, 153, 220, 26);
         pnlShowDetails.add(txtName);
 
-        startLabel = new JLabel("Giờ vào: ");
+        startLabel = new JLabel("Giờ đặt: ");
         startLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         startLabel.setBounds(40, 197, 100, 20);
         startLabel.setForeground(Color.WHITE);
@@ -243,37 +243,16 @@ public class KaraokeBooking_UI extends JPanel {
         txtStart.setBounds(140, 193, 220, 26);
         pnlShowDetails.add(txtStart);
 
-        endLabel = new JLabel("Giờ ra: ");
-        endLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        endLabel.setBounds(40, 237, 100, 20);
-        endLabel.setForeground(Color.WHITE);
-        pnlShowDetails.add(endLabel);
+        receiveLabel = new JLabel("Giờ nhận: ");
+        receiveLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        receiveLabel.setBounds(40, 237, 100, 20);
+        receiveLabel.setForeground(Color.WHITE);
+        pnlShowDetails.add(receiveLabel);
 
-        txtEnd = new JTextField();
-        txtEnd.setBounds(140, 233, 220, 26);
-        pnlShowDetails.add(txtEnd);
+        txtReceive = new JTextField();
+        txtReceive.setBounds(140, 233, 220, 26);
+        pnlShowDetails.add(txtReceive);
 
-        sumLabel = new JLabel("Tổng tiền: ");
-        sumLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        sumLabel.setBounds(40, 277, 100, 20);
-        sumLabel.setForeground(Color.WHITE);
-        pnlShowDetails.add(sumLabel);
-
-        txtSum = new JTextField();
-        txtSum.setBounds(140, 273, 220, 26);
-        pnlShowDetails.add(txtSum);
-
-//        btnUseService = new JButton("Sử dụng dịch vụ");
-//        btnUseService.setFont(new Font("Arial", Font.BOLD, 14));
-//        Custom.setCustomBtn(btnUseService);
-//        btnUseService.setBounds(50, 320, 155, 30);
-//        pnlShowDetails.add(btnUseService);
-//
-//        btnPayment = new JButton("Thanh toán");
-//        btnPayment.setFont(new Font("Arial", Font.BOLD, 14));
-//        Custom.setCustomBtn(btnPayment);
-//        btnPayment.setBounds(240, 320, 155, 30);
-//        pnlShowDetails.add(btnPayment);
 
         String[] colsService = {"Tên DV", "Số lượng", "Giá bán",};
         DefaultTableModel modelService = new DefaultTableModel(colsService, 0);
@@ -342,21 +321,18 @@ public class KaraokeBooking_UI extends JPanel {
             case "Trống":
                 btnRoomList[index].setBackground(Color.decode("#004678"));
                 btnBookRoom.setEnabled(true);
-                //btnPayment.setEnabled(false);
                 btnChooseCustomer.setEnabled(true);
                 btnSwitchRoom.setEnabled(false);
                 break;
             case "Chờ":
                 btnRoomList[index].setBackground(Color.decode("#A3AB00"));
                 btnBookRoom.setEnabled(true);
-                //btnPayment.setEnabled(false);
                 btnChooseCustomer.setEnabled(true);
                 btnSwitchRoom.setEnabled(false);
                 break;
             default:
                 btnRoomList[index].setBackground(Color.decode("#00a65a"));
                 btnBookRoom.setEnabled(false);
-                //btnPayment.setEnabled(true);
                 btnChooseCustomer.setEnabled(false);
                 btnSwitchRoom.setEnabled(true);
                 break;
@@ -382,6 +358,7 @@ public class KaraokeBooking_UI extends JPanel {
         for (int i = 0; i < sizeListRoom; i++) {
             int selection = i;
             String roomID = listRoom.get(i).getMaPhong();
+            String typeRoom = listRoom.get(i).getLoaiPhong().getTenLoaiPhong();
             String location2 = listRoom.get(i).getViTri();
             btnRoomList[selection] = new JButton("");
             loadRoom(roomID);
@@ -406,6 +383,7 @@ public class KaraokeBooking_UI extends JPanel {
                     btnRoomList[selection].setBorder(lineRed);
                     txtRoom.setText(roomID);
                     txtLocation.setText(location2);
+                    txtTypeRoom.setText(typeRoom);
 
                 }
             });

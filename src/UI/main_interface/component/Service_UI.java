@@ -277,7 +277,7 @@ public class Service_UI extends JPanel {
         panelDSDV.setBounds(460, 20, 640, 305);
         panelDSDV.setOpaque(false);
 
-        String[] colsDV = { "STT", "Mã DV", "Tên DV","Giá bán","Số lượng","Loại DV" };
+        String[] colsDV = { "STT", "Mã DV", "Tên DV","Giá bán","Số lượng tồn","Loại DV" };
         DefaultTableModel modelTableDV = new DefaultTableModel(colsDV, 0) ;
         JScrollPane scrollPaneDV;
 

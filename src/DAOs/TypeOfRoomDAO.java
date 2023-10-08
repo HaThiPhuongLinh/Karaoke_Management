@@ -28,6 +28,29 @@ public class TypeOfRoomDAO {
         return dsLoaiPhong;
     }
 
+    public TypeOfRoom getRoomTypeByRoomID(String roomID) {
+        TypeOfRoom tr = null;
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        PreparedStatement stmt = null;
+        try {
+            String sql = "SELECT * FROM LoaiPhong WHERE maLoaiPhong = ?";
+
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, roomID);
+            ResultSet rs = stmt.executeQuery();
+
+            if (!rs.next())
+                return null;
+            tr = new TypeOfRoom(rs);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return tr;
+    }
+
     public String getRoomTypeNameByRoomID(String roomID) {
         String name = null;
         ConnectDB.getInstance();

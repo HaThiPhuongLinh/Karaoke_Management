@@ -1,5 +1,7 @@
 package Entity;
 
+import DAOs.TypeOfRoomDAO;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
@@ -12,6 +14,7 @@ public class TypeOfRoom {
     public TypeOfRoom(ResultSet rs) throws SQLException {
         this(rs.getString(1), rs.getString(2), rs.getInt(3));
     }
+
 
     public String getMaLoaiPhong() {
         return maLoaiPhong;
@@ -79,6 +82,11 @@ public class TypeOfRoom {
     }
 
     public TypeOfRoom(String maLoaiPhong) {
-        this.maLoaiPhong = maLoaiPhong;
+        TypeOfRoomDAO typeOfRoomDAO=new TypeOfRoomDAO();
+        TypeOfRoom tr = typeOfRoomDAO.getRoomTypeByRoomID(maLoaiPhong);
+        this.maLoaiPhong=tr.getMaLoaiPhong();
+        this.tenLoaiPhong=tr.getTenLoaiPhong();
+        this.sucChua=tr.getSucChua();
     }
+
 }
