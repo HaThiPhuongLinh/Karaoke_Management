@@ -79,9 +79,10 @@ public class Room {
     public String toString() {
         return "Room{" +
                 "maPhong='" + maPhong + '\'' +
-                ", tinhTrang=" + tinhTrang +
+                ", loaiPhong=" + loaiPhong +
+                ", tinhTrang='" + tinhTrang + '\'' +
                 ", viTri='" + viTri + '\'' +
-                ", maLP=" + loaiPhong +
+                ", giaPhong=" + giaPhong +
                 '}';
     }
 

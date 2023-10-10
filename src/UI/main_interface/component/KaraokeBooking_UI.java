@@ -253,7 +253,6 @@ public class KaraokeBooking_UI extends JPanel {
         txtReceive.setBounds(140, 233, 220, 26);
         pnlShowDetails.add(txtReceive);
 
-
         String[] colsService = {"Tên DV", "Số lượng", "Giá bán",};
         DefaultTableModel modelService = new DefaultTableModel(colsService, 0);
 

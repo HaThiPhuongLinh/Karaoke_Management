@@ -102,4 +102,35 @@ public class RoomDAO {
         return status;
 
     }
+
+    public ArrayList<Room> getRoomsByStatus(String status) {
+        ArrayList<Room> rooms = new ArrayList<>();
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        PreparedStatement stmt = null;
+
+        try {
+            String sql = "SELECT * FROM Phong WHERE tinhTrang = ?";
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, status);
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                rooms.add(new Room(rs.getString(1), new TypeOfRoom(rs.getString(2)), rs.getString(3), rs.getString(4), rs.getInt(5)));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return rooms;
+    }
+
+
+
 }
