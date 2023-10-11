@@ -2,8 +2,13 @@ package UI.main_interface.component;
 
 import ConnectDB.ConnectDB;
 import DAOs.RoomDAO;
+import DAOs.ServiceDAO;
 import DAOs.TypeOfRoomDAO;
+import DAOs.TypeOfServiceDAO;
 import Entity.Room;
+import Entity.Service;
+import Entity.TypeOfRoom;
+import Entity.TypeOfService;
 import UI.CustomUI.Custom;
 
 import javax.swing.*;
@@ -11,12 +16,11 @@ import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,15 +29,18 @@ public class ServiceForm_UI extends JPanel {
     private DefaultTableModel tableModel, serviceModel;
     private JPanel pnlShowRoom, pnlRoomList, pnlServiceList, pnlShowService, pnlServiceControl,  pnlServiceDetail, timeNow, pnlRoomControl, pnlSelect;
     private JLabel backgroundLabel, timeLabel, searchLabel, searchServiceLable, tOSLabel, quantityLabel, nameLable, stockLabel, sumLabel;
-    private JTextField txtFind, txtFindService, txtName, txtQuantity, txtStock, txtSum;
+    private JTextField txtFind, txtFindService, txtName, txtStock, txtSum;
     private JScrollPane scrShowRoom, scrShowService, scrShowServiceDetail;
+    private JSpinner txtQuantity;
     private JButton btnFindRoom, btnFindService, btnUse;
     private JButton[] btnRoomList;
     private int heightTable = 140;
     private int location = -1;
     private JTable tblService, tblSC;
-    private JComboBox<String> cboRoomType;
+    private JComboBox<String> cboService;
     private TypeOfRoomDAO typeOfRoomDAO;
+    private TypeOfServiceDAO typeOfServiceDAO;
+    private ServiceDAO serviceDAO;
     private RoomDAO roomDAO;
 
     public ServiceForm_UI() {
@@ -47,6 +54,8 @@ public class ServiceForm_UI extends JPanel {
         }
 
         typeOfRoomDAO = new TypeOfRoomDAO();
+        typeOfServiceDAO= new TypeOfServiceDAO();
+        serviceDAO = new ServiceDAO();
         roomDAO = new RoomDAO();
 
         timeNow = new JPanel();
@@ -138,11 +147,10 @@ public class ServiceForm_UI extends JPanel {
         tOSLabel.setForeground(Color.WHITE);
         pnlServiceControl.add(tOSLabel);
 
-        cboRoomType = new JComboBox<String>();
-        cboRoomType.addItem("Tất cả");
-        cboRoomType.setBounds(126, 14, 170, 28);
-        Custom.setCustomComboBox(cboRoomType);
-        pnlServiceControl.add(cboRoomType);
+        cboService = new JComboBox<String>();
+        cboService.setBounds(126, 14, 170, 28);
+        Custom.setCustomComboBox(cboService);
+        pnlServiceControl.add(cboService);
 
         searchServiceLable = new JLabel("Tên dịch vụ: ");
         searchServiceLable.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -165,28 +173,58 @@ public class ServiceForm_UI extends JPanel {
         pnlShowService.setBackground(Color.WHITE);
         pnlShowService.setPreferredSize(new Dimension(310, 140));
 
-//        scrShowService = new JScrollPane(pnlShowService, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-//        scrShowService.setOpaque(false);
-//        scrShowService.getViewport().setOpaque(false);
-//        scrShowService.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "", TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
-//        scrShowService.setBackground(Color.WHITE);
-//        scrShowService.getVerticalScrollBar().setUnitIncrement(10);
-//        pnlServiceList.add(scrShowService, BorderLayout.CENTER);
-
         String[] colsService2 = {"Mã dịch vụ", "Tên dịch vụ", "Đơn vị tính", "Số lượng tồn", "Giá bán"};
         serviceModel = new DefaultTableModel(colsService2, 0);
 
         tblSC = new JTable(serviceModel);
-        tblSC.setFont(new Font("Arial", Font.BOLD, 14));
-        tblSC.setBackground(new Color(255, 255, 255, 0));
-        tblSC.setForeground(new Color(255, 255, 255));
-        tblSC.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-        tblSC.getTableHeader().setForeground(Color.BLUE);
+        Custom.getInstance().setCustomTable(tblSC);
+
+        tblSC.addMouseListener(new MouseListener() {
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // TODO Auto-generated method stub
+                int row= tblSC.getSelectedRow();
+                txtName.setText(serviceModel.getValueAt(row, 1).toString());
+                txtStock.setText(serviceModel.getValueAt(row, 3).toString());
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                // TODO Auto-generated method stub
+
+            }
+
+        });
+
+        for (Service dv : serviceDAO.getAllDichVu()) {
+            Object[] rowData = { dv.getMaDichVu(), dv.getTenDichVu(), dv.getDonViTinh(), dv.getSoLuongTon(), dv.getGiaBan()};
+            serviceModel.addRow(rowData);
+        }
 
         pnlServiceList.add(scrShowService = new JScrollPane(tblSC, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
-        scrShowService.setOpaque(false);
+        //scrShowService.setOpaque(false);
         scrShowService.getViewport().setOpaque(false);
-        scrShowService.getViewport().setBackground(Color.WHITE);
+        //scrShowService.getViewport().setBackground(Color.WHITE);
 
         pnlServiceDetail = new JPanel();
         pnlServiceDetail.setLayout(null);
@@ -204,6 +242,7 @@ public class ServiceForm_UI extends JPanel {
         tblService.setForeground(new Color(255, 255, 255));
         tblService.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
         tblService.getTableHeader().setForeground(Color.BLUE);
+
 
         pnlServiceDetail.add(scrShowServiceDetail = new JScrollPane(tblService, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
         scrShowServiceDetail.setBounds(4, 10, 815, 240);
@@ -234,8 +273,10 @@ public class ServiceForm_UI extends JPanel {
         quantityLabel.setForeground(Color.WHITE);
         pnlSelect.add(quantityLabel);
 
-        txtQuantity = new JTextField();
+        txtQuantity = new JSpinner();
         txtQuantity.setBounds(90, 56, 185, 28);
+        JSpinner.DefaultEditor editor = (JSpinner.DefaultEditor) txtQuantity.getEditor();
+        editor.getTextField().setHorizontalAlignment(JTextField.LEFT);
         pnlSelect.add(txtQuantity);
 
         stockLabel = new JLabel("SL tồn: ");
@@ -271,6 +312,16 @@ public class ServiceForm_UI extends JPanel {
 
         ArrayList<Room> roomList = roomDAO.getAllPhong();
         loadRoomList();
+        reSizeColumnTableService();
+        loadCboService();
+    }
+
+    private void loadCboService() {
+     java.util.List<TypeOfService> dataList = typeOfServiceDAO.getAllLoaiDichVu();
+        cboService.addItem("Tất cả");
+        for (TypeOfService serviceType : dataList) {
+            cboService.addItem(serviceType.getTenLoaiDichVu());
+        }
     }
 
     private void loadRoom(String roomID1) {
@@ -341,7 +392,7 @@ public class ServiceForm_UI extends JPanel {
                         btnRoomList[location].setBorder(lineGray);
                     }
                     String roomTypeName = typeOfRoomDAO.getRoomTypeNameByRoomID(roomID);
-                    cboRoomType.setSelectedItem(roomTypeName);
+                    cboService.setSelectedItem(roomTypeName);
 
                     String roomStatus = roomDAO.getSatusRoomByID(roomID);
 
@@ -381,6 +432,27 @@ public class ServiceForm_UI extends JPanel {
         }
     }
 
+    /**
+     * Thay đổi kích thước các cột trong bảng dịch vụ
+     */
+    private void reSizeColumnTableService() {
+        TableColumnModel tcm = tblSC.getColumnModel();
+
+        tcm.getColumn(0).setPreferredWidth(35);
+        tcm.getColumn(1).setPreferredWidth(130);
+        tcm.getColumn(2).setPreferredWidth(30);
+        tcm.getColumn(3).setPreferredWidth(30);
+        tcm.getColumn(4).setPreferredWidth(40);
+
+        DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        leftRenderer.setHorizontalAlignment(JLabel.LEFT);
+        rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
+
+        tcm.getColumn(0).setCellRenderer(leftRenderer);
+        tcm.getColumn(3).setCellRenderer(rightRenderer);
+        tcm.getColumn(4).setCellRenderer(rightRenderer);
+    }
 
     private void updateTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");

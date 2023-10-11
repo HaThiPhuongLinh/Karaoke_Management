@@ -53,6 +53,13 @@ public class Service {
             this.giaBan=giaBan;
     }
 
+    public String getDonViTinh() {
+        return donViTinh;
+    }
+
+    public void setDonViTinh(String donViTinh) {
+        this.donViTinh = donViTinh;
+    }
 
     public int getSoLuongTon() {
         return soLuongTon;
