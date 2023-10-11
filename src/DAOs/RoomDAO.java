@@ -131,6 +131,33 @@ public class RoomDAO {
         return rooms;
     }
 
+    public ArrayList<Room> getRoomsByType(String roomType) {
+        ArrayList<Room> rooms = new ArrayList<>();
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        PreparedStatement stmt = null;
+
+        try {
+            String sql = "SELECT p.maPhong, p.tinhTrang, p.maLoaiPhong, p.viTri, p.giaPhong, lp.maLoaiPhong, lp.sucChua, lp.tenLoaiPhong FROM dbo.Phong p INNER JOIN dbo.LoaiPhong lp ON p.maLoaiPhong = lp.maLoaiPhong WHERE lp.tenLoaiPhong = ?";
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, roomType);
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                rooms.add(new Room(rs.getString(1), new TypeOfRoom(rs.getString(2)), rs.getString(3), rs.getString(4), rs.getInt(5)));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return rooms;
+    }
 
 
 }

@@ -4,6 +4,7 @@ import ConnectDB.ConnectDB;
 import DAOs.RoomDAO;
 import DAOs.TypeOfRoomDAO;
 import Entity.Room;
+import Entity.Service;
 import Entity.TypeOfRoom;
 import UI.CustomUI.Custom;
 
@@ -14,23 +15,23 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
+import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 
 /**
  * KaraokeBooking (Giao diện quản lý đặt phòng)
  * Author: Hà Thị Phương Linh
  */
-public class KaraokeBooking_UI extends JPanel {
+public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseListener {
     private DefaultTableModel tableModel;
     private JPanel pnlShowRoom, pnlRoomList, timeNow, pnlRoomControl, pnlShowCustomer, pnlShowDetails;
     private JLabel backgroundLabel, timeLabel, roomLabel, statusLabel, customerLabel, room2Label, typeRoomLabel, locationLabel, nameLabel, startLabel, receiveLabel;
-    private JTextField txtCustomer, txtRoom, txtLocation, txtName, txtStart, txtReceive, txtTypeRoom;
+    private JTextField txtRoom, txtLocation, txtName, txtStart, txtReceive, txtTypeRoom;
+    public static JTextField txtCustomer;
     private JScrollPane scrShowRoom, scrService;
     private JButton btnSwitchRoom, btnBookRoom, btnPresetRoom, btnCancelRoom, btnReceiveRoom, btnChooseCustomer;
     private JButton[] btnRoomList;
@@ -40,6 +41,8 @@ public class KaraokeBooking_UI extends JPanel {
     private TypeOfRoomDAO typeOfRoomDAO;
     private RoomDAO roomDAO;
     private JComboBox<String> cboRoomType, cboStatus;
+    KaraokeBooking_UI main = this;
+    private ChooseCustomer chooseCustomer;
 
     public KaraokeBooking_UI() {
         setLayout(null);
@@ -269,6 +272,8 @@ public class KaraokeBooking_UI extends JPanel {
         scrService.getViewport().setOpaque(false);
         scrService.getViewport().setBackground(Color.WHITE);
 
+        btnChooseCustomer.addActionListener(this);
+
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/images/background.png"));
         backgroundLabel = new JLabel(backgroundImage);
         backgroundLabel.setBounds(0, 0, getWidth(), getHeight());
@@ -277,8 +282,23 @@ public class KaraokeBooking_UI extends JPanel {
         ArrayList<Room> roomList = roomDAO.getAllPhong();
         LoadRoomList(roomList);
 
-    }
+        cboRoomType.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String roomTypeName = cboRoomType.getSelectedItem().toString();
+                loadRoomListByRoomTypeName(roomTypeName);
+            }
+        });
 
+        cboStatus.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String status = cboStatus.getSelectedItem().toString();
+                loadRoomListByRoomStatus(status);
+            }
+        });
+
+    }
     private void loadCboRoomType() {
         java.util.List<TypeOfRoom> dataList = typeOfRoomDAO.getAllLoaiPhong();
         cboRoomType.addItem("Tất cả");
@@ -418,10 +438,76 @@ public class KaraokeBooking_UI extends JPanel {
         }
     }
 
+    /**
+     * Hiển thị danh sách phòng dựa trên tên loại phòng
+     *
+     * @param roomTypeName {@code String}: tên loại phòng
+     */
+    private void loadRoomListByRoomTypeName(String roomTypeName) {
+        ArrayList<Room> dataList = new ArrayList<Room>();
+        if (roomTypeName.equalsIgnoreCase("Tất cả"))
+            dataList = roomDAO.getAllPhong();
+        else {
+            location = -1;
+            dataList = roomDAO.getRoomsByType(roomTypeName);
+        }
+        LoadRoomList(dataList);
+    }
+
+    /**
+     * Hiển thị danh sách phòng dựa trên trạng thái
+     *
+     * @param statusRoom {@code String}: trạng thái
+     */
+    private void loadRoomListByRoomStatus(String statusRoom) {
+        ArrayList<Room> dataList = new ArrayList<Room>();
+        if (statusRoom.equalsIgnoreCase("Tất cả"))
+            dataList = roomDAO.getAllPhong();
+        else {
+            location = -1;
+            dataList = roomDAO.getRoomsByStatus(statusRoom);
+        }
+        LoadRoomList(dataList);
+    }
 
     private void updateTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String time = sdf.format(new Date());
         timeLabel.setText(time);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object o = e.getSource();
+        if(o.equals(btnChooseCustomer)) {
+            ChooseCustomer c = new ChooseCustomer(main);
+            c.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            c.setVisible(true);
+        }
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
     }
 }

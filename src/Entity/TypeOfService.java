@@ -1,32 +1,41 @@
 package Entity;
 
+import DAOs.TypeOfRoomDAO;
+import DAOs.TypeOfServiceDAO;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Objects;
 
 public class TypeOfService {
     private String maLoaiDichVu, tenLoaiDichVu;
 
+    public TypeOfService(ResultSet rs) throws SQLException {
+        this(rs.getString(1), rs.getString(2));
+    }
+
+    public TypeOfService(String maLoaiDichVu) {
+        TypeOfServiceDAO typeOfServiceDAO = new TypeOfServiceDAO();
+        TypeOfService tr = typeOfServiceDAO.getServiceTypeByID(maLoaiDichVu);
+        this.maLoaiDichVu=tr.getMaLoaiDichVu();
+        this.tenLoaiDichVu=tr.getTenLoaiDichVu();
+    }
+
+
     public String getMaLoaiDichVu() {
         return maLoaiDichVu;
+    }
+
+    public void setMaLoaiDichVu(String maLoaiDichVu) {
+        this.maLoaiDichVu = maLoaiDichVu;
     }
 
     public String getTenLoaiDichVu() {
         return tenLoaiDichVu;
     }
 
-    public void setMaLoaiDichVu(String maLoaiDichVu) {
-        if(!maLoaiDichVu.trim().equals("")) {
-            this.maLoaiDichVu = maLoaiDichVu;
-        }else {
-            this.maLoaiDichVu = "Un-known";
-        }
-    }
-
     public void setTenLoaiDichVu(String tenLoaiDichVu) {
-        if(!tenLoaiDichVu.trim().equals("")) {
-            this.tenLoaiDichVu = tenLoaiDichVu;
-        }else {
-            this.tenLoaiDichVu = "Un-known";
-        }
+        this.tenLoaiDichVu = tenLoaiDichVu;
     }
 
     @Override
@@ -39,8 +48,8 @@ public class TypeOfService {
     @Override
     public String toString() {
         return "TypeOfService{" +
-                "maLDV='" + maLoaiDichVu + '\'' +
-                ", tenLDV='" + tenLoaiDichVu + '\'' +
+                "maLoaiDichVu='" + maLoaiDichVu + '\'' +
+                ", tenLoaiDichVu='" + tenLoaiDichVu + '\'' +
                 '}';
     }
 
@@ -54,7 +63,4 @@ public class TypeOfService {
         setTenLoaiDichVu(tenLoaiDichVu);
     }
 
-    public TypeOfService(String maLoaiDichVu) {
-        this.maLoaiDichVu = maLoaiDichVu;
-    }
 }

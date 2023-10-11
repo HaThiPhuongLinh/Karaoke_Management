@@ -1,4 +1,6 @@
 package Entity;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.Objects;
 
@@ -15,6 +17,19 @@ public class Customer {
 
     public Customer(String maKhachHang){
         this.maKhachHang = maKhachHang;
+    }
+
+    public Customer(ResultSet rs) throws SQLException {
+        this(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getBoolean(5),rs.getDate(6));
+    }
+
+    public Customer(String maKhachHang, String tenKhachHang, String soDienThoai, String CCCD, boolean gioiTinh, Date ngaySinh) {
+        this.maKhachHang = maKhachHang;
+        this.tenKhachHang = tenKhachHang;
+        this.soDienThoai = soDienThoai;
+        this.CCCD = CCCD;
+        this.gioiTinh = gioiTinh;
+        this.ngaySinh = ngaySinh;
     }
 
     public String getMaKhachHang() {
@@ -89,14 +104,6 @@ public class Customer {
         return Objects.hash(getMaKhachHang());
     }
 
-    public Customer(String maKhachHang, String tenKhachHang, String soDienThoai, String CCCD, boolean gioiTinh, Date ngaySinh) {
-        this.maKhachHang = maKhachHang;
-        this.tenKhachHang = tenKhachHang;
-        this.soDienThoai = soDienThoai;
-        this.CCCD = CCCD;
-        this.gioiTinh = gioiTinh;
-        this.ngaySinh = ngaySinh;
-    }
 
     @Override
     public String toString() {

@@ -1,5 +1,7 @@
 package Entity;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Objects;
 
 public class Service {
@@ -12,6 +14,12 @@ public class Service {
     public Service(){
 
     }
+
+    public Service(ResultSet rs) throws SQLException {
+        this(rs.getString(1), rs.getString(2), new TypeOfService(rs.getString(3)), rs.getString(4), rs.getInt(5),rs.getDouble(6));
+    }
+
+
 
     public Service(String maDichVu){
         this.maDichVu=maDichVu;

@@ -1,4 +1,7 @@
 package Entity;
+import DAOs.RoomDAO;
+import DAOs.TypeOfRoomDAO;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
@@ -14,12 +17,17 @@ public class Room {
 
     }
 
-    public Room(String maPhong){
-        this.maPhong=maPhong;
-    }
-
     public Room(ResultSet rs) throws SQLException {
         this(rs.getString(1), new TypeOfRoom(rs.getString(2)), rs.getString(3), rs.getString(4), rs.getInt(5));
+    }
+    public Room(String maPhong) {
+        RoomDAO roomDAO = new RoomDAO();
+        Room r = roomDAO.getRoomByID(maPhong);
+        this.maPhong=r.getMaPhong();
+        this.loaiPhong = r.getLoaiPhong();
+        this.tinhTrang = r.getTinhTrang();
+        this.viTri = r.getViTri();
+        this.giaPhong = r.getGiaPhong();
     }
 
     public String getMaPhong() {

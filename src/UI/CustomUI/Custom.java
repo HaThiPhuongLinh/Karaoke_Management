@@ -33,7 +33,8 @@ public class Custom {
         tbl.setRowHeight(25);
         tbl.setShowGrid(true);
         tbl.setGridColor(Color.WHITE);
-        tbl.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tbl.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
+        tbl.getTableHeader().setForeground(Color.BLUE);
     }
 
 

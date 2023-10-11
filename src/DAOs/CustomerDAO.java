@@ -2,13 +2,11 @@ package DAOs;
 import Entity.Customer;
 
 
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.List;
 import ConnectDB.ConnectDB;
 import java.util.ArrayList;
-import java.sql.Connection;
-import java.sql.Statement;
-import java.sql.ResultSet;
+
 public class CustomerDAO {
     public List<Customer> getAllKhachHang() {
         List<Customer> dsKhachHang = new ArrayList<Customer>();
@@ -27,4 +25,32 @@ public class CustomerDAO {
         }
         return dsKhachHang;
     }
+
+    public List<Customer> getListKhachHangByName(String name) {
+        List<Customer> namelist = new ArrayList<Customer>();
+        ConnectDB.getInstance();
+        PreparedStatement stmt = null;
+        try {
+            Connection con = ConnectDB.getConnection();
+            String sql = "SELECT * FROM KhachHang where tenKhachHang like ?";
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, "%" + name + "%");
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Customer c = new Customer(rs);
+                namelist.add(c);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return namelist;
+    }
+
 }

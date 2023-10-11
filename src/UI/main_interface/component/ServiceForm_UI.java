@@ -5,10 +5,7 @@ import DAOs.RoomDAO;
 import DAOs.ServiceDAO;
 import DAOs.TypeOfRoomDAO;
 import DAOs.TypeOfServiceDAO;
-import Entity.Room;
-import Entity.Service;
-import Entity.TypeOfRoom;
-import Entity.TypeOfService;
+import Entity.*;
 import UI.CustomUI.Custom;
 
 import javax.swing.*;
@@ -19,13 +16,17 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.PatternSyntaxException;
 
-public class ServiceForm_UI extends JPanel {
+public class ServiceForm_UI extends JPanel implements ActionListener, MouseListener {
     private DefaultTableModel tableModel, serviceModel;
     private JPanel pnlShowRoom, pnlRoomList, pnlServiceList, pnlShowService, pnlServiceControl,  pnlServiceDetail, timeNow, pnlRoomControl, pnlSelect;
     private JLabel backgroundLabel, timeLabel, searchLabel, searchServiceLable, tOSLabel, quantityLabel, nameLable, stockLabel, sumLabel;
@@ -42,6 +43,8 @@ public class ServiceForm_UI extends JPanel {
     private TypeOfServiceDAO typeOfServiceDAO;
     private ServiceDAO serviceDAO;
     private RoomDAO roomDAO;
+    private Map<String, TypeOfService> maDichVuToLoaiDichVu;
+    private ArrayList<Service> lstService;
 
     public ServiceForm_UI() {
         setLayout(null);
@@ -314,7 +317,33 @@ public class ServiceForm_UI extends JPanel {
         loadRoomList();
         reSizeColumnTableService();
         loadCboService();
+        btnFindService.addActionListener(this);
+
+        txtFindService.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    btnFindService.doClick();
+                }
+            }
+        });
+
+        cboService.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selectedLoaiDichVu = (String) cboService.getSelectedItem();
+                serviceModel.setRowCount(0);
+                for (Service dv : serviceDAO.getAllDichVu()) {
+                    if (selectedLoaiDichVu.equalsIgnoreCase("Tất cả") ||
+                            selectedLoaiDichVu.equalsIgnoreCase(dv.getMaLoaiDichVu().getTenLoaiDichVu())) {
+                        Object[] rowData = { dv.getMaDichVu(), dv.getTenDichVu(), dv.getDonViTinh(), dv.getSoLuongTon(), dv.getGiaBan()};
+                        serviceModel.addRow(rowData);
+                    }
+                }
+            }
+        });
     }
+
 
     private void loadCboService() {
      java.util.List<TypeOfService> dataList = typeOfServiceDAO.getAllLoaiDichVu();
@@ -438,10 +467,10 @@ public class ServiceForm_UI extends JPanel {
     private void reSizeColumnTableService() {
         TableColumnModel tcm = tblSC.getColumnModel();
 
-        tcm.getColumn(0).setPreferredWidth(35);
-        tcm.getColumn(1).setPreferredWidth(130);
+        tcm.getColumn(0).setPreferredWidth(30);
+        tcm.getColumn(1).setPreferredWidth(120);
         tcm.getColumn(2).setPreferredWidth(30);
-        tcm.getColumn(3).setPreferredWidth(30);
+        tcm.getColumn(3).setPreferredWidth(40);
         tcm.getColumn(4).setPreferredWidth(40);
 
         DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
@@ -454,10 +483,57 @@ public class ServiceForm_UI extends JPanel {
         tcm.getColumn(4).setCellRenderer(rightRenderer);
     }
 
+
+    public void actionPerformed(ActionEvent e) {
+        Object o = e.getSource();
+        if (o.equals(btnFindService)) {
+            if (txtFindService.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Chưa nhập tên dịch vụ");
+            } else {
+                String serviceName = txtFindService.getText().trim();
+                serviceModel.getDataVector().removeAllElements();
+                serviceModel.fireTableDataChanged();
+                lstService = serviceDAO.getServiceByName(serviceName);
+                if (lstService == null || lstService.size() <= 0) {
+                    serviceModel.getDataVector().removeAllElements();
+                } else {
+                    for (Service s : lstService) {
+                        serviceModel.addRow(new Object[] { s.getMaDichVu(), s.getTenDichVu(), s.getDonViTinh(), s.getSoLuongTon(), s.getGiaBan() });
+                    }
+                }
+            }
+        }
+    }
+
+
     private void updateTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String time = sdf.format(new Date());
         timeLabel.setText(time);
     }
 
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
 }
