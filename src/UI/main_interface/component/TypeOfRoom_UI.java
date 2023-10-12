@@ -1,5 +1,10 @@
 package UI.main_interface.component;
 
+import ConnectDB.ConnectDB;
+import DAOs.StaffDAO;
+import DAOs.TypeOfRoomDAO;
+import Entity.Room;
+import Entity.TypeOfRoom;
 import UI.CustomUI.Custom;
 
 import javax.swing.*;
@@ -13,17 +18,23 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class TypeOfRoom_UI extends JPanel{
+    private  JTable tableLP;
+   
+    private  DefaultTableModel modelTableLP;
     private JLabel backgroundLabel, timeLabel ;
-    private JPanel timeNow, pnlTPList, pnlTPControl, panelDSLP;
-    private DefaultTableModel tableModelNV;
-    private JComboBox<String> cboTinhTrang;
-    private JCheckBox cb;
-    private JTextField txtSearch1, txtSearch2, txtSearch3;
-    private JButton btnTim;
+    private JPanel timeNow, pnlTPList, pnlTPControl;
+    
+    private TypeOfRoomDAO TypeOfRoomDAO;
 
     public TypeOfRoom_UI() {
         setLayout(null);
         setBounds(0, 0, 1175, 770);
+        TypeOfRoomDAO = new TypeOfRoomDAO();
+        try {
+            ConnectDB.getInstance().connect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         JLabel headerLabel = new JLabel("QUẢN LÝ LOẠI PHÒNG");
         headerLabel.setBounds(470, 10, 1175, 40);
@@ -151,23 +162,26 @@ public class TypeOfRoom_UI extends JPanel{
         panelDSLP.setOpaque(false);
 
         String[] colsLP = {"STT", "Mã Loại Phòng", "Tên Loại Phòng", "Sức Chứa"};
-        DefaultTableModel modelTableNV = new DefaultTableModel(colsLP, 0);
+         modelTableLP = new DefaultTableModel(colsLP, 0);
         JScrollPane scrollPaneNV;
 
-        JTable tableNV = new JTable(modelTableNV);
-        tableNV.setFont(new Font("Arial", Font.BOLD, 14));
-        tableNV.setBackground(new Color(255, 255, 255, 0));
-        tableNV.setForeground(new Color(255, 255, 255));
-        tableNV.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-        tableNV.getTableHeader().setForeground(Color.BLUE);
+         tableLP = new JTable(modelTableLP);
+        tableLP.setFont(new Font("Arial", Font.BOLD, 14));
+        tableLP.setBackground(new Color(255, 255, 255, 0));
+        tableLP.setForeground(new Color(255, 255, 255));
+        tableLP.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
+        tableLP.getTableHeader().setForeground(Color.BLUE);
 
-        panelDSLP.add(scrollPaneNV = new JScrollPane(tableNV, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
+        Custom.getInstance().setCustomTable(tableLP);
+
+        panelDSLP.add(scrollPaneNV = new JScrollPane(tableLP, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
                 BorderLayout.CENTER);
         scrollPaneNV.setBounds(10, 20, 1090, 330);
         scrollPaneNV.setOpaque(false);
         scrollPaneNV.getViewport().setOpaque(false);
         scrollPaneNV.getViewport().setBackground(Color.WHITE);
         pnlTPList.add(panelDSLP);
+        loadLP();
 
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/images/background.png"));
         backgroundLabel = new JLabel(backgroundImage);
@@ -180,5 +194,19 @@ public class TypeOfRoom_UI extends JPanel{
         String time = sdf.format(new Date());
         timeLabel.setText(time);
     }
+
+    public void loadLP(){
+        int i=1;
+
+        for (TypeOfRoom room : TypeOfRoomDAO.getAllLoaiPhong()) {
+
+
+            Object[] rowData = { i,room.getMaLoaiPhong(),room.getTenLoaiPhong(),room.getSucChua()};
+            modelTableLP.addRow(rowData);
+            i++;
+
+        }
+    }
+
 
 }

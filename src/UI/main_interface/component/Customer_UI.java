@@ -1,6 +1,11 @@
 package UI.main_interface.component;
 
 import javax.swing.*;
+
+import ConnectDB.ConnectDB;
+import DAOs.CustomerDAO;
+import Entity.Customer;
+import Entity.Service;
 import UI.CustomUI.Custom;
 
 import javax.swing.border.EtchedBorder;
@@ -9,12 +14,19 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-public class Customer_UI extends JPanel {
 
+public class Customer_UI extends JPanel implements ActionListener, MouseListener {
+
+    private  JTable tableKH;
+    private  DefaultTableModel modelTableKH;
     private JLabel backgroundLabel,timeLabel,maKHLabel,tenKHLabel,gioitinhKHLabel,sdtKHLabel,ngaySinhLabel,cmndLabel;
     private JTextField txtMaKH,txtTenKH,txtSDTKH,txtCMNDKH, txtHienThiLoi;
     private JComboBox cboGioiTinh;
@@ -22,8 +34,16 @@ public class Customer_UI extends JPanel {
     private DatePicker dpNgaySinh;
     private DefaultTableModel tableModel;
     private JButton btnThem ,btnXoa,btnSua,btnLamMoi,btnXemHet;
+    private CustomerDAO CustomerDAO ;
+
 
     public Customer_UI(){
+        CustomerDAO = new CustomerDAO();
+        try {
+            ConnectDB.getInstance().connect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         setLayout(null);
         setBounds(0, 0, 1175, 770);
 
@@ -171,15 +191,20 @@ public class Customer_UI extends JPanel {
         panelDSKH.setOpaque(false);
 
         String[] colsKH = { "STT", "Mã KH", "Tên KH","SDT","CCCD","Giới Tính","Ngày Sinh" };
-        DefaultTableModel modelTableKH = new DefaultTableModel(colsKH, 0) ;
+         modelTableKH = new DefaultTableModel(colsKH, 0) ;
         JScrollPane scrollPaneKH;
 
-        JTable tableKH = new JTable(modelTableKH);
+         tableKH = new JTable(modelTableKH);
         tableKH.setFont(new Font("Arial", Font.BOLD, 14));
         tableKH.setBackground(new Color(255, 255, 255, 0));
         tableKH.setForeground(new Color(255, 255, 255));
         tableKH.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
         tableKH.getTableHeader().setForeground(Color.BLUE);
+
+        Custom.getInstance().setCustomTable(tableKH);
+
+        tableKH.addMouseListener(this);
+
 
 
         panelDSKH.add(scrollPaneKH = new JScrollPane(tableKH,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
@@ -189,6 +214,9 @@ public class Customer_UI extends JPanel {
         scrollPaneKH.getViewport().setOpaque(false);
         scrollPaneKH.getViewport().setBackground(Color.WHITE);
         pnlCusList.add(panelDSKH);
+
+        loadKH();
+
 
 
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/images/background.png"));
@@ -201,4 +229,74 @@ public class Customer_UI extends JPanel {
         String time = sdf.format(new Date());
         timeLabel.setText(time);
     }
+    public void loadKH(){
+        int i=1;
+        String gt ="";
+        for (Customer customer : CustomerDAO.getAllKhachHang()) {
+
+
+            if(customer.isGioiTinh()==true){
+
+             gt="Nam" ;
+
+            }
+            else{
+                gt="Nữ";
+            }
+            Object[] rowData = { i,customer.getMaKhachHang(), customer.getTenKhachHang(), customer.getSoDienThoai(), customer.getCCCD(), gt,customer.getNgaySinh()};
+            modelTableKH.addRow(rowData);
+            i++;
+
+        }
+    }
+
+
+
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        int row= tableKH.getSelectedRow();
+        txtMaKH.setText(modelTableKH.getValueAt(row, 1).toString());
+        txtTenKH.setText(modelTableKH.getValueAt(row, 2).toString());
+        txtSDTKH.setText(modelTableKH.getValueAt(row, 3).toString());
+        txtCMNDKH.setText(modelTableKH.getValueAt(row, 4).toString());
+//        dpNgaySinh.set(modelTableKH.getValueAt(row, 6).toString());
+//        String ngaysinh = tableKH.getValueAt(row,6).toString().trim();
+//        java.util.Date ns = Calendar.getInstance().getTime();
+//        try {
+//            ns =new SimpleDateFormat("dd-MM-yyyy").parse(ngaysinh);
+//        } catch (ParseException ex) {
+//            ex.printStackTrace();
+//            ns =Calendar.getInstance().getTime();
+//        }
+//     dpNgaySinh.set(ns);
+        cboGioiTinh.setSelectedItem(modelTableKH.getValueAt(row,5).toString());
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
+
 }

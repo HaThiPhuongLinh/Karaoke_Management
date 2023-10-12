@@ -1,5 +1,8 @@
 package UI.main_interface.component;
 
+import ConnectDB.ConnectDB;
+import DAOs.RoomDAO;
+import Entity.Room;
 import UI.CustomUI.Custom;
 
 import javax.swing.*;
@@ -13,15 +16,24 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class SearchingRoom extends JPanel {
+    private  JTable tableP;
+    private  DefaultTableModel modelTableP;
     private JLabel backgroundLabel, timeLabel, search1Label, search2Label, search3Label;
     private JTextField txtSearch1, txtSearch2, txtSearch3;
     private JPanel timeNow, pnlCusList, pnlCusControl, pnlCusListRight;
     private DefaultTableModel tableModel;
     private JButton btnTim;
+    private RoomDAO RoomDAO;
 
     public SearchingRoom() {
         setLayout(null);
         setBounds(0, 0, 1175, 770);
+        RoomDAO = new RoomDAO();
+        try {
+            ConnectDB.getInstance().connect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         //phan viet code
         JLabel headerLabel = new JLabel("TÌM KIẾM PHÒNG");
@@ -105,24 +117,26 @@ public class SearchingRoom extends JPanel {
         panelDSKH.setBounds(30, 20, 1100, 470);
         panelDSKH.setOpaque(false);
 
-        String[] colsKH = {"STT", "Mã Phòng", "Loại Phòng", "Tình Trạng", "Vị Trí"};
-        DefaultTableModel modelTableKH = new DefaultTableModel(colsKH, 0);
-        JScrollPane scrollPaneKH;
+        String[] colsKH = {"STT", "Mã Phòng", "Loại Phòng", "Tình Trạng", "Vị Trí","Giá Tiền"};
+         modelTableP = new DefaultTableModel(colsKH, 0);
+        JScrollPane scrollPaneP;
 
-        JTable tableKH = new JTable(modelTableKH);
-        tableKH.setFont(new Font("Arial", Font.BOLD, 14));
-        tableKH.setBackground(new Color(255, 255, 255, 0));
-        tableKH.setForeground(new Color(255, 255, 255));
-        tableKH.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-        tableKH.getTableHeader().setForeground(Color.BLUE);
+         tableP = new JTable(modelTableP);
+        tableP.setFont(new Font("Arial", Font.BOLD, 14));
+        tableP.setBackground(new Color(255, 255, 255, 0));
+        tableP.setForeground(new Color(255, 255, 255));
+        tableP.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
+        tableP.getTableHeader().setForeground(Color.BLUE);
+        Custom.getInstance().setCustomTable(tableP);
 
-        panelDSKH.add(scrollPaneKH = new JScrollPane(tableKH, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
+        panelDSKH.add(scrollPaneP = new JScrollPane(tableP, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
                 BorderLayout.CENTER);
-        scrollPaneKH.setBounds(10, 20, 1090, 470);
-        scrollPaneKH.setOpaque(false);
-        scrollPaneKH.getViewport().setOpaque(false);
-        scrollPaneKH.getViewport().setBackground(Color.WHITE);
+        scrollPaneP.setBounds(10, 20, 1090, 470);
+        scrollPaneP.setOpaque(false);
+        scrollPaneP.getViewport().setOpaque(false);
+        scrollPaneP.getViewport().setBackground(Color.WHITE);
         pnlCusList.add(panelDSKH);
+        loadP();
 
 
         //
@@ -136,6 +150,26 @@ public class SearchingRoom extends JPanel {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String time = sdf.format(new Date());
         timeLabel.setText(time);
+    }
+    public void loadP(){
+        int i=1;
+
+        for (Room room : RoomDAO.getAllPhong()) {
+
+
+//            if(customer.isGioiTinh()==true){
+//
+//                gt="Nam" ;
+//
+//            }
+//            else{
+//                gt="Nữ";
+//            }
+            Object[] rowData = { i,room.getMaPhong(),room.getLoaiPhong().getTenLoaiPhong(),room.getViTri(),room.getTinhTrang(),room.getGiaPhong()};
+            modelTableP.addRow(rowData);
+            i++;
+
+        }
     }
 
 }

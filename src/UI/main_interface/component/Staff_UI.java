@@ -1,5 +1,10 @@
 package UI.main_interface.component;
 
+import ConnectDB.ConnectDB;
+import DAOs.CustomerDAO;
+import DAOs.StaffDAO;
+import Entity.Customer;
+import Entity.Staff;
 import UI.CustomUI.Custom;
 
 import javax.swing.*;
@@ -14,6 +19,8 @@ import java.util.Date;
 
 public class Staff_UI extends JPanel {
 
+    private  JTable tableNV;
+    private  DefaultTableModel modelTableNV;
     private JLabel backgroundLabel, ChucVuLabel, taiKhoanLabel, tinhTrangLabel, timeLabel, maNVLabel, tenNVLabel, gioitinhNVLabel, sdtNVLabel, ngaySinhLabel, cmndLabel, search1Label, search2Label, search3Label;
     private JTextField txtMaNV, txtTenNV, txtSDTNV, txtCMNDNV, txtTaiKhoan, txtChucVu, txttinhTrang;
     private JComboBox cboGioiTinhNV, cboChucVu, cbotinhTrang;
@@ -21,12 +28,19 @@ public class Staff_UI extends JPanel {
     private DatePicker dpNgaySinhNV;
     private DefaultTableModel tableModelNV;
     private JButton btnThem, btnXoa, btnSua, btnTim1, btnTim2, btnTim3, btnLamMoi, btnXemHet;
+    private StaffDAO StaffDAO;
 
     public Staff_UI() {
         setLayout(null);
         setBounds(0, 0, 1175, 770);
 
         //phan viet code
+        StaffDAO = new StaffDAO();
+        try {
+            ConnectDB.getInstance().connect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         JLabel headerLabel = new JLabel("QUẢN LÝ NHÂN VIÊN");
         headerLabel.setBounds(470, 10, 1175, 40);
         headerLabel.setFont(new Font("Arial", Font.BOLD, 25));
@@ -213,17 +227,18 @@ public class Staff_UI extends JPanel {
         panelDSNV.setBounds(30, 290, 1100, 320);
         panelDSNV.setOpaque(false);
 
-        String[] colsNV = {"STT", "Mã NV", "Tên NV", "SDT", "CCCD", "Giới Tính", "Ngày Sinh", "Chức Vụ", "Tình Trạng", "Tài Khoản","Địa Chỉ"};
-        DefaultTableModel modelTableNV = new DefaultTableModel(colsNV, 0);
+        String[] colsNV = { "Mã NV", "Tên NV", "SDT", "CCCD", "Giới Tính", "Ngày Sinh", "Chức Vụ", "Tình Trạng", "Tài Khoản","Địa Chỉ"};
+         modelTableNV = new DefaultTableModel(colsNV, 0);
         JScrollPane scrollPaneNV;
 
-        JTable tableNV = new JTable(modelTableNV);
+
+       tableNV = new JTable(modelTableNV);
         tableNV.setFont(new Font("Arial", Font.BOLD, 14));
         tableNV.setBackground(new Color(255, 255, 255, 0));
         tableNV.setForeground(new Color(255, 255, 255));
         tableNV.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
         tableNV.getTableHeader().setForeground(Color.BLUE);
-
+        Custom.getInstance().setCustomTable(tableNV);
         panelDSNV.add(scrollPaneNV = new JScrollPane(tableNV, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
                 BorderLayout.CENTER);
         scrollPaneNV.setBounds(10, 20, 1090, 330);
@@ -231,6 +246,7 @@ public class Staff_UI extends JPanel {
         scrollPaneNV.getViewport().setOpaque(false);
         scrollPaneNV.getViewport().setBackground(Color.WHITE);
         pnlStaffList.add(panelDSNV);
+        loadNV();
 
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/images/background.png"));
         backgroundLabel = new JLabel(backgroundImage);
@@ -242,5 +258,25 @@ public class Staff_UI extends JPanel {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String time = sdf.format(new Date());
         timeLabel.setText(time);
+    }
+    public void loadNV(){
+
+        String gt ="";
+        for (Staff staff : StaffDAO.getAllStaff()) {
+
+
+            if(staff.isGioiTinh()==true){
+
+                gt="Nam" ;
+
+            }
+            else{
+                gt="Nữ";
+            }
+            Object[] rowData = { staff.getMaNhanVien(),staff.getTenNhanVien(),staff.getCCCD(),staff.getSoDienThoai(),gt,staff.getNgaySinh(),staff.getChucVu(),staff.getTrangThai(),staff.getTaiKhoan(),staff.getDiaChi()};
+            modelTableNV.addRow(rowData);
+
+
+        }
     }
 }

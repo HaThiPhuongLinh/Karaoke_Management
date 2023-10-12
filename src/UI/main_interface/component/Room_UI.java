@@ -1,6 +1,13 @@
 package UI.main_interface.component;
 
 import javax.swing.*;
+
+import ConnectDB.ConnectDB;
+import DAOs.RoomDAO;
+import DAOs.StaffDAO;
+import Entity.Customer;
+import Entity.Room;
+import Entity.TypeOfRoom;
 import UI.CustomUI.Custom;
 
 import javax.swing.border.EtchedBorder;
@@ -16,8 +23,11 @@ import javax.swing.ImageIcon;
 
 public class Room_UI extends JPanel {
 
-       private JPanel pnlRoomControl, pnlRoomList, timeNow;
+    private  JTable tableP;
+    private  DefaultTableModel modelTableP;
+    private JPanel pnlRoomControl, pnlRoomList, timeNow;
        private JLabel backgroundLabel, timeLabel;
+       private RoomDAO RoomDAO;
 
 
 
@@ -26,6 +36,12 @@ public class Room_UI extends JPanel {
     public Room_UI(){
             setLayout(null);
             setBounds(0, 0, 1175, 770);
+        RoomDAO = new RoomDAO();
+        try {
+            ConnectDB.getInstance().connect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
             JLabel headerLabel = new JLabel("QUẢN LÝ PHÒNG");
             headerLabel.setBounds(470, 10, 1175, 40);
@@ -81,15 +97,17 @@ public class Room_UI extends JPanel {
         panelDSP.setOpaque(false);
 
             String[] colsP = { "STT", "Mã Phòng","Mã Loại Phòng","Vị Trí","Tình Trạng","Giá Phòng" };
-            DefaultTableModel modelTableP = new DefaultTableModel(colsP, 0) ;
+             modelTableP = new DefaultTableModel(colsP, 0) ;
             JScrollPane scrollPaneP;
 
-            JTable tableP = new JTable(modelTableP);
+             tableP = new JTable(modelTableP);
         tableP.setFont(new Font("Arial", Font.BOLD, 14));
         tableP.setBackground(new Color(255, 255, 255, 0));
         tableP.setForeground(new Color(255, 255, 255));
         tableP.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
         tableP.getTableHeader().setForeground(Color.BLUE);
+
+        Custom.getInstance().setCustomTable(tableP);
 
 
         panelDSP.add(scrollPaneP = new JScrollPane(tableP,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
@@ -224,6 +242,7 @@ public class Room_UI extends JPanel {
         backgroundLabel = new JLabel(backgroundImage);
         backgroundLabel.setBounds(0, 0, getWidth(), getHeight());
         add(backgroundLabel);
+        loadP();
 
 
     }
@@ -231,6 +250,26 @@ public class Room_UI extends JPanel {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String time = sdf.format(new Date());
         timeLabel.setText(time);
+    }
+    public void loadP(){
+        int i=1;
+
+        for (Room room : RoomDAO.getAllPhong()) {
+
+
+//            if(customer.isGioiTinh()==true){
+//
+//                gt="Nam" ;
+//
+//            }
+//            else{
+//                gt="Nữ";
+//            }
+            Object[] rowData = { i,room.getMaPhong(),room.getLoaiPhong().getTenLoaiPhong(),room.getViTri(),room.getTinhTrang(),room.getGiaPhong()};
+            modelTableP.addRow(rowData);
+            i++;
+
+        }
     }
 
 }
