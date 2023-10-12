@@ -16,7 +16,7 @@ import javax.swing.ImageIcon;
 public class Customer_UI extends JPanel {
 
     private JLabel backgroundLabel,timeLabel,maKHLabel,tenKHLabel,gioitinhKHLabel,sdtKHLabel,ngaySinhLabel,cmndLabel;
-    private JTextField txtMaKH,txtTenKH,txtSDTKH,txtCMNDKH, txtTimKiem;
+    private JTextField txtMaKH,txtTenKH,txtSDTKH,txtCMNDKH, txtHienThiLoi;
     private JComboBox cboGioiTinh;
     private  JPanel timeNow,pnlCusList,pnlCusControl,pnlCusListRight;
     private DatePicker dpNgaySinh;
@@ -132,11 +132,11 @@ public class Customer_UI extends JPanel {
         txtCMNDKH.setBounds(145,120,350,30);
         pnlCusControl.add(txtCMNDKH);
 
-        txtTimKiem =new JTextField();
-        txtTimKiem.setBounds(145,170,350,30);
-        txtTimKiem.setOpaque(false);
-        txtTimKiem.setEditable(false);
-        pnlCusControl.add(txtTimKiem);
+        txtHienThiLoi =new JTextField();
+        txtHienThiLoi.setBounds(145,170,350,30);
+        txtHienThiLoi.setOpaque(false);
+        txtHienThiLoi.setEditable(false);
+        pnlCusControl.add(txtHienThiLoi);
 
         btnThem = new JButton("Thêm");
         btnThem.setFont(new Font("Arial", Font.PLAIN, 15));

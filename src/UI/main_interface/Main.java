@@ -32,12 +32,12 @@ public class Main extends JFrame {
                 }
             } else if (index == 2) {
                 if (subIndex == 1) {
-                    showForm(new Room_UI());
+                    showForm(new SearchingRoom());
                 } else if (subIndex == 2) {
                     showForm(new Room_UI());
 
                 } else if (subIndex == 3) {
-                    showForm(new Room_UI());
+                    showForm(new TypeOfRoom_UI());
 
                 } else if (subIndex == 4) {
                     showForm(new KaraokeBooking_UI());
