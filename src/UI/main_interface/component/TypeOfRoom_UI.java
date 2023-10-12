@@ -102,16 +102,12 @@ public class TypeOfRoom_UI extends JPanel{
         pnlTPControl.add(textFieldSucChua);
 
 
-        JLabel labelGiaTien = new JLabel("Giá Tiền :");
-        labelGiaTien.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelGiaTien.setBounds(330, 160, 150, 30);
-        labelGiaTien.setForeground(Color.WHITE);
-        pnlTPControl.add(labelGiaTien);
 
-        JTextField textFieldGiaTien = new JTextField();
-        textFieldGiaTien.setBounds(465, 160, 311, 30);
-        textFieldGiaTien.setColumns(10);
-        pnlTPControl.add(textFieldGiaTien);
+
+        JTextField textFieldBaoLoi = new JTextField();
+        textFieldBaoLoi.setBounds(465, 160, 311, 30);
+        textFieldBaoLoi.setColumns(10);
+        pnlTPControl.add(textFieldBaoLoi);
 
 
 
@@ -154,7 +150,7 @@ public class TypeOfRoom_UI extends JPanel{
         panelDSLP.setBounds(30, 290, 1100, 320);
         panelDSLP.setOpaque(false);
 
-        String[] colsLP = {"STT", "Mã Loại Phòng", "Tên Loại Phòng", "Sức Chứa", "Giá Tiền"};
+        String[] colsLP = {"STT", "Mã Loại Phòng", "Tên Loại Phòng", "Sức Chứa"};
         DefaultTableModel modelTableNV = new DefaultTableModel(colsLP, 0);
         JScrollPane scrollPaneNV;
 

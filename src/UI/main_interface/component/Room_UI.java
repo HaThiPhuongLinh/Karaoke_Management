@@ -80,7 +80,7 @@ public class Room_UI extends JPanel {
         panelDSP.setBounds(30, 310, 1100, 320);
         panelDSP.setOpaque(false);
 
-            String[] colsP = { "STT", "Mã Phòng","Mã Loại Phòng","Vị Trí","Tình Trạng" };
+            String[] colsP = { "STT", "Mã Phòng","Mã Loại Phòng","Vị Trí","Tình Trạng","Giá Phòng" };
             DefaultTableModel modelTableP = new DefaultTableModel(colsP, 0) ;
             JScrollPane scrollPaneP;
 
@@ -159,7 +159,7 @@ public class Room_UI extends JPanel {
         //      Lọc theo
         JLabel labelLocTheoLP = new JLabel("Lọc theo:");
         labelLocTheoLP.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelLocTheoLP.setBounds(550, 20, 150, 30);
+        labelLocTheoLP.setBounds(550, 70, 150, 30);
         labelLocTheoLP.setForeground(Color.WHITE);
         pnlRoomControl.add(labelLocTheoLP);
 
@@ -167,28 +167,29 @@ public class Room_UI extends JPanel {
         comboBoxLocTheoLP.addItem("Tất cả");
         comboBoxLocTheoLP.addItem("Tình Trạng");
         comboBoxLocTheoLP.addItem("Loại Phòng");
-        comboBoxLocTheoLP.setBounds(665,20,311,30);
+        comboBoxLocTheoLP.setBounds(665,70,311,30);
         Custom.setCustomComboBox(comboBoxLocTheoLP);
         pnlRoomControl.add(comboBoxLocTheoLP);
 
         //      Từ khóa
-        JLabel labelTuKhoaDV = new JLabel("Từ khóa:");
-        labelTuKhoaDV.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelTuKhoaDV.setBounds(550, 70, 150, 30);
-        labelTuKhoaDV.setForeground(Color.WHITE);
-        pnlRoomControl.add(labelTuKhoaDV);
+        JLabel labelGiaP = new JLabel("Giá Phòng:");
+        labelGiaP.setFont(new Font("Arial", Font.PLAIN, 14));
+        labelGiaP.setBounds(550, 20, 150, 30);
+        labelGiaP.setForeground(Color.WHITE);
+        pnlRoomControl.add(labelGiaP);
 
-        JTextField textFieldTuKhoaDV = new JTextField();
-        textFieldTuKhoaDV.setBounds(665, 70, 200, 30);
-        textFieldTuKhoaDV.setColumns(6);
-        pnlRoomControl.add(textFieldTuKhoaDV);
+        JTextField textFieldGiaP = new JTextField();
+        textFieldGiaP.setBounds(665, 20, 311, 30);
+        textFieldGiaP.setColumns(6);
+        pnlRoomControl.add(textFieldGiaP);
 
-//        btn tìm kiếm
-        JButton btnTimKiemP = new JButton("Tìm kiếm");
-        btnTimKiemP.setFont(new Font("Arial", Font.BOLD, 14));
-        Custom.setCustomBtn(btnTimKiemP);
-        btnTimKiemP.setBounds(875, 70, 100, 30);
-        pnlRoomControl.add(btnTimKiemP);
+        JTextField textFieldBaoLoi = new JTextField();
+        textFieldBaoLoi.setBounds(665, 120, 311, 30);
+        textFieldBaoLoi.setColumns(6);
+        pnlRoomControl.add(textFieldBaoLoi);
+
+//
+
 
         //        btn thêm
         JButton btnThêmP = new JButton("Thêm");

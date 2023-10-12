@@ -157,7 +157,7 @@ public class Staff_UI extends JPanel {
 
         ChucVuLabel = new JLabel("Chức Vụ: ");
         ChucVuLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        ChucVuLabel.setBounds(550, 70, 120, 30);
+        ChucVuLabel.setBounds(315, 170, 120, 30);
         ChucVuLabel.setForeground(Color.WHITE);
         pnlStaffControl.add(ChucVuLabel);
 
@@ -165,32 +165,36 @@ public class Staff_UI extends JPanel {
         cboChucVu = new JComboBox<String>();
         cboChucVu.addItem("Nhân Viên");
         cboChucVu.addItem("Quản lý");
-        cboChucVu.setBounds(665, 70, 200, 30);
+        cboChucVu.setBounds(390, 170, 105, 30);
         Custom.setCustomComboBox(cboChucVu);
         pnlStaffControl.add(cboChucVu);
 
         tinhTrangLabel = new JLabel("Tình Trạng: ");
         tinhTrangLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        tinhTrangLabel.setBounds(550, 120, 120, 30);
+        tinhTrangLabel.setBounds(550, 70, 120, 30);
         tinhTrangLabel.setForeground(Color.WHITE);
         pnlStaffControl.add(tinhTrangLabel);
 
         cbotinhTrang = new JComboBox<String>();
         cbotinhTrang.addItem("Đang làm ");
         cbotinhTrang.addItem("Đã nghỉ");
-        cbotinhTrang.setBounds(665, 120, 200, 30);
+        cbotinhTrang.setBounds(665, 70, 200, 30);
         Custom.setCustomComboBox(cbotinhTrang);
         pnlStaffControl.add(cbotinhTrang);
 
         taiKhoanLabel = new JLabel("Tài Khoản: ");
         taiKhoanLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        taiKhoanLabel.setBounds(550, 170, 120, 30);
+        taiKhoanLabel.setBounds(550, 120, 120, 30);
         taiKhoanLabel.setForeground(Color.WHITE);
         pnlStaffControl.add(taiKhoanLabel);
 
         txtTaiKhoan = new JTextField();
-        txtTaiKhoan.setBounds(665, 170, 200, 30);
+        txtTaiKhoan.setBounds(665, 120, 200, 30);
         pnlStaffControl.add(txtTaiKhoan);
+
+        JTextField txtBaoLoi = new JTextField();
+        txtBaoLoi.setBounds(665, 170, 200, 30);
+        pnlStaffControl.add(txtBaoLoi);
         //-
         JLabel diaChiLabel = new JLabel("Địa Chỉ: ");
         diaChiLabel.setFont(new Font("Arial", Font.PLAIN, 14));
