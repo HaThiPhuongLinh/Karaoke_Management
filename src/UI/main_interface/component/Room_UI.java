@@ -27,7 +27,7 @@ public class Room_UI extends JPanel {
             setLayout(null);
             setBounds(0, 0, 1175, 770);
 
-            JLabel headerLabel = new JLabel("QUẢN LÝ KHÁCH HÀNG");
+            JLabel headerLabel = new JLabel("QUẢN LÝ PHÒNG");
             headerLabel.setBounds(470, 10, 1175, 40);
             headerLabel.setFont(new Font("Arial", Font.BOLD, 25));
             headerLabel.setForeground(Color.WHITE);
@@ -55,7 +55,7 @@ public class Room_UI extends JPanel {
 
             pnlRoomList = new JPanel();
         pnlRoomList.setBorder(new TitledBorder(
-                    new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Phòng",
+                    new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "PHÒNG",
                     TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
         pnlRoomList.setBounds(10, 70, 1120, 620);
             pnlRoomList.setOpaque(false);
@@ -75,7 +75,7 @@ public class Room_UI extends JPanel {
 
             JPanel panelDSP = new JPanel();
         panelDSP.setLayout(null);
-        panelDSP.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DANH SÁCH KHÁCH HÀNG",
+        panelDSP.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DANH SÁCH PHÒNG",
                     TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
         panelDSP.setBounds(30, 310, 1100, 320);
         panelDSP.setOpaque(false);
