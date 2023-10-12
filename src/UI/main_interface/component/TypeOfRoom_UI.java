@@ -53,7 +53,7 @@ public class TypeOfRoom_UI extends JPanel{
 
         pnlTPList = new JPanel();
         pnlTPList.setBorder(new TitledBorder(
-                new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Nhân Viên",
+                new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Loại Phòng",
                 TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
         pnlTPList.setBounds(10, 70, 1120, 620);
         pnlTPList.setOpaque(false);
@@ -149,7 +149,7 @@ public class TypeOfRoom_UI extends JPanel{
 
         JPanel panelDSLP = new JPanel();
         panelDSLP.setLayout(null);
-        panelDSLP.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DANH SÁCH NHÂN VIÊN",
+        panelDSLP.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DANH SÁCH LOẠI PHÒNG",
                 TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
         panelDSLP.setBounds(30, 290, 1100, 320);
         panelDSLP.setOpaque(false);

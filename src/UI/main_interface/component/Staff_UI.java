@@ -134,25 +134,25 @@ public class Staff_UI extends JPanel {
         btnThem = new JButton("Thêm");
         btnThem.setFont(new Font("Arial", Font.PLAIN, 15));
         Custom.setCustomBtn(btnThem);
-        btnThem.setBounds(550, 20, 100, 30);
+        btnThem.setBounds(550, 220, 100, 30);
         pnlStaffControl.add(btnThem);
 
         btnXoa = new JButton("Xóa");
         btnXoa.setFont(new Font("Arial", Font.PLAIN, 15));
-        btnXoa.setBounds(690, 20, 100, 30);
+        btnXoa.setBounds(690, 220, 100, 30);
         Custom.setCustomBtn(btnXoa);
         pnlStaffControl.add(btnXoa);
 
         btnSua = new JButton("Sửa");
         btnSua.setFont(new Font("Arial", Font.PLAIN, 15));
         Custom.setCustomBtn(btnSua);
-        btnSua.setBounds(830, 20, 100, 30);
+        btnSua.setBounds(830, 220, 100, 30);
         pnlStaffControl.add(btnSua);
 
         btnLamMoi = new JButton("Làm Mới");
         Custom.setCustomBtn(btnLamMoi);
         btnLamMoi.setFont(new Font("Arial", Font.PLAIN, 15));
-        btnLamMoi.setBounds(970, 20, 100, 30);
+        btnLamMoi.setBounds(970, 220, 100, 30);
         pnlStaffControl.add(btnLamMoi);
 
         ChucVuLabel = new JLabel("Chức Vụ: ");
@@ -194,12 +194,12 @@ public class Staff_UI extends JPanel {
         //-
         JLabel diaChiLabel = new JLabel("Địa Chỉ: ");
         diaChiLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        diaChiLabel.setBounds(550, 220, 120, 30);
+        diaChiLabel.setBounds(550, 20, 120, 30);
         diaChiLabel.setForeground(Color.WHITE);
         pnlStaffControl.add(diaChiLabel);
 
          JTextField txtDiaChi = new JTextField();
-        txtDiaChi.setBounds(665, 220, 200, 30);
+        txtDiaChi.setBounds(665, 20, 200, 30);
         pnlStaffControl.add(txtDiaChi);
 
         JPanel panelDSNV = new JPanel();
