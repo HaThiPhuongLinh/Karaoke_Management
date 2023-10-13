@@ -1,11 +1,6 @@
 package UI.main_interface.component;
 
 import UI.CustomUI.Custom;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PlotOrientation;
-
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -17,16 +12,15 @@ import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Statistic_UI extends JPanel {
+public class StatisticService_UI extends JPanel {
     private JLabel backgroundLabel,timeLabel;
 
-    public Statistic_UI(){
+    public StatisticService_UI(){
         setLayout(null);
         setBounds(0, 0, 1175, 770);
 
         //phan viet code
-
-        JLabel headerLabel = new JLabel("THỐNG KÊ DOANH THU");
+        JLabel headerLabel = new JLabel("THỐNG KÊ DỊCH VỤ");
         headerLabel.setBounds(470, 10, 1175, 40);
         headerLabel.setFont(new Font("Arial", Font.BOLD, 25));
         headerLabel.setForeground(Color.WHITE);
@@ -112,42 +106,33 @@ public class Statistic_UI extends JPanel {
         add(btnLamMoi);
 
 
-        JPanel panelDoanhThu = new JPanel();
-        panelDoanhThu.setLayout(null);
-        panelDoanhThu.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DOANH THU",
+//      danh sách dịch vụ
+        JPanel panelDSDV = new JPanel();
+        panelDSDV.setLayout(null);
+        panelDSDV.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DANH SÁCH DỊCH VỤ",
                 TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
-        panelDoanhThu.setBounds(5, 130, 1110, 480);
-        panelDoanhThu.setOpaque(false);
+        panelDSDV.setBounds(5, 130, 1110, 480);
+        panelDSDV.setOpaque(false);
 
-        JFreeChart chart = ChartFactory.createBarChart("BIỂU ĐỒ DOANH THU", "Ngày", "VND", null,
-                PlotOrientation.VERTICAL, false, false, false);
-        // chart.getPlot().setBackgroundPaint(Color.WHITE);
-        chart.setBackgroundPaint(Color.WHITE);
+        String[] colsDV = { "STT", "Mã dịch vụ", "Tên dịch vụ","Số lượng bán được" };
+        DefaultTableModel modelTableDV = new DefaultTableModel(colsDV, 0) ;
+        JScrollPane scrollPaneDV;
 
-        ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setBounds(10, 20, 850, 450);
-        chartPanel.setOpaque(false);
-        panelDoanhThu.add(chartPanel);
+        JTable tableDV = new JTable(modelTableDV);
+        tableDV.setFont(new Font("Arial", Font.BOLD, 14));
+        tableDV.setBackground(new Color(255, 255, 255, 0));
+        tableDV.setForeground(new Color(255, 255, 255));
+        tableDV.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
+        tableDV.getTableHeader().setForeground(Color.BLUE);
+//        tableLDV.getTableHeader().setBackground(new Color(255, 255, 255));
 
-//        Tổng doanh thu
-        JLabel labelTongDoanhThu = new JLabel("Tổng doanh thu:");
-        labelTongDoanhThu.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelTongDoanhThu.setBounds(880, 50, 150, 30);
-        labelTongDoanhThu.setForeground(Color.WHITE);
-        panelDoanhThu.add(labelTongDoanhThu);
-
-        JTextField textFieldTongDoanhThu = new JTextField();
-        textFieldTongDoanhThu.setBounds(880, 80, 150, 30);
-        textFieldTongDoanhThu.setColumns(3);
-        panelDoanhThu.add(textFieldTongDoanhThu);
-
-        JLabel labelVND = new JLabel("VND");
-        labelVND.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelVND.setBounds(1040, 80, 150, 30);
-        labelVND.setForeground(Color.WHITE);
-        panelDoanhThu.add(labelVND);
-
-        panel1.add(panelDoanhThu);
+        panelDSDV.add(scrollPaneDV = new JScrollPane(tableDV,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
+                BorderLayout.CENTER);
+        scrollPaneDV.setBounds(10,20,1090,450);
+        scrollPaneDV.setOpaque(false);
+        scrollPaneDV.getViewport().setOpaque(false);
+        scrollPaneDV.getViewport().setBackground(Color.WHITE);
+        panel1.add(panelDSDV);
         //
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/images/background.png"));
         backgroundLabel = new JLabel(backgroundImage);
