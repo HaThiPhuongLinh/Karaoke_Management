@@ -12,54 +12,88 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Statistic_UI extends JPanel {
-    private JLabel backgroundLabel;
+    private JLabel backgroundLabel,timeLabel;
 
     public Statistic_UI(){
         setLayout(null);
         setBounds(0, 0, 1175, 770);
 
         //phan viet code
-        JLabel labelHeader = new JLabel("THỐNG KÊ");
-        labelHeader.setBounds(520, 10, 1175, 40);
-        labelHeader.setFont(new Font("Arial", Font.BOLD, 25));
-        labelHeader.setForeground(Color.WHITE);
-        add(labelHeader);
+
+        JLabel headerLabel = new JLabel("THỐNG KÊ DOANH THU");
+        headerLabel.setBounds(470, 10, 1175, 40);
+        headerLabel.setFont(new Font("Arial", Font.BOLD, 25));
+        headerLabel.setForeground(Color.WHITE);
+        Component add = add(headerLabel);
+
+        JPanel timeNow = new JPanel();
+        timeNow.setBorder(new TitledBorder(
+                new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "",
+                TitledBorder.LEADING, TitledBorder.TOP));
+        timeNow.setBounds(12, 10, 300, 50);
+        timeNow.setOpaque(false);
+        add(timeNow);
+
+        timeLabel = new JLabel();
+        timeLabel.setFont(new Font("Arial", Font.BOLD, 33));
+        timeLabel.setForeground(Color.WHITE);
+        timeNow.add(timeLabel);
+        Timer timer = new Timer(10, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateTime();
+            }
+        });
+        timer.start();
+
+        JPanel panel1 =  new JPanel();
+        panel1.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "THÔNG TIN THỐNG KÊ",
+                TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
+        panel1.setBounds(10, 70, 1120, 620);
+        panel1.setOpaque(false);
+        add(panel1);
+
+        panel1.setLayout(null);
 
         //        Từ ngày
         JLabel labelTuNgay = new JLabel("Từ ngày:");
         labelTuNgay.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelTuNgay.setBounds(30, 50, 120, 30);
+        labelTuNgay.setBounds(120, 100, 120, 30);
         labelTuNgay.setForeground(Color.WHITE);
         add(labelTuNgay);
 
         DatePicker pickerTuNgay = new DatePicker(150);
         pickerTuNgay.setOpaque(false);
-        pickerTuNgay.setBounds(130, 50, 250, 30);
+        pickerTuNgay.setBounds(200, 100, 300, 30);
         add(pickerTuNgay);
 //      Đến ngày
         JLabel lblDenNgay = new JLabel("Đến ngày: ");
         lblDenNgay.setFont(new Font("Arial", Font.PLAIN, 14));
-        lblDenNgay.setBounds(300, 50, 120, 30);
+        lblDenNgay.setBounds(420, 100, 120, 30);
         lblDenNgay.setForeground(Color.WHITE);
         add(lblDenNgay);
 
         DatePicker pickerDenNgay = new DatePicker(150);
         pickerDenNgay.setOpaque(false);
-        pickerDenNgay.setBounds(400, 50, 250, 30);
+        pickerDenNgay.setBounds(500, 100, 300, 30);
         add(pickerDenNgay);
 
 //      Lọc theo
         JLabel labelLocTheo = new JLabel("Lọc theo:");
         labelLocTheo.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelLocTheo.setBounds(600, 50, 150, 30);
+        labelLocTheo.setBounds(720, 100, 150, 30);
         labelLocTheo.setForeground(Color.WHITE);
         add(labelLocTheo);
 
         JComboBox<String> comboBoxLocTheo = new JComboBox<String>();
         comboBoxLocTheo.addItem("Tùy chỉnh");
-        comboBoxLocTheo.setBounds(700,50,150,30);
+        comboBoxLocTheo.setBounds(800,100,200,30);
         Custom.setCustomComboBox(comboBoxLocTheo);
         add(comboBoxLocTheo);
 
@@ -67,65 +101,23 @@ public class Statistic_UI extends JPanel {
         JButton btnThongKe = new JButton("Thống kê");
         btnThongKe.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnThongKe);
-        btnThongKe.setBounds(930, 50, 150, 30);
+        btnThongKe.setBounds(400, 160, 150, 30);
         add(btnThongKe);
 
-//      Thống kê khách hàng
-        JPanel panelTKKH = new JPanel();
-        panelTKKH.setLayout(null);
-        panelTKKH.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "THỐNG KÊ KHÁCH HÀNG",
+        //        btn làm mới
+        JButton btnLamMoi = new JButton("Làm mới");
+        btnLamMoi.setFont(new Font("Arial", Font.BOLD, 14));
+        Custom.setCustomBtn(btnLamMoi);
+        btnLamMoi.setBounds(600, 160, 150, 30);
+        add(btnLamMoi);
+
+
+        JPanel panelDoanhThu = new JPanel();
+        panelDoanhThu.setLayout(null);
+        panelDoanhThu.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DOANH THU",
                 TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
-        panelTKKH.setBounds(30, 100, 520, 250);
-        panelTKKH.setOpaque(false);
-
-        String[] colsTKKH = { "STT", "Mã KH", "Tên KH","Số lần sử dụng DV" };
-        DefaultTableModel modelTableTKKH = new DefaultTableModel(colsTKKH, 0) ;
-        JScrollPane scrollPaneTKKH;
-
-        JTable tableTKKH = new JTable(modelTableTKKH);
-        tableTKKH.setFont(new Font("Arial", Font.BOLD, 14));
-        tableTKKH.setBackground(new Color(255, 255, 255, 0));
-        tableTKKH.setForeground(new Color(255, 255, 255));
-        tableTKKH.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-        tableTKKH.getTableHeader().setForeground(Color.BLUE);
-//        tableLDV.getTableHeader().setBackground(new Color(255, 255, 255));
-
-        panelTKKH.add(scrollPaneTKKH = new JScrollPane(tableTKKH,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
-                BorderLayout.CENTER);
-        scrollPaneTKKH.setBounds(10,20,500,220);
-        scrollPaneTKKH.setOpaque(false);
-        scrollPaneTKKH.getViewport().setOpaque(false);
-        scrollPaneTKKH.getViewport().setBackground(Color.WHITE);
-        add(panelTKKH);
-
-
-//      Thống kê dịch vụ
-        JPanel panelTKDV = new JPanel();
-        panelTKDV.setLayout(null);
-        panelTKDV.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "THỐNG KÊ DỊCH VỤ",
-                TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
-        panelTKDV.setBounds(600, 100, 520, 250);
-        panelTKDV.setOpaque(false);
-
-        String[] colsTKDV = { "STT", "Mã DV", "Tên DV","DV dùng nhiều nhất" };
-        DefaultTableModel modelTableTKDV = new DefaultTableModel(colsTKDV, 0) ;
-        JScrollPane scrollPaneTKDV;
-
-        JTable tableTKDV = new JTable(modelTableTKDV);
-        tableTKDV.setFont(new Font("Arial", Font.BOLD, 14));
-        tableTKDV.setBackground(new Color(255, 255, 255, 0));
-        tableTKDV.setForeground(new Color(255, 255, 255));
-        tableTKDV.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-        tableTKDV.getTableHeader().setForeground(Color.BLUE);
-//        tableLDV.getTableHeader().setBackground(new Color(255, 255, 255));
-
-        panelTKDV.add(scrollPaneTKDV = new JScrollPane(tableTKDV,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
-                BorderLayout.CENTER);
-        scrollPaneTKDV.setBounds(10,20,500,220);
-        scrollPaneTKDV.setOpaque(false);
-        scrollPaneTKDV.getViewport().setOpaque(false);
-        scrollPaneTKDV.getViewport().setBackground(Color.WHITE);
-        add(panelTKDV);
+        panelDoanhThu.setBounds(5, 130, 1110, 480);
+        panelDoanhThu.setOpaque(false);
 
         JFreeChart chart = ChartFactory.createBarChart("BIỂU ĐỒ DOANH THU", "Ngày", "VND", null,
                 PlotOrientation.VERTICAL, false, false, false);
@@ -133,32 +125,38 @@ public class Statistic_UI extends JPanel {
         chart.setBackgroundPaint(Color.WHITE);
 
         ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setBounds(30, 380, 800, 290);
+        chartPanel.setBounds(10, 20, 850, 450);
         chartPanel.setOpaque(false);
-        add(chartPanel);
+        panelDoanhThu.add(chartPanel);
 
 //        Tổng doanh thu
         JLabel labelTongDoanhThu = new JLabel("Tổng doanh thu:");
         labelTongDoanhThu.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelTongDoanhThu.setBounds(850, 400, 150, 30);
+        labelTongDoanhThu.setBounds(880, 50, 150, 30);
         labelTongDoanhThu.setForeground(Color.WHITE);
-        add(labelTongDoanhThu);
+        panelDoanhThu.add(labelTongDoanhThu);
 
         JTextField textFieldTongDoanhThu = new JTextField();
-        textFieldTongDoanhThu.setBounds(850, 430, 150, 30);
+        textFieldTongDoanhThu.setBounds(880, 80, 150, 30);
         textFieldTongDoanhThu.setColumns(3);
-        add(textFieldTongDoanhThu);
+        panelDoanhThu.add(textFieldTongDoanhThu);
 
         JLabel labelVND = new JLabel("VND");
         labelVND.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelVND.setBounds(1010, 430, 150, 30);
+        labelVND.setBounds(1040, 80, 150, 30);
         labelVND.setForeground(Color.WHITE);
-        add(labelVND);
+        panelDoanhThu.add(labelVND);
 
+        panel1.add(panelDoanhThu);
         //
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/images/background.png"));
         backgroundLabel = new JLabel(backgroundImage);
         backgroundLabel.setBounds(0, 0, getWidth(), getHeight());
         add(backgroundLabel);
+    }
+    private void updateTime() {
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        String time = sdf.format(new Date());
+        timeLabel.setText(time);
     }
 }
