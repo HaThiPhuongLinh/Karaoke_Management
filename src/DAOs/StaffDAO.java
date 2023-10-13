@@ -30,15 +30,17 @@ public class StaffDAO {
             while (rs.next()) {
                 String maNhanVien = rs.getString(1);
                 String tenNhanVien = rs.getString(2);
-                String CCCD = rs.getString(3);
-                boolean gioiTinh = rs.getBoolean(4);
-                Date ngaySinh = rs.getDate(5);
-                String soDienThoai = rs.getString(6);
-                String chucVu = rs.getString(7);
-                String trangThai = rs.getString(8);
-                String taiKhoan = rs.getString(9);
+                String soDienThoai = rs.getString(3);
+                String CCCD = rs.getString(4);
+                boolean gioiTinh = rs.getBoolean(5);
+                Date ngaySinh = rs.getDate(6);
+                String diachi =rs.getString(7);
+                String chucVu = rs.getString(8);
+                String trangThai = rs.getString(9);
+                String taiKhoan = rs.getString(10);
 
-                Staff nhanVien = new Staff(maNhanVien,tenNhanVien,CCCD,gioiTinh,ngaySinh,soDienThoai,chucVu,trangThai,taiKhoan);
+
+                Staff nhanVien = new Staff(maNhanVien,tenNhanVien,CCCD,soDienThoai,gioiTinh,ngaySinh,diachi,chucVu,trangThai,taiKhoan);
 
                 dsStaff.add(nhanVien);
             }

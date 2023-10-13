@@ -1,5 +1,8 @@
 package UI.main_interface.component;
 
+import ConnectDB.ConnectDB;
+import DAOs.CustomerDAO;
+import Entity.Customer;
 import UI.CustomUI.Custom;
 
 import javax.swing.*;
@@ -13,15 +16,23 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class SearchingCustomer_UI extends JPanel {
+    private DefaultTableModel modelTableKH;
     private JLabel backgroundLabel, timeLabel, search1Label, search2Label, search3Label;
     private JTextField txtSearch1, txtSearch2, txtSearch3;
     private JPanel timeNow, pnlCusList, pnlCusControl, pnlCusListRight;
     private DefaultTableModel tableModel;
     private JButton btnTim;
+    private CustomerDAO CustomerDAO;
 
     public SearchingCustomer_UI() {
         setLayout(null);
         setBounds(0, 0, 1175, 770);
+        CustomerDAO = new CustomerDAO();
+        try {
+            ConnectDB.getInstance().connect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         //phan viet code
         JLabel headerLabel = new JLabel("TÌM KIẾM KHÁCH HÀNG");
@@ -116,7 +127,7 @@ public class SearchingCustomer_UI extends JPanel {
         panelDSKH.setOpaque(false);
 
         String[] colsKH = {"STT", "Mã KH", "Tên KH", "SDT", "CCCD", "Giới Tính", "Ngày Sinh"};
-        DefaultTableModel modelTableKH = new DefaultTableModel(colsKH, 0);
+        modelTableKH = new DefaultTableModel(colsKH, 0);
         JScrollPane scrollPaneKH;
 
         JTable tableKH = new JTable(modelTableKH);
@@ -125,6 +136,7 @@ public class SearchingCustomer_UI extends JPanel {
         tableKH.setForeground(new Color(255, 255, 255));
         tableKH.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
         tableKH.getTableHeader().setForeground(Color.BLUE);
+        Custom.getInstance().setCustomTable(tableKH);
 
         panelDSKH.add(scrollPaneKH = new JScrollPane(tableKH, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
                 BorderLayout.CENTER);
@@ -133,6 +145,7 @@ public class SearchingCustomer_UI extends JPanel {
         scrollPaneKH.getViewport().setOpaque(false);
         scrollPaneKH.getViewport().setBackground(Color.WHITE);
         pnlCusList.add(panelDSKH);
+        loadKH();
 
 
         //
@@ -148,4 +161,24 @@ public class SearchingCustomer_UI extends JPanel {
         timeLabel.setText(time);
     }
 
+    public void loadKH() {
+        int i = 1;
+        String gt = "";
+        for (Customer customer : CustomerDAO.getAllKhachHang()) {
+
+
+            if (customer.isGioiTinh() == true) {
+
+                gt = "Nam";
+
+            } else {
+                gt = "Nữ";
+            }
+            Object[] rowData = {i, customer.getMaKhachHang(), customer.getTenKhachHang(), customer.getSoDienThoai(), customer.getCCCD(), gt, customer.getNgaySinh()};
+            modelTableKH.addRow(rowData);
+            i++;
+
+        }
+
+    }
 }

@@ -1,5 +1,8 @@
 package UI.main_interface.component;
 
+import ConnectDB.ConnectDB;
+import DAOs.StaffDAO;
+import Entity.Staff;
 import UI.CustomUI.Custom;
 
 import javax.swing.*;
@@ -14,6 +17,8 @@ import java.util.Date;
 
 public class SearchingStaff_UI extends JPanel {
 
+    private  JTable tableNV;
+    private  DefaultTableModel modelTableNV;
     private JLabel backgroundLabel, timeLabel, search1Label, search2Label, search3Label, search4Label;
     private JPanel timeNow, pnlStaffList, pnlStaffControl, panelDSNV;
     private DefaultTableModel tableModelNV;
@@ -21,10 +26,17 @@ public class SearchingStaff_UI extends JPanel {
     private JCheckBox cb;
     private JTextField txtSearch1, txtSearch2, txtSearch3;
     private JButton btnTim;
+    private StaffDAO StaffDAO;
 
     public SearchingStaff_UI() {
         setLayout(null);
         setBounds(0, 0, 1175, 770);
+        StaffDAO = new StaffDAO();
+        try {
+            ConnectDB.getInstance().connect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         JLabel headerLabel = new JLabel("TÌM KIẾM NHÂN VIÊN");
         headerLabel.setBounds(470, 10, 1175, 40);
@@ -132,16 +144,17 @@ public class SearchingStaff_UI extends JPanel {
         panelDSNV.setBounds(30, 290, 1100, 320);
         panelDSNV.setOpaque(false);
 
-        String[] colsNV = {"STT", "Mã NV", "Tên NV", "SDT", "CCCD", "Giới Tính", "Ngày Sinh", "Chức Vụ", "Tình Trạng", "Tài Khoản","Địa Chỉ"};
-        DefaultTableModel modelTableNV = new DefaultTableModel(colsNV, 0);
+        String[] colsNV = { "Mã NV", "Tên NV", "SDT", "CCCD", "Giới Tính", "Ngày Sinh", "Chức Vụ", "Tình Trạng", "Tài Khoản","Địa Chỉ"};
+         modelTableNV = new DefaultTableModel(colsNV, 0);
         JScrollPane scrollPaneNV;
 
-        JTable tableNV = new JTable(modelTableNV);
+         tableNV = new JTable(modelTableNV);
         tableNV.setFont(new Font("Arial", Font.BOLD, 14));
         tableNV.setBackground(new Color(255, 255, 255, 0));
         tableNV.setForeground(new Color(255, 255, 255));
         tableNV.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
         tableNV.getTableHeader().setForeground(Color.BLUE);
+        Custom.getInstance().setCustomTable(tableNV);
 
         panelDSNV.add(scrollPaneNV = new JScrollPane(tableNV, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
                 BorderLayout.CENTER);
@@ -150,6 +163,7 @@ public class SearchingStaff_UI extends JPanel {
         scrollPaneNV.getViewport().setOpaque(false);
         scrollPaneNV.getViewport().setBackground(Color.WHITE);
         pnlStaffList.add(panelDSNV);
+        loadNV();
 
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/images/background.png"));
         backgroundLabel = new JLabel(backgroundImage);
@@ -162,5 +176,26 @@ public class SearchingStaff_UI extends JPanel {
         String time = sdf.format(new Date());
         timeLabel.setText(time);
     }
+    public void loadNV(){
+
+        String gt ="";
+        for (Staff staff : StaffDAO.getAllStaff()) {
+
+
+            if(staff.isGioiTinh()==true){
+
+                gt="Nam" ;
+
+            }
+            else{
+                gt="Nữ";
+            }
+            Object[] rowData = { staff.getMaNhanVien(),staff.getTenNhanVien(),staff.getCCCD(),staff.getSoDienThoai(),gt,staff.getNgaySinh(),staff.getChucVu(),staff.getTrangThai(),staff.getTaiKhoan(),staff.getDiaChi()};
+            modelTableNV.addRow(rowData);
+
+
+        }
+    }
+
 
 }

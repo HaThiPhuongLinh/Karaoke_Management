@@ -5,13 +5,15 @@ import java.util.Date;
 public class Staff {
     private String maNhanVien;
     private String tenNhanVien;
+    private String soDienThoai;
     private String CCCD;
     private boolean gioiTinh;
     private Date ngaySinh;
-    private String soDienThoai;
+    private String diaChi;
     private String chucVu;
     private String trangThai;
     private String taiKhoan;
+
 
     public Staff(){
 
@@ -21,13 +23,14 @@ public class Staff {
         this.maNhanVien = maNhanVien;
     }
 
-    public Staff(String maNhanVien, String tenNhanVien, String CCCD, boolean gioiTinh, Date ngaySinh, String soDienThoai, String chucVu, String trangThai, String taiKhoan){
+    public Staff(String maNhanVien, String tenNhanVien, String soDienThoai, String CCCD, boolean gioiTinh, Date ngaySinh, String diaChi, String chucVu, String trangThai, String taiKhoan) {
         this.maNhanVien = maNhanVien;
         this.tenNhanVien = tenNhanVien;
+        this.soDienThoai = soDienThoai;
         this.CCCD = CCCD;
         this.gioiTinh = gioiTinh;
         this.ngaySinh = ngaySinh;
-        this.soDienThoai = soDienThoai;
+        this.diaChi = diaChi;
         this.chucVu = chucVu;
         this.trangThai = trangThai;
         this.taiKhoan = taiKhoan;
@@ -101,15 +104,29 @@ public class Staff {
         this.gioiTinh = gioiTinh;
     }
 
+    public boolean isGioiTinh() {
+        return gioiTinh;
+    }
+
+    public String getDiaChi() {
+        return diaChi;
+    }
+
+    public void setDiaChi(String diaChi) {
+        this.diaChi = diaChi;
+    }
+
+
     @Override
     public String toString() {
         return "Staff{" +
                 "maNhanVien='" + maNhanVien + '\'' +
                 ", tenNhanVien='" + tenNhanVien + '\'' +
-                ", cmnd='" + CCCD + '\'' +
+                ", soDienThoai='" + soDienThoai + '\'' +
+                ", CCCD='" + CCCD + '\'' +
                 ", gioiTinh=" + gioiTinh +
                 ", ngaySinh=" + ngaySinh +
-                ", soDienThoai='" + soDienThoai + '\'' +
+                ", diaChi='" + diaChi + '\'' +
                 ", chucVu='" + chucVu + '\'' +
                 ", trangThai='" + trangThai + '\'' +
                 ", taiKhoan='" + taiKhoan + '\'' +
