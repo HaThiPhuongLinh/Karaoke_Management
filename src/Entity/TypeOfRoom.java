@@ -2,6 +2,7 @@ package Entity;
 
 import DAOs.RoomDAO;
 import DAOs.TypeOfRoomDAO;
+import DAOs.TypeOfServiceDAO;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,7 +16,6 @@ public class TypeOfRoom {
     public TypeOfRoom(ResultSet rs) throws SQLException {
         this(rs.getString(1), rs.getString(2), rs.getInt(3));
     }
-
 
     public TypeOfRoom(String maLoaiPhong) {
         this.maLoaiPhong = maLoaiPhong;
