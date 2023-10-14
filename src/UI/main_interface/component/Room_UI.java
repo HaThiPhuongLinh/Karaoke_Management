@@ -12,6 +12,7 @@ import UI.CustomUI.Custom;
 
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -20,22 +21,20 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.table.TableColumnModel;
 
 public class Room_UI extends JPanel {
 
-    private  JTable tableP;
-    private  DefaultTableModel modelTableP;
+    private JTable tableP;
+    private DefaultTableModel modelTableP;
     private JPanel pnlRoomControl, pnlRoomList, timeNow;
-       private JLabel backgroundLabel, timeLabel;
-       private RoomDAO RoomDAO;
+    private JLabel backgroundLabel, timeLabel;
+    private RoomDAO RoomDAO;
 
 
-
-
-
-    public Room_UI(){
-            setLayout(null);
-            setBounds(0, 0, 1175, 770);
+    public Room_UI() {
+        setLayout(null);
+        setBounds(0, 0, 1175, 770);
         RoomDAO = new RoomDAO();
         try {
             ConnectDB.getInstance().connect();
@@ -43,41 +42,40 @@ public class Room_UI extends JPanel {
             e.printStackTrace();
         }
 
-            JLabel headerLabel = new JLabel("QUẢN LÝ PHÒNG");
-            headerLabel.setBounds(470, 10, 1175, 40);
-            headerLabel.setFont(new Font("Arial", Font.BOLD, 25));
-            headerLabel.setForeground(Color.WHITE);
-            add(headerLabel);
+        JLabel headerLabel = new JLabel("QUẢN LÝ PHÒNG");
+        headerLabel.setBounds(470, 10, 1175, 40);
+        headerLabel.setFont(new Font("Arial", Font.BOLD, 25));
+        headerLabel.setForeground(Color.WHITE);
+        add(headerLabel);
 
-            timeNow = new JPanel();
-            timeNow.setBorder(new TitledBorder(
-                    new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "",
-                    TitledBorder.LEADING, TitledBorder.TOP));
-            timeNow.setBounds(12, 10, 300, 50);
-            timeNow.setOpaque(false);
-            add(timeNow);
+        timeNow = new JPanel();
+        timeNow.setBorder(new TitledBorder(
+                new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "",
+                TitledBorder.LEADING, TitledBorder.TOP));
+        timeNow.setBounds(12, 10, 300, 50);
+        timeNow.setOpaque(false);
+        add(timeNow);
 
-            timeLabel = new JLabel();
-            timeLabel.setFont(new Font("Arial", Font.BOLD, 33));
-            timeLabel.setForeground(Color.WHITE);
-            timeNow.add(timeLabel);
-            Timer timer = new Timer(10, new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    updateTime();
-                }
-            });
-            timer.start();
+        timeLabel = new JLabel();
+        timeLabel.setFont(new Font("Arial", Font.BOLD, 33));
+        timeLabel.setForeground(Color.WHITE);
+        timeNow.add(timeLabel);
+        Timer timer = new Timer(10, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateTime();
+            }
+        });
+        timer.start();
 
-            pnlRoomList = new JPanel();
+        pnlRoomList = new JPanel();
         pnlRoomList.setBorder(new TitledBorder(
-                    new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "PHÒNG",
-                    TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
+                new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "PHÒNG",
+                TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
         pnlRoomList.setBounds(10, 70, 1120, 620);
-            pnlRoomList.setOpaque(false);
-            add(pnlRoomList);
+        pnlRoomList.setOpaque(false);
+        add(pnlRoomList);
         pnlRoomList.setLayout(new BorderLayout(0, 0));
-
 
         pnlRoomControl = new JPanel();
         pnlRoomControl.setOpaque(false);
@@ -86,21 +84,18 @@ public class Room_UI extends JPanel {
         pnlRoomControl.setLayout(null);
         pnlRoomControl.setPreferredSize(new Dimension(1100, 230));
 
-
-
-
-            JPanel panelDSP = new JPanel();
+        JPanel panelDSP = new JPanel();
         panelDSP.setLayout(null);
         panelDSP.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DANH SÁCH PHÒNG",
-                    TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
+                TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
         panelDSP.setBounds(30, 310, 1100, 320);
         panelDSP.setOpaque(false);
 
-            String[] colsP = { "STT", "Mã Phòng","Mã Loại Phòng","Vị Trí","Tình Trạng","Giá Phòng" };
-             modelTableP = new DefaultTableModel(colsP, 0) ;
-            JScrollPane scrollPaneP;
+        String[] colsP = {"STT", "Mã Phòng", "Loại Phòng", "Vị Trí", "Tình Trạng", "Giá Phòng"};
+        modelTableP = new DefaultTableModel(colsP, 0);
+        JScrollPane scrollPaneP;
 
-             tableP = new JTable(modelTableP);
+        tableP = new JTable(modelTableP);
         tableP.setFont(new Font("Arial", Font.BOLD, 14));
         tableP.setBackground(new Color(255, 255, 255, 0));
         tableP.setForeground(new Color(255, 255, 255));
@@ -109,19 +104,13 @@ public class Room_UI extends JPanel {
 
         Custom.getInstance().setCustomTable(tableP);
 
-
-        panelDSP.add(scrollPaneP = new JScrollPane(tableP,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
-                    BorderLayout.CENTER);
-            scrollPaneP.setBounds(10,20,1090,330);
-            scrollPaneP.setOpaque(false);
-            scrollPaneP.getViewport().setOpaque(false);
-            scrollPaneP.getViewport().setBackground(Color.WHITE);
+        panelDSP.add(scrollPaneP = new JScrollPane(tableP, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
+                BorderLayout.CENTER);
+        scrollPaneP.setBounds(10, 20, 1090, 330);
+        scrollPaneP.setOpaque(false);
+        scrollPaneP.getViewport().setOpaque(false);
+        scrollPaneP.getViewport().setBackground(Color.WHITE);
         pnlRoomList.add(panelDSP);
-
-
-
-
-
 
         //        Mã phòng
         JLabel labelMaPhong = new JLabel("Mã Phòng:");
@@ -147,7 +136,6 @@ public class Room_UI extends JPanel {
         textFieldVitri.setColumns(10);
         pnlRoomControl.add(textFieldVitri);
 
-
         //      Loại phòng
         JLabel labelLoaiPhong = new JLabel("Loại phòng:");
         labelLoaiPhong.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -157,22 +145,22 @@ public class Room_UI extends JPanel {
 
         JComboBox<String> comboBoxLoaiPhong = new JComboBox<String>();
         comboBoxLoaiPhong.addItem("Tất cả");
-        comboBoxLoaiPhong.setBounds(145,120,311,30);
+        comboBoxLoaiPhong.setBounds(145, 120, 311, 30);
         Custom.setCustomComboBox(comboBoxLoaiPhong);
         pnlRoomControl.add(comboBoxLoaiPhong);
 
         //tinh trang
-        JLabel labelTinhTrang= new JLabel("Tình Trạng:");
+        JLabel labelTinhTrang = new JLabel("Tình Trạng:");
         labelTinhTrang.setFont(new Font("Arial", Font.PLAIN, 14));
         labelTinhTrang.setBounds(30, 170, 120, 30);
         labelTinhTrang.setForeground(Color.WHITE);
         pnlRoomControl.add(labelTinhTrang);
 
         JComboBox<String> comboBoxTinhTrang = new JComboBox<String>();
-        comboBoxTinhTrang .addItem("Tất cả");
-        comboBoxTinhTrang .setBounds(145,170,311,30);
-        Custom.setCustomComboBox(comboBoxTinhTrang );
-        pnlRoomControl.add(comboBoxTinhTrang );
+        comboBoxTinhTrang.addItem("Tất cả");
+        comboBoxTinhTrang.setBounds(145, 170, 311, 30);
+        Custom.setCustomComboBox(comboBoxTinhTrang);
+        pnlRoomControl.add(comboBoxTinhTrang);
 
         //      Lọc theo
         JLabel labelLocTheoLP = new JLabel("Lọc theo:");
@@ -185,7 +173,7 @@ public class Room_UI extends JPanel {
         comboBoxLocTheoLP.addItem("Tất cả");
         comboBoxLocTheoLP.addItem("Tình Trạng");
         comboBoxLocTheoLP.addItem("Loại Phòng");
-        comboBoxLocTheoLP.setBounds(665,70,311,30);
+        comboBoxLocTheoLP.setBounds(665, 70, 311, 30);
         Custom.setCustomComboBox(comboBoxLocTheoLP);
         pnlRoomControl.add(comboBoxLocTheoLP);
 
@@ -205,9 +193,6 @@ public class Room_UI extends JPanel {
         textFieldBaoLoi.setBounds(665, 120, 311, 30);
         textFieldBaoLoi.setColumns(6);
         pnlRoomControl.add(textFieldBaoLoi);
-
-//
-
 
         //        btn thêm
         JButton btnThêmP = new JButton("Thêm");
@@ -237,35 +222,24 @@ public class Room_UI extends JPanel {
         btnlamMoiP.setBounds(970, 170, 100, 30);
         pnlRoomControl.add(btnlamMoiP);
 
-
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/images/background.png"));
         backgroundLabel = new JLabel(backgroundImage);
         backgroundLabel.setBounds(0, 0, getWidth(), getHeight());
         add(backgroundLabel);
         loadP();
-
-
     }
+
     private void updateTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String time = sdf.format(new Date());
         timeLabel.setText(time);
     }
-    public void loadP(){
-        int i=1;
 
+
+    public void loadP() {
+        int i = 1;
         for (Room room : RoomDAO.getRoomList()) {
-
-
-//            if(customer.isGioiTinh()==true){
-//
-//                gt="Nam" ;
-//
-//            }
-//            else{
-//                gt="Nữ";
-//            }
-            Object[] rowData = { i,room.getMaPhong(),room.getLoaiPhong().getTenLoaiPhong(),room.getViTri(),room.getTinhTrang(),room.getGiaPhong()};
+            Object[] rowData = {i, room.getMaPhong(), room.getLoaiPhong().getTenLoaiPhong(), room.getViTri(), room.getTinhTrang(), room.getGiaPhong()};
             modelTableP.addRow(rowData);
             i++;
 
