@@ -377,7 +377,7 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
         btnRoomList[index].setPreferredSize(new Dimension(110, 110));
         btnRoomList[index].setIcon(new ImageIcon(getClass().getResource("/images/room.png")));
         btnRoomList[index].setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnRoomList[index].setBackground(Color.decode("#00a65a"));
+        btnRoomList[index].setBackground(Color.decode("#008000"));
         pnlShowRoom.revalidate();
         pnlShowRoom.repaint();
     }
@@ -443,17 +443,7 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
                     Room roomActiveE = roomDAO.getRoomByRoomId(roomID);
                     if (roomActiveE == null) roomActiveE = new Room();
                     String roomStatus = roomActiveE.getTinhTrang();
-                    switch (roomStatus) {
-                        case "Trống":
-                            btnRoomList[selection].setBackground(Color.decode("#004678"));
-                            break;
-                        case "Chờ":
-                            btnRoomList[selection].setBackground(Color.decode("#A3AB00"));
-                            break;
-                        default:
-                            btnRoomList[selection].setBackground(Color.decode("#00a65a"));
-                            break;
-                    }
+                    btnRoomList[selection].setBackground(Color.decode("#008000"));
                     btnRoomList[selection].setForeground(Color.WHITE);
                 }
             });

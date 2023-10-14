@@ -338,19 +338,19 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
         btnRoomList[index].setCursor(new Cursor(Cursor.HAND_CURSOR));
         switch (statusP) {
             case "Trống":
-                btnRoomList[index].setBackground(Color.decode("#004678"));
+                btnRoomList[index].setBackground(Color.decode("#5F009D"));
                 btnBookRoom.setEnabled(true);
                 btnChooseCustomer.setEnabled(true);
                 btnSwitchRoom.setEnabled(false);
                 break;
             case "Chờ":
-                btnRoomList[index].setBackground(Color.decode("#A3AB00"));
+                btnRoomList[index].setBackground(Color.decode("#0D9EA1"));
                 btnBookRoom.setEnabled(true);
                 btnChooseCustomer.setEnabled(true);
                 btnSwitchRoom.setEnabled(false);
                 break;
             default:
-                btnRoomList[index].setBackground(Color.decode("#00a65a"));
+                btnRoomList[index].setBackground(Color.decode("#008000"));
                 btnBookRoom.setEnabled(false);
                 btnChooseCustomer.setEnabled(false);
                 btnSwitchRoom.setEnabled(true);
@@ -428,13 +428,13 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
                     String status = roomActiveE.getTinhTrang();
                     switch (status) {
                         case "Trống":
-                            btnRoomList[selection].setBackground(Color.decode("#004678"));
+                            btnRoomList[selection].setBackground(Color.decode("#5F009D"));
                             break;
                         case "Chờ":
-                            btnRoomList[selection].setBackground(Color.decode("#A3AB00"));
+                            btnRoomList[selection].setBackground(Color.decode("#0D9EA1"));
                             break;
                         default:
-                            btnRoomList[selection].setBackground(Color.decode("#00a65a"));
+                            btnRoomList[selection].setBackground(Color.decode("#008000"));
                             break;
                     }
                     btnRoomList[selection].setForeground(Color.WHITE);
@@ -477,7 +477,6 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
             roomList = roomDAO.getListAvailableRoomByRoomTypeName(roomTypeName);
         }
     }
-
 
     /**
      * Hiển thị danh sách phòng dựa trên trạng thái
