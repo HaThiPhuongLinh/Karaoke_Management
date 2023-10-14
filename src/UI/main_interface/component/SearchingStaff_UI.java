@@ -9,6 +9,7 @@ import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,8 +18,8 @@ import java.util.Date;
 
 public class SearchingStaff_UI extends JPanel {
 
-    private  JTable tableNV;
-    private  DefaultTableModel modelTableNV;
+    private JTable tableNV;
+    private DefaultTableModel modelTableNV;
     private JLabel backgroundLabel, timeLabel, search1Label, search2Label, search3Label, search4Label;
     private JPanel timeNow, pnlStaffList, pnlStaffControl, panelDSNV;
     private DefaultTableModel tableModelNV;
@@ -45,9 +46,7 @@ public class SearchingStaff_UI extends JPanel {
         Component add = add(headerLabel);
 
         timeNow = new JPanel();
-        timeNow.setBorder(new TitledBorder(
-                new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "",
-                TitledBorder.LEADING, TitledBorder.TOP));
+        timeNow.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "", TitledBorder.LEADING, TitledBorder.TOP));
         timeNow.setBounds(12, 10, 300, 50);
         timeNow.setOpaque(false);
         add(timeNow);
@@ -65,9 +64,7 @@ public class SearchingStaff_UI extends JPanel {
         timer.start();
 
         pnlStaffList = new JPanel();
-        pnlStaffList.setBorder(new TitledBorder(
-                new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Nhân Viên",
-                TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
+        pnlStaffList.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Nhân Viên", TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
         pnlStaffList.setBounds(10, 70, 1120, 620);
         pnlStaffList.setOpaque(false);
         add(pnlStaffList);
@@ -108,7 +105,7 @@ public class SearchingStaff_UI extends JPanel {
 
         search3Label = new JLabel("Tìm Theo CCCD: ");
         search3Label.setFont(new Font("Arial", Font.PLAIN, 14));
-            search3Label.setBounds(330, 115, 120, 30);
+        search3Label.setBounds(330, 115, 120, 30);
         search3Label.setForeground(Color.WHITE);
         pnlStaffControl.add(search3Label);
 
@@ -139,16 +136,15 @@ public class SearchingStaff_UI extends JPanel {
 
         JPanel panelDSNV = new JPanel();
         panelDSNV.setLayout(null);
-        panelDSNV.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DANH SÁCH NHÂN VIÊN",
-                TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
+        panelDSNV.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DANH SÁCH NHÂN VIÊN", TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
         panelDSNV.setBounds(30, 290, 1100, 320);
         panelDSNV.setOpaque(false);
 
-        String[] colsNV = { "Mã NV", "Tên NV", "SDT", "CCCD", "Giới Tính", "Ngày Sinh", "Chức Vụ", "Tình Trạng", "Tài Khoản","Địa Chỉ"};
-         modelTableNV = new DefaultTableModel(colsNV, 0);
+        String[] colsNV = {"Mã NV", "Tên NV", "SDT", "CCCD", "Giới Tính", "Ngày Sinh", "Chức Vụ", "Tình Trạng", "Tài Khoản", "Địa Chỉ"};
+        modelTableNV = new DefaultTableModel(colsNV, 0);
         JScrollPane scrollPaneNV;
 
-         tableNV = new JTable(modelTableNV);
+        tableNV = new JTable(modelTableNV);
         tableNV.setFont(new Font("Arial", Font.BOLD, 14));
         tableNV.setBackground(new Color(255, 255, 255, 0));
         tableNV.setForeground(new Color(255, 255, 255));
@@ -156,8 +152,7 @@ public class SearchingStaff_UI extends JPanel {
         tableNV.getTableHeader().setForeground(Color.BLUE);
         Custom.getInstance().setCustomTable(tableNV);
 
-        panelDSNV.add(scrollPaneNV = new JScrollPane(tableNV, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
-                BorderLayout.CENTER);
+        panelDSNV.add(scrollPaneNV = new JScrollPane(tableNV, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
         scrollPaneNV.setBounds(10, 20, 1090, 330);
         scrollPaneNV.setOpaque(false);
         scrollPaneNV.getViewport().setOpaque(false);
@@ -169,6 +164,8 @@ public class SearchingStaff_UI extends JPanel {
         backgroundLabel = new JLabel(backgroundImage);
         backgroundLabel.setBounds(0, 0, getWidth(), getHeight());
         add(backgroundLabel);
+
+        reSizeColumnTableStaff();
     }
 
     private void updateTime() {
@@ -176,24 +173,27 @@ public class SearchingStaff_UI extends JPanel {
         String time = sdf.format(new Date());
         timeLabel.setText(time);
     }
-    public void loadNV(){
+    private void reSizeColumnTableStaff() {
+        TableColumnModel tcm = tableNV.getColumnModel();
 
-        String gt ="";
+        tcm.getColumn(0).setPreferredWidth(50);
+        tcm.getColumn(1).setPreferredWidth(120);
+        tcm.getColumn(2).setPreferredWidth(80);
+        tcm.getColumn(3).setPreferredWidth(100);
+        tcm.getColumn(4).setPreferredWidth(60);
+        tcm.getColumn(8).setPreferredWidth(100);
+        tcm.getColumn(9).setPreferredWidth(90);
+    }
+    public void loadNV() {
+        String gt = "";
         for (Staff staff : StaffDAO.getAllStaff()) {
-
-
-            if(staff.isGioiTinh()==true){
-
-                gt="Nam" ;
-
+            if (staff.isGioiTinh() == true) {
+                gt = "Nam";
+            } else {
+                gt = "Nữ";
             }
-            else{
-                gt="Nữ";
-            }
-            Object[] rowData = { staff.getMaNhanVien(),staff.getTenNhanVien(),staff.getCCCD(),staff.getSoDienThoai(),gt,staff.getNgaySinh(),staff.getChucVu(),staff.getTrangThai(),staff.getTaiKhoan(),staff.getDiaChi()};
+            Object[] rowData = {staff.getMaNhanVien(), staff.getTenNhanVien(), staff.getCCCD(), staff.getSoDienThoai(), gt, staff.getNgaySinh(), staff.getChucVu(), staff.getTrangThai(), staff.getTaiKhoan(), staff.getDiaChi()};
             modelTableNV.addRow(rowData);
-
-
         }
     }
 
