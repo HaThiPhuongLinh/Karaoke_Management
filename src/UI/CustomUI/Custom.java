@@ -26,11 +26,11 @@ public class Custom {
     }
 
     public static void setCustomTable(JTable tbl) {
-        tbl.setFont(new Font("Arial", Font.PLAIN, 13));
+        tbl.setFont(new Font("Arial", Font.PLAIN, 14));
         tbl.setForeground(Color.WHITE);
-        tbl.setBackground(new Color(0, 41, 169));
-        tbl.setSelectionBackground(Color.decode("#6666FF"));
-        tbl.setRowHeight(25);
+        tbl.setBackground(Color.decode("#5F009D"));
+        tbl.setSelectionBackground(Color.decode("#232D31"));
+        tbl.setRowHeight(27);
         tbl.setShowGrid(true);
         tbl.setGridColor(Color.WHITE);
         tbl.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
