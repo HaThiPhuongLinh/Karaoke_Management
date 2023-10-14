@@ -279,7 +279,7 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
         backgroundLabel.setBounds(0, 0, getWidth(), getHeight());
         add(backgroundLabel);
 
-        ArrayList<Room> roomList = roomDAO.getAllPhong();
+        ArrayList<Room> roomList = roomDAO.getRoomList();
         LoadRoomList(roomList);
 
         cboRoomType.addActionListener(new ActionListener() {
@@ -313,7 +313,7 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
      * @param roomID1 {@code ArrayList<Room>}: ID phòng
      */
     private void loadRoom(String roomID1) {
-        Room room = roomDAO.getRoomByID(roomID1);
+        Room room = roomDAO.getRoomByRoomId(roomID1);
         if (room == null) room = new Room();
         String statusP = room.getTinhTrang();
         String roomID = room.getMaPhong();
@@ -377,14 +377,18 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
         for (int i = 0; i < sizeListRoom; i++) {
             int selection = i;
             String roomID = listRoom.get(i).getMaPhong();
-            String typeRoom = listRoom.get(i).getLoaiPhong().getTenLoaiPhong();
+            //String typeRoom = listRoom.get(i).getLoaiPhong().getTenLoaiPhong();
             String location2 = listRoom.get(i).getViTri();
             btnRoomList[selection] = new JButton("");
             loadRoom(roomID);
             btnRoomList[selection].setBorder(lineGray);
             if ((i + 1) % 5 == 0) {
                 heightTable += 130;
-                pnlShowRoom.setPreferredSize(new Dimension(0, heightTable));
+                pnlShowRoom.setPreferredSize(new Dimension(90, heightTable));
+            }
+            String roomName = txtRoom.getText();
+            if (roomID.equalsIgnoreCase(roomName)) {
+                location = i;
             }
             btnRoomList[selection].addActionListener(new ActionListener() {
                 @Override
@@ -392,18 +396,20 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
                     if (location != -1) {
                         btnRoomList[location].setBorder(lineGray);
                     }
+
                     String roomTypeName = typeOfRoomDAO.getRoomTypeNameByRoomID(roomID);
-                    cboRoomType.setSelectedItem(roomTypeName);
-
-                    String roomStatus = roomDAO.getSatusRoomByID(roomID);
-                    cboStatus.setSelectedItem(roomStatus);
-
+                    if (roomTypeName.equals("") || roomTypeName.isEmpty() || roomTypeName == null) {
+                        roomTypeName = "Tất cả";
+                    }
+                    loadCboRoom(roomTypeName);
                     location = selection;
                     btnRoomList[selection].setBorder(lineRed);
                     txtRoom.setText(roomID);
                     txtLocation.setText(location2);
-                    txtTypeRoom.setText(typeRoom);
-
+                    Room roomActiveE = roomDAO.getRoomByRoomId(roomID);
+                    if (roomActiveE == null)
+                        roomActiveE = new Room();
+                    txtTypeRoom.setText(roomActiveE.getLoaiPhong().getTenLoaiPhong());
                 }
             });
 
@@ -417,7 +423,7 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
 
                 @Override
                 public void mouseExited(MouseEvent e) {
-                    Room roomActiveE = roomDAO.getRoomByID(roomID);
+                    Room roomActiveE = roomDAO.getRoomByRoomId(roomID);
                     if (roomActiveE == null) roomActiveE = new Room();
                     String status = roomActiveE.getTinhTrang();
                     switch (status) {
@@ -436,6 +442,10 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
             });
             pnlShowRoom.add(btnRoomList[selection]);
         }
+        if (location != -1 && location < btnRoomList.length) {
+            btnRoomList[location].setBorder(lineRed);
+            btnRoomList[location].doClick();
+        }
     }
 
     /**
@@ -446,13 +456,28 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
     private void loadRoomListByRoomTypeName(String roomTypeName) {
         ArrayList<Room> dataList = new ArrayList<Room>();
         if (roomTypeName.equalsIgnoreCase("Tất cả"))
-            dataList = roomDAO.getAllPhong();
+            dataList = roomDAO.getRoomList();
         else {
             location = -1;
             dataList = roomDAO.getRoomsByType(roomTypeName);
         }
         LoadRoomList(dataList);
     }
+
+    /**
+     * Hiển thị danh sách phòng khi biết loại phòng trên comboBox Phòng
+     *
+     * @param roomTypeName {@code String}: loại tên phòng
+     */
+    private void loadCboRoom(String roomTypeName) {
+        ArrayList<Room> roomList = new ArrayList<Room>();
+        if (roomTypeName.equalsIgnoreCase("Tất cả")) {
+            roomList = roomDAO.getListAvailableRoom();
+        } else {
+            roomList = roomDAO.getListAvailableRoomByRoomTypeName(roomTypeName);
+        }
+    }
+
 
     /**
      * Hiển thị danh sách phòng dựa trên trạng thái
@@ -462,7 +487,7 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
     private void loadRoomListByRoomStatus(String statusRoom) {
         ArrayList<Room> dataList = new ArrayList<Room>();
         if (statusRoom.equalsIgnoreCase("Tất cả"))
-            dataList = roomDAO.getAllPhong();
+            dataList = roomDAO.getRoomList();
         else {
             location = -1;
             dataList = roomDAO.getRoomsByStatus(statusRoom);

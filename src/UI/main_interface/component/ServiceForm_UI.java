@@ -313,7 +313,7 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
         backgroundLabel.setBounds(0, 0, getWidth(), getHeight());
         add(backgroundLabel);
 
-        ArrayList<Room> roomList = roomDAO.getAllPhong();
+        ArrayList<Room> roomList = roomDAO.getRoomList();
         loadRoomList();
         reSizeColumnTableService();
         loadCboService();
@@ -354,7 +354,7 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
     }
 
     private void loadRoom(String roomID1) {
-        Room room = roomDAO.getRoomByID(roomID1);
+        Room room = roomDAO.getRoomByRoomId(roomID1);
         if (room == null) room = new Room();
         String statusP = room.getTinhTrang();
         String roomID = room.getMaPhong();
@@ -440,7 +440,7 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
 
                 @Override
                 public void mouseExited(MouseEvent e) {
-                    Room roomActiveE = roomDAO.getRoomByID(roomID);
+                    Room roomActiveE = roomDAO.getRoomByRoomId(roomID);
                     if (roomActiveE == null) roomActiveE = new Room();
                     String roomStatus = roomActiveE.getTinhTrang();
                     switch (roomStatus) {

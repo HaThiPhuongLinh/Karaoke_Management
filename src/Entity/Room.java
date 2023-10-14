@@ -13,21 +13,18 @@ public class Room {
     private String viTri;
     private int giaPhong;
 
-    public Room(){
-
-    }
-
     public Room(ResultSet rs) throws SQLException {
-        this(rs.getString(1), new TypeOfRoom(rs.getString(2)), rs.getString(3), rs.getString(4), rs.getInt(5));
+        this(rs.getString("maPhong"), new TypeOfRoom(rs), rs.getString("tinhTrang"), rs.getString("viTri"), rs.getInt("giaPhong"));
     }
-    public Room(String maPhong) {
-        RoomDAO roomDAO = new RoomDAO();
-        Room r = roomDAO.getRoomByID(maPhong);
-        this.maPhong=r.getMaPhong();
-        this.loaiPhong = r.getLoaiPhong();
-        this.tinhTrang = r.getTinhTrang();
-        this.viTri = r.getViTri();
-        this.giaPhong = r.getGiaPhong();
+    public Room() {
+        this.maPhong = "";
+        this.loaiPhong = new TypeOfRoom();
+        this.tinhTrang = "";
+        this.viTri = "";
+    }
+
+    public Room(String string) {
+        this.maPhong = maPhong;
     }
 
     public String getMaPhong() {

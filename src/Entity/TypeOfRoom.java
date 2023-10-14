@@ -14,24 +14,25 @@ public class TypeOfRoom {
     private int sucChua;
 
     public TypeOfRoom(ResultSet rs) throws SQLException {
-        this(rs.getString(1), rs.getString(2), rs.getInt(3));
+        this(rs.getString("maLoaiPhong"), rs.getString("tenLoaiPhong"), rs.getInt("sucChua"));
     }
 
     public TypeOfRoom(String maLoaiPhong) {
         this.maLoaiPhong = maLoaiPhong;
     }
 
+    public TypeOfRoom() {
+        this.maLoaiPhong = "";
+        this.tenLoaiPhong = "";
+        this.sucChua = 0;
+    }
 
     public String getMaLoaiPhong() {
         return maLoaiPhong;
     }
 
     public void setMaLoaiPhong(String maLoaiPhong) {
-        if(!maLoaiPhong.trim().equals("")) {
-            this.maLoaiPhong = maLoaiPhong;
-        }else {
-            this.maLoaiPhong = "Un-known";
-        }
+        this.maLoaiPhong = maLoaiPhong;
     }
 
     public String getTenLoaiPhong() {
@@ -39,11 +40,7 @@ public class TypeOfRoom {
     }
 
     public void setTenLoaiPhong(String tenLoaiPhong) {
-        if(!tenLoaiPhong.trim().equals("")) {
-            this.tenLoaiPhong = tenLoaiPhong;
-        }else {
-            this.tenLoaiPhong = "Un-known";
-        }
+        this.tenLoaiPhong = tenLoaiPhong;
     }
 
     public int getSucChua() {
@@ -51,13 +48,8 @@ public class TypeOfRoom {
     }
 
     public void setSucChua(int sucChua) {
-        if(sucChua<=0) {
-            this.sucChua=1;
-        }
-        else
-            this.sucChua=sucChua;
+        this.sucChua = sucChua;
     }
-
 
     @Override
     public boolean equals(Object o) {

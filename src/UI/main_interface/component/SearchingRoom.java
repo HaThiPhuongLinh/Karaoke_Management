@@ -154,7 +154,7 @@ public class SearchingRoom extends JPanel {
     public void loadP(){
         int i=1;
 
-        for (Room room : RoomDAO.getAllPhong()) {
+        for (Room room : RoomDAO.getRoomList()) {
 
 
 //            if(customer.isGioiTinh()==true){

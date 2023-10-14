@@ -20,7 +20,7 @@ public class TypeOfRoomDAO {
             ResultSet rs = statement.executeQuery(sql);
             while (rs.next()) {
                 dsLoaiPhong.add(
-                        new TypeOfRoom(rs.getString(1), rs.getString(2), rs.getInt(3)));
+                        new TypeOfRoom(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();
