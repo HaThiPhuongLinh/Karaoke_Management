@@ -3,6 +3,8 @@ package UI.main_interface.component;
 import ConnectDB.ConnectDB;
 import DAOs.CustomerDAO;
 import Entity.Customer;
+import Entity.Service;
+import Entity.TypeOfService;
 import UI.CustomUI.Custom;
 
 import javax.swing.*;
@@ -13,9 +15,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
-public class SearchingCustomer_UI extends JPanel {
+public class SearchingCustomer_UI extends JPanel implements ActionListener {
+    private  JButton btnlamMoi;
     private DefaultTableModel modelTableKH;
     private JLabel backgroundLabel, timeLabel, search1Label, search2Label, search3Label;
     private JTextField txtSearch1, txtSearch2, txtSearch3;
@@ -94,6 +98,11 @@ public class SearchingCustomer_UI extends JPanel {
         Custom.setCustomBtn(btnTim);
         btnTim.setFont(new Font("Arial", Font.PLAIN, 14));
         pnlCusControl.add(btnTim);
+        btnlamMoi = new JButton("Làm mới");
+        btnlamMoi.setFont(new Font("Arial", Font.BOLD, 14));
+        Custom.setCustomBtn(btnlamMoi);
+        btnlamMoi.setBounds(535, 195, 100, 30);
+        pnlCusControl.add(btnlamMoi);
 
 
         search2Label = new JLabel("Tìm Theo SDT: ");
@@ -146,6 +155,8 @@ public class SearchingCustomer_UI extends JPanel {
         scrollPaneKH.getViewport().setBackground(Color.WHITE);
         pnlCusList.add(panelDSKH);
         loadKH();
+        btnTim.addActionListener(this);
+        btnlamMoi.addActionListener(this);
 
 
         //
@@ -180,5 +191,74 @@ public class SearchingCustomer_UI extends JPanel {
 
         }
 
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object o = e.getSource();
+        if (o.equals(btnTim)) {
+
+            String txtTenKH = txtSearch1.getText();
+            ArrayList<Customer> cus1 = (ArrayList<Customer>) CustomerDAO.getListKhachHangByName(txtTenKH);
+
+            String txtSDT = txtSearch2.getText();
+            ArrayList<Customer> cus2 = (ArrayList<Customer>) CustomerDAO.getListKhachHangBySDT(txtSDT);
+
+            String txtcccd = txtSearch3.getText();
+            ArrayList<Customer> cus3 = (ArrayList<Customer>) CustomerDAO.getListKhachHangByCCCD(txtcccd);
+
+//            String txtTenLDV = textFieldTenLoaiDichVu.getText();
+//            ArrayList<TypeOfService> typeOfServices = typeOfServiceDAO.getTypeOfServiceByName(txtTenLDV);
+            if (txtSearch1.getText().trim().equals("") && txtSearch2.getText().trim().equals("") && txtSearch3.getText().trim().equals("")) {
+                JOptionPane.showMessageDialog(this, "VUI LÒNG NHẬP THÔNG TIN CẦN TÌM KIẾM!!!");
+            } else if (!txtSearch1.getText().trim().equals("")) {
+                modelTableKH.getDataVector().removeAllElements();
+                int i = 1;
+                if (cus1.size() != 0) {
+                    for (Customer customer : cus1) {
+                        modelTableKH.addRow(new Object[]{i, customer.getMaKhachHang(), customer.getTenKhachHang(), customer.getSoDienThoai(), customer.getCCCD(), customer.isGioiTinh(), customer.getNgaySinh()});
+                        i++;
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "KHÔNG TÌM THẤY!!!");
+                    txtSearch1.selectAll();
+                    txtSearch1.requestFocus();
+                }
+            } else if (!txtSearch2.getText().trim().equals("")) {
+                modelTableKH.getDataVector().removeAllElements();
+                int i = 1;
+                if (cus2.size() != 0) {
+                    for (Customer customer : cus2) {
+                        modelTableKH.addRow(new Object[]{i, customer.getMaKhachHang(), customer.getTenKhachHang(), customer.getSoDienThoai(), customer.getCCCD(), customer.isGioiTinh(), customer.getNgaySinh()});
+                        i++;
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "KHÔNG TÌM THẤY!!!");
+                    txtSearch2.selectAll();
+                    txtSearch2.requestFocus();
+                }
+            } else if (!txtSearch3.getText().trim().equals("")) {
+                modelTableKH.getDataVector().removeAllElements();
+                int i = 1;
+                if (cus3.size() != 0) {
+                    for (Customer customer : cus3) {
+                        modelTableKH.addRow(new Object[]{i, customer.getMaKhachHang(), customer.getTenKhachHang(), customer.getSoDienThoai(), customer.getCCCD(), customer.isGioiTinh(), customer.getNgaySinh()});
+                        i++;
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "KHÔNG TÌM THẤY!!!");
+                    txtSearch3.selectAll();
+                    txtSearch3.requestFocus();
+                }
+            }
+        }else if(o.equals(btnlamMoi)){
+            txtSearch2.setText("");
+            txtSearch1.setText("");
+            txtSearch3.setText("");
+
+
+            modelTableKH.getDataVector().removeAllElements();
+            loadKH();
+        }
     }
 }

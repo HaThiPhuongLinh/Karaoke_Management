@@ -44,8 +44,8 @@ public class Customer {
         return CCCD;
     }
 
-    public Date getNgaySinh() {
-        return ngaySinh;
+    public java.sql.Date getNgaySinh() {
+        return (java.sql.Date) ngaySinh;
     }
 
     public String getSoDienThoai() {

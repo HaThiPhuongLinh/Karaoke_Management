@@ -16,12 +16,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+
 
 public class Customer_UI extends JPanel implements ActionListener, MouseListener {
 
@@ -35,6 +37,7 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
     private DefaultTableModel tableModel;
     private JButton btnThem ,btnXoa,btnSua,btnLamMoi,btnXemHet;
     private CustomerDAO CustomerDAO ;
+    private Date date;
 
 
     public Customer_UI(){
@@ -97,7 +100,7 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
         pnlCusControl.add(maKHLabel);
         txtMaKH =new JTextField();
         txtMaKH.setBounds(145,20,350,30);
-        txtMaKH.setEditable(false);
+//        txtMaKH.setEditable(false);
         pnlCusControl.add(txtMaKH);
 
         tenKHLabel = new JLabel("Tên Khách Hàng: ");
@@ -216,6 +219,10 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
         pnlCusList.add(panelDSKH);
 
         loadKH();
+        btnThem.addActionListener(this);
+        btnSua.addActionListener(this);
+        btnXemHet.addActionListener(this);
+        btnLamMoi.addActionListener(this);
 
 
 
@@ -228,6 +235,10 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String time = sdf.format(new Date());
         timeLabel.setText(time);
+    }
+    private String formatDate(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyy");
+        return sdf.format(date);
     }
     public void loadKH(){
         int i=1;
@@ -255,16 +266,126 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        Object o = e.getSource();
+        if (o.equals(btnLamMoi)) {
+            txtMaKH.setText("");
+            txtTenKH.setText("");
+            cboGioiTinh.setSelectedIndex(0);
+            txtCMNDKH.setText("");
+            dpNgaySinh.setValueToDay();
+            txtMaKH.requestFocus();
+            txtMaKH.setText("KH");
+            txtMaKH.setEditable(true);
+        } else if (o.equals(btnThem)) {
+
+
+            String maKH = txtMaKH.getText().trim();
+            String tenKH = txtTenKH.getText().trim();
+            String sdt = txtSDTKH.getText().trim();
+            String gioiTinh = cboGioiTinh.getSelectedItem().toString();
+            boolean gt = true;
+            String cccd = txtCMNDKH.getText().trim();
+            if (gioiTinh == "Nam") {
+                gt = true;
+            } else {
+                gt = false;
+            }
+
+
+            Date ngaysinh = null;
+
+            try {
+                ngaysinh = dpNgaySinh.getValueToDay();
+
+            } catch (ParseException e3) {
+                e3.printStackTrace();
+            }
+
+            Customer kh = new Customer(maKH, tenKH, sdt, cccd, gt, ngaysinh);
+
+            try {
+                if (CustomerDAO.insert(kh)) {
+                    String date = formatDate(kh.getNgaySinh());
+                    modelTableKH.addRow(new Object[]{kh.getMaKhachHang(), kh.getTenKhachHang(), kh.getSoDienThoai(),
+                            kh.getCCCD(), kh.isGioiTinh(), date});
+                    JOptionPane.showMessageDialog(this, "Thêm khách hàng thành công");
+                    modelTableKH.fireTableDataChanged();
+                    modelTableKH.getDataVector().removeAllElements();
+                    loadKH();
+
+                }
+
+
+            } catch (SQLException e2) {
+                JOptionPane.showMessageDialog(this, "Thêm khách hàng thất bại");
+            }
+
+        } else if (o.equals(btnSua)) {
+
+            String maKH = txtMaKH.getText().trim();
+            String tenKH = txtTenKH.getText().trim();
+            String sdt = txtSDTKH.getText().trim();
+            String gioiTinh = cboGioiTinh.getSelectedItem().toString();
+            boolean gt = true;
+            String cccd = txtCMNDKH.getText().trim();
+            if (gioiTinh == "Nam") {
+                gt = true;
+            } else {
+                gt = false;
+            }
+
+
+            Date ngaysinh = null;
+
+            try {
+                ngaysinh = dpNgaySinh.getValueToDay();
+
+            } catch (ParseException e3) {
+                e3.printStackTrace();
+            }
+            Customer kh = new Customer(maKH, tenKH, sdt, cccd, gt, ngaysinh);
+
+            int row = tableKH.getSelectedRow();
+            boolean result = CustomerDAO.update(kh);
+            if (result == true) {
+                String date = formatDate(kh.getNgaySinh());
+                modelTableKH.setValueAt(kh.getMaKhachHang(), row, 1);
+                modelTableKH.setValueAt(kh.getTenKhachHang(), row, 2);
+                modelTableKH.setValueAt(kh.getSoDienThoai(), row, 3);
+                modelTableKH.setValueAt(kh.getCCCD(), row, 4);
+                modelTableKH.setValueAt(kh.isGioiTinh(), row, 5);
+                modelTableKH.setValueAt(date, row, 6);
+                JOptionPane.showMessageDialog(this, "Cập nhật thành công");
+                modelTableKH.fireTableDataChanged();
+                modelTableKH.getDataVector().removeAllElements();
+                loadKH();
+            } else {
+                JOptionPane.showMessageDialog(this, "Lỗi: Cập nhật thất bại");
+            }
+
+        }else if(o.equals(btnLamMoi)){
+            txtMaKH.setText("");
+            txtTenKH.setText("");
+            txtCMNDKH.setText("");
+            cboGioiTinh.setSelectedItem(0);
+            txtSDTKH.setText("");
+            dpNgaySinh.setValueToDay();
+
+        }else if(o.equals(btnXemHet)){
+            modelTableKH.getDataVector().removeAllElements();
+            loadKH();
+        }
 
     }
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        int row= tableKH.getSelectedRow();
-        txtMaKH.setText(modelTableKH.getValueAt(row, 1).toString());
-        txtTenKH.setText(modelTableKH.getValueAt(row, 2).toString());
-        txtSDTKH.setText(modelTableKH.getValueAt(row, 3).toString());
-        txtCMNDKH.setText(modelTableKH.getValueAt(row, 4).toString());
+
+        @Override
+        public void mouseClicked (MouseEvent e){
+            int row = tableKH.getSelectedRow();
+            txtMaKH.setText(modelTableKH.getValueAt(row, 1).toString());
+            txtTenKH.setText(modelTableKH.getValueAt(row, 2).toString());
+            txtSDTKH.setText(modelTableKH.getValueAt(row, 3).toString());
+            txtCMNDKH.setText(modelTableKH.getValueAt(row, 4).toString());
 //        dpNgaySinh.set(modelTableKH.getValueAt(row, 6).toString());
 //        String ngaysinh = tableKH.getValueAt(row,6).toString().trim();
 //        java.util.Date ns = Calendar.getInstance().getTime();
@@ -275,28 +396,30 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
 //            ns =Calendar.getInstance().getTime();
 //        }
 //     dpNgaySinh.set(ns);
-        cboGioiTinh.setSelectedItem(modelTableKH.getValueAt(row,5).toString());
+            cboGioiTinh.setSelectedItem(modelTableKH.getValueAt(row, 5).toString());
 
-    }
+        }
 
-    @Override
-    public void mousePressed(MouseEvent e) {
+        @Override
+        public void mousePressed (MouseEvent e){
 
-    }
+        }
 
-    @Override
-    public void mouseReleased(MouseEvent e) {
+        @Override
+        public void mouseReleased (MouseEvent e){
 
-    }
+        }
 
-    @Override
-    public void mouseEntered(MouseEvent e) {
+        @Override
+        public void mouseEntered (MouseEvent e){
 
-    }
+        }
 
-    @Override
-    public void mouseExited(MouseEvent e) {
+        @Override
+        public void mouseExited (MouseEvent e){
 
-    }
+        }
+
+
 
 }
