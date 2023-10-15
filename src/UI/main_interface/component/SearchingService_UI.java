@@ -10,9 +10,7 @@ import UI.CustomUI.Custom;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,6 +19,8 @@ import java.awt.event.MouseListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
+import static java.lang.Double.parseDouble;
 
 public class SearchingService_UI extends JPanel implements ActionListener, MouseListener {
     private JTextField textFieldMaDichVu,textFieldTenDichVu,textFieldTenLoaiDichVu,textFieldGiaBan;
@@ -31,6 +31,7 @@ public class SearchingService_UI extends JPanel implements ActionListener, Mouse
     private TypeOfServiceDAO typeOfServiceDAO;
     private DefaultTableModel modelTableDV;
     private JTable tableDV;
+
     public SearchingService_UI(){
         setLayout(null);
         setBounds(0, 0, 1175, 770);
@@ -183,6 +184,16 @@ public class SearchingService_UI extends JPanel implements ActionListener, Mouse
         reSizeColumnTableService();
     }
 
+    private void reSizeColumnTableService() {
+        TableColumnModel tcm = tableDV.getColumnModel();
+
+        tcm.getColumn(0).setPreferredWidth(20);
+        tcm.getColumn(1).setPreferredWidth(40);
+        tcm.getColumn(2).setPreferredWidth(130);
+        tcm.getColumn(3).setPreferredWidth(100);
+
+    }
+
     private void loadSearchingService(){
         java.util.List<Service> list = serviceDAO.getAllDichVu();
         int i=1;
@@ -210,43 +221,141 @@ public class SearchingService_UI extends JPanel implements ActionListener, Mouse
 
             String txtTenLDV = textFieldTenLoaiDichVu.getText();
             ArrayList<TypeOfService> typeOfServices = typeOfServiceDAO.getTypeOfServiceByName(txtTenLDV);
-
-            double giaBan = Double.parseDouble(textFieldGiaBan.getText());
-            ArrayList<Service> services3 = serviceDAO.getDichVuTheoGia(giaBan);
-
+            if (textFieldMaDichVu.getText().trim().equals("") && textFieldTenDichVu.getText().trim().equals("")&&textFieldTenLoaiDichVu.getText().trim().equals("")&&textFieldGiaBan.getText().trim().equals("")){
+                JOptionPane.showMessageDialog(this, "VUI LÒNG NHẬP THÔNG TIN CẦN TÌM KIẾM!!!");
+            }else
             if (!textFieldMaDichVu.getText().trim().equals("")){
                 modelTableDV.getDataVector().removeAllElements();
                 int i=1;
-                for (Service service : services1){
-                    modelTableDV.addRow(new Object[]{i,service.getMaDichVu(),service.getTenDichVu(),service.getMaLoaiDichVu().getTenLoaiDichVu(),service.getDonViTinh(),service.getSoLuongTon(),service.getGiaBan()});
-                    i++;
-                }
-            }else if (!textFieldTenDichVu.getText().trim().equals("")){
-                modelTableDV.getDataVector().removeAllElements();
-                int i=1;
-                for (Service service : services2){
-                    modelTableDV.addRow(new Object[]{i,service.getMaDichVu(),service.getTenDichVu(),service.getMaLoaiDichVu().getTenLoaiDichVu(),service.getDonViTinh(),service.getSoLuongTon(),service.getGiaBan()});
-                    i++;
-                }
-            }else
-//                if (!textFieldTenLoaiDichVu.getText().trim().equals("")){
-//                modelTableDV.getDataVector().removeAllElements();
-//                int i=1;
-//                for (TypeOfService service : typeOfServices){
-//                    modelTableDV.addRow(new Object[]{i,service.getMaDichVu(),service.getTenDichVu(),service.getMaLoaiDichVu().getTenLoaiDichVu(),service.getDonViTinh(),service.getSoLuongTon(),service.getGiaBan()});
-//                    i++;
-//                }
-//            }else
-                if (!textFieldGiaBan.getText().trim().equals("")){
-                    modelTableDV.getDataVector().removeAllElements();
-                    int i=1;
-                    for (Service service : services3){
+                if (services1.size()!=0){
+                    for (Service service : services1){
                         modelTableDV.addRow(new Object[]{i,service.getMaDichVu(),service.getTenDichVu(),service.getMaLoaiDichVu().getTenLoaiDichVu(),service.getDonViTinh(),service.getSoLuongTon(),service.getGiaBan()});
                         i++;
                     }
-                } else {
+                }else{
                     JOptionPane.showMessageDialog(this, "KHÔNG TÌM THẤY!!!");
+                    textFieldMaDichVu.selectAll();
+                    textFieldMaDichVu.requestFocus();
                 }
+            }else {
+                if (!textFieldGiaBan.getText().trim().equals("") && !textFieldTenDichVu.getText().trim().equals("") && !textFieldTenLoaiDichVu.getText().trim().equals("")){
+                    modelTableDV.getDataVector().removeAllElements();
+                    int i=1;
+                    double gia = Double.parseDouble(textFieldGiaBan.getText());
+                    ArrayList<Service> services3 = serviceDAO.getDichVuTheoGia(gia);
+                    if (services3.size()!=0 && services2.size()!=0 && typeOfServices.size()!=0){
+                        for (Service service : services3){
+                            for (Service s : services2){
+                                for (TypeOfService typeOfService : typeOfServices){
+                                    if ((s.getGiaBan() == service.getGiaBan()) && s.getMaLoaiDichVu().getTenLoaiDichVu().trim().equals(typeOfService.getTenLoaiDichVu())){
+                                        modelTableDV.addRow(new Object[]{i,s.getMaDichVu(),s.getTenDichVu(),s.getMaLoaiDichVu().getTenLoaiDichVu(),s.getDonViTinh(),s.getSoLuongTon(),s.getGiaBan()});
+                                        i++;
+                                    }
+                                }
+                            }
+                            break;
+                        }
+                    }else{
+                        JOptionPane.showMessageDialog(this, "KHÔNG TÌM THẤY!!!");
+                    }
+                }else if (!textFieldTenDichVu.getText().trim().equals("") && !textFieldTenLoaiDichVu.getText().trim().equals("")){
+                    modelTableDV.getDataVector().removeAllElements();
+                    int i=1;
+                    if (services2.size()!=0 && typeOfServices.size()!=0){
+                        for (TypeOfService service : typeOfServices){
+                            for (Service s : services2){
+                                if (s.getMaLoaiDichVu().getTenLoaiDichVu().trim().equals(service.getTenLoaiDichVu())){
+                                    modelTableDV.addRow(new Object[]{i,s.getMaDichVu(),s.getTenDichVu(),s.getMaLoaiDichVu().getTenLoaiDichVu(),s.getDonViTinh(),s.getSoLuongTon(),s.getGiaBan()});
+                                    i++;
+                                }
+                            }
+                        }
+                    }else{
+                        JOptionPane.showMessageDialog(this, "KHÔNG TÌM THẤY!!!");
+                    }
+                }else if (!textFieldGiaBan.getText().trim().equals("") && !textFieldTenLoaiDichVu.getText().trim().equals("")){
+                    modelTableDV.getDataVector().removeAllElements();
+                    int i=1;
+                    double gia = Double.parseDouble(textFieldGiaBan.getText());
+                    ArrayList<Service> services3 = serviceDAO.getDichVuTheoGia(gia);
+                    if (services3.size()!=0 && typeOfServices.size()!=0){
+                        for (TypeOfService service : typeOfServices){
+                            for (Service s : services3){
+                                if (s.getMaLoaiDichVu().getTenLoaiDichVu().trim().equals(service.getTenLoaiDichVu())){
+                                    modelTableDV.addRow(new Object[]{i,s.getMaDichVu(),s.getTenDichVu(),s.getMaLoaiDichVu().getTenLoaiDichVu(),s.getDonViTinh(),s.getSoLuongTon(),s.getGiaBan()});
+                                    i++;
+                                }
+                            }
+                        }
+                    }else{
+                        JOptionPane.showMessageDialog(this, "KHÔNG TÌM THẤY!!!");
+                    }
+                }else if (!textFieldGiaBan.getText().trim().equals("") && !textFieldTenDichVu.getText().trim().equals("")){
+                    modelTableDV.getDataVector().removeAllElements();
+                    int i=1;
+                    double gia = Double.parseDouble(textFieldGiaBan.getText());
+                    ArrayList<Service> services3 = serviceDAO.getDichVuTheoGia(gia);
+                    if (services3.size()!=0 && services2.size()!=0){
+                        for (Service service : services3){
+                            for (Service s : services2){
+                                if (s.getGiaBan() == service.getGiaBan()){
+                                    modelTableDV.addRow(new Object[]{i,s.getMaDichVu(),s.getTenDichVu(),s.getMaLoaiDichVu().getTenLoaiDichVu(),s.getDonViTinh(),s.getSoLuongTon(),s.getGiaBan()});
+                                    i++;
+                                }
+                            }
+                            break;
+                        }
+                    }else{
+                        JOptionPane.showMessageDialog(this, "KHÔNG TÌM THẤY!!!");
+                    }
+                }else if (!textFieldTenDichVu.getText().trim().equals("")){
+                    modelTableDV.getDataVector().removeAllElements();
+                    int i=1;
+                    if (services2.size()!=0){
+                        for (Service service : services2){
+                            modelTableDV.addRow(new Object[]{i,service.getMaDichVu(),service.getTenDichVu(),service.getMaLoaiDichVu().getTenLoaiDichVu(),service.getDonViTinh(),service.getSoLuongTon(),service.getGiaBan()});
+                            i++;
+                        }
+                    }else{
+                        JOptionPane.showMessageDialog(this, "KHÔNG TÌM THẤY!!!");
+                        textFieldTenDichVu.selectAll();
+                        textFieldTenDichVu.requestFocus();
+                    }
+                }else if (!textFieldTenLoaiDichVu.getText().trim().equals("")){
+                    modelTableDV.getDataVector().removeAllElements();
+                    ArrayList<Service> se = (ArrayList<Service>) serviceDAO.getAllDichVu();
+                    int i=1;
+                    if (typeOfServices.size()!=0){
+                        for (TypeOfService service : typeOfServices){
+                            for (Service s : se){
+                                if (s.getMaLoaiDichVu().getTenLoaiDichVu().trim().equals(service.getTenLoaiDichVu())){
+                                    modelTableDV.addRow(new Object[]{i,s.getMaDichVu(),s.getTenDichVu(),s.getMaLoaiDichVu().getTenLoaiDichVu(),s.getDonViTinh(),s.getSoLuongTon(),s.getGiaBan()});
+                                    i++;
+                                }
+                            }
+                        }
+                    }else{
+                        JOptionPane.showMessageDialog(this, "KHÔNG TÌM THẤY!!!");
+                        textFieldTenLoaiDichVu.selectAll();
+                        textFieldTenLoaiDichVu.requestFocus();
+                    }
+                }else if (!textFieldGiaBan.getText().trim().equals("")){
+                    modelTableDV.getDataVector().removeAllElements();
+                    double gia = Double.parseDouble(textFieldGiaBan.getText());
+                    ArrayList<Service> services3 = serviceDAO.getDichVuTheoGia(gia);
+                    int i=1;
+                    if (services3.size()!=0){
+                        for (Service service : services3){
+                            modelTableDV.addRow(new Object[]{i,service.getMaDichVu(),service.getTenDichVu(),service.getMaLoaiDichVu().getTenLoaiDichVu(),service.getDonViTinh(),service.getSoLuongTon(),service.getGiaBan()});
+                            i++;
+                        }
+                    }else{
+                        JOptionPane.showMessageDialog(this, "KHÔNG TÌM THẤY!!!");
+                        textFieldGiaBan.selectAll();
+                        textFieldGiaBan.requestFocus();
+                    }
+                }
+            }
         }else if(o.equals(btnlamMoi)){
             textFieldMaDichVu.setText("");
             textFieldTenDichVu.setText("");
@@ -256,16 +365,6 @@ public class SearchingService_UI extends JPanel implements ActionListener, Mouse
             modelTableDV.getDataVector().removeAllElements();
             loadSearchingService();
         }
-    }
-
-    private void reSizeColumnTableService() {
-        TableColumnModel tcm = tableDV.getColumnModel();
-
-        tcm.getColumn(0).setPreferredWidth(20);
-        tcm.getColumn(1).setPreferredWidth(40);
-        tcm.getColumn(2).setPreferredWidth(130);
-        tcm.getColumn(3).setPreferredWidth(100);
-
     }
 
     @Override
