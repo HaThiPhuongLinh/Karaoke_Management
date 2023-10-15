@@ -16,7 +16,7 @@ public class Service {
     }
 
     public Service(ResultSet rs) throws SQLException {
-        this(rs.getString(1), rs.getString(2), new TypeOfService(rs.getString(3)), rs.getString(4), rs.getInt(5),rs.getDouble(6));
+        this(rs.getString("maDichVu"), rs.getString("tenDichVu"), new TypeOfService(rs.getString(3)), rs.getString(4), rs.getInt(5),rs.getDouble(6));
     }
 
 

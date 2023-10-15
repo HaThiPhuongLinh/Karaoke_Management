@@ -1,12 +1,10 @@
 package DAOs;
 
 import ConnectDB.ConnectDB;
+import Entity.Account;
 import Entity.Staff;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -48,5 +46,40 @@ public class StaffDAO {
             e.printStackTrace();
         }
         return dsStaff;
+    }
+
+    public Staff getStaffByUsername(String username) {
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        String query = "SELECT TOP 1 nv.maNhanVien, nv.tenNhanVien, nv.soDienThoai, nv.CCCD, nv.gioiTinh,  nv.ngaySinh, " +
+                "nv.diaChi, nv.chucVu, nv.trangThai, " +
+                "nv.taiKhoan, " +
+                "tk.taiKhoan, tk.matKhau, tk.tinhTrang " +
+                "FROM dbo.TaiKhoan tk, dbo.NhanVien nv " +
+                "WHERE tk.taiKhoan = nv.taiKhoan " +
+                "AND tk.taiKhoan = ?";
+
+        try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
+            preparedStatement.setString(1, username);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    Staff staff = new Staff();
+                    staff.setMaNhanVien(resultSet.getString(1));
+                    staff.setTenNhanVien(resultSet.getString(2));
+                    staff.setSoDienThoai(resultSet.getString(3));
+                    staff.setCCCD(resultSet.getString(4));
+                    staff.setGioiTinh(resultSet.getBoolean(5));
+                    staff.setNgaySinh(resultSet.getDate(6));
+                    staff.setChucVu(resultSet.getString(7));
+                    staff.setTrangThai(resultSet.getString(8));
+                    staff.setTaiKhoan(resultSet.getString(9));
+                    return staff;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

@@ -1,10 +1,15 @@
 package menu;
 
+import DAOs.AccountDAO;
+import Entity.Account;
+import Entity.Staff;
 import menu.mode.LightDarkMode;
 
 import com.formdev.flatlaf.util.UIScale;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
@@ -12,7 +17,7 @@ import javax.swing.border.EmptyBorder;
 
 
 public class Menu extends JPanel {
-    private JButton buttonLogin;
+    private JButton buttonLogout;
     private final String menuItems[][] = {
             {"~Khách Hàng~"},
             {"Khách Hàng", "Tìm kiếm khách hàng", "Cập nhật khách hàng"},
@@ -51,7 +56,7 @@ public class Menu extends JPanel {
 
     private final List<MenuEvent> events = new ArrayList<>();
     private boolean menuFull = true;
-    private final String headerName = "Staff Name";
+    public String headerName = "Staff Name";
 
     protected final boolean hideMenuTitleOnMinimum = true;
     protected final int menuTitleLeftInset = 5;
@@ -59,9 +64,15 @@ public class Menu extends JPanel {
     protected final int menuMaxWidth = 280;
     protected final int menuMinWidth = 60;
     protected final int headerFullHgap = 5;
+    Account user = new Account();
 
     public Menu() {
         init();
+    }
+
+    public void setHeaderName(String name) {
+        headerName = name;
+        header.setText(headerName);
     }
 
     private void init() {
@@ -72,13 +83,23 @@ public class Menu extends JPanel {
                 UIScale.scale(2),
                 UIScale.scale(2)
         ));
-        buttonLogin = new JButton("Log out");
-        buttonLogin.setBackground(new Color(255, 255, 255));
-        buttonLogin.setForeground(new Color(49, 62, 74));
-        buttonLogin.setFocusPainted(false);
-        buttonLogin.setBorderPainted(false);
-        buttonLogin.setFont(new Font("Arial", Font.PLAIN, 14));
+        buttonLogout = new JButton("Log out");
+        buttonLogout.setBackground(new Color(255, 255, 255));
+        buttonLogout.setForeground(new Color(49, 62, 74));
+        buttonLogout.setFocusPainted(false);
+        buttonLogout.setBorderPainted(false);
+        buttonLogout.setFont(new Font("Dialog", Font.BOLD, 16));
 
+        buttonLogout.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent evt) {
+                buttonLogout.setBackground(Color.decode("#329B24"));
+                buttonLogout.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            }
+            public void mouseExited(MouseEvent evt) {
+                buttonLogout.setBackground(Color.white);
+                buttonLogout.setCursor(Cursor.getDefaultCursor());
+            }
+        });
 
         Color backgroundColor = new Color(51, 51, 51);
         setBackground(backgroundColor);
@@ -91,7 +112,7 @@ public class Menu extends JPanel {
         panelMenu = new JPanel(new MenuItemLayout(this));
         panelMenu.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         panelMenu.setBackground(new Color(51, 51, 51));
-        panelMenu.add(buttonLogin);
+        panelMenu.add(buttonLogout);
         scroll.setViewportView(panelMenu);
         scroll.setBorder(null);
         JScrollBar vscroll = scroll.getVerticalScrollBar();
@@ -260,11 +281,11 @@ public class Menu extends JPanel {
                 lightDarkMode.setBounds(ldx, ldy, ldWidth, ldHeight);
 
                 int loginButtonWidth = 100;
-                int loginButtonHeight = 50;
+                int loginButtonHeight = 80;
                 int loginButtonX = ldx + ldWidth + ldgap;
                 int loginButtonY = ldy - loginButtonHeight - gap;
 
-                buttonLogin.setBounds(loginButtonX, loginButtonY, loginButtonWidth, loginButtonHeight);
+                buttonLogout.setBounds(loginButtonX, loginButtonY, loginButtonWidth, loginButtonHeight);
 
             }
         }

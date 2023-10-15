@@ -175,11 +175,13 @@ public class ChooseCustomer extends JFrame implements ActionListener, MouseListe
         }
 
         if (o.equals(btnALL)) {
+            modelTable.setRowCount(0);
             int row = table.getSelectedRow();
             for (Customer c : customerDAO.getAllKhachHang()) {
                 Object[] rowData = { c.getMaKhachHang(), c.getTenKhachHang(), c.getSoDienThoai(), c.getNgaySinh()};
                 modelTable.addRow(rowData);
             }
+            txtTim.setText("");
         }
     }
 

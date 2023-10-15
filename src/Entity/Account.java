@@ -11,6 +11,12 @@ public class Account {
         this.tinhTrang = tinhTrang;
     }
 
+    public Account() {
+        this.taiKhoan = taiKhoan;
+        this.matKhau = matKhau;
+        this.tinhTrang = tinhTrang;
+    }
+
     public String getTaiKhoan() {
         return taiKhoan;
     }

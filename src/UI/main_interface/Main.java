@@ -1,5 +1,6 @@
 package UI.main_interface;
 
+import Entity.Staff;
 import UI.main_interface.component.*;
 import UI.main_interface.swing.RoundPanel;
 import menu.Menu;
@@ -10,16 +11,26 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+import java.awt.*;
+import java.awt.event.*;
+
 public class Main extends JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private static Main instance;
     public static JPanel body;
     private JButton minimizeButton;
     private JButton exitButton;
     private Header header2;
     private Menu menu21;
     private RoundPanel roundPanel1;
+    private static Staff staffLogin = null;
 
-    public Main() {
+    public Main(Staff staff) {
+        this.staffLogin = staff;
         initComponents();
         setBackground(new Color(0, 0, 0, 0));
         menu21.addMenuEvent((int index, int subIndex, MenuAction action) -> {
@@ -102,7 +113,7 @@ public class Main extends JFrame {
 
         /* Create and display the form */
         SwingUtilities.invokeLater(() -> {
-            new Main().setVisible(true);
+            new Main(staffLogin).setVisible(true);
         });
     }
 
@@ -112,7 +123,11 @@ public class Main extends JFrame {
         body.revalidate();
         body.repaint();
     }
-
+    public static Main getInstance(Staff staffLogin) {
+        if (instance == null)
+            instance = new Main(staffLogin);
+        return instance;
+    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

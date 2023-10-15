@@ -143,31 +143,31 @@ public class Staff_UI extends JPanel {
         pnlStaffControl.add(txtCMNDNV);
 
         btnThem = new JButton("Thêm");
-        btnThem.setFont(new Font("Arial", Font.PLAIN, 15));
+        btnThem.setFont(new Font("Arial", Font.BOLD, 15));
         Custom.setCustomBtn(btnThem);
         btnThem.setBounds(550, 220, 100, 30);
         pnlStaffControl.add(btnThem);
 
         btnXoa = new JButton("Xóa");
-        btnXoa.setFont(new Font("Arial", Font.PLAIN, 15));
+        btnXoa.setFont(new Font("Arial", Font.BOLD, 15));
         btnXoa.setBounds(690, 220, 100, 30);
         Custom.setCustomBtn(btnXoa);
         pnlStaffControl.add(btnXoa);
 
         btnSua = new JButton("Sửa");
-        btnSua.setFont(new Font("Arial", Font.PLAIN, 15));
+        btnSua.setFont(new Font("Arial", Font.BOLD, 15));
         Custom.setCustomBtn(btnSua);
         btnSua.setBounds(830, 220, 100, 30);
         pnlStaffControl.add(btnSua);
 
         btnLamMoi = new JButton("Làm Mới");
         Custom.setCustomBtn(btnLamMoi);
-        btnLamMoi.setFont(new Font("Arial", Font.PLAIN, 15));
+        btnLamMoi.setFont(new Font("Arial", Font.BOLD, 15));
         btnLamMoi.setBounds(970, 220, 100, 30);
         pnlStaffControl.add(btnLamMoi);
 
         ChucVuLabel = new JLabel("Chức Vụ: ");
-        ChucVuLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        ChucVuLabel.setFont(new Font("Arial", Font.BOLD, 14));
         ChucVuLabel.setBounds(315, 170, 120, 30);
         ChucVuLabel.setForeground(Color.WHITE);
         pnlStaffControl.add(ChucVuLabel);

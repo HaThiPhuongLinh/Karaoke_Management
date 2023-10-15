@@ -93,11 +93,12 @@ public class SearchingCustomer_UI extends JPanel implements ActionListener {
         txtSearch1.setBounds(465, 25, 280, 30);
         pnlCusControl.add(txtSearch1);
 
-        btnTim = new JButton("Tìm");
+        btnTim = new JButton("Tìm kiếm");
         btnTim.setBounds(645, 195, 100, 30);
+        btnTim.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnTim);
-        btnTim.setFont(new Font("Arial", Font.PLAIN, 14));
         pnlCusControl.add(btnTim);
+
         btnlamMoi = new JButton("Làm mới");
         btnlamMoi.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnlamMoi);

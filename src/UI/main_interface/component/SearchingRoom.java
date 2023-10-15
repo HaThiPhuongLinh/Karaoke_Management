@@ -90,12 +90,11 @@ public class SearchingRoom extends JPanel {
         txtSearch1.setBounds(215, 25, 280, 30);
         pnlCusControl.add(txtSearch1);
 
-        btnTim = new JButton("Tìm");
+        btnTim = new JButton("Tìm kiếm");
         btnTim.setBounds(980, 25, 100, 30);
         Custom.setCustomBtn(btnTim);
-        btnTim.setFont(new Font("Arial", Font.PLAIN, 14));
+        btnTim.setFont(new Font("Arial", Font.BOLD, 14));
         pnlCusControl.add(btnTim);
-
 
         search2Label = new JLabel("Tìm Theo Giá: ");
         search2Label.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -106,9 +105,6 @@ public class SearchingRoom extends JPanel {
         txtSearch2 = new JTextField();
         txtSearch2.setBounds(645, 25, 280, 30);
         pnlCusControl.add(txtSearch2);
-
-
-
 
         JPanel panelDSKH = new JPanel();
         panelDSKH.setLayout(null);
@@ -138,8 +134,6 @@ public class SearchingRoom extends JPanel {
         pnlCusList.add(panelDSKH);
         loadP();
 
-
-        //
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/images/background.png"));
         backgroundLabel = new JLabel(backgroundImage);
         backgroundLabel.setBounds(0, 0, getWidth(), getHeight());
@@ -153,18 +147,7 @@ public class SearchingRoom extends JPanel {
     }
     public void loadP(){
         int i=1;
-
         for (Room room : RoomDAO.getRoomList()) {
-
-
-//            if(customer.isGioiTinh()==true){
-//
-//                gt="Nam" ;
-//
-//            }
-//            else{
-//                gt="Nữ";
-//            }
             Object[] rowData = { i,room.getMaPhong(),room.getLoaiPhong().getTenLoaiPhong(),room.getViTri(),room.getTinhTrang(),room.getGiaPhong()};
             modelTableP.addRow(rowData);
             i++;

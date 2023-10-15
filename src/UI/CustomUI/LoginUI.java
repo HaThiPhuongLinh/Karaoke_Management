@@ -3,7 +3,9 @@ import ConnectDB.ConnectDB;
 import javax.swing.*;
 import javax.swing.border.Border;
 import DAOs.AccountDAO;
+import DAOs.StaffDAO;
 import Entity.Account;
+import Entity.Staff;
 import UI.main_interface.Main;
 
 import java.awt.*;
@@ -18,6 +20,7 @@ public class LoginUI extends JFrame{
     private final Border borderBottomFocusDark = BorderFactory.createMatteBorder(0, 0, 1, 0, Color.decode("#321a3d"));
 
     private AccountDAO logInDAO = new AccountDAO();
+    private StaffDAO staffDAO = new StaffDAO();
     private Account account;
     private Main main;
 
@@ -33,7 +36,7 @@ public class LoginUI extends JFrame{
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        staffDAO = new StaffDAO();
         JPanel leftPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -138,6 +141,7 @@ public class LoginUI extends JFrame{
 
                 int tinhTrang = logInDAO.checkLogin(user);
                 if (tinhTrang == 1) {
+                    Staff staff = staffDAO.getStaffByUsername(enteredUsername);
                     try {
                         for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                             if ("Nimbus".equals(info.getName())) {
@@ -156,7 +160,7 @@ public class LoginUI extends JFrame{
                     }
                     dispose();
                     SwingUtilities.invokeLater( () -> {
-                        new Main().setVisible(true);
+                        new Main(staff).setVisible(true);
                     });
                 } else if (tinhTrang == 0) {
                     errorMessageLabel.setForeground(Color.RED);

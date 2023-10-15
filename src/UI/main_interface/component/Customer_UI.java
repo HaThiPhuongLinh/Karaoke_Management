@@ -162,26 +162,26 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
         pnlCusControl.add(txtHienThiLoi);
 
         btnThem = new JButton("Thêm");
-        btnThem.setFont(new Font("Arial", Font.PLAIN, 15));
+        btnThem.setFont(new Font("Arial", Font.BOLD, 15));
         btnThem.setBounds(550, 170, 100, 30);
         Custom.setCustomBtn(btnThem);
         pnlCusControl.add(btnThem);
 
         btnLamMoi = new JButton("Làm Mới");
         Custom.setCustomBtn(btnLamMoi);
-        btnLamMoi.setFont(new Font("Arial", Font.PLAIN, 15));
+        btnLamMoi.setFont(new Font("Arial", Font.BOLD, 15));
         btnLamMoi.setBounds(690, 170, 100, 30);
         pnlCusControl.add(btnLamMoi);
 
         btnSua = new JButton("Sửa");
         Custom.setCustomBtn(btnSua);
-        btnSua.setFont(new Font("Arial", Font.PLAIN, 15));
+        btnSua.setFont(new Font("Arial", Font.BOLD, 15));
         btnSua.setBounds(830, 170, 100, 30);
         pnlCusControl.add(btnSua);
 
         btnXemHet = new JButton("Xem Hết");
         Custom.setCustomBtn(btnXemHet);
-        btnXemHet.setFont(new Font("Arial", Font.PLAIN, 15));
+        btnXemHet.setFont(new Font("Arial", Font.BOLD, 15));
         btnXemHet.setBounds(970, 170, 100, 30);
         pnlCusControl.add(btnXemHet);
 

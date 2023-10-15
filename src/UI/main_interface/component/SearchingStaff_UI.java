@@ -87,10 +87,10 @@ public class SearchingStaff_UI extends JPanel {
         txtSearch1.setBounds(465, 15, 280, 30);
         pnlStaffControl.add(txtSearch1);
 
-        btnTim = new JButton("Tìm");
+        btnTim = new JButton("Tìm kiếm");
         btnTim.setBounds(645, 205, 100, 30);
         Custom.setCustomBtn(btnTim);
-        btnTim.setFont(new Font("Arial", Font.PLAIN, 14));
+        btnTim.setFont(new Font("Arial", Font.BOLD, 14));
         pnlStaffControl.add(btnTim);
 
         search2Label = new JLabel("Tìm Theo SDT: ");

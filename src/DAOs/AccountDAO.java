@@ -3,6 +3,8 @@ package DAOs;
 import Entity.Account;
 
 import ConnectDB.ConnectDB;
+import Entity.Staff;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,4 +29,6 @@ public class AccountDAO {
         }
         return -1;
     }
+
+
 }
