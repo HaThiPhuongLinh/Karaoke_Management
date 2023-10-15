@@ -30,6 +30,7 @@ public class SearchingService_UI extends JPanel implements ActionListener, Mouse
     private ServiceDAO serviceDAO;
     private TypeOfServiceDAO typeOfServiceDAO;
     private DefaultTableModel modelTableDV;
+    private JTable tableDV;
 
     public SearchingService_UI(){
         setLayout(null);
@@ -154,7 +155,7 @@ public class SearchingService_UI extends JPanel implements ActionListener, Mouse
         modelTableDV = new DefaultTableModel(colsDV, 0) ;
         JScrollPane scrollPaneDV;
 
-        JTable tableDV = new JTable(modelTableDV);
+        tableDV = new JTable(modelTableDV);
         tableDV.setFont(new Font("Arial", Font.BOLD, 14));
         tableDV.setBackground(new Color(255, 255, 255, 0));
         tableDV.setForeground(new Color(255, 255, 255));
@@ -180,6 +181,17 @@ public class SearchingService_UI extends JPanel implements ActionListener, Mouse
         btnlamMoi.addActionListener(this);
 
         loadSearchingService();
+        reSizeColumnTableService();
+    }
+
+    private void reSizeColumnTableService() {
+        TableColumnModel tcm = tableDV.getColumnModel();
+
+        tcm.getColumn(0).setPreferredWidth(20);
+        tcm.getColumn(1).setPreferredWidth(40);
+        tcm.getColumn(2).setPreferredWidth(130);
+        tcm.getColumn(3).setPreferredWidth(100);
+
     }
 
     private void loadSearchingService(){
