@@ -14,7 +14,7 @@ public class ServiceDAO {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
         try {
-            String sql = "Select * from DichVu";
+            String sql = "Select * from dbo.DichVu";
             Statement statement = con.createStatement();
             ResultSet rs = statement.executeQuery(sql);
             while (rs.next()) {
@@ -161,7 +161,7 @@ public class ServiceDAO {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
         try {
-            String sql = "SELECT * FROM DichVu where giaBan like ?";
+            String sql = "SELECT * FROM dbo.DichVu where giaBan like ?";
             statement = con.prepareStatement(sql);
             statement.setDouble(1, giaBan);
             // Thực thi câu lệnh SQL trả về đối tượng ResultSet.
