@@ -11,12 +11,12 @@ import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,6 +31,7 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
     private JLabel backgroundLabel,timeLabel;
     private ServiceDAO serviceDAO;
     private TypeOfServiceDAO typeOfServiceDAO;
+    private DecimalFormat df = new DecimalFormat("#,###.##");
 
     public Service_UI(){
         setLayout(null);
@@ -112,7 +113,7 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
         panel1.add(labelLDV);
 
         comboBoxLDV = new JComboBox<String>();
-        comboBoxLDV.addItem("Tất cả");
+        comboBoxLDV.addItem(" ");
         comboBoxLDV.setBounds(520, 50, 170, 30);
         Custom.setCustomComboBox(comboBoxLDV);
         panel1.add(comboBoxLDV);
@@ -232,7 +233,6 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
         btnXoa.addActionListener(this);
 
         textFieldMaDichVu.setEditable(false);
-        reSizeColumnTableService();
     }
 
     private void loadService(){
@@ -240,7 +240,7 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
         int i=1;
         for (Service service : list){
 
-            modelTableDV.addRow(new Object[]{i,service.getMaDichVu(),service.getTenDichVu(),service.getMaLoaiDichVu().getTenLoaiDichVu(),service.getDonViTinh(),service.getSoLuongTon(),service.getGiaBan()});
+            modelTableDV.addRow(new Object[]{i,service.getMaDichVu(),service.getTenDichVu(),service.getMaLoaiDichVu().getTenLoaiDichVu(),service.getDonViTinh(),service.getSoLuongTon(),df.format(service.getGiaBan())});
             i++;
         }
     }
@@ -256,50 +256,81 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
             comboBoxLDV.addItem(serviceType.getTenLoaiDichVu());
         }
     }
+    private boolean validData() {
+//        String ma = txtMaKH.getText().trim();
+        String ten = textFieldTenDichVu.getText().trim();
+        String donViTinh = textFieldDonViTinh.getText().trim();
+        String soLuongTon = textFieldSLT.getText().trim();
+        String giaBan = textFieldGiaBan.getText().trim();
 
-    private void reSizeColumnTableService() {
-        TableColumnModel tcm = tableDV.getColumnModel();
-
-        tcm.getColumn(0).setPreferredWidth(20);
-        tcm.getColumn(1).setPreferredWidth(40);
-        tcm.getColumn(2).setPreferredWidth(130);
-        tcm.getColumn(3).setPreferredWidth(100);
-
+//        if (!((ma.length()) > 0 && ma.matches("[A-Z]\\d{3}"))) {
+//            showMessage("Error: Mã nhân viên phải theo định dạng: [A-Z]\\\\d{3}", txtMaKH);
+//            return false;
+//        }
+        if (!((ten.length()) > 0 && ten.matches("^[A-Za-zaAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆfFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTuUùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ ]+"))) {
+            JOptionPane.showMessageDialog(textFieldTenDichVu,"Error: Tên dịch vụ không được chứa số và kí tự đặc biệt");
+            textFieldTenDichVu.selectAll();
+            textFieldTenDichVu.requestFocus();
+            return false;
+        }
+        if (!((donViTinh.length()) > 0 && donViTinh.matches("^[A-Za-zaAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆfFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTuUùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ ]+"))) {
+            JOptionPane.showMessageDialog(textFieldDonViTinh,"Error: Đơn vị tính không được chứa số và kí tự đặc biệt");
+            textFieldDonViTinh.selectAll();
+            textFieldDonViTinh.requestFocus();
+            return false;
+        }
+        if (!((soLuongTon.length()) > 0 && soLuongTon.matches("^[1-9]\\d*"))) {
+            JOptionPane.showMessageDialog(textFieldSLT,"Error: Số lượng tồn phải là số lớn hơn 0");
+            textFieldSLT.selectAll();
+            textFieldSLT.requestFocus();
+            return false;
+        }
+//        if (!((giaBan.length()) > 0 && giaBan.matches("^[1-9]\\d*"))) {
+//            JOptionPane.showMessageDialog(textFieldGiaBan,"Error: Giá bán phải là số lớn hơn 0");
+//            textFieldGiaBan.selectAll();
+//            textFieldGiaBan.requestFocus();
+//            return false;
+//        }
+        return true;
     }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         if (o.equals(btnThem)){
-            String tenLDV = comboBoxLDV.getSelectedItem().toString().trim();
-            ArrayList<TypeOfService> typeOfServices = typeOfServiceDAO.getTypeOfServiceByName(tenLDV);
-            String s="";
-            for (TypeOfService service : typeOfServices){
-                s+=service.getMaLoaiDichVu();
-            }
+            if (textFieldTenDichVu.getText().equals("") || textFieldSLT.getText().equals("") || textFieldDonViTinh.getText().equals("")|| textFieldGiaBan.getText().equals("")|| comboBoxLDV.getSelectedIndex()==0){
+                JOptionPane.showMessageDialog(this,"Bạn phải nhập thông tin đầy đủ thông tin dịch vụ");
+            }else
+            if (validData()){
+                String tenLDV = comboBoxLDV.getSelectedItem().toString().trim();
+                ArrayList<TypeOfService> typeOfServices = typeOfServiceDAO.getTypeOfServiceByName(tenLDV);
+                String s="";
+                for (TypeOfService service : typeOfServices){
+                    s+=service.getMaLoaiDichVu();
+                }
 
-            java.util.List<Service> list = serviceDAO.getAllDichVu();
-            int i=1;
-            for (Service service : list){
-                i++;
-            }
-            String MaDV = "";
-            if (i<10){
-                MaDV = "DV00"+i;
-            }else{
-                MaDV = "DV0"+i;
-            }
-            String ma = textFieldMaDichVu.getText();
-            String tenDv = textFieldTenDichVu.getText().trim();
-            String donViTinh = textFieldDonViTinh.getText().trim();
-            int soLuongTon = Integer.parseInt(textFieldSLT.getText().trim());
-            double giaBan = Double.parseDouble(textFieldGiaBan.getText().trim());
+                java.util.List<Service> list = serviceDAO.getAllDichVu();
+                int i=1;
+                for (Service service : list){
+                    i++;
+                }
+                String MaDV = "";
+                if (i<10){
+                    MaDV = "DV00"+i;
+                }else{
+                    MaDV = "DV0"+i;
+                }
+                String ma = textFieldMaDichVu.getText();
+                String tenDv = textFieldTenDichVu.getText().trim();
+                String donViTinh = textFieldDonViTinh.getText().trim();
+                int soLuongTon = Integer.parseInt(textFieldSLT.getText().trim());
+                double giaBan = Double.parseDouble(textFieldGiaBan.getText().trim());
 
-            Service service = new Service(MaDV,tenDv,new TypeOfService(s),donViTinh,soLuongTon,giaBan);
-            if (serviceDAO.insert(service)) {
-                modelTableDV.getDataVector().removeAllElements();
-                loadService();
-                JOptionPane.showMessageDialog(this, "Thêm thành công dịch vụ");
+                Service service = new Service(MaDV,tenDv,new TypeOfService(s),donViTinh,soLuongTon,giaBan);
+                if (serviceDAO.insert(service)) {
+                    modelTableDV.getDataVector().removeAllElements();
+                    loadService();
+                    textFieldThongBao.setText("Thêm dịch vụ thành công!!!");
+                }
             }
 
         }else if (o.equals(btnlamMoi)){
@@ -315,15 +346,59 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
             loadService();
         }else if(o.equals(btnXoa)){
             int row = tableDV.getSelectedRow();
-            try {
-                if (row == -1) {
-                    JOptionPane.showMessageDialog(this, "Chon dong can xoa");
-                } else {
+            if (row == -1) {
+                JOptionPane.showMessageDialog(this, "Chon dong can xoa");
+            } else {
+                String tenLDV = comboBoxLDV.getSelectedItem().toString().trim();
+                ArrayList<TypeOfService> typeOfServices = typeOfServiceDAO.getTypeOfServiceByName(tenLDV);
+                String s="";
+                for (TypeOfService service : typeOfServices){
+                    s+=service.getMaLoaiDichVu();
+                }
+                String MaDV = textFieldMaDichVu.getText().trim();
+                String tenDv = textFieldTenDichVu.getText().trim();
+                String donViTinh = textFieldDonViTinh.getText().trim();
+                int soLuongTon = Integer.parseInt(textFieldSLT.getText().trim());
+                double giaBan = Double.parseDouble(textFieldGiaBan.getText().trim());
+
+                Service service = new Service(MaDV,tenDv,new TypeOfService(s),donViTinh,soLuongTon,giaBan);
+                int ans = JOptionPane.showConfirmDialog(this, "Bạn có muốn xoá dòng đã chọn ?", "Cảnh báo",
+                        JOptionPane.YES_NO_OPTION);
+                if (ans == JOptionPane.YES_OPTION) {
+
+//                        java.util.List<Service> list = serviceDAO.getAllDichVu();
+//                        for (Service sa : list){
+//                            if (sa.getMaDichVu().trim().equals(service.getMaDichVu())){
+//
+//                            }
+//                        }
+
+                    serviceDAO.delete(service.getMaDichVu());
+
+                    textFieldMaDichVu.setText("");
+                    textFieldTenDichVu.setText("");
+                    comboBoxLDV.setSelectedIndex(0);
+                    textFieldDonViTinh.setText("");
+                    textFieldSLT.setText("");
+                    textFieldGiaBan.setText("");
+                    textFieldThongBao.setText("");
+
+                    modelTableDV.removeRow(row);
+                    textFieldThongBao.setText("Xóa thành công!!!");
+                    modelTableDV.getDataVector().removeAllElements();
+                    loadService();
+                }
+            }
+        }else if (o.equals(btnSua)){
+            int row = tableDV.getSelectedRow();
+
+            if (row >= 0) {
+                if (validData()) {
                     String tenLDV = comboBoxLDV.getSelectedItem().toString().trim();
                     ArrayList<TypeOfService> typeOfServices = typeOfServiceDAO.getTypeOfServiceByName(tenLDV);
-                    String s="";
-                    for (TypeOfService service : typeOfServices){
-                        s+=service.getMaLoaiDichVu();
+                    String s = "";
+                    for (TypeOfService service : typeOfServices) {
+                        s += service.getMaLoaiDichVu();
                     }
 
                     String MaDV = textFieldMaDichVu.getText().trim();
@@ -332,66 +407,25 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
                     int soLuongTon = Integer.parseInt(textFieldSLT.getText().trim());
                     double giaBan = Double.parseDouble(textFieldGiaBan.getText().trim());
 
-                    Service service = new Service(MaDV,tenDv,new TypeOfService(s),donViTinh,soLuongTon,giaBan);
-                    int ans = JOptionPane.showConfirmDialog(this, "Bạn có muốn xoá dòng đã chọn ?", "Cảnh báo",
-                            JOptionPane.YES_NO_OPTION);
-                    if (ans == JOptionPane.YES_OPTION) {
-                        serviceDAO.delete(service.getMaDichVu());
+                    Service service = new Service(MaDV, tenDv, new TypeOfService(s), donViTinh, soLuongTon, giaBan);
 
-                        java.util.List<Service> list = serviceDAO.getAllDichVu();
-                        int i=1;
-                        for (Service sa : list){
-                            i++;
-                        }
-                        String madv = "";
-                        if (i<10){
-                            madv = "DV00"+i;
-                        }else{
-                            madv = "DV0"+i;
-                        }
 
-                        modelTableDV.removeRow(row);
-                        JOptionPane.showMessageDialog(this, "Xóa thành công");
-                        modelTableDV.getDataVector().removeAllElements();
-                        loadService();
+                    if (serviceDAO.update(service)) {
+
+                        tableDV.setValueAt(textFieldTenDichVu.getText(), row, 2);
+                        tableDV.setValueAt(comboBoxLDV.getSelectedItem(), row, 3);
+                        tableDV.setValueAt(textFieldDonViTinh.getText(), row, 4);
+                        tableDV.setValueAt(textFieldSLT.getText(), row, 5);
+                        tableDV.setValueAt(textFieldGiaBan.getText(), row, 6);
+
+                        textFieldThongBao.setText("Sửa thành công");
                     }
                 }
-            } catch (Exception e3) {
-                JOptionPane.showMessageDialog(this, "Xoa khong thanh cong");
-            }
-        }else if (o.equals(btnSua)){
-            int row = tableDV.getSelectedRow();
-            String tenLDV = comboBoxLDV.getSelectedItem().toString().trim();
-            ArrayList<TypeOfService> typeOfServices = typeOfServiceDAO.getTypeOfServiceByName(tenLDV);
-            String s="";
-            for (TypeOfService service : typeOfServices){
-                s+=service.getMaLoaiDichVu();
-            }
-
-            String MaDV = textFieldMaDichVu.getText().trim();
-            String tenDv = textFieldTenDichVu.getText().trim();
-            String donViTinh = textFieldDonViTinh.getText().trim();
-            int soLuongTon = Integer.parseInt(textFieldSLT.getText().trim());
-            double giaBan = Double.parseDouble(textFieldGiaBan.getText().trim());
-            if (row >= 0) {
-                Service service = new Service(MaDV,tenDv,new TypeOfService(s),donViTinh,soLuongTon,giaBan);
-//
-                if (serviceDAO.update(service)) {
-                    tableDV.setValueAt(textFieldTenDichVu.getText(), row, 2);
-                    tableDV.setValueAt(comboBoxLDV.getSelectedItem(), row, 3);
-                    tableDV.setValueAt(textFieldDonViTinh.getText(), row, 4);
-                    tableDV.setValueAt(textFieldSLT.getText(), row, 5);
-                    tableDV.setValueAt(textFieldGiaBan.getText(), row, 6);
-                    JOptionPane.showMessageDialog(this, "Sửa thành công");
-                } else {
-                    JOptionPane.showMessageDialog(this, "Lỗi:Vui lòng chọn dòng cần sửa và không được sửa mã");
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "Chọn dòng cần xóa");
+            }else {
+                JOptionPane.showMessageDialog(this, "Chọn dòng cần sửa");
             }
         }
     }
-
 
     @Override
     public void mouseClicked(MouseEvent e) {

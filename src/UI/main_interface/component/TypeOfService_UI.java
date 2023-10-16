@@ -17,6 +17,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class TypeOfService_UI extends JPanel  implements ActionListener, MouseListener {
@@ -199,61 +200,78 @@ public class TypeOfService_UI extends JPanel  implements ActionListener, MouseLi
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         if(o.equals(btnThem)){
-            String maLDV = textFieldMaLoaiDichVu.getText();
-            String tenLDV = textFieldTenLoaiDichVu.getText();
-            if(!maLDV.trim().equals("")){
-                TypeOfService typeOfService = new TypeOfService(maLDV,tenLDV);
-                try {
-                    if (typeOfServiceDAO.insert(typeOfService)){
-                        modelTableDV.getDataVector().removeAllElements();
-                        loadTypeOfService();
-                        textFieldThongBao.setText("Thêm thành công!!!");
-                    }else {
-                        JOptionPane.showMessageDialog(this, "Trùng mã");
-                    }
-                } catch (Exception e1) {
-                    JOptionPane.showMessageDialog(this, "Trùng");
+            if (textFieldTenLoaiDichVu.getText().equals("")){
+                JOptionPane.showMessageDialog(this,"Bạn phải nhập thông tin đầy đủ thông tin loại dịch vụ");
+            }else
+            if (validData()){
+                java.util.List<TypeOfService> list = typeOfServiceDAO.getAllLoaiDichVu();
+                int i=1;
+                for (TypeOfService service : list){
+                    i++;
                 }
-            }else {
-                JOptionPane.showMessageDialog(this, "Mã và tên không được để trống ");
+                String MaLDV = "";
+                if (i<10){
+                    MaLDV = "LDV0"+i;
+                }else{
+                    MaLDV = "LDV"+i;
+                }
+                String maldv = textFieldMaLoaiDichVu.getText();
+                String tenldv = textFieldTenLoaiDichVu.getText().trim();
+
+                TypeOfService type = new TypeOfService(MaLDV,tenldv);
+                if (typeOfServiceDAO.insert(type)) {
+                    modelTableDV.getDataVector().removeAllElements();
+                    loadTypeOfService();
+                    textFieldThongBao.setText("Thêm loại dịch vụ thành công!!!");
+                }
             }
         }else if(o.equals(btnXoa)){
             int row = tableDV.getSelectedRow();
-            try {
-                if (row == -1) {
-                    JOptionPane.showMessageDialog(this, "Chon dong can xoa");
-                } else {
-                    TypeOfService ldv = null;
-                    ldv = getDataInFormTypeOfService();
-                    String ma = ldv.getMaLoaiDichVu();
-                    int ans = JOptionPane.showConfirmDialog(this, "Bạn có muốn xoá dòng đã chọn ?", "Cảnh báo",
-                            JOptionPane.YES_NO_OPTION);
-                    if (ans == JOptionPane.YES_OPTION) {
-                        typeOfServiceDAO.delete(ma);
-                        modelTableDV.removeRow(row);
-                        JOptionPane.showMessageDialog(this, "Xóa thành công");
-                        modelTableDV.getDataVector().removeAllElements();
-                        loadTypeOfService();
-                    }
+            if (row == -1) {
+                JOptionPane.showMessageDialog(this, "Chon dong can xoa");
+            } else {
+
+                String MaDV = textFieldMaLoaiDichVu.getText().trim();
+                String tenDv = textFieldTenLoaiDichVu.getText().trim();
+
+                TypeOfService type = new TypeOfService(MaDV,tenDv);
+
+                int ans = JOptionPane.showConfirmDialog(this, "Bạn có muốn xoá dòng đã chọn ?", "Cảnh báo",
+                        JOptionPane.YES_NO_OPTION);
+                if (ans == JOptionPane.YES_OPTION) {
+
+                    typeOfServiceDAO.delete(type.getMaLoaiDichVu());
+
+                    textFieldMaLoaiDichVu.setText("");
+                    textFieldTenLoaiDichVu.setText("");
+
+                    textFieldThongBao.setText("");
+
+                    modelTableDV.removeRow(row);
+                    textFieldThongBao.setText("Xóa thành công!!!");
+                    modelTableDV.getDataVector().removeAllElements();
+                    loadTypeOfService();
                 }
-            } catch (Exception e3) {
-                JOptionPane.showMessageDialog(this, "Xoa khong thanh cong");
             }
         }else if (o.equals(btnSua)){
             int row = tableDV.getSelectedRow();
-            String ma = textFieldMaLoaiDichVu.getText();
-            String ten = textFieldTenLoaiDichVu.getText();
             if (row >= 0) {
-                TypeOfService ldv = new TypeOfService(ma, ten);
-//                System.out.println(ldv.toString());
-                if (typeOfServiceDAO.update(ldv)) {
-                    tableDV.setValueAt(textFieldTenLoaiDichVu.getText(), row, 2);
-                    JOptionPane.showMessageDialog(this, "Sửa thành công");
-                } else {
-                    JOptionPane.showMessageDialog(this, "Lỗi:Vui lòng chọn dòng cần sửa và không được sửa mã");
+                if (validData()) {
+
+                    String MaDV = textFieldMaLoaiDichVu.getText().trim();
+                    String tenDv = textFieldTenLoaiDichVu.getText().trim();
+
+                    TypeOfService type = new TypeOfService(MaDV,tenDv);
+
+                    if (typeOfServiceDAO.update(type)) {
+
+                        tableDV.setValueAt(textFieldTenLoaiDichVu.getText(), row, 2);
+
+                        textFieldThongBao.setText("Sửa thành công");
+                    }
                 }
-            } else {
-                JOptionPane.showMessageDialog(this, "Chọn dòng cần xóa");
+            }else {
+                JOptionPane.showMessageDialog(this, "Chọn dòng cần sửa");
             }
         }else if(o.equals(btnLamMoi)){
             textFieldMaLoaiDichVu.setText("");
@@ -300,5 +318,17 @@ public class TypeOfService_UI extends JPanel  implements ActionListener, MouseLi
     @Override
     public void mouseExited(MouseEvent e) {
 
+    }
+    private boolean validData() {
+//        String ma = txtMaKH.getText().trim();
+        String ten = textFieldTenLoaiDichVu.getText().trim();
+        if (!((ten.length()) > 0 && ten.matches("^[A-Za-zaAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆfFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTuUùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ ]+"))) {
+            JOptionPane.showMessageDialog(textFieldTenLoaiDichVu,"Error: Tên loại dịch vụ không được chứa số và kí tự đặc biệt");
+            textFieldTenLoaiDichVu.selectAll();
+            textFieldTenLoaiDichVu.requestFocus();
+            return false;
+        }
+
+        return true;
     }
 }
