@@ -82,14 +82,15 @@ public class ServiceDAO {
         PreparedStatement stmt = null;
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
-        String sql = "update dbo.DichVu set tenDichVu = ?, giaBan = ?, soLuongTon = ?,maLDV = ?" + " Where maDichVu = ?";
+        String sql = "update dbo.DichVu set tenDichVu = ?,maLoaiDichVu = ?, donViTinh = ?, soLuongTon = ?, giaBan = ?" + " Where maDichVu = ?";
         try {
             stmt = con.prepareStatement(sql);
             stmt.setString(1, s.getTenDichVu());
-            stmt.setDouble(2, s.getGiaBan());
-            stmt.setInt(3, s.getSoLuongTon());
-            stmt.setString(4,s.getMaLoaiDichVu().getMaLoaiDichVu());
-            stmt.setString(5, s.getMaDichVu());
+            stmt.setString(2,s.getMaLoaiDichVu().getMaLoaiDichVu());
+            stmt.setString(3, s.getDonViTinh());
+            stmt.setInt(4, s.getSoLuongTon());
+            stmt.setDouble(5, s.getGiaBan());
+            stmt.setString(6, s.getMaDichVu());
 
             n = stmt.executeUpdate();
         } catch (SQLException e) {
@@ -103,6 +104,31 @@ public class ServiceDAO {
         }
         return n > 0;
     }
+
+    public boolean updateMa(Service s) {
+        int n = 0;
+        PreparedStatement stmt = null;
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        String sql = "update dbo.DichVu set maDichVu = ?" + " Where maDichVu = ?";
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, s.getMaDichVu());
+
+            n = stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return n > 0;
+    }
+
+
     public boolean delete(String id) {
         int n = 0;
         PreparedStatement stmt = null;
@@ -186,33 +212,10 @@ public class ServiceDAO {
 
     }
 
-//    public ArrayList<TypeOfService> getTypeOfServiceByName(String name) {
-//        ArrayList<TypeOfService> lst = new ArrayList<TypeOfService>();
-//        ConnectDB.getInstance();
-//        Connection con = ConnectDB.getConnection();
-//        PreparedStatement stmt = null;
-//
-//        try {
-//            String sql = "SELECT * FROM LoaiDichVu where tenoaiDichVu like ?";
-//            stmt = con.prepareStatement(sql);
-//            stmt.setString(1, "%" + name + "%");
-//
-//            ResultSet rs = stmt.executeQuery();
-//            while (rs.next()) {
-//                String maLDV = rs.getString("maLoaiDichVu");
-//                String tenLDV = rs.getString("tenoaiDichVu");
-//                TypeOfService typeOfService = new TypeOfService(maLDV, tenLDV);
-//                lst.add(typeOfService);
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        } finally {
-//            try {
-//                stmt.close();
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        return lst;
+//    public String getLastServiceID() {
+//        String query = "{CALL USP_getLastServiceId()}";
+//        Object obj = DataProvider.getInstance().executeScalar(query, null);
+//        String result = obj != null ? obj.toString() : "";
+//        return result;
 //    }
 }
