@@ -181,6 +181,17 @@ public class SearchingService_UI extends JPanel implements ActionListener, Mouse
         btnlamMoi.addActionListener(this);
 
         loadSearchingService();
+         reSizeColumnTableService();
+    }
+
+    private void reSizeColumnTableService() {
+        TableColumnModel tcm = tableDV.getColumnModel();
+
+        tcm.getColumn(0).setPreferredWidth(20);
+        tcm.getColumn(1).setPreferredWidth(40);
+        tcm.getColumn(2).setPreferredWidth(130);
+        tcm.getColumn(3).setPreferredWidth(100);
+
     }
 
     private void loadSearchingService(){
