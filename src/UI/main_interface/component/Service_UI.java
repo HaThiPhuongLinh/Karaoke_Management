@@ -26,7 +26,8 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
     private JComboBox<String> comboBoxLDV;
     private JTextField textFieldDonViTinh;
     private JButton btnThem,btnXoa,btnSua,btnlamMoi;
-    private JTextField textFieldMaDichVu,textFieldTenDichVu,textFieldGiaBan,textFieldThongBao,textFieldSLT;
+    private JTextField textFieldMaDichVu,textFieldTenDichVu,textFieldThongBao;
+    private JSpinner textFieldGiaBan, textFieldSLT;
     private DefaultTableModel modelTableDV;
     private JLabel backgroundLabel,timeLabel;
     private ServiceDAO serviceDAO;
@@ -137,9 +138,9 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
         labelSoLuongTon.setForeground(Color.WHITE);
         panel1.add(labelSoLuongTon);
 
-        textFieldSLT = new JTextField();
+        textFieldSLT = new JSpinner();
         textFieldSLT.setBounds(880,50,170,30);
-        textFieldSLT.setColumns(10);
+//        textFieldSLT.setColumns(10);
         panel1.add(textFieldSLT);
 
         //      Giá bán
@@ -149,9 +150,9 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
         labelGiaBan.setForeground(Color.WHITE);
         panel1.add(labelGiaBan);
 
-        textFieldGiaBan = new JTextField();
+        textFieldGiaBan = new JSpinner();
         textFieldGiaBan.setBounds(880,100,170,30);
-        textFieldGiaBan.setColumns(10);
+//        textFieldGiaBan.setColumns(10);
         panel1.add(textFieldGiaBan);
 
         //Thông báo
@@ -260,8 +261,8 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
 //        String ma = txtMaKH.getText().trim();
         String ten = textFieldTenDichVu.getText().trim();
         String donViTinh = textFieldDonViTinh.getText().trim();
-        String soLuongTon = textFieldSLT.getText().trim();
-        String giaBan = textFieldGiaBan.getText().trim();
+        String soLuongTon = textFieldSLT.getValue().toString();
+        String giaBan = textFieldGiaBan.getValue().toString();
 
 //        if (!((ma.length()) > 0 && ma.matches("[A-Z]\\d{3}"))) {
 //            showMessage("Error: Mã nhân viên phải theo định dạng: [A-Z]\\\\d{3}", txtMaKH);
@@ -281,23 +282,19 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
         }
         if (!((soLuongTon.length()) > 0 && soLuongTon.matches("^[1-9]\\d*"))) {
             JOptionPane.showMessageDialog(textFieldSLT,"Error: Số lượng tồn phải là số lớn hơn 0");
-            textFieldSLT.selectAll();
-            textFieldSLT.requestFocus();
             return false;
         }
-//        if (!((giaBan.length()) > 0 && giaBan.matches("^[1-9]\\d*"))) {
-//            JOptionPane.showMessageDialog(textFieldGiaBan,"Error: Giá bán phải là số lớn hơn 0");
-//            textFieldGiaBan.selectAll();
-//            textFieldGiaBan.requestFocus();
-//            return false;
-//        }
+        if (!((giaBan.length()) > 0 && giaBan.matches("^[1-9]\\d*"))) {
+            JOptionPane.showMessageDialog(textFieldGiaBan,"Error: Giá bán phải là số lớn hơn 0");
+            return false;
+        }
         return true;
     }
     @Override
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         if (o.equals(btnThem)){
-            if (textFieldTenDichVu.getText().equals("") || textFieldSLT.getText().equals("") || textFieldDonViTinh.getText().equals("")|| textFieldGiaBan.getText().equals("")|| comboBoxLDV.getSelectedIndex()==0){
+            if (textFieldTenDichVu.getText().equals("") || textFieldSLT.getValue().equals("") || textFieldDonViTinh.getText().equals("")|| textFieldGiaBan.getValue().equals("")|| comboBoxLDV.getSelectedIndex()==0){
                 JOptionPane.showMessageDialog(this,"Bạn phải nhập thông tin đầy đủ thông tin dịch vụ");
             }else
             if (validData()){
@@ -322,8 +319,9 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
                 String ma = textFieldMaDichVu.getText();
                 String tenDv = textFieldTenDichVu.getText().trim();
                 String donViTinh = textFieldDonViTinh.getText().trim();
-                int soLuongTon = Integer.parseInt(textFieldSLT.getText().trim());
-                double giaBan = Double.parseDouble(textFieldGiaBan.getText().trim());
+                int soLuongTon = Integer.parseInt(textFieldSLT.getValue().toString());
+                double giaBan = Double.parseDouble(textFieldGiaBan.getValue().toString());
+//                String giaBan = df.format(textFieldGiaBan.getText());
 
                 Service service = new Service(MaDV,tenDv,new TypeOfService(s),donViTinh,soLuongTon,giaBan);
                 if (serviceDAO.insert(service)) {
@@ -338,8 +336,8 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
             textFieldTenDichVu.setText("");
             comboBoxLDV.setSelectedIndex(0);
             textFieldDonViTinh.setText("");
-            textFieldSLT.setText("");
-            textFieldGiaBan.setText("");
+            textFieldSLT.setValue((int)0);
+            textFieldGiaBan.setValue((double)0);
             textFieldThongBao.setText("");
 
             modelTableDV.getDataVector().removeAllElements();
@@ -358,20 +356,13 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
                 String MaDV = textFieldMaDichVu.getText().trim();
                 String tenDv = textFieldTenDichVu.getText().trim();
                 String donViTinh = textFieldDonViTinh.getText().trim();
-                int soLuongTon = Integer.parseInt(textFieldSLT.getText().trim());
-                double giaBan = Double.parseDouble(textFieldGiaBan.getText().trim());
+                int soLuongTon = Integer.parseInt(textFieldSLT.getValue().toString());
+                double giaBan = Double.parseDouble(textFieldGiaBan.getValue().toString());
 
                 Service service = new Service(MaDV,tenDv,new TypeOfService(s),donViTinh,soLuongTon,giaBan);
                 int ans = JOptionPane.showConfirmDialog(this, "Bạn có muốn xoá dòng đã chọn ?", "Cảnh báo",
                         JOptionPane.YES_NO_OPTION);
                 if (ans == JOptionPane.YES_OPTION) {
-
-//                        java.util.List<Service> list = serviceDAO.getAllDichVu();
-//                        for (Service sa : list){
-//                            if (sa.getMaDichVu().trim().equals(service.getMaDichVu())){
-//
-//                            }
-//                        }
 
                     serviceDAO.delete(service.getMaDichVu());
 
@@ -379,11 +370,12 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
                     textFieldTenDichVu.setText("");
                     comboBoxLDV.setSelectedIndex(0);
                     textFieldDonViTinh.setText("");
-                    textFieldSLT.setText("");
-                    textFieldGiaBan.setText("");
+                    textFieldSLT.setValue((int)0);
+                    textFieldGiaBan.setValue((double)0);
                     textFieldThongBao.setText("");
 
                     modelTableDV.removeRow(row);
+
                     textFieldThongBao.setText("Xóa thành công!!!");
                     modelTableDV.getDataVector().removeAllElements();
                     loadService();
@@ -391,8 +383,7 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
             }
         }else if (o.equals(btnSua)){
             int row = tableDV.getSelectedRow();
-
-            if (row >= 0) {
+            if (row > 0) {
                 if (validData()) {
                     String tenLDV = comboBoxLDV.getSelectedItem().toString().trim();
                     ArrayList<TypeOfService> typeOfServices = typeOfServiceDAO.getTypeOfServiceByName(tenLDV);
@@ -404,19 +395,18 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
                     String MaDV = textFieldMaDichVu.getText().trim();
                     String tenDv = textFieldTenDichVu.getText().trim();
                     String donViTinh = textFieldDonViTinh.getText().trim();
-                    int soLuongTon = Integer.parseInt(textFieldSLT.getText().trim());
-                    double giaBan = Double.parseDouble(textFieldGiaBan.getText().trim());
+                    int soLuongTon = Integer.parseInt(textFieldSLT.getValue().toString());
+                    double giaBan = Double.parseDouble(textFieldGiaBan.getValue().toString());
 
                     Service service = new Service(MaDV, tenDv, new TypeOfService(s), donViTinh, soLuongTon, giaBan);
 
 
                     if (serviceDAO.update(service)) {
-
                         tableDV.setValueAt(textFieldTenDichVu.getText(), row, 2);
                         tableDV.setValueAt(comboBoxLDV.getSelectedItem(), row, 3);
                         tableDV.setValueAt(textFieldDonViTinh.getText(), row, 4);
-                        tableDV.setValueAt(textFieldSLT.getText(), row, 5);
-                        tableDV.setValueAt(textFieldGiaBan.getText(), row, 6);
+                        tableDV.setValueAt(textFieldSLT.getValue(), row, 5);
+                        tableDV.setValueAt(textFieldGiaBan.getValue(), row, 6);
 
                         textFieldThongBao.setText("Sửa thành công");
                     }
@@ -432,12 +422,15 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
         Object o = e.getSource();
         if (o.equals(tableDV)) {
             int row = tableDV.getSelectedRow();
-            textFieldMaDichVu.setText(modelTableDV.getValueAt(row,1).toString());
-            textFieldTenDichVu.setText(modelTableDV.getValueAt(row,2).toString());
-            comboBoxLDV.setSelectedItem(modelTableDV.getValueAt(row,3));
-            textFieldDonViTinh.setText(modelTableDV.getValueAt(row,4).toString());
-            textFieldSLT.setText(modelTableDV.getValueAt(row,5).toString());
-            textFieldGiaBan.setText(modelTableDV.getValueAt(row,6).toString());
+            textFieldMaDichVu.setText(tableDV.getValueAt(row,1).toString());
+            textFieldTenDichVu.setText(tableDV.getValueAt(row,2).toString());
+            comboBoxLDV.setSelectedItem(tableDV.getValueAt(row,3));
+            textFieldDonViTinh.setText(tableDV.getValueAt(row,4).toString());
+            String quantityStr = tableDV.getValueAt(row, 5).toString().trim().replace(",", "");
+            textFieldSLT.setValue(Integer.parseInt(quantityStr));
+            String priceStr = tableDV.getValueAt(row, 6).toString().trim().replace(",", "");
+            textFieldGiaBan.setValue(Integer.parseInt(priceStr));
+
         }
     }
 
