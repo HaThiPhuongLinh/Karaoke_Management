@@ -7,6 +7,7 @@ import DAOs.StaffDAO;
 import Entity.Account;
 import Entity.Staff;
 import UI.main_interface.Main;
+import menu.Menu;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -23,6 +24,7 @@ public class LoginUI extends JFrame{
     private StaffDAO staffDAO = new StaffDAO();
     private Account account;
     private Main main;
+    public static Menu menu;
 
     public LoginUI() {
         setTitle("Login Form");
@@ -132,6 +134,7 @@ public class LoginUI extends JFrame{
                 }
             }
         });
+
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -160,7 +163,7 @@ public class LoginUI extends JFrame{
                     }
                     dispose();
                     SwingUtilities.invokeLater( () -> {
-                        new Main(staff).setVisible(true);
+                        new Main().setVisible(true);
                     });
                 } else if (tinhTrang == 0) {
                     errorMessageLabel.setForeground(Color.RED);
@@ -174,6 +177,8 @@ public class LoginUI extends JFrame{
                 }
             }
         });
+
+
 
         loginButton.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent evt) {

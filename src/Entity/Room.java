@@ -23,7 +23,7 @@ public class Room {
         this.viTri = "";
     }
 
-    public Room(String string) {
+    public Room(String maPhong) {
         this.maPhong = maPhong;
     }
 
@@ -32,11 +32,15 @@ public class Room {
     }
 
     public void setMaPhong(String maPhong) {
-        if(!(maPhong.trim().equals(""))) {
-            this.maPhong = maPhong;
-        }else {
-            this.maPhong = "Un-known";
-        }
+        this.maPhong = maPhong;
+    }
+
+    public TypeOfRoom getLoaiPhong() {
+        return loaiPhong;
+    }
+
+    public void setLoaiPhong(TypeOfRoom loaiPhong) {
+        this.loaiPhong = loaiPhong;
     }
 
     public String getTinhTrang() {
@@ -52,21 +56,8 @@ public class Room {
     }
 
     public void setViTri(String viTri) {
-        if(!(viTri.trim().equals(""))) {
-            this.viTri = viTri;
-        }else {
-            this.viTri = "Un-known";
-        }
+        this.viTri = viTri;
     }
-
-    public TypeOfRoom getLoaiPhong() {
-        return loaiPhong;
-    }
-
-    public void setLoaiPhong(TypeOfRoom loaiPhong) {
-        this.loaiPhong = loaiPhong;
-    }
-
 
     @Override
     public boolean equals(Object o) {

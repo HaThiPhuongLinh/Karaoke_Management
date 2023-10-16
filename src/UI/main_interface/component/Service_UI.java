@@ -11,6 +11,7 @@ import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -233,6 +234,17 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
         btnXoa.addActionListener(this);
 
         textFieldMaDichVu.setEditable(false);
+        reSizeColumnTableService();
+    }
+
+    private void reSizeColumnTableService() {
+        TableColumnModel tcm = tableDV.getColumnModel();
+
+        tcm.getColumn(0).setPreferredWidth(20);
+        tcm.getColumn(1).setPreferredWidth(40);
+        tcm.getColumn(2).setPreferredWidth(130);
+        tcm.getColumn(3).setPreferredWidth(100);
+
     }
 
     private void loadService(){

@@ -27,10 +27,10 @@ public class Main extends JFrame {
     private Header header2;
     private Menu menu21;
     private RoundPanel roundPanel1;
-    private static Staff staffLogin = null;
+    public static Menu menu;
+    public String staffName;
 
-    public Main(Staff staff) {
-        this.staffLogin = staff;
+    public Main() {
         initComponents();
         setBackground(new Color(0, 0, 0, 0));
         menu21.addMenuEvent((int index, int subIndex, MenuAction action) -> {
@@ -113,7 +113,7 @@ public class Main extends JFrame {
 
         /* Create and display the form */
         SwingUtilities.invokeLater(() -> {
-            new Main(staffLogin).setVisible(true);
+            new Main().setVisible(true);
         });
     }
 
@@ -125,12 +125,13 @@ public class Main extends JFrame {
     }
     public static Main getInstance(Staff staffLogin) {
         if (instance == null)
-            instance = new Main(staffLogin);
+            instance = new Main();
         return instance;
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+
         roundPanel1 = new RoundPanel();
         header2 = new Header();
         menu21 = new Menu();

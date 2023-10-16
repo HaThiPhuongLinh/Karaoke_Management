@@ -1,8 +1,8 @@
 package menu;
 
-import DAOs.AccountDAO;
 import Entity.Account;
-import Entity.Staff;
+import UI.CustomUI.Custom;
+import UI.main_interface.Main;
 import menu.mode.LightDarkMode;
 
 import com.formdev.flatlaf.util.UIScale;
@@ -10,6 +10,7 @@ import com.formdev.flatlaf.util.UIScale;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
@@ -37,10 +38,15 @@ public class Menu extends JPanel {
         return menuFull;
     }
 
+    public static Menu getInstance() {
+        if (instance == null)
+            instance = new Menu();
+        return instance;
+    }
+
     public void setMenuFull(boolean menuFull) {
         this.menuFull = menuFull;
         if (menuFull) {
-            header.setText(headerName);
             header.setHorizontalAlignment(getComponentOrientation().isLeftToRight() ? JLabel.LEFT : JLabel.RIGHT);
         } else {
             header.setText("");
@@ -56,7 +62,6 @@ public class Menu extends JPanel {
 
     private final List<MenuEvent> events = new ArrayList<>();
     private boolean menuFull = true;
-    public String headerName = "Staff Name";
 
     protected final boolean hideMenuTitleOnMinimum = true;
     protected final int menuTitleLeftInset = 5;
@@ -64,16 +69,14 @@ public class Menu extends JPanel {
     protected final int menuMaxWidth = 280;
     protected final int menuMinWidth = 60;
     protected final int headerFullHgap = 5;
+    private static Menu instance = new Menu();
     Account user = new Account();
 
     public Menu() {
         init();
     }
 
-    public void setHeaderName(String name) {
-        headerName = name;
-        header.setText(headerName);
-    }
+
 
     private void init() {
         setLayout(new MenuLayout());
@@ -104,7 +107,7 @@ public class Menu extends JPanel {
         Color backgroundColor = new Color(51, 51, 51);
         setBackground(backgroundColor);
 
-        header = new JLabel(headerName);
+        header = new JLabel("StaffName");
         header.setFont(new Font("Arial", Font.BOLD, 24));
         header.setForeground(new Color(240, 240, 240));
 
@@ -220,7 +223,7 @@ public class Menu extends JPanel {
         return menuMinWidth;
     }
 
-    private JLabel header;
+    public JLabel header;
     private JScrollPane scroll;
     private JPanel panelMenu;
     private LightDarkMode lightDarkMode;

@@ -1,10 +1,7 @@
 package UI.CustomUI;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
-import javax.swing.plaf.basic.BasicComboBoxUI;
-import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 
 public class Custom {

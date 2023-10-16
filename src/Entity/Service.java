@@ -19,8 +19,6 @@ public class Service {
         this(rs.getString("maDichVu"), rs.getString("tenDichVu"), new TypeOfService(rs.getString(3)), rs.getString(4), rs.getInt(5),rs.getDouble(6));
     }
 
-
-
     public Service(String maDichVu){
         this.maDichVu=maDichVu;
     }
@@ -30,11 +28,7 @@ public class Service {
     }
 
     public void setMaDichVu(String maDichVu) {
-        if(!maDichVu.trim().equals("")) {
-            this.maDichVu = maDichVu;
-        }else {
-            this.maDichVu = "Un-known";
-        }
+        this.maDichVu = maDichVu;
     }
 
     public String getTenDichVu() {
@@ -42,23 +36,15 @@ public class Service {
     }
 
     public void setTenDichVu(String tenDichVu) {
-        if(!tenDichVu.trim().equals("")) {
-            this.tenDichVu = tenDichVu;
-        }else {
-            this.tenDichVu = "Un-known";
-        }
+        this.tenDichVu = tenDichVu;
     }
 
-    public double getGiaBan() {
-        return giaBan;
+    public TypeOfService getMaLoaiDichVu() {
+        return maLoaiDichVu;
     }
 
-    public void setGiaBan(double giaBan) {
-        if(giaBan<0) {
-            this.giaBan=0;
-        }
-        else
-            this.giaBan=giaBan;
+    public void setMaLoaiDichVu(TypeOfService maLoaiDichVu) {
+        this.maLoaiDichVu = maLoaiDichVu;
     }
 
     public String getDonViTinh() {
@@ -74,20 +60,15 @@ public class Service {
     }
 
     public void setSoLuongTon(int soLuongTon) {
-        if(soLuongTon<0) {
-            this.soLuongTon=0;
-        }
-        else
-            this.soLuongTon=soLuongTon;
+        this.soLuongTon = soLuongTon;
     }
 
-
-    public TypeOfService getMaLoaiDichVu() {
-        return maLoaiDichVu;
+    public double getGiaBan() {
+        return giaBan;
     }
 
-    public void setMaLoaiDichVu(TypeOfService maLoaiDichVu) {
-        this.maLoaiDichVu = maLoaiDichVu;
+    public void setGiaBan(double giaBan) {
+        this.giaBan = giaBan;
     }
 
     @Override

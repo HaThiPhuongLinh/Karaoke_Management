@@ -140,7 +140,7 @@ public class SearchingStaff_UI extends JPanel {
         panelDSNV.setBounds(30, 290, 1100, 320);
         panelDSNV.setOpaque(false);
 
-        String[] colsNV = {"Mã NV", "Tên NV", "SDT", "CCCD", "Giới Tính", "Ngày Sinh", "Chức Vụ", "Tình Trạng", "Tài Khoản", "Địa Chỉ"};
+        String[] colsNV = {"Mã NV", "Tên NV", "SDT", "CCCD", "Giới Tính", "Ngày Sinh", "Địa Chỉ", "Chức Vụ", "Tình Trạng", "Tài Khoản"};
         modelTableNV = new DefaultTableModel(colsNV, 0);
         JScrollPane scrollPaneNV;
 
@@ -192,7 +192,7 @@ public class SearchingStaff_UI extends JPanel {
             } else {
                 gt = "Nữ";
             }
-            Object[] rowData = {staff.getMaNhanVien(), staff.getTenNhanVien(), staff.getCCCD(), staff.getSoDienThoai(), gt, staff.getNgaySinh(), staff.getChucVu(), staff.getTrangThai(), staff.getTaiKhoan(), staff.getDiaChi()};
+            Object[] rowData = {staff.getMaNhanVien(), staff.getTenNhanVien(), staff.getSoDienThoai(), staff.getCCCD(), gt, staff.getNgaySinh(),staff.getDiaChi(), staff.getChucVu(), staff.getTrangThai(), staff.getTaiKhoan().getTaiKhoan()};
             modelTableNV.addRow(rowData);
         }
     }
