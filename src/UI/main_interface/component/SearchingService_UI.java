@@ -11,7 +11,6 @@ import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,6 +23,7 @@ import java.util.Date;
 import static java.lang.Double.parseDouble;
 
 public class SearchingService_UI extends JPanel implements ActionListener, MouseListener {
+    private JTable tableDV;
     private JTextField textFieldMaDichVu,textFieldTenDichVu,textFieldTenLoaiDichVu,textFieldGiaBan;
     private JButton btnlamMoi;
     private JButton btnTimKiem;
@@ -31,7 +31,6 @@ public class SearchingService_UI extends JPanel implements ActionListener, Mouse
     private ServiceDAO serviceDAO;
     private TypeOfServiceDAO typeOfServiceDAO;
     private DefaultTableModel modelTableDV;
-    private JTable tableDV;
 
     public SearchingService_UI(){
         setLayout(null);
@@ -83,50 +82,50 @@ public class SearchingService_UI extends JPanel implements ActionListener, Mouse
         panel1.setLayout(null);
 
         //        Mã dịch vụ
-        JLabel labelMaDichVu = new JLabel("Mã dịch vụ:");
-        labelMaDichVu.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelMaDichVu.setBounds(60, 50, 150, 30);
-        labelMaDichVu.setForeground(Color.WHITE);
-        panel1.add(labelMaDichVu);
-
-        textFieldMaDichVu = new JTextField();
-        textFieldMaDichVu.setBounds(160, 50, 250, 30);
-        textFieldMaDichVu.setColumns(10);
-        panel1.add(textFieldMaDichVu);
+//        JLabel labelMaDichVu = new JLabel("Mã dịch vụ:");
+//        labelMaDichVu.setFont(new Font("Arial", Font.PLAIN, 14));
+//        labelMaDichVu.setBounds(60, 50, 150, 30);
+//        labelMaDichVu.setForeground(Color.WHITE);
+//        panel1.add(labelMaDichVu);
+//
+//        textFieldMaDichVu = new JTextField();
+//        textFieldMaDichVu.setBounds(160, 50, 250, 30);
+//        textFieldMaDichVu.setColumns(10);
+//        panel1.add(textFieldMaDichVu);
 
 //      Tên dịch vụ
         JLabel labelTenDichVu = new JLabel("Tên dịch vụ:");
         labelTenDichVu.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelTenDichVu.setBounds(60, 100, 150, 30);
+        labelTenDichVu.setBounds(100, 50, 150, 30);
         labelTenDichVu.setForeground(Color.WHITE);
         panel1.add(labelTenDichVu);
 
         textFieldTenDichVu = new JTextField();
-        textFieldTenDichVu.setBounds(160, 100, 250, 30);
+        textFieldTenDichVu.setBounds(220, 50, 250, 30);
         textFieldTenDichVu.setColumns(10);
         panel1.add(textFieldTenDichVu);
 
         //      Tên loại dịch vụ
         JLabel labelTenLoaiDichVu = new JLabel("Tên loại dịch vụ:");
         labelTenLoaiDichVu.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelTenLoaiDichVu.setBounds(480, 50, 150, 30);
+        labelTenLoaiDichVu.setBounds(100, 100, 150, 30);
         labelTenLoaiDichVu.setForeground(Color.WHITE);
         panel1.add(labelTenLoaiDichVu);
 
         textFieldTenLoaiDichVu = new JTextField();
-        textFieldTenLoaiDichVu.setBounds(610, 50, 250, 30);
+        textFieldTenLoaiDichVu.setBounds(220, 100, 250, 30);
         textFieldTenLoaiDichVu.setColumns(10);
         panel1.add(textFieldTenLoaiDichVu);
 
         //      Giá bán
         JLabel labelGiaBan = new JLabel("Giá bán:");
         labelGiaBan.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelGiaBan.setBounds(480, 100, 150, 30);
+        labelGiaBan.setBounds(630, 50, 150, 30);
         labelGiaBan.setForeground(Color.WHITE);
         panel1.add(labelGiaBan);
 
         textFieldGiaBan = new JTextField();
-        textFieldGiaBan.setBounds(610, 100, 250, 30);
+        textFieldGiaBan.setBounds(750, 50, 250, 30);
         textFieldGiaBan.setColumns(10);
         panel1.add(textFieldGiaBan);
 
@@ -134,14 +133,14 @@ public class SearchingService_UI extends JPanel implements ActionListener, Mouse
         btnTimKiem = new JButton("Tìm kiếm");
         btnTimKiem.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnTimKiem);
-        btnTimKiem.setBounds(930, 50, 100, 30);
+        btnTimKiem.setBounds(750, 100, 100, 30);
         panel1.add(btnTimKiem);
 
         //        btn làm mới
         btnlamMoi = new JButton("Làm mới");
         btnlamMoi.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnlamMoi);
-        btnlamMoi.setBounds(930, 100, 100, 30);
+        btnlamMoi.setBounds(900, 100, 100, 30);
         panel1.add(btnlamMoi);
 
 //      danh sách dịch vụ
@@ -182,7 +181,7 @@ public class SearchingService_UI extends JPanel implements ActionListener, Mouse
         btnlamMoi.addActionListener(this);
 
         loadSearchingService();
-        reSizeColumnTableService();
+         reSizeColumnTableService();
     }
 
     private void reSizeColumnTableService() {
@@ -214,52 +213,36 @@ public class SearchingService_UI extends JPanel implements ActionListener, Mouse
         Object o = e.getSource();
         if (o.equals(btnTimKiem)){
 
-            String txtMaDV = textFieldMaDichVu.getText();
-            ArrayList<Service> services1 = serviceDAO.getDichVuTheoMa(txtMaDV);
-
             String txtTenDV = textFieldTenDichVu.getText();
             ArrayList<Service> services2 = serviceDAO.getServiceByName(txtTenDV);
 
             String txtTenLDV = textFieldTenLoaiDichVu.getText();
             ArrayList<TypeOfService> typeOfServices = typeOfServiceDAO.getTypeOfServiceByName(txtTenLDV);
-            if (textFieldMaDichVu.getText().trim().equals("") && textFieldTenDichVu.getText().trim().equals("")&&textFieldTenLoaiDichVu.getText().trim().equals("")&&textFieldGiaBan.getText().trim().equals("")){
+
+            if (textFieldTenDichVu.getText().trim().equals("") && textFieldTenLoaiDichVu.getText().trim().equals("") && textFieldGiaBan.getText().trim().equals("")){
                 JOptionPane.showMessageDialog(this, "VUI LÒNG NHẬP THÔNG TIN CẦN TÌM KIẾM!!!");
-            }else
-            if (!textFieldMaDichVu.getText().trim().equals("")){
+            }else if (!textFieldGiaBan.getText().trim().equals("") && !textFieldTenDichVu.getText().trim().equals("") && !textFieldTenLoaiDichVu.getText().trim().equals("")){
                 modelTableDV.getDataVector().removeAllElements();
                 int i=1;
-                if (services1.size()!=0){
-                    for (Service service : services1){
-                        modelTableDV.addRow(new Object[]{i,service.getMaDichVu(),service.getTenDichVu(),service.getMaLoaiDichVu().getTenLoaiDichVu(),service.getDonViTinh(),service.getSoLuongTon(),service.getGiaBan()});
-                        i++;
-                    }
-                }else{
-                    JOptionPane.showMessageDialog(this, "KHÔNG TÌM THẤY!!!");
-                    textFieldMaDichVu.selectAll();
-                    textFieldMaDichVu.requestFocus();
-                }
-            }else {
-                if (!textFieldGiaBan.getText().trim().equals("") && !textFieldTenDichVu.getText().trim().equals("") && !textFieldTenLoaiDichVu.getText().trim().equals("")){
-                    modelTableDV.getDataVector().removeAllElements();
-                    int i=1;
-                    double gia = Double.parseDouble(textFieldGiaBan.getText());
-                    ArrayList<Service> services3 = serviceDAO.getDichVuTheoGia(gia);
-                    if (services3.size()!=0 && services2.size()!=0 && typeOfServices.size()!=0){
-                        for (Service service : services3){
-                            for (Service s : services2){
-                                for (TypeOfService typeOfService : typeOfServices){
-                                    if ((s.getGiaBan() == service.getGiaBan()) && s.getMaLoaiDichVu().getTenLoaiDichVu().trim().equals(typeOfService.getTenLoaiDichVu())){
-                                        modelTableDV.addRow(new Object[]{i,s.getMaDichVu(),s.getTenDichVu(),s.getMaLoaiDichVu().getTenLoaiDichVu(),s.getDonViTinh(),s.getSoLuongTon(),s.getGiaBan()});
-                                        i++;
-                                    }
+                double gia = Double.parseDouble(textFieldGiaBan.getText());
+                ArrayList<Service> services3 = serviceDAO.getDichVuTheoGia(gia);
+                if (services3.size()!=0 && services2.size()!=0 && typeOfServices.size()!=0){
+                    for (Service service : services3){
+                        for (Service s : services2){
+                            for (TypeOfService typeOfService : typeOfServices){
+                                if ((s.getGiaBan() == service.getGiaBan()) && s.getMaLoaiDichVu().getTenLoaiDichVu().trim().equals(typeOfService.getTenLoaiDichVu())){
+                                    modelTableDV.addRow(new Object[]{i,s.getMaDichVu(),s.getTenDichVu(),s.getMaLoaiDichVu().getTenLoaiDichVu(),s.getDonViTinh(),s.getSoLuongTon(),s.getGiaBan()});
+                                    i++;
                                 }
                             }
-                            break;
                         }
-                    }else{
+                        break;
+                    }
+                }else{
                         JOptionPane.showMessageDialog(this, "KHÔNG TÌM THẤY!!!");
                     }
-                }else if (!textFieldTenDichVu.getText().trim().equals("") && !textFieldTenLoaiDichVu.getText().trim().equals("")){
+                }else {
+                if (!textFieldTenDichVu.getText().trim().equals("") && !textFieldTenLoaiDichVu.getText().trim().equals("")){
                     modelTableDV.getDataVector().removeAllElements();
                     int i=1;
                     if (services2.size()!=0 && typeOfServices.size()!=0){
@@ -354,11 +337,12 @@ public class SearchingService_UI extends JPanel implements ActionListener, Mouse
                         JOptionPane.showMessageDialog(this, "KHÔNG TÌM THẤY!!!");
                         textFieldGiaBan.selectAll();
                         textFieldGiaBan.requestFocus();
+
                     }
                 }
             }
+
         }else if(o.equals(btnlamMoi)){
-            textFieldMaDichVu.setText("");
             textFieldTenDichVu.setText("");
             textFieldTenLoaiDichVu.setText("");
             textFieldGiaBan.setText("");
@@ -366,6 +350,7 @@ public class SearchingService_UI extends JPanel implements ActionListener, Mouse
             modelTableDV.getDataVector().removeAllElements();
             loadSearchingService();
         }
+
     }
 
     @Override
