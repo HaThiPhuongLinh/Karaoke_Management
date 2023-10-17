@@ -6,7 +6,9 @@ import java.sql.*;
 import java.util.List;
 
 import ConnectDB.ConnectDB;
+import Entity.Service;
 import Entity.TypeOfRoom;
+import Entity.TypeOfService;
 
 import java.util.ArrayList;
 
@@ -230,6 +232,135 @@ public class RoomDAO {
         }
 
         return rooms;
+    }
+    public ArrayList<Room> getDichVuTheoGia(int giaBan) {
+        ArrayList<Room> dsdv = new ArrayList<Room>();
+        PreparedStatement statement = null;
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        try {
+            String sql = "SELECT * FROM dbo.Phong where giaPhong like ?";
+            statement = con.prepareStatement(sql);
+            statement.setInt(1, giaBan);
+            // Thực thi câu lệnh SQL trả về đối tượng ResultSet.
+            ResultSet rs = statement.executeQuery();
+            // Duyệt kết quả trả về
+            while (rs.next()) {
+                dsdv.add(
+                        new Room(rs.getString(1), new TypeOfRoom(rs.getString(2)), rs.getString(3),rs.getString(4),rs.getInt(5)));
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                statement.close();
+            } catch (SQLException e2) {
+                e2.printStackTrace();
+            }
+        }
+
+        return dsdv;
+
+    }
+
+    public boolean insert(Room ro) throws SQLException{
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        PreparedStatement statement = null;
+        int n = 0;
+        try {
+            String sql = "insert into dbo.Phong (maPhong, maLoaiPhong, tinhTrang,viTri, giaPhong)" + "values (?,?,?,?,?)";
+            statement = con.prepareStatement(sql);
+            statement.setString(1, ro.getMaPhong());
+            statement.setString(2, ro.getLoaiPhong().getMaLoaiPhong());
+            statement.setString(3, ro.getTinhTrang());
+            statement.setString(4, ro.getViTri());
+            statement.setInt(5,ro.getGiaPhong());
+
+            n = statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                statement.close();
+            } catch (SQLException e2) {
+                // TODO: handle exception
+                e2.printStackTrace();
+            }
+        }
+        return n > 0;
+    }
+
+    public boolean update(Room ro) {
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        PreparedStatement statement = null;
+        int n = 0;
+        try {
+            String sql = "update dbo.Phong" + " set maLoaiPhong = ?, tinhTrang=?, viTri = ?, giaPhong = ?"
+                    + " where maPhong = ?";
+            statement = con.prepareStatement(sql);
+            statement.setString(5, ro.getMaPhong());
+            statement.setString(1, ro.getLoaiPhong().getMaLoaiPhong());
+            statement.setString(2, ro.getTinhTrang());
+            statement.setString(3, ro.getViTri());
+            statement.setInt(4,ro.getGiaPhong());
+            n = statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                statement.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return n > 0;
+    }
+
+    public boolean delete(Room ro) {
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        PreparedStatement statement = null;
+        int n = 0;
+        try {
+            String sql = "delete from dbo.Phong" + " where maPhong = ?";
+            statement = con.prepareStatement(sql);
+            statement.setString(1, ro.getMaPhong());
+            n = statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return n > 0;
+
+
+    }
+    public String generateNextRoomId() {
+        Connection con = null;
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+        String nextRoomId = null;
+
+        try {
+            con = ConnectDB.getConnection();
+            String sql = "SELECT TOP 1 maPhong FROM dbo.Phong ORDER BY maPhong DESC";
+            statement = con.prepareStatement(sql);
+            rs = statement.executeQuery();
+
+            if (rs.next()) {
+                String lastRoomId = rs.getString("maPhong");
+                String numericPart = lastRoomId.substring(2); // Lấy phần số từ mã phòng cuối cùng
+                int counter = Integer.parseInt(numericPart) + 1; // Tăng giá trị số lên 1
+                nextRoomId = "P1" + String.format("%02d", counter); // Định dạng lại giá trị số thành chuỗi 3 chữ số, sau đó ghép với tiền tố "DV"
+            } else {
+                nextRoomId = "P101";
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return nextRoomId;
     }
 
 

@@ -35,6 +35,25 @@ public class AccountDAO {
         return account;
     }
 
+    public String getAccountByAccount(String taiKhoan) {
+        String account = null;
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+
+        String sql = "SELECT * FROM TaiKhoan WHERE taiKhoan = ?";
+        try (PreparedStatement preparedStatement = con.prepareStatement(sql)) {
+            preparedStatement.setString(1, taiKhoan);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    account = resultSet.getString("taiKhoan");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return account;
+    }
 
     public int checkLogin(Account user) {
         ConnectDB.getInstance();

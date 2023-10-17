@@ -139,4 +139,136 @@ public class StaffDAO {
         }
         return cccdlistt;
     }
+    public boolean addStaff(Staff staff) {
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        PreparedStatement stmt = null;
+
+        try {
+            // Kiểm tra xem tài khoản đã tồn tại hay chưa
+            String checkAccountQuery = "SELECT COUNT(*) FROM TaiKhoan WHERE taiKhoan = ?";
+            stmt = con.prepareStatement(checkAccountQuery);
+            stmt.setString(1, staff.getTaiKhoan().getTaiKhoan());
+            ResultSet resultSet = stmt.executeQuery();
+
+            if (resultSet.next() && resultSet.getInt(1) == 0) {
+                // Tài khoản chưa tồn tại, thêm tài khoản mới
+                String insertAccountQuery = "INSERT INTO TaiKhoan (taiKhoan, matKhau, tinhTrang) VALUES (?, ?, ?)";
+                stmt = con.prepareStatement(insertAccountQuery);
+                stmt.setString(1, staff.getTaiKhoan().getTaiKhoan());
+                stmt.setString(2, "1"); // Mật khẩu mặc định là "1"
+                stmt.setBoolean(3, true);
+                stmt.executeUpdate();
+            }
+
+            // Thêm thông tin nhân viên vào bảng NhanVien
+            String insertStaffQuery = "INSERT INTO NhanVien (maNhanVien, tenNhanVien, soDienThoai, CCCD, gioiTinh, ngaySinh, diaChi, chucVu, trangThai, taiKhoan) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            stmt = con.prepareStatement(insertStaffQuery);
+            stmt.setString(1, staff.getMaNhanVien());
+            stmt.setString(2, staff.getTenNhanVien());
+            stmt.setString(3, staff.getSoDienThoai());
+            stmt.setString(4, staff.getCCCD());
+            stmt.setBoolean(5, staff.isGioiTinh());
+            stmt.setDate(6, (Date) staff.getNgaySinh());
+            stmt.setString(7, staff.getDiaChi());
+            stmt.setString(8, staff.getChucVu());
+            stmt.setString(9, staff.getTrangThai());
+            stmt.setString(10, staff.getTaiKhoan().getTaiKhoan());
+            stmt.executeUpdate();
+
+            con.commit();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            if (con != null) {
+                try {
+                    con.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            return false;
+        } finally {
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public boolean update(Staff s) {
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        PreparedStatement statement = null;
+        int n = 0;
+        try {
+            String sql = "update dbo.NhanVien" + " set tenNhanVien = ?, soDienThoai=?, CCCD = ?, gioiTinh = ?,ngaySinh=?,diaChi=?,chucVu=?,tinhTrang=?,taiKhoan=?"
+                    + " where maNhanVien = ?";
+            statement = con.prepareStatement(sql);
+            statement.setString(1, s.getTenNhanVien());
+            statement.setString(2, s.getSoDienThoai());
+            statement.setString(3, s.getCCCD());
+            statement.setBoolean(4, s.isGioiTinh());
+            statement.setDate(5, (Date) s.getNgaySinh());
+            statement.setString(6, s.getDiaChi());
+            statement.setString(7, s.getChucVu());
+            statement.setString(8, s.getTrangThai());
+            statement.setString(9, s.getTaiKhoan().getTaiKhoan());
+            statement.setString(10, s.getMaNhanVien());
+            n = statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return n > 0;
+    }
+
+    public boolean delete(Staff kh) {
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        PreparedStatement statement = null;
+        int n = 0;
+        try {
+            String sql = "delete from dbo.NhanVien" + " where maNhanVien = ?";
+            statement = con.prepareStatement(sql);
+            statement.setString(1, kh.getMaNhanVien());
+            n = statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return n > 0;
+
+
+    }
+    public String generateNextStaffId() {
+        Connection con = null;
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+        String nextStaffId = null;
+
+        try {
+            con = ConnectDB.getConnection();
+            String sql = "SELECT TOP 1 maNhanVien FROM dbo.NhanVien ORDER BY maNhanVien DESC";
+            statement = con.prepareStatement(sql);
+            rs = statement.executeQuery();
+
+            if (rs.next()) {
+                String lastStaffId = rs.getString("maNhanVien");
+                String numericPart = lastStaffId.substring(2); // Lấy phần số từ mã nhân viên cuối cùng
+                int counter = Integer.parseInt(numericPart) + 1; // Tăng giá trị số lên 1
+                nextStaffId = "NV" + String.format("%03d", counter); // Định dạng lại giá trị số thành chuỗi 3 chữ số, sau đó ghép với tiền tố "DV"
+            } else {
+                nextStaffId = "NV01";
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return nextStaffId;
+    }
+
+
 }

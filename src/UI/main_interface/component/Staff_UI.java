@@ -1,10 +1,9 @@
 package UI.main_interface.component;
 
 import ConnectDB.ConnectDB;
-import DAOs.CustomerDAO;
+import DAOs.AccountDAO;
 import DAOs.StaffDAO;
-import Entity.Customer;
-import Entity.Staff;
+import Entity.*;
 import UI.CustomUI.Custom;
 
 import javax.swing.*;
@@ -15,11 +14,16 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Staff_UI extends JPanel {
+public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
 
+    private  JTextField txtBaoLoi;
+    private  JTextField txtDiaChi;
     private JTable tableNV;
     private DefaultTableModel modelTableNV;
     private JLabel backgroundLabel, ChucVuLabel, taiKhoanLabel, tinhTrangLabel, timeLabel, maNVLabel, tenNVLabel, gioitinhNVLabel, sdtNVLabel, ngaySinhLabel, cmndLabel, search1Label, search2Label, search3Label;
@@ -28,8 +32,9 @@ public class Staff_UI extends JPanel {
     private JPanel timeNow, pnlStaffList, pnlStaffControl, panelDSNV;
     private DatePicker dpNgaySinhNV;
     private DefaultTableModel tableModelNV;
-    private JButton btnThem, btnXoa, btnSua, btnTim1, btnTim2, btnTim3, btnLamMoi, btnXemHet;
+    private JButton btnThem, btnXemhet, btnSua, btnTim1, btnTim2, btnTim3, btnLamMoi, btnXemHet;
     private StaffDAO StaffDAO;
+    private AccountDAO AccountDAO;
 
     public Staff_UI() {
         setLayout(null);
@@ -37,6 +42,7 @@ public class Staff_UI extends JPanel {
 
         //phan viet code
         StaffDAO = new StaffDAO();
+        AccountDAO =new AccountDAO();
         try {
             ConnectDB.getInstance().connect();
         } catch (Exception e) {
@@ -148,16 +154,12 @@ public class Staff_UI extends JPanel {
         btnThem.setBounds(550, 220, 100, 30);
         pnlStaffControl.add(btnThem);
 
-        btnXoa = new JButton("Xóa");
-        btnXoa.setFont(new Font("Arial", Font.BOLD, 15));
-        btnXoa.setBounds(690, 220, 100, 30);
-        Custom.setCustomBtn(btnXoa);
-        pnlStaffControl.add(btnXoa);
+
 
         btnSua = new JButton("Sửa");
         btnSua.setFont(new Font("Arial", Font.BOLD, 15));
         Custom.setCustomBtn(btnSua);
-        btnSua.setBounds(830, 220, 100, 30);
+        btnSua.setBounds(770, 220, 100, 30);
         pnlStaffControl.add(btnSua);
 
         btnLamMoi = new JButton("Làm Mới");
@@ -203,8 +205,10 @@ public class Staff_UI extends JPanel {
         txtTaiKhoan.setBounds(665, 120, 200, 30);
         pnlStaffControl.add(txtTaiKhoan);
 
-        JTextField txtBaoLoi = new JTextField();
-        txtBaoLoi.setBounds(665, 170, 200, 30);
+         txtBaoLoi = new JTextField();
+        txtBaoLoi.setFont(new Font("Arial",Font.BOLD,13));
+        txtBaoLoi.setForeground(Color.RED);
+        txtBaoLoi.setBounds(665, 170, 400, 30);
         pnlStaffControl.add(txtBaoLoi);
         //-
         JLabel diaChiLabel = new JLabel("Địa Chỉ: ");
@@ -213,7 +217,7 @@ public class Staff_UI extends JPanel {
         diaChiLabel.setForeground(Color.WHITE);
         pnlStaffControl.add(diaChiLabel);
 
-        JTextField txtDiaChi = new JTextField();
+        txtDiaChi = new JTextField();
         txtDiaChi.setBounds(665, 20, 200, 30);
         pnlStaffControl.add(txtDiaChi);
 
@@ -242,11 +246,16 @@ public class Staff_UI extends JPanel {
         scrollPaneNV.getViewport().setBackground(Color.WHITE);
         pnlStaffList.add(panelDSNV);
         loadNV();
+        tableNV.addMouseListener(this);
 
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/images/background.png"));
         backgroundLabel = new JLabel(backgroundImage);
         backgroundLabel.setBounds(0, 0, getWidth(), getHeight());
         add(backgroundLabel);
+        btnSua.addActionListener(this);
+
+        btnThem.addActionListener(this);
+        btnLamMoi.addActionListener(this);
 
         reSizeColumnTableStaff();
     }
@@ -280,5 +289,198 @@ public class Staff_UI extends JPanel {
             Object[] rowData = {staff.getMaNhanVien(), staff.getTenNhanVien(), staff.getSoDienThoai(), staff.getCCCD(), gt, staff.getNgaySinh(),staff.getDiaChi(), staff.getChucVu(), staff.getTrangThai(), staff.getTaiKhoan().getTaiKhoan()};
             modelTableNV.addRow(rowData);
         }
+    }
+    private void showMessage(JTextField txt, String message) {
+        txt.requestFocus();
+        txtBaoLoi.setText(message);
+    }
+
+    private boolean validData() {
+        String ten = txtTenNV.getText().trim();
+        String diachi = txtDiaChi.getText().trim();
+        String taikhoan = txtTaiKhoan.getText().toString();
+        String cccd = txtCMNDNV.getText().toString();
+        String sdt = txtSDTNV.getText().toString();
+
+        if (!((ten.length() > 0) && ten.matches("^[A-Za-zÀ-ỹ ]+"))) {
+            showMessage(txtTenNV,"Tên nhân viên không được chứa kí tự đặc biệt và số");
+            return false;
+        }
+        if (!((diachi.length()) > 0 && diachi.matches("^[A-Za-zÀ-ỹ0-9 ]+"))) {
+            showMessage(txtDiaChi,"Địa chỉ không được chứa số và kí tự đặc biệt");
+            return false;
+        }
+        if (!((taikhoan.length()) > 0 && taikhoan.matches("^[a-z]*"))) {
+            showMessage(txtTaiKhoan,"Số lượng tồn phải lớn hơn 0");
+            return false;
+        }
+        if (!((cccd.length()) > 0 && cccd.matches("^0[0-9]{11}$"))) {
+            showMessage(txtCMNDNV,"CCCD gồm 12 số bắt đầu bằng 0");
+            return false;
+        }if (!((sdt.length()) > 0 && sdt.matches("^0[0-9]{9}$"))) {
+            showMessage(txtSDTNV,"SDT gồm 10 số bắt đầu bằng 0");
+            return false;
+        }
+        return true;
+    }
+    public String laymaNV(){
+        String MaNV = StaffDAO.generateNextStaffId();
+        System.out.printf("ádasdasd "+MaNV);
+        return MaNV;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object o = e.getSource();
+        if (o.equals(btnLamMoi)) {
+            txtMaNV.setText("");
+            txtTenNV.setText("");
+            cboGioiTinhNV.setSelectedIndex(0);
+            txtCMNDNV.setText("");
+            dpNgaySinhNV.setValueToDay();
+            txtTaiKhoan.setText("");
+            cbotinhTrang.setSelectedIndex(0);
+            cboChucVu.setSelectedIndex(0);
+            txtDiaChi.setText("");
+            txtMaNV.requestFocus();
+            txtMaNV.setText("KH");
+            txtMaNV.setEditable(true);
+        } else if (o.equals(btnThem)) {
+            if (txtTenNV.getText().equals("") || txtSDTNV.getText().equals("") || txtCMNDNV.getText().equals("") || txtDiaChi.getText().equals("") || txtTaiKhoan.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Bạn phải nhập thông tin nhân viên");
+            } else if (validData()){
+
+                    String ma = txtMaNV.getText().trim();
+                    String ten = txtTenNV.getText().trim();
+                    String sdt = txtSDTNV.getText().trim();
+                    String gioiTinh = cboGioiTinhNV.getSelectedItem().toString();
+                    boolean gt = true;
+                    String cccd = txtCMNDNV.getText().trim();
+                    String chucVu = cboChucVu.getSelectedItem().toString();
+                    String diachi = txtDiaChi.getText().trim();
+                    String trangthai = cbotinhTrang.getSelectedItem().toString();
+                    String taikhoan = txtTaiKhoan.getText().trim();
+
+                    if (gioiTinh == "Nam") {
+                        gt = true;
+                    } else {
+                        gt = false;
+                    }
+                    Date ngaysinh = null;
+                    try {
+                        ngaysinh = dpNgaySinhNV.getValueToDay();
+
+                    } catch (ParseException e3) {
+                        e3.printStackTrace();
+                    }
+                    Staff kh = new Staff(ma, ten, sdt, cccd, gt, ngaysinh, diachi, chucVu, trangthai, new Account(taikhoan));
+
+                    if (StaffDAO.addStaff(kh)) {
+                        String date = String.valueOf(kh.getNgaySinh());
+                        modelTableNV.addRow(new Object[]{kh.getMaNhanVien(), kh.getTenNhanVien(), kh.getSoDienThoai(),
+                                kh.getCCCD(), kh.isGioiTinh(), date, kh.getDiaChi(), kh.getChucVu(), kh.getTrangThai(), kh.getTaiKhoan().getTaiKhoan()});
+                        JOptionPane.showMessageDialog(this, "Thêm nhân viên thành công");
+                        modelTableNV.fireTableDataChanged();
+                        modelTableNV.getDataVector().removeAllElements();
+                        loadNV();
+
+
+                    }
+
+                }
+        } else if (o.equals(btnSua)) {
+
+            String ma = txtMaNV.getText().trim();
+            String ten = txtTenNV.getText().trim();
+            String sdt = txtSDTNV.getText().trim();
+            String gioiTinh = cboGioiTinhNV.getSelectedItem().toString();
+            boolean gt = true;
+            String chucVu = cboChucVu.getSelectedItem().toString();
+            String diachi = txtDiaChi.getText().trim();
+            String trangthai=cbotinhTrang.getSelectedItem().toString();
+            String cccd = txtCMNDNV.getText().trim();
+            String taikhoan =txtTaiKhoan.getText().trim();
+
+            if (gioiTinh == "Nam") {
+                gt = true;
+            } else {
+                gt = false;
+            }
+
+
+            Date ngaysinh = null;
+
+            try {
+                ngaysinh = dpNgaySinhNV.getValueToDay();
+
+            } catch (ParseException e3) {
+                e3.printStackTrace();
+            }
+            Staff kh = new Staff(ma, ten, sdt, cccd, gt, ngaysinh ,diachi,chucVu,trangthai,new Account(taikhoan));
+
+            int row = tableNV.getSelectedRow();
+            boolean result = StaffDAO.update(kh);
+            if (result == true) {
+                String date = String.valueOf(kh.getNgaySinh());
+                modelTableNV.setValueAt(kh.getMaNhanVien(), row, 1);
+                modelTableNV.setValueAt(kh.getTenNhanVien(), row, 2);
+                modelTableNV.setValueAt(kh.getSoDienThoai(), row, 3);
+                modelTableNV.setValueAt(kh.getCCCD(), row, 4);
+                modelTableNV.setValueAt(kh.isGioiTinh(), row, 5);
+                modelTableNV.setValueAt(date, row, 6);
+                modelTableNV.setValueAt(kh.getDiaChi(),row,7);
+                modelTableNV.setValueAt(kh.getChucVu(),row,8);
+                modelTableNV.setValueAt(kh.getTrangThai(),row,9);
+                modelTableNV.setValueAt(kh.getTaiKhoan().getTaiKhoan(),row,7);
+                JOptionPane.showMessageDialog(this, "Cập nhật thành công");
+                modelTableNV.fireTableDataChanged();
+                modelTableNV.getDataVector().removeAllElements();
+                loadNV();
+            } else {
+                JOptionPane.showMessageDialog(this, "Lỗi: Cập nhật thất bại");
+            }
+
+        }
+
+
+
+    }
+
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        int row = tableNV.getSelectedRow();
+        txtMaNV.setText(modelTableNV.getValueAt(row, 0).toString());
+        txtTenNV.setText(modelTableNV.getValueAt(row, 1).toString());
+        txtSDTNV.setText(modelTableNV.getValueAt(row, 2).toString());
+        txtCMNDNV.setText(modelTableNV.getValueAt(row, 3).toString());
+        cboGioiTinhNV.setSelectedItem(modelTableNV.getValueAt(row,4).toString());
+        txtDiaChi.setText(modelTableNV.getValueAt(row, 6).toString());
+        cboChucVu.setSelectedItem(modelTableNV.getValueAt(row,7).toString());
+        cbotinhTrang.setSelectedItem(modelTableNV.getValueAt(row,8).toString());
+        txtTaiKhoan.setText(modelTableNV.getValueAt(row, 9).toString());
+
+
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
     }
 }

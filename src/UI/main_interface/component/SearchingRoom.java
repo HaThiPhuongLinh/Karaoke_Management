@@ -2,7 +2,8 @@ package UI.main_interface.component;
 
 import ConnectDB.ConnectDB;
 import DAOs.RoomDAO;
-import Entity.Room;
+import DAOs.TypeOfRoomDAO;
+import Entity.*;
 import UI.CustomUI.Custom;
 
 import javax.swing.*;
@@ -12,22 +13,28 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
-public class SearchingRoom extends JPanel {
+public class SearchingRoom extends JPanel implements ActionListener, MouseListener {
     private  JTable tableP;
     private  DefaultTableModel modelTableP;
     private JLabel backgroundLabel, timeLabel, search1Label, search2Label, search3Label;
-    private JTextField txtSearch1, txtSearch2, txtSearch3;
+    private JTextField  txtSearch2, txtSearch3;
+    private JComboBox cboTimTheoTen;
     private JPanel timeNow, pnlCusList, pnlCusControl, pnlCusListRight;
     private DefaultTableModel tableModel;
-    private JButton btnTim;
+    private JButton btnTim,btnLammOi;
     private RoomDAO RoomDAO;
+    private TypeOfRoomDAO typeOfRoomDAO;
 
     public SearchingRoom() {
         setLayout(null);
         setBounds(0, 0, 1175, 770);
+        typeOfRoomDAO = new TypeOfRoomDAO();
         RoomDAO = new RoomDAO();
         try {
             ConnectDB.getInstance().connect();
@@ -86,15 +93,21 @@ public class SearchingRoom extends JPanel {
         search1Label.setForeground(Color.WHITE);
         pnlCusControl.add(search1Label);
 
-        txtSearch1 = new JTextField();
-        txtSearch1.setBounds(215, 25, 280, 30);
-        pnlCusControl.add(txtSearch1);
+        cboTimTheoTen = new JComboBox();
+        cboTimTheoTen.setBounds(215, 25, 280, 30);
+        cboTimTheoTen.addItem("Tất Cả");
+        pnlCusControl.add(cboTimTheoTen);
 
         btnTim = new JButton("Tìm kiếm");
         btnTim.setBounds(980, 25, 100, 30);
         Custom.setCustomBtn(btnTim);
         btnTim.setFont(new Font("Arial", Font.BOLD, 14));
         pnlCusControl.add(btnTim);
+        btnLammOi = new JButton("Làm mới");
+        btnLammOi.setBounds(980, 60, 100, 30);
+        Custom.setCustomBtn(btnLammOi);
+        btnLammOi.setFont(new Font("Arial", Font.BOLD, 14));
+        pnlCusControl.add(btnLammOi);
 
         search2Label = new JLabel("Tìm Theo Giá: ");
         search2Label.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -133,18 +146,41 @@ public class SearchingRoom extends JPanel {
         scrollPaneP.getViewport().setBackground(Color.WHITE);
         pnlCusList.add(panelDSKH);
         loadP();
+        loadCboLoaiPhong();
+        btnLammOi.addActionListener(this);
+        btnTim.addActionListener(this);
 
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/images/background.png"));
         backgroundLabel = new JLabel(backgroundImage);
         backgroundLabel.setBounds(0, 0, getWidth(), getHeight());
         add(backgroundLabel);
-    }
+//Tim theo ten loại phong
+        cboTimTheoTen.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selectedLoaiPhong = (String) cboTimTheoTen.getSelectedItem();
+                txtSearch2.setText("");
 
+                modelTableP.setRowCount(0);
+                int i=1;
+                for (Room room : RoomDAO.getRoomList()) {
+                    if (selectedLoaiPhong.equalsIgnoreCase("Tất cả") ||
+                            selectedLoaiPhong.equalsIgnoreCase(room.getLoaiPhong().getTenLoaiPhong())) {
+                        Object[] rowData = {i,room.getMaPhong(),room.getLoaiPhong().getTenLoaiPhong(),room.getViTri(),room.getTinhTrang(),room.getGiaPhong()};
+                        modelTableP.addRow(rowData);
+                    }
+                    i++;
+                }
+            }
+        });
+    }
+//Cap nhat thoi gian thuc
     private void updateTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String time = sdf.format(new Date());
         timeLabel.setText(time);
     }
+    //Load danh sach phong len bang
     public void loadP(){
         int i=1;
         for (Room room : RoomDAO.getRoomList()) {
@@ -154,6 +190,77 @@ public class SearchingRoom extends JPanel {
 
         }
     }
+    //Load danh sach loai phong len combobox
+    private void loadCboLoaiPhong() {
+        java.util.List<TypeOfRoom> dataList = TypeOfRoomDAO.getAllLoaiPhong();
 
+        for (TypeOfRoom typeOfRoom : dataList) {
+            cboTimTheoTen.addItem(typeOfRoom.getTenLoaiPhong());
+        }
+    }
+
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object o = e.getSource();
+        if (o.equals(btnTim)) {
+
+
+            if ( txtSearch2.getText().trim().equals("") ) {
+                JOptionPane.showMessageDialog(this, "VUI LÒNG NHẬP THÔNG TIN CẦN TÌM KIẾM!!!");
+
+            } else if (!txtSearch2.getText().trim().equals("")) {
+                modelTableP.getDataVector().removeAllElements();
+                int gia = Integer.parseInt(txtSearch2.getText());
+                ArrayList<Room> services3 = RoomDAO.getDichVuTheoGia(gia);
+                int i = 1;
+                if (services3.size() != 0) {
+                    for (Room room : services3) {
+                        modelTableP.addRow(new Object[]{i, room.getMaPhong(), room.getLoaiPhong().getTenLoaiPhong(), room.getViTri(), room.getTinhTrang(), room.getGiaPhong()});
+                        i++;
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "KHÔNG TÌM THẤY!!!");
+                    txtSearch2.selectAll();
+                    txtSearch2.requestFocus();
+                }
+            }
+
+        }else if(o.equals(btnLammOi)){
+            txtSearch2.setText("");
+            cboTimTheoTen.setSelectedIndex(0);
+
+
+
+            modelTableP.getDataVector().removeAllElements();
+            loadP();
+        }
+
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
 }
 

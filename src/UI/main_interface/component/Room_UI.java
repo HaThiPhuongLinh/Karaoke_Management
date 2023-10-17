@@ -4,38 +4,51 @@ import javax.swing.*;
 
 import ConnectDB.ConnectDB;
 import DAOs.RoomDAO;
-import DAOs.StaffDAO;
-import Entity.Customer;
+import DAOs.TypeOfRoomDAO;
 import Entity.Room;
 import Entity.TypeOfRoom;
 import UI.CustomUI.Custom;
 
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.table.TableColumnModel;
+import java.util.ArrayList;
+import java.sql.SQLException ;
 
-public class Room_UI extends JPanel {
-
-    private JTable tableP;
+public class Room_UI extends JPanel implements ActionListener, MouseListener {
+    private  JTextField txtBaoLoi;
+    private  JButton btnThêmP;
+    private  JButton btnXoaP;
+    private  JButton btnSuaP;
+    private  JTextField txtMaPhong;
+    private JTextField txtVitri;
+    private  JComboBox<String> cboLocTheoLP;
+    private  JTextField txtGiaP;
+    private  JButton btnlamMoiP;
+    private  JComboBox<String> cboTinhTrang;
+    private  JComboBox<String> cboLoaiPhong;
+    private JTable tblPhong;
     private DefaultTableModel modelTableP;
+
+
     private JPanel pnlRoomControl, pnlRoomList, timeNow;
     private JLabel backgroundLabel, timeLabel;
     private RoomDAO RoomDAO;
-
+private TypeOfRoomDAO typeOfRoomDAO;
 
     public Room_UI() {
         setLayout(null);
         setBounds(0, 0, 1175, 770);
         RoomDAO = new RoomDAO();
+        typeOfRoomDAO = new TypeOfRoomDAO();
         try {
             ConnectDB.getInstance().connect();
         } catch (Exception e) {
@@ -95,16 +108,17 @@ public class Room_UI extends JPanel {
         modelTableP = new DefaultTableModel(colsP, 0);
         JScrollPane scrollPaneP;
 
-        tableP = new JTable(modelTableP);
-        tableP.setFont(new Font("Arial", Font.BOLD, 14));
-        tableP.setBackground(new Color(255, 255, 255, 0));
-        tableP.setForeground(new Color(255, 255, 255));
-        tableP.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-        tableP.getTableHeader().setForeground(Color.BLUE);
+        tblPhong = new JTable(modelTableP);
+        tblPhong.setFont(new Font("Arial", Font.BOLD, 14));
+        tblPhong.setBackground(new Color(255, 255, 255, 0));
+        tblPhong.setForeground(new Color(255, 255, 255));
+        tblPhong.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
+        tblPhong.getTableHeader().setForeground(Color.BLUE);
+        tblPhong.addMouseListener(this);
 
-        Custom.getInstance().setCustomTable(tableP);
+        Custom.getInstance().setCustomTable(tblPhong);
 
-        panelDSP.add(scrollPaneP = new JScrollPane(tableP, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
+        panelDSP.add(scrollPaneP = new JScrollPane(tblPhong, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
                 BorderLayout.CENTER);
         scrollPaneP.setBounds(10, 20, 1090, 330);
         scrollPaneP.setOpaque(false);
@@ -119,10 +133,10 @@ public class Room_UI extends JPanel {
         labelMaPhong.setForeground(Color.WHITE);
         pnlRoomControl.add(labelMaPhong);
 
-        JTextField textFieldMaPhong = new JTextField();
-        textFieldMaPhong.setBounds(145, 20, 311, 30);
-        textFieldMaPhong.setColumns(10);
-        pnlRoomControl.add(textFieldMaPhong);
+         txtMaPhong = new JTextField();
+        txtMaPhong.setBounds(145, 20, 311, 30);
+        txtMaPhong.setColumns(10);
+        pnlRoomControl.add(txtMaPhong);
 
 //      Vị trí
         JLabel labelViTri = new JLabel("Vị Trí:");
@@ -131,10 +145,10 @@ public class Room_UI extends JPanel {
         labelViTri.setForeground(Color.WHITE);
         pnlRoomControl.add(labelViTri);
 
-        JTextField textFieldVitri = new JTextField();
-        textFieldVitri.setBounds(145, 70, 311, 30);
-        textFieldVitri.setColumns(10);
-        pnlRoomControl.add(textFieldVitri);
+         txtVitri = new JTextField();
+        txtVitri.setBounds(145, 70, 311, 30);
+        txtVitri.setColumns(10);
+        pnlRoomControl.add(txtVitri);
 
         //      Loại phòng
         JLabel labelLoaiPhong = new JLabel("Loại phòng:");
@@ -143,11 +157,11 @@ public class Room_UI extends JPanel {
         labelLoaiPhong.setForeground(Color.WHITE);
         pnlRoomControl.add(labelLoaiPhong);
 
-        JComboBox<String> comboBoxLoaiPhong = new JComboBox<String>();
-        comboBoxLoaiPhong.addItem("Tất cả");
-        comboBoxLoaiPhong.setBounds(145, 120, 311, 30);
-        Custom.setCustomComboBox(comboBoxLoaiPhong);
-        pnlRoomControl.add(comboBoxLoaiPhong);
+         cboLoaiPhong = new JComboBox<String>();
+        cboLoaiPhong.addItem("Tất cả");
+        cboLoaiPhong.setBounds(145, 120, 311, 30);
+        Custom.setCustomComboBox(cboLoaiPhong);
+        pnlRoomControl.add(cboLoaiPhong);
 
         //tinh trang
         JLabel labelTinhTrang = new JLabel("Tình Trạng:");
@@ -156,11 +170,14 @@ public class Room_UI extends JPanel {
         labelTinhTrang.setForeground(Color.WHITE);
         pnlRoomControl.add(labelTinhTrang);
 
-        JComboBox<String> comboBoxTinhTrang = new JComboBox<String>();
-        comboBoxTinhTrang.addItem("Tất cả");
-        comboBoxTinhTrang.setBounds(145, 170, 311, 30);
-        Custom.setCustomComboBox(comboBoxTinhTrang);
-        pnlRoomControl.add(comboBoxTinhTrang);
+         cboTinhTrang = new JComboBox<String>();
+        cboTinhTrang.addItem("Trống");
+        cboTinhTrang.addItem("Chờ");
+        cboTinhTrang.addItem("Đang sử dụng");
+        cboTinhTrang.addItem("Tạm");
+        cboTinhTrang.setBounds(145, 170, 311, 30);
+        Custom.setCustomComboBox(cboTinhTrang);
+        pnlRoomControl.add(cboTinhTrang);
 
         //      Lọc theo
         JLabel labelLocTheoLP = new JLabel("Lọc theo:");
@@ -169,13 +186,13 @@ public class Room_UI extends JPanel {
         labelLocTheoLP.setForeground(Color.WHITE);
         pnlRoomControl.add(labelLocTheoLP);
 
-        JComboBox<String> comboBoxLocTheoLP = new JComboBox<String>();
-        comboBoxLocTheoLP.addItem("Tất cả");
-        comboBoxLocTheoLP.addItem("Tình Trạng");
-        comboBoxLocTheoLP.addItem("Loại Phòng");
-        comboBoxLocTheoLP.setBounds(665, 70, 311, 30);
-        Custom.setCustomComboBox(comboBoxLocTheoLP);
-        pnlRoomControl.add(comboBoxLocTheoLP);
+         cboLocTheoLP = new JComboBox<String>();
+        cboLocTheoLP.addItem("Tất cả");
+        cboLocTheoLP.addItem("Tình Trạng");
+        cboLocTheoLP.addItem("Loại Phòng");
+        cboLocTheoLP.setBounds(665, 70, 311, 30);
+        Custom.setCustomComboBox(cboLocTheoLP);
+        pnlRoomControl.add(cboLocTheoLP);
 
         //      Từ khóa
         JLabel labelGiaP = new JLabel("Giá Phòng:");
@@ -184,39 +201,41 @@ public class Room_UI extends JPanel {
         labelGiaP.setForeground(Color.WHITE);
         pnlRoomControl.add(labelGiaP);
 
-        JTextField textFieldGiaP = new JTextField();
-        textFieldGiaP.setBounds(665, 20, 311, 30);
-        textFieldGiaP.setColumns(6);
-        pnlRoomControl.add(textFieldGiaP);
+         txtGiaP = new JTextField();
+        txtGiaP.setBounds(665, 20, 311, 30);
+        txtGiaP.setColumns(6);
+        pnlRoomControl.add(txtGiaP);
 
-        JTextField textFieldBaoLoi = new JTextField();
-        textFieldBaoLoi.setBounds(665, 120, 311, 30);
-        textFieldBaoLoi.setColumns(6);
-        pnlRoomControl.add(textFieldBaoLoi);
+         txtBaoLoi = new JTextField();
+        txtBaoLoi.setFont(new Font("Arial",Font.BOLD,13));
+        txtBaoLoi.setForeground(Color.RED);
+        txtBaoLoi.setBounds(550, 120, 426, 30);
+        txtBaoLoi.setColumns(6);
+        pnlRoomControl.add(txtBaoLoi);
 
         //        btn thêm
-        JButton btnThêmP = new JButton("Thêm");
+         btnThêmP = new JButton("Thêm");
         btnThêmP.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnThêmP);
         btnThêmP.setBounds(550, 170, 100, 30);
         pnlRoomControl.add(btnThêmP);
 
         //        btn Xóa
-        JButton btnXoaP = new JButton("Xóa");
+         btnXoaP = new JButton("Xóa");
         btnXoaP.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnXoaP);
         btnXoaP.setBounds(690, 170, 100, 30);
         pnlRoomControl.add(btnXoaP);
 
         //        btn sửa
-        JButton btnSuaP = new JButton("Sửa");
+         btnSuaP = new JButton("Sửa");
         btnSuaP.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnSuaP);
         btnSuaP.setBounds(830, 170, 100, 30);
         pnlRoomControl.add(btnSuaP);
 
         //        btn làm mới
-        JButton btnlamMoiP = new JButton("Làm mới");
+         btnlamMoiP = new JButton("Làm mới");
         btnlamMoiP.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnlamMoiP);
         btnlamMoiP.setBounds(970, 170, 100, 30);
@@ -226,7 +245,14 @@ public class Room_UI extends JPanel {
         backgroundLabel = new JLabel(backgroundImage);
         backgroundLabel.setBounds(0, 0, getWidth(), getHeight());
         add(backgroundLabel);
+        btnSuaP.addActionListener(this);
+        btnlamMoiP.addActionListener(this);
+        btnThêmP.addActionListener(this);
+        btnXoaP.addActionListener(this);
         loadP();
+        loadCboLoaiPhong();
+
+
     }
 
     private void updateTime() {
@@ -234,6 +260,8 @@ public class Room_UI extends JPanel {
         String time = sdf.format(new Date());
         timeLabel.setText(time);
     }
+
+
 
 
     public void loadP() {
@@ -245,5 +273,190 @@ public class Room_UI extends JPanel {
 
         }
     }
+    private void loadCboLoaiPhong() {
+        java.util.List<TypeOfRoom> dataList = typeOfRoomDAO.getAllLoaiPhong();
+        for (TypeOfRoom typeOfRoom : dataList) {
+            cboLoaiPhong.addItem(typeOfRoom.getTenLoaiPhong());
+        }
+    }
+    public String laymaP(){
+        String MaP = RoomDAO.generateNextRoomId();
+        return MaP;
+    }
 
+
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object o = e.getSource();
+        if (o.equals(btnThêmP)) {
+            if (txtVitri.getText().equals("") || txtGiaP.getText().equals("") ||   cboLoaiPhong.getSelectedIndex() == 0) {
+                JOptionPane.showMessageDialog(this, "Bạn phải nhập thông tin đầy đủ thông tin dịch vụ");
+            } else if (validData()) {
+                String ma = laymaP();
+                String tenLDV = cboLoaiPhong.getSelectedItem().toString().trim();
+                ArrayList<TypeOfRoom> typeOfRooms = typeOfRoomDAO.getTypeOfRoomByName(tenLDV);
+                String s = "";
+                for (TypeOfRoom typeOfRoom : typeOfRooms) {
+                    s += typeOfRoom.getMaLoaiPhong();
+                }
+
+
+
+                String vitri = txtVitri.getText().trim();
+                String tinhTrang = cboTinhTrang.getSelectedItem().toString();
+                int giaBan = Integer.parseInt(txtGiaP.getText().trim());
+
+                Room room = new Room(ma, new TypeOfRoom(s), vitri, tinhTrang, giaBan);
+
+                try {
+                    if (RoomDAO.insert(room)) {
+
+                        modelTableP.getDataVector().removeAllElements();
+                        loadP();
+                        JOptionPane.showMessageDialog(this, "Thêm thành công phòng");
+                    }
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+
+
+            } else if (o.equals(btnlamMoiP)) {
+                txtMaPhong.setText("");
+
+                cboLoaiPhong.setSelectedIndex(0);
+                txtGiaP.setText("");
+                txtVitri.setText("");
+                cboTinhTrang.setSelectedIndex(0);
+
+
+                modelTableP.getDataVector().removeAllElements();
+                loadP();
+            } else if (o.equals(btnXoaP)) {
+                int row = tblPhong.getSelectedRow();
+                try {
+                    if (row == -1) {
+                        JOptionPane.showMessageDialog(this, "Chon dong can xoa");
+                    } else {
+                        String tenLP = cboLoaiPhong.getSelectedItem().toString().trim();
+                        ArrayList<TypeOfRoom> typeOfRooms = typeOfRoomDAO.getTypeOfRoomByName(tenLP);
+                        String s = "";
+                        for (TypeOfRoom typeOfRoom : typeOfRooms) {
+                            s += typeOfRoom.getMaLoaiPhong();
+                        }
+
+                        String map = txtMaPhong.getText().trim();
+
+                        String vitri = txtVitri.getText().trim();
+                        int gia = Integer.parseInt(txtGiaP.getText().trim());
+                        String tinhtrang = cboTinhTrang.getSelectedItem().toString().trim();
+
+
+                        Room room = new Room(map, new TypeOfRoom(s), vitri, tinhtrang, gia);
+                        int ans = JOptionPane.showConfirmDialog(this, "Bạn có muốn xoá phòng đã chọn ?", "Cảnh báo",
+                                JOptionPane.YES_NO_OPTION);
+                        if (ans == JOptionPane.YES_OPTION) {
+                            RoomDAO.delete(room);
+
+
+                            modelTableP.removeRow(row);
+                            JOptionPane.showMessageDialog(this, "Xóa thành công");
+                            modelTableP.getDataVector().removeAllElements();
+                            loadP();
+                        }
+                    }
+                } catch (Exception e3) {
+                    JOptionPane.showMessageDialog(this, "Xoa khong thanh cong");
+                }
+            } else if (o.equals(btnSuaP)) {
+                int row = tblPhong.getSelectedRow();
+                String tenLP = cboLoaiPhong.getSelectedItem().toString().trim();
+                ArrayList<TypeOfRoom> typeOfRooms = typeOfRoomDAO.getTypeOfRoomByName(tenLP);
+                String s = "";
+                for (TypeOfRoom typeOfRoom : typeOfRooms) {
+                    s += typeOfRoom.getMaLoaiPhong();
+                }
+
+                String map = txtMaPhong.getText().trim();
+
+                String vitri = txtVitri.getText().trim();
+                int gia = Integer.parseInt(txtGiaP.getText().trim());
+                String tinhtrang = cboTinhTrang.getSelectedItem().toString().trim();
+
+
+                Room room = new Room(map, new TypeOfRoom(s), vitri, tinhtrang, gia);
+//
+            if (!RoomDAO.update(room)) {
+                JOptionPane.showMessageDialog(this, "Lỗi:Vui lòng chọn dòng cần sửa và không được sửa mã");
+            } else {
+
+                tblPhong.setValueAt(cboLoaiPhong.getSelectedItem().toString(), row, 2);
+                tblPhong.setValueAt(txtVitri.getText(), row, 3);
+                tblPhong.setValueAt(cboTinhTrang.getSelectedItem().toString(), row, 4);
+                tblPhong.setValueAt(txtGiaP.getText(), row, 5);
+                JOptionPane.showMessageDialog(this, "Sửa thành công");
+            }
+        } else {
+                JOptionPane.showMessageDialog(this, "Chọn dòng cần xóa");
+            }
+        }
+
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        int row = tblPhong.getSelectedRow();
+        txtMaPhong.setText(modelTableP.getValueAt(row, 1).toString());
+        cboLoaiPhong.setSelectedItem(modelTableP.getValueAt(row, 2).toString());
+        cboTinhTrang.setSelectedItem(modelTableP.getValueAt(row, 4).toString());
+        txtGiaP.setText(modelTableP.getValueAt(row, 5).toString());
+        txtVitri.setText(modelTableP.getValueAt(row, 3).toString());
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
+    private boolean validData() {
+
+        String vitri = txtVitri.getText().trim();
+        String tenLP = cboLoaiPhong.getSelectedItem().toString().trim();;
+        String tinhTrang = cboTinhTrang.getSelectedItem().toString().trim();;
+        String giaBan = txtGiaP.getText().trim();
+
+
+        if (!((vitri.length()) > 0 && vitri.matches("^[A-Za-zÀ-ỹ0-9 ]+"))) {
+//            JOptionPane.showMessageDialog(txtVitri,"Error: Vị trí không được chứa và kí tự đặc biệt");
+            txtVitri.selectAll();
+            txtVitri.requestFocus();
+            txtBaoLoi.setText("Error: Vị trí không được chứa và kí tự đặc biệt");
+            return false;
+        }
+
+        if (!((giaBan.length()) > 0 && giaBan.matches("^[1-9]\\d*"))) {
+//            JOptionPane.showMessageDialog(txtGiaP,"Error: Giá Bán phải là số lớn hơn 0");
+            txtGiaP.selectAll();
+            txtGiaP.requestFocus();
+            txtBaoLoi.setText("Error: Giá Bán phải là số lớn hơn 0");
+            return false;
+        }
+
+        return true;
+    }
 }

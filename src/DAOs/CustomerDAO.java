@@ -133,7 +133,7 @@ public class CustomerDAO {
         return n > 0;
     }
 
-    public boolean update(Customer kh) {
+    public static boolean update(Customer kh) {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
         PreparedStatement statement = null;
