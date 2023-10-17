@@ -1,5 +1,8 @@
 package Entity;
 
+import DAOs.AccountDAO;
+import DAOs.TypeOfServiceDAO;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -20,7 +23,11 @@ public class Account {
     }
 
     public Account(String taiKhoan) {
-        this.taiKhoan = taiKhoan;
+        AccountDAO accountDAO = new AccountDAO();
+        Account a = accountDAO.getAccountByTaiKhoan(taiKhoan);
+        this.taiKhoan = a.getTaiKhoan();
+        this.matKhau = a.getMatKhau();
+        this.tinhTrang = a.getTinhTrang();
     }
 
     public Account() {
@@ -28,10 +35,10 @@ public class Account {
         this.matKhau = "";
         this.tinhTrang = false;
     }
-
     public Account(ResultSet rs) throws SQLException {
-        this(rs.getString("taiKhoan"), rs.getString("matKhau"), rs.getBoolean("tinhTrang"));
+        this(rs.getString(1), rs.getString(2), rs.getBoolean(3));
     }
+
 
     public String getTaiKhoan() {
         return taiKhoan;

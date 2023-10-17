@@ -2,6 +2,7 @@ package UI.main_interface.component;
 
 import ConnectDB.ConnectDB;
 import DAOs.StaffDAO;
+import Entity.Service;
 import Entity.Staff;
 import UI.CustomUI.Custom;
 
@@ -13,11 +14,15 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
-public class SearchingStaff_UI extends JPanel {
+public class SearchingStaff_UI extends JPanel implements ActionListener, MouseListener {
 
+    private  JButton btnLamMoi;
     private JTable tableNV;
     private DefaultTableModel modelTableNV;
     private JLabel backgroundLabel, timeLabel, search1Label, search2Label, search3Label, search4Label;
@@ -92,6 +97,11 @@ public class SearchingStaff_UI extends JPanel {
         Custom.setCustomBtn(btnTim);
         btnTim.setFont(new Font("Arial", Font.BOLD, 14));
         pnlStaffControl.add(btnTim);
+        btnLamMoi = new JButton("Làm Mới");
+        btnLamMoi.setBounds(535, 205, 100, 30);
+        Custom.setCustomBtn(btnLamMoi);
+        btnLamMoi.setFont(new Font("Arial", Font.BOLD, 14));
+        pnlStaffControl.add(btnLamMoi);
 
         search2Label = new JLabel("Tìm Theo SDT: ");
         search2Label.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -120,19 +130,11 @@ public class SearchingStaff_UI extends JPanel {
         pnlStaffControl.add(search4Label);
 
         cboTinhTrang = new JComboBox<>();
+        cboTinhTrang.addItem("Tất cả");
         cboTinhTrang.addItem("Đang làm");
         cboTinhTrang.addItem("Đã nghỉ");
         cboTinhTrang.setBounds(465, 165, 280, 30);
         pnlStaffControl.add(cboTinhTrang);
-
-        cb = new JCheckBox();
-        cb.setBounds(760, 174, 20, 20);
-        pnlStaffControl.add(cb);
-
-        txtSearch1 = new JTextField();
-        txtSearch1.setBounds(465, 15, 280, 30);
-        pnlStaffControl.add(txtSearch1);
-
 
         JPanel panelDSNV = new JPanel();
         panelDSNV.setLayout(null);
@@ -164,6 +166,24 @@ public class SearchingStaff_UI extends JPanel {
         backgroundLabel = new JLabel(backgroundImage);
         backgroundLabel.setBounds(0, 0, getWidth(), getHeight());
         add(backgroundLabel);
+        btnTim.addActionListener(this);
+        btnLamMoi.addActionListener(this);
+
+        cboTinhTrang.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selectedNhanVien = (String) cboTinhTrang.getSelectedItem();
+                modelTableNV.setRowCount(0);
+                for (Staff staff : StaffDAO.getAllStaff()) {
+                    if (selectedNhanVien.equalsIgnoreCase("Tất cả") || selectedNhanVien.equalsIgnoreCase(staff.getTrangThai())) {
+                        Object[] rowData = { staff.getMaNhanVien(), staff.getTenNhanVien(), staff.getSoDienThoai(),
+                                staff.getCCCD(), staff.isGioiTinh(), staff.getNgaySinh(), staff.getDiaChi(),
+                                staff.getChucVu(), staff.getTrangThai(), staff.getTaiKhoan().getTaiKhoan()};
+                        modelTableNV.addRow(rowData);
+                    }
+                }
+            }
+        });
 
         reSizeColumnTableStaff();
     }
@@ -198,4 +218,100 @@ public class SearchingStaff_UI extends JPanel {
     }
 
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object o = e.getSource();
+        if (o.equals(btnTim)) {
+            String txtTenKH = txtSearch1.getText();
+            ArrayList<Staff> cus1 = (ArrayList<Staff>) StaffDAO.getListNhanVienByName(txtTenKH);
+
+            String txtSDT = txtSearch2.getText();
+            ArrayList<Staff> cus2 = (ArrayList<Staff>) StaffDAO.getListNhanVienBySDT(txtSDT);
+
+            String txtcccd = txtSearch3.getText();
+            ArrayList<Staff> cus3 = (ArrayList<Staff>) StaffDAO.getListNhanVienByCCCD(txtcccd);
+
+            if (txtSearch1.getText().trim().equals("") && txtSearch2.getText().trim().equals("") && txtSearch3.getText().trim().equals("")) {
+                JOptionPane.showMessageDialog(this, "Bạn phải nhập thông tin tìm kiếm");
+            } else if (!txtSearch1.getText().trim().equals("")) {
+                modelTableNV.getDataVector().removeAllElements();
+                int i = 1;
+                if (cus1.size() != 0) {
+                    for (Staff staff : cus1) {
+                        modelTableNV.addRow(new Object[]{staff.getMaNhanVien(), staff.getTenNhanVien(), staff.getSoDienThoai(),
+                                staff.getCCCD(), staff.isGioiTinh(), staff.getNgaySinh(), staff.getDiaChi(),
+                                staff.getChucVu(), staff.getTrangThai(), staff.getTaiKhoan().getTaiKhoan()});
+                        i++;
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Không tìm thấy nhân viên");
+                    txtSearch1.selectAll();
+                    txtSearch1.requestFocus();
+                }
+            } else if (!txtSearch2.getText().trim().equals("")) {
+                modelTableNV.getDataVector().removeAllElements();
+                int i = 1;
+                if (cus2.size() != 0) {
+                    for (Staff staff : cus2) {
+                        modelTableNV.addRow(new Object[]{staff.getMaNhanVien(), staff.getTenNhanVien(), staff.getSoDienThoai(),
+                                staff.getCCCD(), staff.isGioiTinh(), staff.getNgaySinh(), staff.getDiaChi(),
+                                staff.getChucVu(), staff.getTrangThai(), staff.getTaiKhoan().getTaiKhoan()});
+                        i++;
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Không tìm thấy nhân viên");
+                    txtSearch2.selectAll();
+                    txtSearch2.requestFocus();
+                }
+            } else if (!txtSearch3.getText().trim().equals("")) {
+                modelTableNV.getDataVector().removeAllElements();
+                int i = 1;
+                if (cus3.size() != 0) {
+                    for (Staff staff: cus3) {
+                        modelTableNV.addRow(new Object[]{staff.getMaNhanVien(), staff.getTenNhanVien(), staff.getSoDienThoai(),
+                                staff.getCCCD(), staff.isGioiTinh(), staff.getNgaySinh(), staff.getDiaChi(),
+                                staff.getChucVu(), staff.getTrangThai(), staff.getTaiKhoan().getTaiKhoan()});
+                        i++;
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Không tìm thấy nhân viên");
+                    txtSearch3.selectAll();
+                    txtSearch3.requestFocus();
+                }
+            }
+
+        } else if (o.equals(btnLamMoi)) {
+            txtSearch1.setText("");
+            txtSearch2.setText("");
+            txtSearch3.setText("");
+            modelTableNV.setRowCount(0); // Xóa dữ liệu trong bảng.
+            loadNV();
+        }
+
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
 }

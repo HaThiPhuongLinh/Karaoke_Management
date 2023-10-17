@@ -211,7 +211,7 @@ public class SearchingCustomer_UI extends JPanel implements ActionListener {
 //            String txtTenLDV = textFieldTenLoaiDichVu.getText();
 //            ArrayList<TypeOfService> typeOfServices = typeOfServiceDAO.getTypeOfServiceByName(txtTenLDV);
             if (txtSearch1.getText().trim().equals("") && txtSearch2.getText().trim().equals("") && txtSearch3.getText().trim().equals("")) {
-                JOptionPane.showMessageDialog(this, "VUI LÒNG NHẬP THÔNG TIN CẦN TÌM KIẾM!!!");
+                JOptionPane.showMessageDialog(this, "Bạn phải nhập thông tin tìm kiếm");
             } else if (!txtSearch1.getText().trim().equals("")) {
                 modelTableKH.getDataVector().removeAllElements();
                 int i = 1;
@@ -221,7 +221,7 @@ public class SearchingCustomer_UI extends JPanel implements ActionListener {
                         i++;
                     }
                 } else {
-                    JOptionPane.showMessageDialog(this, "KHÔNG TÌM THẤY!!!");
+                    JOptionPane.showMessageDialog(this, "Không tìm thấy khách hàng");
                     txtSearch1.selectAll();
                     txtSearch1.requestFocus();
                 }
@@ -234,7 +234,7 @@ public class SearchingCustomer_UI extends JPanel implements ActionListener {
                         i++;
                     }
                 } else {
-                    JOptionPane.showMessageDialog(this, "KHÔNG TÌM THẤY!!!");
+                    JOptionPane.showMessageDialog(this, "Không tìm thấy khách hàng");
                     txtSearch2.selectAll();
                     txtSearch2.requestFocus();
                 }
@@ -247,7 +247,7 @@ public class SearchingCustomer_UI extends JPanel implements ActionListener {
                         i++;
                     }
                 } else {
-                    JOptionPane.showMessageDialog(this, "KHÔNG TÌM THẤY!!!");
+                    JOptionPane.showMessageDialog(this, "Không tìm thấy khách hàng");
                     txtSearch3.selectAll();
                     txtSearch3.requestFocus();
                 }

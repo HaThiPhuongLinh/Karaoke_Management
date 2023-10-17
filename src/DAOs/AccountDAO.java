@@ -14,24 +14,6 @@ public class AccountDAO {
         return instance;
     }
 
-    public ArrayList<Account> getAllAccount(){
-        ArrayList<Account> lst = new ArrayList<Account>();
-        try {
-            ConnectDB.getInstance();
-            Connection con = ConnectDB.getConnection();
-
-            String sql = "Select * from TaiKhoan";
-            Statement statement = con.createStatement();
-            ResultSet rs = statement.executeQuery(sql);
-            while (rs.next()) {
-                Account account = new Account(rs);
-                lst.add(account);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return lst;
-    }
 
     public Account getAccountByTaiKhoan(String taiKhoan) {
         Account account = null;
