@@ -176,7 +176,7 @@ public class TypeOfService_UI extends JPanel  implements ActionListener, MouseLi
         btnXoa.addActionListener(this);
 
         tableDV.addMouseListener(this);
-
+        textFieldMaLoaiDichVu.setEditable(false);
 
         loadTypeOfService();
     }
@@ -196,6 +196,12 @@ public class TypeOfService_UI extends JPanel  implements ActionListener, MouseLi
         timeLabel.setText(time);
     }
 
+    public String laymaLDV(){
+        String MaDV = typeOfServiceDAO.generateNextTypeOfServiceId();
+        System.out.printf("ádasdasd "+MaDV);
+        return MaDV;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
@@ -204,18 +210,8 @@ public class TypeOfService_UI extends JPanel  implements ActionListener, MouseLi
                 JOptionPane.showMessageDialog(this,"Bạn phải nhập thông tin đầy đủ thông tin loại dịch vụ");
             }else
             if (validData()){
-                java.util.List<TypeOfService> list = typeOfServiceDAO.getAllLoaiDichVu();
-                int i=1;
-                for (TypeOfService service : list){
-                    i++;
-                }
-                String MaLDV = "";
-                if (i<10){
-                    MaLDV = "LDV0"+i;
-                }else{
-                    MaLDV = "LDV"+i;
-                }
-                String maldv = textFieldMaLoaiDichVu.getText();
+
+                String MaLDV = laymaLDV();
                 String tenldv = textFieldTenLoaiDichVu.getText().trim();
 
                 TypeOfService type = new TypeOfService(MaLDV,tenldv);
@@ -320,7 +316,6 @@ public class TypeOfService_UI extends JPanel  implements ActionListener, MouseLi
 
     }
     private boolean validData() {
-//        String ma = txtMaKH.getText().trim();
         String ten = textFieldTenLoaiDichVu.getText().trim();
         if (!((ten.length()) > 0 && ten.matches("^[A-Za-zaAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆfFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTuUùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ ]+"))) {
             JOptionPane.showMessageDialog(textFieldTenLoaiDichVu,"Error: Tên loại dịch vụ không được chứa số và kí tự đặc biệt");

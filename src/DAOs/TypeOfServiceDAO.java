@@ -142,4 +142,118 @@ public class TypeOfServiceDAO {
         }
         return n > 0;
     }
+//    public TypeOfService getServiceTypeByName1(String serviceTypeName) {
+//        String query = "SELECT * FROM LoaiDichVu WHERE tenoaiDichVu = ?";
+//        Object[] params = { serviceTypeName };
+//        ResultSet rs = DataProvider.getInstance().executeQuery(query, params);
+//        TypeOfService result = null;
+//        try {
+//            while (rs.next()) {
+//                result = new TypeOfService(rs);
+//                break;
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return result;
+//    }
+
+//    public String getLastServiceTypeID() {
+//        String query = "{CALL USP_getLastServiceTypeID()}";
+//        Object obj = DataProvider.getInstance().executeScalar(query, null);
+//        String result = obj != null ? obj.toString() : "";
+//        return result;
+//    }
+
+    public String getServiceCodeByName(String serviceName) {
+        Connection con = null;
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+        String serviceCode = null;
+
+        try {
+            con = ConnectDB.getConnection();  // Thiết lập kết nối đến cơ sở dữ liệu
+
+            // Tạo câu lệnh truy vấn SQL để lấy mã dịch vụ từ tên dịch vụ
+            String sql = "SELECT maLoaiDichVu FROM dbo.LoaiDichVu WHERE tenoaiDichVu = ?";
+            statement = con.prepareStatement(sql);
+            statement.setString(1, serviceName);
+
+            // Thực thi câu lệnh truy vấn
+            rs = statement.executeQuery();
+
+            // Xử lý kết quả trả về (nếu có)
+            if (rs.next()) {
+                // Lấy thông tin mã dịch vụ từ ResultSet
+                serviceCode = rs.getString("maLoaiDichVu");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Xử lý các ngoại lệ hoặc thông báo lỗi tại đây...
+        }
+//        finally {
+//            // Đảm bảo đóng tất cả các kết nối, câu lệnh và tài nguyên dùng trong lúc thực hiện
+//            try {
+//                if (rs != null) {
+//                    rs.close();
+//                }
+//
+//                if (statement != null) {
+//                    statement.close();
+//                }
+//
+//                if (con != null) {
+//                    con.close();
+//                }
+//            } catch (SQLException e2) {
+//                e2.printStackTrace();
+//            }
+//        }
+
+        return serviceCode;
+    }
+    public String generateNextTypeOfServiceId() {
+        Connection con = null;
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+        String nextServiceId = null;
+
+        try {
+            con = ConnectDB.getConnection();
+            String sql = "SELECT TOP 1 maLoaiDichVu FROM dbo.LoaiDichVu ORDER BY maLoaiDichVu DESC";
+            statement = con.prepareStatement(sql);
+            rs = statement.executeQuery();
+
+            if (rs.next()) {
+                String lastServiceId = rs.getString("maLoaiDichVu");
+                String numericPart = lastServiceId.substring(3); // Lấy phần số từ mã dịch vụ cuối cùng
+                int counter = Integer.parseInt(numericPart) + 1; // Tăng giá trị số lên 1
+                nextServiceId = "LDV" + String.format("%02d", counter); // Định dạng lại giá trị số thành chuỗi 3 chữ số, sau đó ghép với tiền tố "DV"
+            } else {
+                nextServiceId = "LDV01";
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+//        finally {
+//            try {
+//                if (rs != null) {
+//                    rs.close();
+//                }
+//
+//                if (statement != null) {
+//                    statement.close();
+//                }
+//
+//                if (con != null) {
+//                    con.close();
+//                }
+//            } catch (SQLException e2) {
+//                e2.printStackTrace();
+//            }
+//        }
+
+        return nextServiceId;
+    }
 }
