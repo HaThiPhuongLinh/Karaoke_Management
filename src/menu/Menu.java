@@ -1,13 +1,18 @@
 package menu;
 
 import Entity.Account;
+import Entity.Staff;
 import UI.CustomUI.Custom;
+import UI.CustomUI.LoginUI;
 import UI.main_interface.Main;
+import com.formdev.flatlaf.extras.FlatSVGIcon;
 import menu.mode.LightDarkMode;
 
 import com.formdev.flatlaf.util.UIScale;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -17,7 +22,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 
-public class Menu extends JPanel {
+public class Menu extends JPanel implements ActionListener {
     private JButton buttonLogout;
     private final String menuItems[][] = {
             {"~Khách Hàng~"},
@@ -70,13 +75,16 @@ public class Menu extends JPanel {
     protected final int menuMinWidth = 60;
     protected final int headerFullHgap = 5;
     private static Menu instance = new Menu();
+    private static Staff staffLogin = null;
     Account user = new Account();
 
     public Menu() {
         init();
     }
 
-
+    public void setHeader(String staffName) {
+        header.setText(staffName);
+    }
 
     private void init() {
         setLayout(new MenuLayout());
@@ -86,12 +94,13 @@ public class Menu extends JPanel {
                 UIScale.scale(2),
                 UIScale.scale(2)
         ));
-        buttonLogout = new JButton("Log out");
-        buttonLogout.setBackground(new Color(255, 255, 255));
+        buttonLogout = new JButton("Log out", new FlatSVGIcon(getClass().getResource("/menu/icon/4.svg")));
+        buttonLogout.setBackground(new Color(192, 192, 192));
         buttonLogout.setForeground(new Color(49, 62, 74));
         buttonLogout.setFocusPainted(false);
         buttonLogout.setBorderPainted(false);
-        buttonLogout.setFont(new Font("Dialog", Font.BOLD, 16));
+        buttonLogout.setFont(new Font("Dialog", Font.PLAIN, 16));
+
 
         buttonLogout.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent evt) {
@@ -104,11 +113,21 @@ public class Menu extends JPanel {
             }
         });
 
+        buttonLogout.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (staffLogin != null) {
+                    Main.getInstance(staffLogin).dispose();
+                }
+                LoginUI login = new LoginUI();
+                login.setVisible(true);
+            }
+        });
         Color backgroundColor = new Color(51, 51, 51);
         setBackground(backgroundColor);
 
         header = new JLabel("StaffName");
-        header.setFont(new Font("Arial", Font.BOLD, 24));
+        header.setFont(new Font("Arial", Font.BOLD, 22));
         header.setForeground(new Color(240, 240, 240));
 
         scroll = new JScrollPane();
@@ -227,6 +246,11 @@ public class Menu extends JPanel {
     private JScrollPane scroll;
     private JPanel panelMenu;
     private LightDarkMode lightDarkMode;
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+    }
 
     private class MenuLayout implements LayoutManager {
 

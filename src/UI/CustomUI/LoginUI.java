@@ -163,7 +163,7 @@ public class LoginUI extends JFrame{
                     }
                     dispose();
                     SwingUtilities.invokeLater( () -> {
-                        new Main().setVisible(true);
+                        new Main(staff).setVisible(true);
                     });
                 } else if (tinhTrang == 0) {
                     errorMessageLabel.setForeground(Color.RED);

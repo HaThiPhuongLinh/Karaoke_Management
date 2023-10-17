@@ -19,6 +19,7 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.*;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,6 +46,7 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
     private RoomDAO roomDAO;
     private Map<String, TypeOfService> maDichVuToLoaiDichVu;
     private ArrayList<Service> lstService;
+    private DecimalFormat df = new DecimalFormat("#,###.##");
 
     public ServiceForm_UI() {
         setLayout(null);
@@ -220,7 +222,7 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
         });
 
         for (Service dv : serviceDAO.getAllDichVu()) {
-            Object[] rowData = { dv.getMaDichVu(), dv.getTenDichVu(), dv.getDonViTinh(), dv.getSoLuongTon(), dv.getGiaBan()};
+            Object[] rowData = { dv.getMaDichVu(), dv.getTenDichVu(), dv.getDonViTinh(), dv.getSoLuongTon(), df.format(dv.getGiaBan())};
             serviceModel.addRow(rowData);
         }
 
@@ -336,7 +338,7 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
                 for (Service dv : serviceDAO.getAllDichVu()) {
                     if (selectedLoaiDichVu.equalsIgnoreCase("Tất cả") ||
                             selectedLoaiDichVu.equalsIgnoreCase(dv.getMaLoaiDichVu().getTenLoaiDichVu())) {
-                        Object[] rowData = { dv.getMaDichVu(), dv.getTenDichVu(), dv.getDonViTinh(), dv.getSoLuongTon(), dv.getGiaBan()};
+                        Object[] rowData = { dv.getMaDichVu(), dv.getTenDichVu(), dv.getDonViTinh(), dv.getSoLuongTon(), df.format(dv.getGiaBan())};
                         serviceModel.addRow(rowData);
                     }
                 }
@@ -488,7 +490,7 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
                     serviceModel.getDataVector().removeAllElements();
                 } else {
                     for (Service s : lstService) {
-                        serviceModel.addRow(new Object[] { s.getMaDichVu(), s.getTenDichVu(), s.getDonViTinh(), s.getSoLuongTon(), s.getGiaBan() });
+                        serviceModel.addRow(new Object[] { s.getMaDichVu(), s.getTenDichVu(), s.getDonViTinh(), s.getSoLuongTon(), df.format(s.getGiaBan()) });
                     }
                 }
             }

@@ -19,7 +19,7 @@ public class DiaLogDatePicker extends JDialog implements ActionListener, ChangeL
     private JSpinner spinYear;
     private int check = 0, viTri = -1;
     private JLabel lbMonth, lbYear, lbThu, lbNgayThang, lbToDay;
-    private String blueColor = "#436EEE";
+    private String blueColor = "#5F009D";
     private String whiteColor = "#fafafa";
 
     public DiaLogDatePicker() {

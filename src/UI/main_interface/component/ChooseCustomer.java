@@ -3,8 +3,7 @@ package UI.main_interface.component;
 import DAOs.CustomerDAO;
 import Entity.Customer;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -23,6 +22,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import ConnectDB.ConnectDB;
+import UI.CustomUI.Custom;
 
 public class ChooseCustomer extends JFrame implements ActionListener, MouseListener {
     private JTable table;
@@ -67,6 +67,7 @@ public class ChooseCustomer extends JFrame implements ActionListener, MouseListe
         btnFind.setBounds(450, 26, 55, 30);
         searchPanel.add(btnFind);
 
+
         btnALL = new JButton("Refresh");
         btnALL.setBounds(510, 26, 75, 30);
         searchPanel.add(btnALL);
@@ -74,7 +75,7 @@ public class ChooseCustomer extends JFrame implements ActionListener, MouseListe
                 new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)),
                 "Tìm khách hàng", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
         panel.add(searchPanel);
-
+        Custom.setCustomBtn(btnALL);
         JPanel pnTable = new JPanel();
         pnTable.setBounds(20, 120, 850, 340);
         panel.add(pnTable);
@@ -85,11 +86,18 @@ public class ChooseCustomer extends JFrame implements ActionListener, MouseListe
         table = new JTable(modelTable);
         JScrollPane scpTable = new JScrollPane(table);
         pnTable.add(scpTable, BorderLayout.CENTER);
+        Custom.setCustomTable(table);
 
         btnChoose = new JButton("Chọn");
         btnChoose.setBounds(380, 470, 100, 30);
         panel.add(btnChoose);
 
+        Custom.setCustomBtn(btnFind);
+        Custom.setCustomBtn(btnChoose);
+
+        btnALL.setFont(new Font("Arial", Font.BOLD, 14));
+        btnFind.setFont(new Font("Arial", Font.BOLD, 14));
+        btnChoose.setFont(new Font("Arial", Font.BOLD, 14));
 
         customerDAO = new CustomerDAO();
         table.setRowHeight(30);
