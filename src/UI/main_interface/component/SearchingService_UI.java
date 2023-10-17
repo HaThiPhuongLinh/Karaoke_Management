@@ -85,18 +85,6 @@ public class SearchingService_UI extends JPanel implements ActionListener, Mouse
 
         panel1.setLayout(null);
 
-        //        Mã dịch vụ
-//        JLabel labelMaDichVu = new JLabel("Mã dịch vụ:");
-//        labelMaDichVu.setFont(new Font("Arial", Font.PLAIN, 14));
-//        labelMaDichVu.setBounds(60, 50, 150, 30);
-//        labelMaDichVu.setForeground(Color.WHITE);
-//        panel1.add(labelMaDichVu);
-//
-//        textFieldMaDichVu = new JTextField();
-//        textFieldMaDichVu.setBounds(160, 50, 250, 30);
-//        textFieldMaDichVu.setColumns(10);
-//        panel1.add(textFieldMaDichVu);
-
 //      Tên dịch vụ
         JLabel labelTenDichVu = new JLabel("Tên dịch vụ:");
         labelTenDichVu.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -108,18 +96,6 @@ public class SearchingService_UI extends JPanel implements ActionListener, Mouse
         textFieldTenDichVu.setBounds(220, 50, 250, 30);
         textFieldTenDichVu.setColumns(10);
         panel1.add(textFieldTenDichVu);
-
-//        //      Tên loại dịch vụ
-//        JLabel labelTenLoaiDichVu = new JLabel("Tên loại dịch vụ:");
-//        labelTenLoaiDichVu.setFont(new Font("Arial", Font.PLAIN, 14));
-//        labelTenLoaiDichVu.setBounds(100, 100, 150, 30);
-//        labelTenLoaiDichVu.setForeground(Color.WHITE);
-//        panel1.add(labelTenLoaiDichVu);
-//
-//        textFieldTenLoaiDichVu = new JTextField();
-//        textFieldTenLoaiDichVu.setBounds(220, 100, 250, 30);
-//        textFieldTenLoaiDichVu.setColumns(10);
-//        panel1.add(textFieldTenLoaiDichVu);
 
         //      Loại dịch vụ
         JLabel labelLDV = new JLabel("Loại dịch vụ:");
@@ -199,6 +175,7 @@ public class SearchingService_UI extends JPanel implements ActionListener, Mouse
 
         loadSearchingService();
         loadCboService();
+        reSizeColumnTableService();
 
         comboBoxLDV.addActionListener(new ActionListener() {
             @Override
@@ -218,6 +195,15 @@ public class SearchingService_UI extends JPanel implements ActionListener, Mouse
                 }
             }
         });
+    }
+
+    private void reSizeColumnTableService(){
+        TableColumnModel tblModel = tableDV.getColumnModel();
+
+        tblModel.getColumn(0).setPreferredWidth(20);
+        tblModel.getColumn(1).setPreferredWidth(40);
+        tblModel.getColumn(2).setPreferredWidth(130);
+        tblModel.getColumn(3).setPreferredWidth(100);
     }
 
     private void loadSearchingService(){
@@ -301,7 +287,6 @@ public class SearchingService_UI extends JPanel implements ActionListener, Mouse
 
         }else if(o.equals(btnlamMoi)){
             textFieldTenDichVu.setText("");
-            textFieldTenLoaiDichVu.setText("");
             textFieldGiaBan.setText("");
 
             modelTableDV.getDataVector().removeAllElements();
