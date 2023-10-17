@@ -105,29 +105,6 @@ public class ServiceDAO {
         return n > 0;
     }
 
-    public boolean updateMa(Service s) {
-        int n = 0;
-        PreparedStatement stmt = null;
-        ConnectDB.getInstance();
-        Connection con = ConnectDB.getConnection();
-        String sql = "update dbo.DichVu set maDichVu = ?" + " Where maDichVu = ?";
-        try {
-            stmt = con.prepareStatement(sql);
-            stmt.setString(1, s.getMaDichVu());
-
-            n = stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                stmt.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return n > 0;
-    }
-
 
     public boolean delete(String id) {
         int n = 0;
@@ -212,10 +189,47 @@ public class ServiceDAO {
 
     }
 
-//    public String getLastServiceID() {
-//        String query = "{CALL USP_getLastServiceId()}";
-//        Object obj = DataProvider.getInstance().executeScalar(query, null);
-//        String result = obj != null ? obj.toString() : "";
-//        return result;
-//    }
+    public String generateNextServiceId() {
+        Connection con = null;
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+        String nextServiceId = null;
+
+        try {
+            con = ConnectDB.getConnection();
+            String sql = "SELECT TOP 1 maDichVu FROM dbo.DichVu ORDER BY maDichVu DESC";
+            statement = con.prepareStatement(sql);
+            rs = statement.executeQuery();
+
+            if (rs.next()) {
+                String lastServiceId = rs.getString("maDichVu");
+                String numericPart = lastServiceId.substring(2); // Lấy phần số từ mã dịch vụ cuối cùng
+                int counter = Integer.parseInt(numericPart) + 1; // Tăng giá trị số lên 1
+                nextServiceId = "DV" + String.format("%03d", counter); // Định dạng lại giá trị số thành chuỗi 3 chữ số, sau đó ghép với tiền tố "DV"
+            } else {
+                nextServiceId = "DV001";
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+//        finally {
+//            try {
+//                if (rs != null) {
+//                    rs.close();
+//                }
+//
+//                if (statement != null) {
+//                    statement.close();
+//                }
+//
+//                if (con != null) {
+//                    con.close();
+//                }
+//            } catch (SQLException e2) {
+//                e2.printStackTrace();
+//            }
+//        }
+
+        return nextServiceId;
+    }
 }
