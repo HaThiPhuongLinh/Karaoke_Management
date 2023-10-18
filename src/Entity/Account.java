@@ -11,23 +11,18 @@ public class Account {
     private String matKhau;
     private Boolean tinhTrang;
 
+    public Account(ResultSet rs) throws SQLException {
+        this(rs.getString("taiKhoan"), rs.getString("matKhau"), rs.getBoolean("tinhTrang"));
+    }
+
     public Account(String taiKhoan, String matKhau, Boolean tinhTrang) {
         this.taiKhoan = taiKhoan;
         this.matKhau = matKhau;
         this.tinhTrang = tinhTrang;
     }
 
-    public Account(String taiKhoan, String matKhau) {
-        this.taiKhoan = taiKhoan;
-        this.matKhau = matKhau;
-    }
-
     public Account(String taiKhoan) {
-        AccountDAO accountDAO = new AccountDAO();
-        Account a = accountDAO.getAccountByTaiKhoan(taiKhoan);
-        this.taiKhoan = a.getTaiKhoan();
-        this.matKhau = a.getMatKhau();
-        this.tinhTrang = a.getTinhTrang();
+        this.taiKhoan = taiKhoan;
     }
 
     public Account() {
@@ -35,10 +30,6 @@ public class Account {
         this.matKhau = "";
         this.tinhTrang = false;
     }
-    public Account(ResultSet rs) throws SQLException {
-        this(rs.getString(1), rs.getString(2), rs.getBoolean(3));
-    }
-
 
     public String getTaiKhoan() {
         return taiKhoan;

@@ -121,6 +121,7 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
         cboStatus.addItem("Trống");
         cboStatus.addItem("Đang sử dụng");
         cboStatus.addItem("Chờ");
+        cboStatus.addItem("Tạm");
         cboStatus.setBounds(500, 14, 140, 28);
         Custom.setCustomComboBox(cboStatus);
         pnlRoomControl.add(cboStatus);
@@ -349,6 +350,12 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
                 btnChooseCustomer.setEnabled(true);
                 btnSwitchRoom.setEnabled(false);
                 break;
+            case "Tạm":
+                btnRoomList[index].setBackground(Color.decode("#FAA0AA"));
+                btnBookRoom.setEnabled(true);
+                btnChooseCustomer.setEnabled(true);
+                btnSwitchRoom.setEnabled(false);
+                break;
             default:
                 btnRoomList[index].setBackground(Color.decode("#008000"));
                 btnBookRoom.setEnabled(false);
@@ -377,7 +384,6 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
         for (int i = 0; i < sizeListRoom; i++) {
             int selection = i;
             String roomID = listRoom.get(i).getMaPhong();
-            //String typeRoom = listRoom.get(i).getLoaiPhong().getTenLoaiPhong();
             String location2 = listRoom.get(i).getViTri();
             btnRoomList[selection] = new JButton("");
             loadRoom(roomID);
@@ -432,6 +438,9 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
                             break;
                         case "Chờ":
                             btnRoomList[selection].setBackground(Color.decode("#0D9EA1"));
+                            break;
+                        case "Tạm":
+                            btnRoomList[selection].setBackground(Color.decode("#FAA0AA"));
                             break;
                         default:
                             btnRoomList[selection].setBackground(Color.decode("#008000"));
@@ -508,8 +517,14 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
             c.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             c.setVisible(true);
         }
+        if(o.equals(btnBookRoom)) {
+
+        }
     }
 
+    private void bookRoomNow(){
+
+    }
     @Override
     public void mouseClicked(MouseEvent e) {
 

@@ -212,24 +212,6 @@ public class ServiceDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-//        finally {
-//            try {
-//                if (rs != null) {
-//                    rs.close();
-//                }
-//
-//                if (statement != null) {
-//                    statement.close();
-//                }
-//
-//                if (con != null) {
-//                    con.close();
-//                }
-//            } catch (SQLException e2) {
-//                e2.printStackTrace();
-//            }
-//        }
-
         return nextServiceId;
     }
 }

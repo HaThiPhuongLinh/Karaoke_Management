@@ -2,7 +2,6 @@ package UI.main_interface.component;
 
 import ConnectDB.ConnectDB;
 import DAOs.StaffDAO;
-import Entity.Service;
 import Entity.Staff;
 import UI.CustomUI.Custom;
 
@@ -23,7 +22,7 @@ import java.util.Date;
 public class SearchingStaff_UI extends JPanel implements ActionListener, MouseListener {
 
     private  JButton btnLamMoi;
-    private JTable tableNV;
+    private JTable tblNV;
     private DefaultTableModel modelTableNV;
     private JLabel backgroundLabel, timeLabel, search1Label, search2Label, search3Label, search4Label;
     private JPanel timeNow, pnlStaffList, pnlStaffControl, panelDSNV;
@@ -146,16 +145,16 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
         modelTableNV = new DefaultTableModel(colsNV, 0);
         JScrollPane scrollPaneNV;
 
-        tableNV = new JTable(modelTableNV);
-        tableNV.setFont(new Font("Arial", Font.BOLD, 14));
-        tableNV.setBackground(new Color(255, 255, 255, 0));
-        tableNV.setForeground(new Color(255, 255, 255));
-        tableNV.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-        tableNV.getTableHeader().setForeground(Color.BLUE);
-        Custom.getInstance().setCustomTable(tableNV);
+        tblNV = new JTable(modelTableNV);
+        tblNV.setFont(new Font("Arial", Font.BOLD, 14));
+        tblNV.setBackground(new Color(255, 255, 255, 0));
+        tblNV.setForeground(new Color(255, 255, 255));
+        tblNV.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
+        tblNV.getTableHeader().setForeground(Color.BLUE);
+        Custom.getInstance().setCustomTable(tblNV);
 
-        panelDSNV.add(scrollPaneNV = new JScrollPane(tableNV, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
-        scrollPaneNV.setBounds(10, 20, 1090, 330);
+        panelDSNV.add(scrollPaneNV = new JScrollPane(tblNV, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
+        scrollPaneNV.setBounds(10, 20, 1090, 310);
         scrollPaneNV.setOpaque(false);
         scrollPaneNV.getViewport().setOpaque(false);
         scrollPaneNV.getViewport().setBackground(Color.WHITE);
@@ -174,10 +173,16 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
             public void actionPerformed(ActionEvent e) {
                 String selectedNhanVien = (String) cboTinhTrang.getSelectedItem();
                 modelTableNV.setRowCount(0);
+                String gt ="";
                 for (Staff staff : StaffDAO.getAllStaff()) {
+                    if (staff.isGioiTinh() == true) {
+                        gt = "Nam";
+                    } else {
+                        gt = "Nữ";
+                    }
                     if (selectedNhanVien.equalsIgnoreCase("Tất cả") || selectedNhanVien.equalsIgnoreCase(staff.getTrangThai())) {
                         Object[] rowData = { staff.getMaNhanVien(), staff.getTenNhanVien(), staff.getSoDienThoai(),
-                                staff.getCCCD(), staff.isGioiTinh(), staff.getNgaySinh(), staff.getDiaChi(),
+                                staff.getCCCD(), gt, staff.getNgaySinh(), staff.getDiaChi(),
                                 staff.getChucVu(), staff.getTrangThai(), staff.getTaiKhoan().getTaiKhoan()};
                         modelTableNV.addRow(rowData);
                     }
@@ -187,14 +192,15 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
 
         reSizeColumnTableStaff();
     }
-
+    //Cap nhat thoi gian thuc
     private void updateTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String time = sdf.format(new Date());
         timeLabel.setText(time);
     }
+    //Custom size cua bang
     private void reSizeColumnTableStaff() {
-        TableColumnModel tcm = tableNV.getColumnModel();
+        TableColumnModel tcm = tblNV.getColumnModel();
 
         tcm.getColumn(0).setPreferredWidth(50);
         tcm.getColumn(1).setPreferredWidth(120);
@@ -204,15 +210,22 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
         tcm.getColumn(8).setPreferredWidth(100);
         tcm.getColumn(9).setPreferredWidth(90);
     }
+
+    private String formatDate(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyy");
+        return sdf.format(date);
+    }
+    //Load danh sach nhan vien len bang
     public void loadNV() {
         String gt = "";
         for (Staff staff : StaffDAO.getAllStaff()) {
+            String date = formatDate(staff.getNgaySinh());
             if (staff.isGioiTinh() == true) {
                 gt = "Nam";
             } else {
                 gt = "Nữ";
             }
-            Object[] rowData = {staff.getMaNhanVien(), staff.getTenNhanVien(), staff.getSoDienThoai(), staff.getCCCD(), gt, staff.getNgaySinh(),staff.getDiaChi(), staff.getChucVu(), staff.getTrangThai(), staff.getTaiKhoan().getTaiKhoan()};
+            Object[] rowData = {staff.getMaNhanVien(), staff.getTenNhanVien(), staff.getSoDienThoai(), staff.getCCCD(), gt, date ,staff.getDiaChi(), staff.getChucVu(), staff.getTrangThai(), staff.getTaiKhoan().getTaiKhoan()};
             modelTableNV.addRow(rowData);
         }
     }
@@ -236,10 +249,17 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
             } else if (!txtSearch1.getText().trim().equals("")) {
                 modelTableNV.getDataVector().removeAllElements();
                 int i = 1;
+                String gt ="";
                 if (cus1.size() != 0) {
                     for (Staff staff : cus1) {
+                        String date = formatDate(staff.getNgaySinh());
+                        if (staff.isGioiTinh() == true) {
+                            gt = "Nam";
+                        } else {
+                            gt = "Nữ";
+                        }
                         modelTableNV.addRow(new Object[]{staff.getMaNhanVien(), staff.getTenNhanVien(), staff.getSoDienThoai(),
-                                staff.getCCCD(), staff.isGioiTinh(), staff.getNgaySinh(), staff.getDiaChi(),
+                                staff.getCCCD(), gt, date, staff.getDiaChi(),
                                 staff.getChucVu(), staff.getTrangThai(), staff.getTaiKhoan().getTaiKhoan()});
                         i++;
                     }
@@ -251,10 +271,17 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
             } else if (!txtSearch2.getText().trim().equals("")) {
                 modelTableNV.getDataVector().removeAllElements();
                 int i = 1;
+                String gt ="";
                 if (cus2.size() != 0) {
                     for (Staff staff : cus2) {
+                        String date = formatDate(staff.getNgaySinh());
+                        if (staff.isGioiTinh() == true) {
+                            gt = "Nam";
+                        } else {
+                            gt = "Nữ";
+                        }
                         modelTableNV.addRow(new Object[]{staff.getMaNhanVien(), staff.getTenNhanVien(), staff.getSoDienThoai(),
-                                staff.getCCCD(), staff.isGioiTinh(), staff.getNgaySinh(), staff.getDiaChi(),
+                                staff.getCCCD(), gt, date, staff.getDiaChi(),
                                 staff.getChucVu(), staff.getTrangThai(), staff.getTaiKhoan().getTaiKhoan()});
                         i++;
                     }
@@ -266,10 +293,17 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
             } else if (!txtSearch3.getText().trim().equals("")) {
                 modelTableNV.getDataVector().removeAllElements();
                 int i = 1;
+                String gt ="";
                 if (cus3.size() != 0) {
                     for (Staff staff: cus3) {
+                        String date = formatDate(staff.getNgaySinh());
+                        if (staff.isGioiTinh() == true) {
+                            gt = "Nam";
+                        } else {
+                            gt = "Nữ";
+                        }
                         modelTableNV.addRow(new Object[]{staff.getMaNhanVien(), staff.getTenNhanVien(), staff.getSoDienThoai(),
-                                staff.getCCCD(), staff.isGioiTinh(), staff.getNgaySinh(), staff.getDiaChi(),
+                                staff.getCCCD(), gt, date, staff.getDiaChi(),
                                 staff.getChucVu(), staff.getTrangThai(), staff.getTaiKhoan().getTaiKhoan()});
                         i++;
                     }
@@ -284,10 +318,9 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
             txtSearch1.setText("");
             txtSearch2.setText("");
             txtSearch3.setText("");
-            modelTableNV.setRowCount(0); // Xóa dữ liệu trong bảng.
+            modelTableNV.setRowCount(0);
             loadNV();
         }
-
     }
 
     @Override

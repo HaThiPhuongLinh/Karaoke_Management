@@ -23,8 +23,8 @@ public class SearchingCustomer_UI extends JPanel implements ActionListener {
     private DefaultTableModel modelTableKH;
     private JLabel backgroundLabel, timeLabel, search1Label, search2Label, search3Label;
     private JTextField txtSearch1, txtSearch2, txtSearch3;
-    private JPanel timeNow, pnlCusList, pnlCusControl, pnlCusListRight;
-    private DefaultTableModel tableModel;
+    private JPanel timeNow, pnlCusList, pnlCusControl;
+
     private JButton btnTim;
     private CustomerDAO CustomerDAO;
 
@@ -172,26 +172,25 @@ public class SearchingCustomer_UI extends JPanel implements ActionListener {
         String time = sdf.format(new Date());
         timeLabel.setText(time);
     }
-
+    private String formatDate(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyy");
+        return sdf.format(date);
+    }
     public void loadKH() {
         int i = 1;
         String gt = "";
         for (Customer customer : CustomerDAO.getAllKhachHang()) {
-
-
+            String date = formatDate(customer.getNgaySinh());
             if (customer.isGioiTinh() == true) {
-
                 gt = "Nam";
-
             } else {
                 gt = "Nữ";
             }
-            Object[] rowData = {i, customer.getMaKhachHang(), customer.getTenKhachHang(), customer.getSoDienThoai(), customer.getCCCD(), gt, customer.getNgaySinh()};
+            Object[] rowData = {i, customer.getMaKhachHang(), customer.getTenKhachHang(), customer.getSoDienThoai(), customer.getCCCD(), gt, date};
             modelTableKH.addRow(rowData);
             i++;
 
         }
-
     }
 
     @Override
@@ -208,16 +207,21 @@ public class SearchingCustomer_UI extends JPanel implements ActionListener {
             String txtcccd = txtSearch3.getText();
             ArrayList<Customer> cus3 = (ArrayList<Customer>) CustomerDAO.getListKhachHangByCCCD(txtcccd);
 
-//            String txtTenLDV = textFieldTenLoaiDichVu.getText();
-//            ArrayList<TypeOfService> typeOfServices = typeOfServiceDAO.getTypeOfServiceByName(txtTenLDV);
             if (txtSearch1.getText().trim().equals("") && txtSearch2.getText().trim().equals("") && txtSearch3.getText().trim().equals("")) {
                 JOptionPane.showMessageDialog(this, "Bạn phải nhập thông tin tìm kiếm");
             } else if (!txtSearch1.getText().trim().equals("")) {
                 modelTableKH.getDataVector().removeAllElements();
                 int i = 1;
+                String gt = "";
                 if (cus1.size() != 0) {
                     for (Customer customer : cus1) {
-                        modelTableKH.addRow(new Object[]{i, customer.getMaKhachHang(), customer.getTenKhachHang(), customer.getSoDienThoai(), customer.getCCCD(), customer.isGioiTinh(), customer.getNgaySinh()});
+                        String date = formatDate(customer.getNgaySinh());
+                        if (customer.isGioiTinh() == true) {
+                            gt = "Nam";
+                        } else {
+                            gt = "Nữ";
+                        }
+                        modelTableKH.addRow(new Object[]{i, customer.getMaKhachHang(), customer.getTenKhachHang(), customer.getSoDienThoai(), customer.getCCCD(), gt, date});
                         i++;
                     }
                 } else {
@@ -228,9 +232,16 @@ public class SearchingCustomer_UI extends JPanel implements ActionListener {
             } else if (!txtSearch2.getText().trim().equals("")) {
                 modelTableKH.getDataVector().removeAllElements();
                 int i = 1;
+                String gt ="";
                 if (cus2.size() != 0) {
                     for (Customer customer : cus2) {
-                        modelTableKH.addRow(new Object[]{i, customer.getMaKhachHang(), customer.getTenKhachHang(), customer.getSoDienThoai(), customer.getCCCD(), customer.isGioiTinh(), customer.getNgaySinh()});
+                        String date = formatDate(customer.getNgaySinh());
+                        if (customer.isGioiTinh() == true) {
+                            gt = "Nam";
+                        } else {
+                            gt = "Nữ";
+                        }
+                        modelTableKH.addRow(new Object[]{i, customer.getMaKhachHang(), customer.getTenKhachHang(), customer.getSoDienThoai(), customer.getCCCD(), gt, date});
                         i++;
                     }
                 } else {
@@ -241,9 +252,16 @@ public class SearchingCustomer_UI extends JPanel implements ActionListener {
             } else if (!txtSearch3.getText().trim().equals("")) {
                 modelTableKH.getDataVector().removeAllElements();
                 int i = 1;
+                String gt ="";
                 if (cus3.size() != 0) {
                     for (Customer customer : cus3) {
-                        modelTableKH.addRow(new Object[]{i, customer.getMaKhachHang(), customer.getTenKhachHang(), customer.getSoDienThoai(), customer.getCCCD(), customer.isGioiTinh(), customer.getNgaySinh()});
+                        String date = formatDate(customer.getNgaySinh());
+                        if (customer.isGioiTinh() == true) {
+                            gt = "Nam";
+                        } else {
+                            gt = "Nữ";
+                        }
+                        modelTableKH.addRow(new Object[]{i, customer.getMaKhachHang(), customer.getTenKhachHang(), customer.getSoDienThoai(), customer.getCCCD(),gt, date});
                         i++;
                     }
                 } else {

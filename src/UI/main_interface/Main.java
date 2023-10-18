@@ -11,13 +11,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
-import java.awt.*;
-import java.awt.event.*;
-
 public class Main extends JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private static Main instance;
@@ -53,7 +46,7 @@ public class Main extends JFrame {
                 }
             } else if (index == 2) {
                 if (subIndex == 1) {
-                    showForm(new SearchingRoom());
+                    showForm(new SearchingRoom_UI());
                 } else if (subIndex == 2) {
                     showForm(new Room_UI());
 

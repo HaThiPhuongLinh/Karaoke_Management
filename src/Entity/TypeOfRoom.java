@@ -14,11 +14,15 @@ public class TypeOfRoom {
     private int sucChua;
 
     public TypeOfRoom(ResultSet rs) throws SQLException {
-        this(rs.getString("maLoaiPhong"), rs.getString("tenLoaiPhong"), rs.getInt("sucChua"));
+        this(rs.getString(1), rs.getString(2), rs.getInt(3));
     }
 
     public TypeOfRoom(String maLoaiPhong) {
-        this.maLoaiPhong = maLoaiPhong;
+        TypeOfRoomDAO typeOfRoomDAO = new TypeOfRoomDAO();
+        TypeOfRoom t = typeOfRoomDAO.getRoomTypeByID(maLoaiPhong);
+        this.maLoaiPhong = t.getMaLoaiPhong();
+        this.tenLoaiPhong= t.getTenLoaiPhong();
+        this.sucChua = t.getSucChua();
     }
 
     public TypeOfRoom() {

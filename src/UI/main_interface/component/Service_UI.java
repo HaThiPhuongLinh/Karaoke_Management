@@ -329,8 +329,8 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
                     if (serviceDAO.insert(service)) {
                         modelTableDV.getDataVector().removeAllElements();
                         loadService();
-                        JOptionPane.showMessageDialog(this,"Thêm dịch vụ thành công");
                         lamMoi();
+                        JOptionPane.showMessageDialog(this,"Thêm dịch vụ thành công");
                     }
                 }
 
@@ -358,9 +358,9 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
                     serviceDAO.delete(service.getMaDichVu());
                     lamMoi();
                     modelTableDV.removeRow(row);
-                    JOptionPane.showMessageDialog(this,"Xóa thành công");
                     modelTableDV.getDataVector().removeAllElements();
                     loadService();
+                    JOptionPane.showMessageDialog(this,"Xóa thành công");
                 }
             }
         } else if (o.equals(btnSua)) {
@@ -390,8 +390,8 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
                         tableDV.setValueAt(textFieldDonViTinh.getText(), row, 4);
                         tableDV.setValueAt(quantityStr, row, 5);
                         tableDV.setValueAt(priceStr, row, 6);
-                        JOptionPane.showMessageDialog(this,"Sửa thành công");
                         lamMoi();
+                        JOptionPane.showMessageDialog(this,"Sửa thành công");
                     }
                 }
             } else {
