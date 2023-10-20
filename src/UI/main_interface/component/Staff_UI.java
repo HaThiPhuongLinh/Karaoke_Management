@@ -354,6 +354,8 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
         Object o = e.getSource();
         if (o.equals(btnLamMoi)) {
             reFresh();
+            modelTableNV.getDataVector().removeAllElements();
+            loadNV();
         } else if (o.equals(btnThem)) {
             if (txtTenNV.getText().equals("") || txtSDTNV.getText().equals("") || txtCMNDNV.getText().equals("") || txtDiaChi.getText().equals("") || txtTaiKhoan.getText().equals("")) {
                 JOptionPane.showMessageDialog(this, "Bạn phải nhập thông tin nhân viên");

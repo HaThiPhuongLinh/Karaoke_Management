@@ -407,6 +407,8 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
         cboGioiTinh.setSelectedIndex(0);
         txtCMNDKH.setText("");
         dpNgaySinh.setValueToDay();
+        txtHienThiLoi.setText("");
+        txtSDTKH.setText("");
     }
 
     @Override
