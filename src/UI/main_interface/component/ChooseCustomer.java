@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -47,6 +49,11 @@ public class ChooseCustomer extends JFrame implements ActionListener, MouseListe
         }
 
         gui();
+    }
+
+    private String formatDate(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyy");
+        return sdf.format(date);
     }
 
     private void gui() {
@@ -103,7 +110,8 @@ public class ChooseCustomer extends JFrame implements ActionListener, MouseListe
         table.setRowHeight(30);
 
         for (Customer c : customerDAO.getAllKhachHang()) {
-            Object[] rowData = { c.getMaKhachHang(), c.getTenKhachHang(), c.getSoDienThoai(), c.getNgaySinh()};
+            String date = formatDate(c.getNgaySinh());
+            Object[] rowData = { c.getMaKhachHang(), c.getTenKhachHang(), c.getSoDienThoai(), date};
             modelTable.addRow(rowData);
         }
 
@@ -161,7 +169,8 @@ public class ChooseCustomer extends JFrame implements ActionListener, MouseListe
                     modelTable.getDataVector().removeAllElements();
                 } else {
                     for (Customer c : lstCustomer) {
-                        modelTable.addRow(new Object[] { c.getMaKhachHang(), c.getTenKhachHang(), c.getSoDienThoai(), c.getNgaySinh()});
+                        String date = formatDate(c.getNgaySinh());
+                        modelTable.addRow(new Object[] { c.getMaKhachHang(), c.getTenKhachHang(), c.getSoDienThoai(), date});
                     }
 
                 }
@@ -186,7 +195,8 @@ public class ChooseCustomer extends JFrame implements ActionListener, MouseListe
             modelTable.setRowCount(0);
             int row = table.getSelectedRow();
             for (Customer c : customerDAO.getAllKhachHang()) {
-                Object[] rowData = { c.getMaKhachHang(), c.getTenKhachHang(), c.getSoDienThoai(), c.getNgaySinh()};
+                String date = formatDate(c.getNgaySinh());
+                Object[] rowData = { c.getMaKhachHang(), c.getTenKhachHang(), c.getSoDienThoai(), date};
                 modelTable.addRow(rowData);
             }
             txtTim.setText("");

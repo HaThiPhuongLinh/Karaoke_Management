@@ -1,11 +1,11 @@
 package UI.main_interface.component;
 
 import ConnectDB.ConnectDB;
+import DAOs.CustomerDAO;
+import DAOs.ReservationFormDAO;
 import DAOs.RoomDAO;
 import DAOs.TypeOfRoomDAO;
-import Entity.Room;
-import Entity.Service;
-import Entity.TypeOfRoom;
+import Entity.*;
 import UI.CustomUI.Custom;
 
 import javax.swing.*;
@@ -16,6 +16,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,13 +28,14 @@ import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
  * Author: Hà Thị Phương Linh
  */
 public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseListener {
+    public static JTextField txtCustomer;
+    KaraokeBooking_UI main = this;
     private DefaultTableModel tableModel;
     private JPanel pnlShowRoom, pnlRoomList, timeNow, pnlRoomControl, pnlShowCustomer, pnlShowDetails;
     private JLabel backgroundLabel, timeLabel, roomLabel, statusLabel, customerLabel, room2Label, typeRoomLabel, locationLabel, nameLabel, startLabel, receiveLabel;
     private JTextField txtRoom, txtLocation, txtName, txtStart, txtReceive, txtTypeRoom;
-    public static JTextField txtCustomer;
     private JScrollPane scrShowRoom, scrService;
-    private JButton btnSwitchRoom, btnBookRoom, btnPresetRoom, btnCancelRoom, btnReceiveRoom, btnChooseCustomer;
+    private JButton btnSwitchRoom, btnBookRoom, btnPresetRoom, btnCancelRoom, btnReceiveRoom, btnChooseCustomer, btnForm;
     private JButton[] btnRoomList;
     private int heightTable = 140;
     private int location = -1;
@@ -41,10 +43,13 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
     private TypeOfRoomDAO typeOfRoomDAO;
     private RoomDAO roomDAO;
     private JComboBox<String> cboRoomType, cboStatus;
-    KaraokeBooking_UI main = this;
-    private ChooseCustomer chooseCustomer;
+    private ReservationFormDAO reservationFormDAO;
+    private Staff staffLogin = null;
+    private CustomerDAO customerDAO;
+    private Room selectedRoom = null;
 
-    public KaraokeBooking_UI() {
+    public KaraokeBooking_UI(Staff staff) {
+        this.staffLogin = staff;
         setLayout(null);
         setBounds(0, 0, 1175, 770);
 
@@ -55,6 +60,8 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
         }
 
         typeOfRoomDAO = new TypeOfRoomDAO();
+        customerDAO = new CustomerDAO();
+        reservationFormDAO = new ReservationFormDAO();
         roomDAO = new RoomDAO();
 
         timeNow = new JPanel();
@@ -157,14 +164,22 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
         pnlShowCustomer.add(customerLabel);
 
         txtCustomer = new JTextField();
-        txtCustomer.setBounds(120, 27, 250, 30);
+        txtCustomer.setBounds(120, 27, 220, 30);
+        txtCustomer.setFont(new Font("Dialog", Font.PLAIN, 14));
         pnlShowCustomer.add(txtCustomer);
 
-        btnChooseCustomer = new JButton("Chọn khách hàng");
+        btnChooseCustomer = new JButton();
         btnChooseCustomer.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnChooseCustomer);
-        btnChooseCustomer.setBounds(120, 80, 155, 30);
+        btnChooseCustomer.setIcon(new ImageIcon(getClass().getResource("/UI/main_interface/icon/blueAdd_16.png")));
+        btnChooseCustomer.setBounds(340, 27, 40, 30);
         pnlShowCustomer.add(btnChooseCustomer);
+
+        btnForm = new JButton("Phiếu đặt phòng");
+        btnForm.setFont(new Font("Arial", Font.BOLD, 14));
+        Custom.setCustomBtn(btnForm);
+        btnForm.setBounds(120, 80, 155, 30);
+        pnlShowCustomer.add(btnForm);
 
         btnBookRoom = new JButton("Đặt phòng");
         btnBookRoom.setFont(new Font("Arial", Font.BOLD, 14));
@@ -274,6 +289,7 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
         scrService.getViewport().setBackground(Color.WHITE);
 
         btnChooseCustomer.addActionListener(this);
+        btnBookRoom.addActionListener(this);
 
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/images/background.png"));
         backgroundLabel = new JLabel(backgroundImage);
@@ -300,6 +316,7 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
         });
 
     }
+
     private void loadCboRoomType() {
         java.util.List<TypeOfRoom> dataList = typeOfRoomDAO.getAllLoaiPhong();
         cboRoomType.addItem("Tất cả");
@@ -321,10 +338,9 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
         String btnName = "<html><p style='text-align: center;'> " + roomID + " </p></br><p style='text-align: center;'> " + statusP + " </p></html>";
         int index = 0;
         for (int i = 0; i < btnRoomList.length; i++) {
-            if (btnRoomList[i].getText().contains(roomID)){
+            if (btnRoomList[i].getText().contains(roomID)) {
                 index = i;
-            }
-            else if (btnRoomList[i].getText().equals("")) {
+            } else if (btnRoomList[i].getText().equals("")) {
                 index = i;
                 break;
             }
@@ -359,7 +375,7 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
             default:
                 btnRoomList[index].setBackground(Color.decode("#008000"));
                 btnBookRoom.setEnabled(false);
-                btnChooseCustomer.setEnabled(false);
+                btnChooseCustomer.setEnabled(true);
                 btnSwitchRoom.setEnabled(true);
                 break;
         }
@@ -416,6 +432,16 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
                     if (roomActiveE == null)
                         roomActiveE = new Room();
                     txtTypeRoom.setText(roomActiveE.getLoaiPhong().getTenLoaiPhong());
+
+                    if (roomActiveE.getTinhTrang().equalsIgnoreCase("Đang sử dụng")) {
+                        ReservationForm reservationForm = reservationFormDAO.getReservationFormByRoomId(roomID);
+                        if (reservationForm != null) {
+                            txtName.setText(reservationForm.getMaKhachHang().getTenKhachHang());
+                            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+                            txtStart.setText(sdf.format(reservationForm.getThoiGianDat()));
+                            txtReceive.setText(sdf.format(reservationForm.getThoiGianNhanPhong()));
+                        }
+                    }
                 }
             });
 
@@ -509,22 +535,65 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
         timeLabel.setText(time);
     }
 
+    private String generateID() {
+        String formID = reservationFormDAO.generateNextFormId();
+        return formID;
+    }
+
+
     @Override
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
-        if(o.equals(btnChooseCustomer)) {
+        if (o.equals(btnChooseCustomer)) {
             ChooseCustomer c = new ChooseCustomer(main);
             c.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             c.setVisible(true);
         }
-        if(o.equals(btnBookRoom)) {
+        if (o.equals(btnBookRoom)) {
+            if (location == -1) {
+                JOptionPane.showMessageDialog(this, "Chưa chọn phòng để đặt");
+            } else if (txtCustomer.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Chưa chọn khách hàng cho thuê");
+            }
 
+            String roomID = txtRoom.getText().trim();
+            Room room = roomDAO.getRoomByRoomId(roomID);
+            if (room == null) {
+                room = new Room();
+            }
+            if (room.getTinhTrang().equalsIgnoreCase("Đang sử dụng")) {
+                JOptionPane.showMessageDialog(this, "Phòng đang có khách. Vui lòng chọn phòng khác");
+            } else {
+                String customerName = txtCustomer.getText().trim();
+                String customerID = customerDAO.getIdByTenKhachHang(customerName);
+                Customer c = customerDAO.getKhachHangById(customerID);
+                if (c == null) {
+                    c = new Customer();
+                }
+                String formID = generateID();
+                long millis = System.currentTimeMillis();
+                Timestamp startTime = new Timestamp(millis);
+                Timestamp receiveTime = new Timestamp(millis);
+
+                ReservationForm form = new ReservationForm(formID, startTime, receiveTime, staffLogin, c, room);
+                boolean resultForm = reservationFormDAO.addReservationForm(form);
+
+                if (resultForm) {
+                    JOptionPane.showMessageDialog(this, "Cho thuê phòng thành công");
+                   roomDAO.updateRoomStatus(roomID,"Đang sử dụng");
+                   loadRoom(roomID);
+                   txtCustomer.setText("");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Cho thuê phòng thất bại");
+                }
+            }
         }
     }
 
-    private void bookRoomNow(){
+    private void bookRoomNow() {
 
     }
+
     @Override
     public void mouseClicked(MouseEvent e) {
 

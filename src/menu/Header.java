@@ -1,4 +1,4 @@
-package UI.main_interface.component;
+package menu;
 
 import UI.main_interface.swing.ButtonBadges;
 

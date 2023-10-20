@@ -18,7 +18,7 @@ public class Staff {
     private Account taiKhoan;
 
     public Staff(ResultSet rs) throws SQLException {
-        this(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getBoolean(5),rs.getDate(6), rs.getString(7), rs.getString(8), rs.getString(9), new Account(rs.getString(10)));
+        this(rs.getString("maNhanVien"), rs.getString(2), rs.getString(3), rs.getString(4), rs.getBoolean(5),rs.getDate("ngaySinh"), rs.getString(7), rs.getString(8), rs.getString(9), new Account(rs));
     }
     public Staff(String maNhanVien){
         this.maNhanVien = maNhanVien;

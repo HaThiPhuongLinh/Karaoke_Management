@@ -261,6 +261,36 @@ public class RoomDAO {
 
     }
 
+    public boolean updateRoomStatus(String roomId, String status) {
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        PreparedStatement stmt = null;
+
+        try {
+            String updateSql = "UPDATE dbo.Phong SET tinhTrang = ? WHERE maPhong = ?";
+            stmt = con.prepareStatement(updateSql);
+            stmt.setString(1, status);
+            stmt.setString(2, roomId);
+            int rowsUpdated = stmt.executeUpdate();
+
+            if (rowsUpdated != 1) {
+                return false;
+            }
+            con.commit();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e2) {
+                e2.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+
     public boolean insert(Room ro) throws SQLException{
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();

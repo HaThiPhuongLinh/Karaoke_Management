@@ -1,6 +1,7 @@
 package Entity;
 
 import DAOs.AccountDAO;
+import DAOs.TypeOfRoomDAO;
 import DAOs.TypeOfServiceDAO;
 
 import java.sql.ResultSet;
@@ -12,7 +13,7 @@ public class Account {
     private Boolean tinhTrang;
 
     public Account(ResultSet rs) throws SQLException {
-        this(rs.getString("taiKhoan"), rs.getString("matKhau"), rs.getBoolean("tinhTrang"));
+        this(rs.getString("taiKhoan"), rs.getString(2), rs.getBoolean(3));
     }
 
     public Account(String taiKhoan, String matKhau, Boolean tinhTrang) {

@@ -4,7 +4,6 @@ import ConnectDB.ConnectDB;
 import Entity.Bill;
 import Entity.Service;
 import Entity.DetailsOfService;
-import Entity.ServiceForm;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -32,11 +31,10 @@ public class DetailOfServiceDAO {
             while (rs.next()) {
                 Bill maHoaDon = new Bill(rs.getString(1));
                 Service maDichVu = new Service(rs.getString(2));
-                ServiceForm phieuDichVu = new ServiceForm(rs.getString(3));
                 int soLuong = rs.getInt(4);
                 double donGia = rs.getDouble(5);
 
-                DetailsOfService dos = new DetailsOfService(maHoaDon,maDichVu,phieuDichVu,soLuong,donGia);
+                DetailsOfService dos = new DetailsOfService(maHoaDon,maDichVu,soLuong,donGia);
 
                 dsDOS.add(dos);
             }

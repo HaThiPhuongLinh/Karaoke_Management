@@ -175,7 +175,7 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
         pnlStaffControl.add(tinhTrangLabel);
 
         cbotinhTrang = new JComboBox<String>();
-        cbotinhTrang.addItem("Đang làm ");
+        cbotinhTrang.addItem("Đang làm");
         cbotinhTrang.addItem("Đã nghỉ");
         cbotinhTrang.setBounds(665, 60, 350, 30);
         Custom.setCustomComboBox(cbotinhTrang);

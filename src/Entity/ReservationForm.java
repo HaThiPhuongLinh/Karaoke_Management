@@ -1,5 +1,7 @@
 package Entity;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
 
@@ -10,6 +12,10 @@ public class ReservationForm {
     private Staff maNhanVien;
     private Customer maKhachHang;
     private Room maPhong;
+
+    public ReservationForm(ResultSet rs) throws SQLException {
+        this(rs.getString(1), rs.getTimestamp(2), rs.getTimestamp(3), new Staff(rs), new Customer(rs), new Room(rs));
+    }
 
     public ReservationForm(String maPhieuDat, Timestamp thoiGianDat, Timestamp thoiGianNhanPhong, Staff maNhanVien, Customer maKhachHang, Room maPhong) {
         this.maPhieuDat = maPhieuDat;

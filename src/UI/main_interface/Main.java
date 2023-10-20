@@ -3,6 +3,7 @@ package UI.main_interface;
 import Entity.Staff;
 import UI.main_interface.component.*;
 import UI.main_interface.swing.RoundPanel;
+import menu.Header;
 import menu.Menu;
 import menu.MenuAction;
 
@@ -54,7 +55,7 @@ public class Main extends JFrame {
                     showForm(new TypeOfRoom_UI());
 
                 } else if (subIndex == 4) {
-                    showForm(new KaraokeBooking_UI());
+                    showForm(new KaraokeBooking_UI(staffLogin));
                 }
             } else if (index == 3) {
                 if (subIndex == 1) {
@@ -82,7 +83,7 @@ public class Main extends JFrame {
                 action.cancel();
             }
         });
-        showForm(new KaraokeBooking_UI());
+        showForm(new KaraokeBooking_UI(staffLogin));
     }
 
     public static void main(String[] args) {

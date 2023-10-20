@@ -3,7 +3,6 @@ package Entity;
 public class DetailsOfService {
     private Bill maHoaDon;
     private Service maDichVu;
-    private ServiceForm serviceForm;
     private int soLuong;
     private double giaBan;
 
@@ -11,10 +10,9 @@ public class DetailsOfService {
 
     }
 
-    public DetailsOfService(Bill maHoaDon, Service maDichVu, ServiceForm serviceForm, int soLuong, double giaBan) {
+    public DetailsOfService(Bill maHoaDon, Service maDichVu, int soLuong, double giaBan) {
         this.maHoaDon = maHoaDon;
         this.maDichVu = maDichVu;
-        this.serviceForm = serviceForm;
         this.soLuong = soLuong;
         this.giaBan = giaBan;
     }
@@ -51,11 +49,4 @@ public class DetailsOfService {
         this.soLuong = soLuong;
     }
 
-    public ServiceForm getServiceForm() {
-        return serviceForm;
-    }
-
-    public void setServiceForm(ServiceForm serviceForm) {
-        this.serviceForm = serviceForm;
-    }
 }
