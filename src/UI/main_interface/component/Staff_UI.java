@@ -18,23 +18,22 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 
 public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
-
     private  JTextField txtBaoLoi;
     private  JTextField txtDiaChi;
     private JTable tableNV;
     private DefaultTableModel modelTableNV;
     private JLabel backgroundLabel, ChucVuLabel, taiKhoanLabel, tinhTrangLabel, timeLabel, maNVLabel, tenNVLabel, gioitinhNVLabel, sdtNVLabel, ngaySinhLabel, cmndLabel, search1Label, search2Label, search3Label;
-    private JTextField txtMaNV, txtTenNV, txtSDTNV, txtCMNDNV, txtTaiKhoan, txtChucVu, txttinhTrang;
+    private JTextField txtMaNV, txtTenNV, txtSDTNV, txtCMNDNV, txtTaiKhoan;
     private JComboBox cboGioiTinhNV, cboChucVu, cbotinhTrang;
-    private JPanel timeNow, pnlStaffList, pnlStaffControl, panelDSNV;
+    private JPanel timeNow, pnlStaffList, pnlStaffControl;
     private DatePicker dpNgaySinhNV;
-    private DefaultTableModel tableModelNV;
-    private JButton btnThem, btnXemhet, btnSua, btnTim1, btnTim2, btnTim3, btnLamMoi, btnXemHet;
+    private JButton btnThem, btnSua, btnLamMoi;
     private StaffDAO StaffDAO;
-    private AccountDAO AccountDAO;
 
     public Staff_UI() {
         setLayout(null);
@@ -42,7 +41,6 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
 
         //phan viet code
         StaffDAO = new StaffDAO();
-        AccountDAO =new AccountDAO();
         try {
             ConnectDB.getInstance().connect();
         } catch (Exception e) {
@@ -101,8 +99,9 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
         tenNVLabel.setBounds(30, 60, 120, 30);
         tenNVLabel.setForeground(Color.WHITE);
         pnlStaffControl.add(tenNVLabel);
+
         txtTenNV = new JTextField();
-        txtTenNV.setBounds(145, 70, 350, 30);
+        txtTenNV.setBounds(145, 60, 350, 30);
         pnlStaffControl.add(txtTenNV);
 
         gioitinhNVLabel = new JLabel("Giới Tính: ");
@@ -269,9 +268,9 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
         tcm.getColumn(1).setPreferredWidth(120);
         tcm.getColumn(2).setPreferredWidth(80);
         tcm.getColumn(3).setPreferredWidth(100);
-        tcm.getColumn(4).setPreferredWidth(60);
-        tcm.getColumn(8).setPreferredWidth(100);
-        tcm.getColumn(9).setPreferredWidth(90);
+        tcm.getColumn(4).setPreferredWidth(50);
+        tcm.getColumn(8).setPreferredWidth(70);
+        tcm.getColumn(9).setPreferredWidth(120);
     }
     private String formatDate(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyy");
@@ -301,6 +300,28 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
         String taikhoan = txtTaiKhoan.getText().toString();
         String cccd = txtCMNDNV.getText().toString();
         String sdt = txtSDTNV.getText().toString();
+        String ngaysinh = dpNgaySinhNV.getValue().toString(); // Lấy chuỗi ngày tháng từ DatePicker
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        Date ngaySinhDate = null; // Chuyển chuỗi ngày thành đối tượng Date
+        try {
+            ngaySinhDate = dateFormat.parse(ngaysinh);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
+        // Lấy ngày tháng năm hiện tại
+        LocalDate currentDate = LocalDate.now();
+
+        // Giảm 18 năm
+        currentDate = currentDate.minusYears(18);
+
+        Date eighteenYearsAgo = Date.from(currentDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+        // So sánh ngày nhập vào với ngày tháng năm hiện tại đã giảm đi 18 năm
+        if (!(ngaySinhDate.before(eighteenYearsAgo))) {
+            txtBaoLoi.setText("Nhân viên phải lớn hơn 18 tuổi");
+            return false;
+        }
 
         if (!((ten.length() > 0) && ten.matches("^[A-Za-zÀ-ỹ ]+"))) {
             showMessage(txtTenNV,"Tên nhân viên không được chứa kí tự đặc biệt và số");
@@ -354,7 +375,7 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
                 }
                 Date ngaysinh = null;
                 try {
-                    ngaysinh = dpNgaySinhNV.getValueToDay();
+                    ngaysinh = dpNgaySinhNV.getFullDate();
                 } catch (ParseException e3) {
                     e3.printStackTrace();
                 }
@@ -374,7 +395,9 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
         } else if (o.equals(btnSua)) {
             int row = tableNV.getSelectedRow();
             if(row > 0){
-                if(validData()){
+                if (txtTenNV.getText().equals("") || txtSDTNV.getText().equals("") || txtCMNDNV.getText().equals("") || txtDiaChi.getText().equals("") || txtTaiKhoan.getText().equals("")) {
+                    JOptionPane.showMessageDialog(this, "Bạn phải nhập thông tin nhân viên");
+                } else if (validData()) {
                     String ma = txtMaNV.getText().trim();
                     String ten = txtTenNV.getText().trim();
                     String sdt = txtSDTNV.getText().trim();
@@ -392,50 +415,50 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
                     }
                     Date ngaysinh = null;
                     try {
-                        ngaysinh = dpNgaySinhNV.getValueToDay();
+                        ngaysinh = dpNgaySinhNV.getFullDate();
 
                     } catch (ParseException e3) {
                         e3.printStackTrace();
                     }
                     Staff kh = new Staff(ma, ten, sdt, cccd, gt, ngaysinh ,diachi,chucVu,trangthai,new Account(taikhoan));
                     boolean result = StaffDAO.update(kh);
-            if (result == true) {
-                String date = formatDate(kh.getNgaySinh());
-                modelTableNV.setValueAt(kh.getMaNhanVien(), row, 0);
-                modelTableNV.setValueAt(kh.getTenNhanVien(), row, 1);
-                modelTableNV.setValueAt(kh.getSoDienThoai(), row, 2);
-                modelTableNV.setValueAt(gt, row, 3);
-                modelTableNV.setValueAt(kh.isGioiTinh(), row, 4);
-                modelTableNV.setValueAt(date, row, 5);
-                modelTableNV.setValueAt(kh.getDiaChi(), row, 6);
-                modelTableNV.setValueAt(kh.getChucVu(), row, 7);
-                modelTableNV.setValueAt(kh.getTrangThai(), row, 8);
-                modelTableNV.setValueAt(kh.getTaiKhoan().getTaiKhoan(), row, 9);
-                modelTableNV.fireTableDataChanged();
-                modelTableNV.getDataVector().removeAllElements();
-                loadNV();
-                JOptionPane.showMessageDialog(this, "Cập nhật thành công");
-                reFresh();
-            }
-            }} else {
+                    if (result == true) {
+                        String date = formatDate(kh.getNgaySinh());
+                        modelTableNV.setValueAt(kh.getMaNhanVien(), row, 0);
+                        modelTableNV.setValueAt(kh.getTenNhanVien(), row, 1);
+                        modelTableNV.setValueAt(kh.getSoDienThoai(), row, 2);
+                        modelTableNV.setValueAt(gt, row, 3);
+                        modelTableNV.setValueAt(kh.isGioiTinh(), row, 4);
+                        modelTableNV.setValueAt(date, row, 5);
+                        modelTableNV.setValueAt(kh.getDiaChi(), row, 6);
+                        modelTableNV.setValueAt(kh.getChucVu(), row, 7);
+                        modelTableNV.setValueAt(kh.getTrangThai(), row, 8);
+                        modelTableNV.setValueAt(kh.getTaiKhoan().getTaiKhoan(), row, 9);
+                        modelTableNV.fireTableDataChanged();
+                        modelTableNV.getDataVector().removeAllElements();
+                        loadNV();
+                        JOptionPane.showMessageDialog(this, "Cập nhật thành công");
+                        reFresh();
+                    }
+                }} else {
                 JOptionPane.showMessageDialog(this, "Bạn phải chọn dòng cần sửa");
             }
         }
     }
 
-private void reFresh(){
-    txtMaNV.setText("");
-    txtTenNV.setText("");
-    cboGioiTinhNV.setSelectedIndex(0);
-    txtCMNDNV.setText("");
-    dpNgaySinhNV.setValueToDay();
-    txtTaiKhoan.setText("");
-    cbotinhTrang.setSelectedIndex(0);
-    cboChucVu.setSelectedIndex(0);
-    txtDiaChi.setText("");
-    txtSDTNV.setText("");
-    txtBaoLoi.setText("");
-}
+    private void reFresh(){
+        txtMaNV.setText("");
+        txtTenNV.setText("");
+        cboGioiTinhNV.setSelectedIndex(0);
+        txtCMNDNV.setText("");
+        dpNgaySinhNV.setValueToDay();
+        txtTaiKhoan.setText("");
+        cbotinhTrang.setSelectedIndex(0);
+        cboChucVu.setSelectedIndex(0);
+        txtDiaChi.setText("");
+        txtSDTNV.setText("");
+        txtBaoLoi.setText("");
+    }
     @Override
     public void mouseClicked(MouseEvent e) {
         int row = tableNV.getSelectedRow();

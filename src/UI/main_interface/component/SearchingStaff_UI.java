@@ -175,6 +175,7 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
                 modelTableNV.setRowCount(0);
                 String gt ="";
                 for (Staff staff : StaffDAO.getAllStaff()) {
+                    String date = formatDate(staff.getNgaySinh());
                     if (staff.isGioiTinh() == true) {
                         gt = "Nam";
                     } else {
@@ -182,7 +183,7 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
                     }
                     if (selectedNhanVien.equalsIgnoreCase("Tất cả") || selectedNhanVien.equalsIgnoreCase(staff.getTrangThai())) {
                         Object[] rowData = { staff.getMaNhanVien(), staff.getTenNhanVien(), staff.getSoDienThoai(),
-                                staff.getCCCD(), gt, staff.getNgaySinh(), staff.getDiaChi(),
+                                staff.getCCCD(), gt, date, staff.getDiaChi(),
                                 staff.getChucVu(), staff.getTrangThai(), staff.getTaiKhoan().getTaiKhoan()};
                         modelTableNV.addRow(rowData);
                     }
@@ -206,9 +207,9 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
         tcm.getColumn(1).setPreferredWidth(120);
         tcm.getColumn(2).setPreferredWidth(80);
         tcm.getColumn(3).setPreferredWidth(100);
-        tcm.getColumn(4).setPreferredWidth(60);
-        tcm.getColumn(8).setPreferredWidth(100);
-        tcm.getColumn(9).setPreferredWidth(90);
+        tcm.getColumn(4).setPreferredWidth(50);
+        tcm.getColumn(8).setPreferredWidth(70);
+        tcm.getColumn(9).setPreferredWidth(120);
     }
 
     private String formatDate(Date date) {

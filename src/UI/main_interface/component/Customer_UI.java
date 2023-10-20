@@ -17,6 +17,8 @@ import java.awt.event.MouseListener;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 
 
@@ -138,7 +140,6 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
         Custom.setCustomComboBox(cboGioiTinh);
         pnlCusControl.add(cboGioiTinh);
 
-
         cmndLabel = new JLabel("CCCD: ");
         cmndLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         cmndLabel.setBounds(30, 120, 60, 30);
@@ -152,28 +153,27 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
         txtHienThiLoi = new JTextField();
         txtHienThiLoi.setFont(new Font("Arial", Font.BOLD, 13));
         txtHienThiLoi.setForeground(Color.RED);
-
-        txtHienThiLoi.setBounds(30, 170, 465, 30);
+        txtHienThiLoi.setBounds(145, 170, 465, 30);
         txtHienThiLoi.setOpaque(false);
         txtHienThiLoi.setEditable(false);
         pnlCusControl.add(txtHienThiLoi);
 
         btnThem = new JButton("Thêm");
         btnThem.setFont(new Font("Arial", Font.BOLD, 15));
-        btnThem.setBounds(550, 170, 100, 30);
+        btnThem.setBounds(650, 170, 100, 30);
         Custom.setCustomBtn(btnThem);
         pnlCusControl.add(btnThem);
 
         btnLamMoi = new JButton("Làm Mới");
         Custom.setCustomBtn(btnLamMoi);
         btnLamMoi.setFont(new Font("Arial", Font.BOLD, 15));
-        btnLamMoi.setBounds(690, 170, 100, 30);
+        btnLamMoi.setBounds(930, 170, 100, 30);
         pnlCusControl.add(btnLamMoi);
 
         btnSua = new JButton("Sửa");
         Custom.setCustomBtn(btnSua);
         btnSua.setFont(new Font("Arial", Font.BOLD, 15));
-        btnSua.setBounds(830, 170, 100, 30);
+        btnSua.setBounds(790, 170, 100, 30);
         pnlCusControl.add(btnSua);
 
 
@@ -253,6 +253,28 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
         String ten = txtTenKH.getText().trim();
         String sdt = txtSDTKH.getText().trim();
         String cccd = txtCMNDKH.getText().trim();
+        String ngaysinh = dpNgaySinh.getValue().toString(); // Lấy chuỗi ngày tháng từ DatePicker
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        Date ngaySinhDate = null; // Chuyển chuỗi ngày thành đối tượng Date
+        try {
+            ngaySinhDate = dateFormat.parse(ngaysinh);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
+        // Lấy ngày tháng năm hiện tại
+        LocalDate currentDate = LocalDate.now();
+
+        // Giảm 18 năm
+        currentDate = currentDate.minusYears(18);
+
+        Date eighteenYearsAgo = Date.from(currentDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+        // So sánh ngày nhập vào với ngày tháng năm hiện tại đã giảm đi 18 năm
+        if (!(ngaySinhDate.before(eighteenYearsAgo))) {
+            txtHienThiLoi.setText("Khách hàng phải lớn hơn 18 tuổi");
+            return false;
+        }
         if (!((ten.length()) > 0 && ten.matches("[\\p{L},\\s]+"))) {
             showMessage(txtTenKH, "Tên khách hàng không được chứa kí tự đặc biệt và số");
             return false;
@@ -328,48 +350,54 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
             }
 
         } else if (o.equals(btnSua)) {
-            String maKH = txtMaKH.getText().trim();
-            String tenKH = txtTenKH.getText().trim();
-            String sdt = txtSDTKH.getText().trim();
-            String gioiTinh = cboGioiTinh.getSelectedItem().toString();
-            boolean gt = true;
-            String cccd = txtCMNDKH.getText().trim();
-            if (gioiTinh == "Nam") {
-                gt = true;
-            } else {
-                gt = false;
-            }
-            Date ngaysinh = null;
-            try {
-                ngaysinh = dpNgaySinh.getFullDate();
-
-            } catch (ParseException e3) {
-                e3.printStackTrace();
-            }
-            Customer kh = new Customer(maKH, tenKH, sdt, cccd, gt, ngaysinh);
-            String date = formatDate(kh.getNgaySinh());
-            int row = tblKH.getSelectedRow();
-            boolean result = CustomerDAO.update(kh);
-            if (row > 0) {
-                if (result == true) {
-                    modelTableKH.setValueAt(kh.getMaKhachHang(), row, 1);
-                    modelTableKH.setValueAt(kh.getTenKhachHang(), row, 2);
-                    modelTableKH.setValueAt(kh.getSoDienThoai(), row, 3);
-                    modelTableKH.setValueAt(kh.getCCCD(), row, 4);
-                    modelTableKH.setValueAt(gt, row, 5);
-                    modelTableKH.setValueAt(date, row, 6);
-                    modelTableKH.fireTableDataChanged();
-                    modelTableKH.getDataVector().removeAllElements();
-                    loadKH();
-                    JOptionPane.showMessageDialog(this, "Cập nhật thành công");
-                    reFresh();
+            if (txtTenKH.getText().equals("") || txtSDTKH.getText().equals("")
+                    || txtCMNDKH.getText().equals("")
+            ) {
+                JOptionPane.showMessageDialog(this, "Bạn phải nhập thông tin khách hàng");
+            } else if (validData()) {
+                String maKH = txtMaKH.getText().trim();
+                String tenKH = txtTenKH.getText().trim();
+                String sdt = txtSDTKH.getText().trim();
+                String gioiTinh = cboGioiTinh.getSelectedItem().toString();
+                boolean gt = true;
+                String cccd = txtCMNDKH.getText().trim();
+                if (gioiTinh == "Nam") {
+                    gt = true;
                 } else {
-                    JOptionPane.showMessageDialog(this, "Lỗi: Cập nhật thất bại");
+                    gt = false;
                 }
-            } else {
-                JOptionPane.showMessageDialog(this, "Bạn phải chọn dòng để sửa");
-            }
+                Date ngaysinh = null;
+                try {
+                    ngaysinh = dpNgaySinh.getFullDate();
 
+                } catch (ParseException e3) {
+                    e3.printStackTrace();
+                }
+                Customer kh = new Customer(maKH, tenKH, sdt, cccd, gt, ngaysinh);
+                String date = formatDate(kh.getNgaySinh());
+                int row = tblKH.getSelectedRow();
+                boolean result = CustomerDAO.update(kh);
+                if (row > 0) {
+                    if (result == true) {
+                        modelTableKH.setValueAt(kh.getMaKhachHang(), row, 1);
+                        modelTableKH.setValueAt(kh.getTenKhachHang(), row, 2);
+                        modelTableKH.setValueAt(kh.getSoDienThoai(), row, 3);
+                        modelTableKH.setValueAt(kh.getCCCD(), row, 4);
+                        modelTableKH.setValueAt(gt, row, 5);
+                        modelTableKH.setValueAt(date, row, 6);
+                        modelTableKH.fireTableDataChanged();
+                        modelTableKH.getDataVector().removeAllElements();
+                        loadKH();
+                        JOptionPane.showMessageDialog(this, "Cập nhật thành công");
+                        reFresh();
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Lỗi: Cập nhật thất bại");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Bạn phải chọn dòng để sửa");
+                }
+
+            }
         }
     }
 
