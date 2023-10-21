@@ -2,9 +2,8 @@ package menu;
 
 import Entity.Account;
 import Entity.Staff;
-import UI.CustomUI.Custom;
-import UI.CustomUI.LoginUI;
-import UI.main_interface.Main;
+import UI.LoginUI;
+import UI.component.Dialog.Main;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import menu.mode.LightDarkMode;
 

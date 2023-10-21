@@ -1,8 +1,6 @@
 package Entity;
 
-import DAOs.RoomDAO;
-import DAOs.TypeOfRoomDAO;
-import DAOs.TypeOfServiceDAO;
+import DAO.TypeOfRoomDAO;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

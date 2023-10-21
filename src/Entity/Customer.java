@@ -1,6 +1,5 @@
 package Entity;
-import DAOs.CustomerDAO;
-import DAOs.StaffDAO;
+import DAO.CustomerDAO;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

@@ -1,11 +1,9 @@
 package Entity;
 
-import DAOs.StaffDAO;
-import DAOs.TypeOfRoomDAO;
+import DAO.StaffDAO;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Calendar;
 import java.util.Date;
 
 public class Staff {

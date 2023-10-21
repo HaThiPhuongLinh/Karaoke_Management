@@ -1,6 +1,6 @@
 package menu;
 
-import UI.main_interface.swing.ButtonBadges;
+import menu.swing.ButtonBadges;
 
 import java.awt.Color;
 import java.awt.Graphics;
