@@ -1,5 +1,10 @@
 package UI.main_interface.component;
 
+import DAOs.DetailOfServiceDAO;
+import DAOs.ServiceDAO;
+import Entity.Bill;
+import Entity.DetailsOfService;
+import Entity.Service;
 import UI.CustomUI.Custom;
 
 import javax.swing.*;
@@ -9,15 +14,30 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
-public class StatisticService_UI extends JPanel {
+public class StatisticService_UI extends JPanel implements ActionListener , ItemListener {
+    private JComboBox<String> comboBoxLocTheo;
+    private JButton btnLamMoi,btnThongKe;
+    private DefaultTableModel modelTableDV;
+    private JTable tableDV;
+    private DatePicker pickerDenNgay,pickerTuNgay;
     private JLabel backgroundLabel,timeLabel;
+    private DetailOfServiceDAO detailOfServiceDAO;
+    private ServiceDAO serviceDAO;
 
     public StatisticService_UI(){
         setLayout(null);
         setBounds(0, 0, 1175, 770);
+
+        detailOfServiceDAO = new DetailOfServiceDAO();
+        serviceDAO = new ServiceDAO();
 
         //phan viet code
         JLabel headerLabel = new JLabel("THỐNG KÊ DỊCH VỤ");
@@ -62,7 +82,7 @@ public class StatisticService_UI extends JPanel {
         labelTuNgay.setForeground(Color.WHITE);
         add(labelTuNgay);
 
-        DatePicker pickerTuNgay = new DatePicker(150);
+        pickerTuNgay = new DatePicker(150);
         pickerTuNgay.setOpaque(false);
         pickerTuNgay.setBounds(200, 100, 300, 30);
         add(pickerTuNgay);
@@ -73,7 +93,7 @@ public class StatisticService_UI extends JPanel {
         lblDenNgay.setForeground(Color.WHITE);
         add(lblDenNgay);
 
-        DatePicker pickerDenNgay = new DatePicker(150);
+        pickerDenNgay = new DatePicker(150);
         pickerDenNgay.setOpaque(false);
         pickerDenNgay.setBounds(500, 100, 300, 30);
         add(pickerDenNgay);
@@ -85,21 +105,26 @@ public class StatisticService_UI extends JPanel {
         labelLocTheo.setForeground(Color.WHITE);
         add(labelLocTheo);
 
-        JComboBox<String> comboBoxLocTheo = new JComboBox<String>();
+        comboBoxLocTheo = new JComboBox<String>();
         comboBoxLocTheo.addItem("Tùy chỉnh");
+        comboBoxLocTheo.addItem("7 ngày gần nhất");
+        comboBoxLocTheo.addItem("1 tháng gần nhất");
+        comboBoxLocTheo.addItem("3 tháng gần nhất");
+        comboBoxLocTheo.addItem("6 tháng gần nhất");
+        comboBoxLocTheo.addItem("1 năm gần nhất");
         comboBoxLocTheo.setBounds(800,100,200,30);
         Custom.setCustomComboBox(comboBoxLocTheo);
         add(comboBoxLocTheo);
 
         //        btn thống kê
-        JButton btnThongKe = new JButton("Thống kê");
+        btnThongKe = new JButton("Thống kê");
         btnThongKe.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnThongKe);
         btnThongKe.setBounds(400, 160, 150, 30);
         add(btnThongKe);
 
         //        btn làm mới
-        JButton btnLamMoi = new JButton("Làm mới");
+        btnLamMoi = new JButton("Làm mới");
         btnLamMoi.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnLamMoi);
         btnLamMoi.setBounds(600, 160, 150, 30);
@@ -115,16 +140,17 @@ public class StatisticService_UI extends JPanel {
         panelDSDV.setOpaque(false);
 
         String[] colsDV = { "STT", "Mã dịch vụ", "Tên dịch vụ","Số lượng bán được" };
-        DefaultTableModel modelTableDV = new DefaultTableModel(colsDV, 0) ;
+        modelTableDV = new DefaultTableModel(colsDV, 0) ;
         JScrollPane scrollPaneDV;
 
-        JTable tableDV = new JTable(modelTableDV);
+        tableDV = new JTable(modelTableDV);
         tableDV.setFont(new Font("Arial", Font.BOLD, 14));
         tableDV.setBackground(new Color(255, 255, 255, 0));
         tableDV.setForeground(new Color(255, 255, 255));
         tableDV.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
         tableDV.getTableHeader().setForeground(Color.BLUE);
 //        tableLDV.getTableHeader().setBackground(new Color(255, 255, 255));
+        Custom.getInstance().setCustomTable(tableDV);
 
         panelDSDV.add(scrollPaneDV = new JScrollPane(tableDV,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
                 BorderLayout.CENTER);
@@ -138,10 +164,165 @@ public class StatisticService_UI extends JPanel {
         backgroundLabel = new JLabel(backgroundImage);
         backgroundLabel.setBounds(0, 0, getWidth(), getHeight());
         add(backgroundLabel);
+
+        btnThongKe.addActionListener(this);
+        btnLamMoi.addActionListener(this);
+
+        comboBoxLocTheo.addItemListener(this);
     }
     private void updateTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String time = sdf.format(new Date());
         timeLabel.setText(time);
+    }
+
+    private void docDuLieuVaoTable(ArrayList<DetailsOfService> listService) {
+        int i=1;
+        ArrayList<Service> list = (ArrayList<Service>) serviceDAO.getAllDichVu();
+        for (DetailsOfService CTDV : listService) {
+            String s1 = "";
+            for (Service s : list){
+                if (CTDV.getMaDichVu().getMaDichVu().equals(s.getMaDichVu())){
+                    s1=s.getTenDichVu();
+                }
+            }
+            System.out.printf(CTDV.getMaDichVu()+"");
+            modelTableDV.addRow(new Object[] {i,CTDV.getMaDichVu().getMaDichVu(),s1,CTDV.getSoLuong()});
+            i++;
+        }
+    }
+
+    public boolean validData() throws ParseException {
+        Date tuNgay = pickerTuNgay.getFullDate();
+        Date denNgay = pickerDenNgay.getFullDate();
+        if (denNgay.before(tuNgay)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object o = e.getSource();
+        if (o.equals(btnThongKe)) {
+            modelTableDV.getDataVector().removeAllElements();
+            try {
+                Date tuNgay = pickerTuNgay.getFullDate();
+                Date denNgay = pickerDenNgay.getFullDate();
+                ArrayList<DetailsOfService> listDV = detailOfServiceDAO.getListCTDVByDate(tuNgay, denNgay);
+                System.out.printf(String.valueOf(listDV.size())+"ádasdasd");
+                if (validData()) {
+                    if (tuNgay.before(denNgay)) {
+                        if (listDV == null || listDV.isEmpty() || listDV.size() <= 0)
+                            JOptionPane.showMessageDialog(this, "Không tìm thấy thông tin thông kê");
+                        else
+                            docDuLieuVaoTable(listDV);
+                    }
+                } else if (denNgay.before(tuNgay)) {
+                    pickerDenNgay.setValueToDay();
+                    JOptionPane.showMessageDialog(this, "Ngày kết thúc phải >= ngày bắt đầu", "Cảnh báo",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (ParseException e2) {
+                e2.printStackTrace();
+            }
+        } else if (o.equals(btnLamMoi)){
+            modelTableDV.getDataVector().removeAllElements();
+            tableDV.removeAll();
+            comboBoxLocTheo.setSelectedIndex(0);
+            pickerTuNgay.setValueToDay();
+            pickerDenNgay.setValueToDay();
+        }
+    }
+
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+        Object o = e.getSource();
+        if (o.equals(comboBoxLocTheo)) {
+            String search = comboBoxLocTheo.getSelectedItem().toString();
+            switch (search) {
+                case "7 ngày gần nhất":
+                    pickerTuNgay.setActive(false);
+                    pickerDenNgay.setActive(false);
+                    modelTableDV.getDataVector().removeAllElements();
+                    tableDV.removeAll();
+                    Date tuNgay = pickerTuNgay.setDatesFromToday(Calendar.DAY_OF_MONTH, -6);
+                    Date denNgay = null;
+                    try {
+                        denNgay = pickerDenNgay.getValueToDay();
+                    } catch (ParseException ex) {
+                        ex.printStackTrace();
+                    }
+                    ArrayList<DetailsOfService> listDV = detailOfServiceDAO.getListCTDVByDate(tuNgay, denNgay);
+                    docDuLieuVaoTable(listDV);
+                    break;
+                case "1 tháng gần nhất":
+                    pickerTuNgay.setActive(false);
+                    pickerDenNgay.setActive(false);
+                    modelTableDV.getDataVector().removeAllElements();
+                    tableDV.removeAll();
+                    Date tuNgay1 = pickerTuNgay.setDatesFromToday(Calendar.MONTH, -1);
+                    Date denNgay1 = null;
+                    try {
+                        denNgay1 = pickerDenNgay.getValueToDay();
+                    } catch (ParseException ex) {
+                        ex.printStackTrace();
+                    }
+                    ArrayList<DetailsOfService> listDV1 = detailOfServiceDAO.getListCTDVByDate(tuNgay1, denNgay1);
+                    docDuLieuVaoTable(listDV1);
+                    break;
+                case "3 tháng gần nhất":
+                    pickerTuNgay.setActive(false);
+                    pickerDenNgay.setActive(false);
+                    modelTableDV.getDataVector().removeAllElements();
+                    tableDV.removeAll();
+                    Date tuNgay2 = pickerTuNgay.setDatesFromToday(Calendar.MONTH, -2);
+                    Date denNgay2 = null;
+                    try {
+                        denNgay2 = pickerDenNgay.getValueToDay();
+                    } catch (ParseException ex) {
+                        ex.printStackTrace();
+                    }
+                    ArrayList<DetailsOfService> listDV2 = detailOfServiceDAO.getListCTDVByDate(tuNgay2, denNgay2);
+                    docDuLieuVaoTable(listDV2);
+                    break;
+                case "6 tháng gần nhất":
+                    pickerTuNgay.setActive(false);
+                    pickerDenNgay.setActive(false);
+                    modelTableDV.getDataVector().removeAllElements();
+                    tableDV.removeAll();
+                    Date tuNgay3 = pickerTuNgay.setDatesFromToday(Calendar.MONTH, -5);
+                    Date denNgay3 = null;
+                    try {
+                        denNgay3 = pickerDenNgay.getValueToDay();
+                    } catch (ParseException ex) {
+                        ex.printStackTrace();
+                    }
+                    ArrayList<DetailsOfService> listDV3 = detailOfServiceDAO.getListCTDVByDate(tuNgay3, denNgay3);
+                    docDuLieuVaoTable(listDV3);
+                    break;
+                case "1 năm gần nhất":
+                    pickerTuNgay.setActive(false);
+                    pickerDenNgay.setActive(false);
+                    modelTableDV.getDataVector().removeAllElements();
+                    tableDV.removeAll();
+                    Date tuNgay4 = pickerTuNgay.setDatesFromToday(Calendar.MONTH, -11);
+                    Date denNgay4 = null;
+                    try {
+                        denNgay4 = pickerDenNgay.getValueToDay();
+                    } catch (ParseException ex) {
+                        ex.printStackTrace();
+                    }
+                    ArrayList<DetailsOfService> listDV4 = detailOfServiceDAO.getListCTDVByDate(tuNgay4, denNgay4);
+                    docDuLieuVaoTable(listDV4);
+
+                    break;
+                case "Tùy chỉnh":
+                    pickerTuNgay.setActive(true);
+                    pickerDenNgay.setActive(true);
+                    pickerTuNgay.setValueToDay();
+                    break;
+            }
+        }
     }
 }
