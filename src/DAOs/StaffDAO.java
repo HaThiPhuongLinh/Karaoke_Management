@@ -226,6 +226,33 @@ public class StaffDAO {
         return n > 0;
     }
 
+    public Staff getStaffByID(String maNhanVien) {
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        String query = "SELECT nv.maNhanVien, nv.tenNhanVien, nv.soDienThoai, nv.CCCD, nv.gioiTinh,  nv.ngaySinh, " +
+                "nv.diaChi, nv.chucVu, nv.trangThai, " +
+                "nv.taiKhoan, " +
+                "tk.taiKhoan, tk.matKhau, tk.tinhTrang " +
+                "FROM dbo.TaiKhoan tk, dbo.NhanVien nv " +
+                "WHERE tk.taiKhoan = nv.taiKhoan " +
+                "AND nv.maNhanVien = ?";
+
+        try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
+            preparedStatement.setString(1, maNhanVien);
+
+            try (ResultSet rs = preparedStatement.executeQuery()) {
+                if (rs.next()) {
+                    Staff staff = new Staff(rs);
+                    return staff;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
     public String generateNextStaffId() {
         Connection con = null;
         PreparedStatement statement = null;

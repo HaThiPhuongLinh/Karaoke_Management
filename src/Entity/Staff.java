@@ -1,5 +1,8 @@
 package Entity;
 
+import DAOs.StaffDAO;
+import DAOs.TypeOfRoomDAO;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
@@ -21,7 +24,18 @@ public class Staff {
         this(rs.getString("maNhanVien"), rs.getString(2), rs.getString(3), rs.getString(4), rs.getBoolean(5),rs.getDate("ngaySinh"), rs.getString(7), rs.getString(8), rs.getString(9), new Account(rs));
     }
     public Staff(String maNhanVien){
+        StaffDAO staffDAO = new StaffDAO();
+        Staff s = staffDAO.getStaffByID(maNhanVien);
         this.maNhanVien = maNhanVien;
+        this.tenNhanVien = s.getTenNhanVien();
+        this.soDienThoai = s.getSoDienThoai();
+        this.CCCD = s.getCCCD();
+        this.gioiTinh = s.isGioiTinh();
+        this.ngaySinh = s.getNgaySinh();
+        this.diaChi = s.getDiaChi();
+        this.chucVu = s.getChucVu();
+        this.trangThai = s.getTrangThai();
+        this.taiKhoan = s.getTaiKhoan();
     }
 
     public Staff(String maNhanVien, String tenNhanVien, String soDienThoai, String CCCD, boolean gioiTinh, Date ngaySinh, String diaChi, String chucVu, String trangThai, Account taiKhoan) {
@@ -116,6 +130,8 @@ public class Staff {
     public void setTaiKhoan(Account taiKhoan) {
         this.taiKhoan = taiKhoan;
     }
+
+
 
     @Override
     public String toString() {

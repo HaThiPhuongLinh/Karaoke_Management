@@ -1,4 +1,7 @@
 package Entity;
+import DAOs.CustomerDAO;
+import DAOs.StaffDAO;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
@@ -16,7 +19,14 @@ public class Customer {
     }
 
     public Customer(String maKhachHang){
-        this.maKhachHang = maKhachHang;
+        CustomerDAO customerDAO = new CustomerDAO();
+        Customer c = customerDAO.getKhachHangById(maKhachHang);
+        this.maKhachHang = c.getMaKhachHang();
+        this.tenKhachHang = c.getTenKhachHang();
+        this.soDienThoai = c.getSoDienThoai();
+        this.CCCD = c.getCCCD();
+        this.gioiTinh = c.isGioiTinh();
+        this.ngaySinh = c.getNgaySinh();
     }
 
     public Customer(ResultSet rs) throws SQLException {
