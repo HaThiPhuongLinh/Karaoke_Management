@@ -14,6 +14,8 @@ public class Bill {
     private int tinhTrangHD;
     private String khuyenMai;
 
+    
+
     public Bill(String maHoaDon){
         this.maHoaDon =maHoaDon;
     }
