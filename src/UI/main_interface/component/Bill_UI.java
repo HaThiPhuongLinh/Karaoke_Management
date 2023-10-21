@@ -1,5 +1,9 @@
 package UI.main_interface.component;
 
+import DAOs.BillDAO;
+import Entity.Bill;
+import Entity.Service;
+import Entity.TypeOfService;
 import UI.CustomUI.Custom;
 
 import javax.swing.*;
