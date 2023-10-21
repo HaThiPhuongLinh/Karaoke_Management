@@ -61,6 +61,7 @@ public class LoginUI extends JFrame{
         usernameLabel.setBounds(70, 140, 280, 15);
         rightPanel.add(usernameLabel);
         usernameField = new JTextField();
+        usernameField.setText("maithaivu");
         usernameField.setBounds(70, 160, 280, 30);
         usernameField.setBorder(borderBottomFocus);
         rightPanel.add(usernameField);
@@ -69,6 +70,7 @@ public class LoginUI extends JFrame{
         passwordLabel.setBounds(70, 210, 280, 15);
         rightPanel.add(passwordLabel);
         passwordField = new JPasswordField();
+        passwordField.setText("1");
         passwordField.setBounds(70, 230, 280, 30);
         passwordField.setBorder(borderBottomFocus);
         rightPanel.add(passwordField);

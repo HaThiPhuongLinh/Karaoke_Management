@@ -441,7 +441,11 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
                             txtStart.setText(sdf.format(reservationForm.getThoiGianDat()));
                             txtReceive.setText(sdf.format(reservationForm.getThoiGianNhanPhong()));
                         }
-                    }
+                    } else {
+                    txtName.setText("");
+                    txtStart.setText("");
+                    txtReceive.setText("");
+                }
                 }
             });
 
@@ -554,37 +558,38 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
                 JOptionPane.showMessageDialog(this, "Chưa chọn phòng để đặt");
             } else if (txtCustomer.getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Chưa chọn khách hàng cho thuê");
-            }
-
-            String roomID = txtRoom.getText().trim();
-            Room room = roomDAO.getRoomByRoomId(roomID);
-            if (room == null) {
-                room = new Room();
-            }
-            if (room.getTinhTrang().equalsIgnoreCase("Đang sử dụng")) {
-                JOptionPane.showMessageDialog(this, "Phòng đang có khách. Vui lòng chọn phòng khác");
             } else {
-                String customerName = txtCustomer.getText().trim();
-                String customerID = customerDAO.getIdByTenKhachHang(customerName);
-                Customer c = customerDAO.getKhachHangById(customerID);
-                if (c == null) {
-                    c = new Customer();
+                String roomID = txtRoom.getText().trim();
+                Room room = roomDAO.getRoomByRoomId(roomID);
+                if (room == null) {
+                    room = new Room();
                 }
-                String formID = generateID();
-                long millis = System.currentTimeMillis();
-                Timestamp startTime = new Timestamp(millis);
-                Timestamp receiveTime = new Timestamp(millis);
-
-                ReservationForm form = new ReservationForm(formID, startTime, receiveTime, staffLogin, c, room);
-                boolean resultForm = reservationFormDAO.addReservationForm(form);
-
-                if (resultForm) {
-                    JOptionPane.showMessageDialog(this, "Cho thuê phòng thành công");
-                   roomDAO.updateRoomStatus(roomID,"Đang sử dụng");
-                   loadRoom(roomID);
-                   txtCustomer.setText("");
+                if (room.getTinhTrang().equalsIgnoreCase("Đang sử dụng")) {
+                    JOptionPane.showMessageDialog(this, "Phòng đang có khách. Vui lòng chọn phòng khác");
                 } else {
-                    JOptionPane.showMessageDialog(this, "Cho thuê phòng thất bại");
+                    String customerName = txtCustomer.getText().trim();
+                    String customerID = customerDAO.getIdByTenKhachHang(customerName);
+                    Customer c = customerDAO.getKhachHangById(customerID);
+                    if (c == null) {
+                        c = new Customer();
+                    }
+                    String formID = generateID();
+                    long millis = System.currentTimeMillis();
+                    Timestamp startTime = new Timestamp(millis);
+                    Timestamp receiveTime = new Timestamp(millis);
+
+                    ReservationForm form = new ReservationForm(formID, startTime, receiveTime, staffLogin, c, room);
+                    boolean resultForm = reservationFormDAO.addReservationForm(form);
+
+                    if (resultForm) {
+                        JOptionPane.showMessageDialog(this, "Cho thuê phòng thành công");
+                        roomDAO.updateRoomStatus(roomID, "Đang sử dụng");
+                        ArrayList<Room> roomList = roomDAO.getRoomList();
+                        LoadRoomList(roomList);
+                        txtCustomer.setText("");
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Cho thuê phòng thất bại");
+                    }
                 }
             }
         }
