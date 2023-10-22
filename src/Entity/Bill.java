@@ -6,7 +6,7 @@ import java.util.Date;
 public class Bill {
     private String maHoaDon;
     private Staff maNhanVien;
-    private Customer maKhachHang;
+    private Customer maKhachHang; 
     private Room maPhong;
     private double giaPhong;
     private Timestamp ngayGioDat;
