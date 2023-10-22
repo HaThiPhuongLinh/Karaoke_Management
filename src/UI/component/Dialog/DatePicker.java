@@ -1,14 +1,17 @@
 package UI.component.Dialog;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 import java.text.*;
 import java.sql.Date;
+import java.util.Calendar;
 
 public class DatePicker extends JPanel implements ActionListener {
     private JTextField txt;
     private JButton btn;
     private int widthDefault = 80;
+    private boolean isActive = true;
     DiaLogDatePicker f = new DiaLogDatePicker();
     ImageIcon calenderIcon = new ImageIcon("data/images/calender_16.png");
 
@@ -119,5 +122,40 @@ public class DatePicker extends JPanel implements ActionListener {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
         String date = sdf.format(txt.getText());
         return Integer.parseInt(date);
+    }
+
+    public void setActive(boolean isActive) {
+        this.isActive = isActive;
+        btn.setEnabled(isActive);
+        if (isActive) {
+            txt.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        } else {
+            txt.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+            btn.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        }
+    }
+
+    public Date getDatesFromToday(int timeUnit, int number) {
+        String strDate = DiaLogDatePicker.getToDay();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        java.util.Date date = null;
+        Calendar cal = Calendar.getInstance();
+        try {
+            date = sdf.parse(strDate);
+            cal.setTime(date);
+            cal.add(timeUnit, number);
+            date = cal.getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Date sqlDate = new Date(date.getTime());
+        return sqlDate;
+    }
+    public Date setDatesFromToday(int timeUnit, int numberOfMonths) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        Date date = getDatesFromToday(timeUnit, numberOfMonths);
+        txt.setText(sdf.format(date.getTime()));
+        return date;
     }
 }
