@@ -6,7 +6,7 @@ import java.util.Date;
 public class Bill {
     private String maHoaDon;
     private Staff maNhanVien;
-    private Customer maKhachHang;
+    private Customer maKhachHang; 
     private Room maPhong;
     private double giaPhong;
     private Timestamp ngayGioDat;
@@ -14,9 +14,7 @@ public class Bill {
     private int tinhTrangHD;
     private String khuyenMai;
 
-    public Bill(){
 
-    }
 
     public Bill(String maHoaDon){
         this.maHoaDon =maHoaDon;
@@ -28,6 +26,18 @@ public class Bill {
         this.maKhachHang=maKH;
         this.maPhong=maPhong;
         this.giaPhong=giaPhong;
+        this.ngayGioDat=ngayGioDat;
+        this.ngayGioTra=ngayGioTra;
+        this.tinhTrangHD = tinhTrangHD;
+        this.khuyenMai = khuyenMai;
+    }
+
+    public Bill(String maHoaDon, Staff maNhanVien, Customer maKH, Room maPhong, Timestamp ngayGioDat, Timestamp ngayGioTra, int tinhTrangHD, String khuyenMai){
+        this.maHoaDon= maHoaDon;
+        this.maNhanVien=maNhanVien;
+        this.maKhachHang=maKH;
+        this.maPhong=maPhong;
+//        this.giaPhong=giaPhong;
         this.ngayGioDat=ngayGioDat;
         this.ngayGioTra=ngayGioTra;
         this.tinhTrangHD = tinhTrangHD;
