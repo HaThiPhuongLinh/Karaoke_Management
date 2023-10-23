@@ -1,5 +1,9 @@
 package UI.component;
 
+import ConnectDB.ConnectDB;
+import DAO.ReservationFormDAO;
+import DAO.RoomDAO;
+import Entity.ReservationForm;
 import UI.CustomUI.Custom;
 
 import javax.swing.*;
@@ -7,15 +11,37 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
-public class Bill_UI extends JPanel {
+public class Bill_UI extends JPanel implements ActionListener, MouseListener {
+    private  JTextField txtTK;
+    private  JButton btnLap;
+    private  JButton btnTim;
+    private  DefaultTableModel modelTablePDP;
     private JLabel backgroundLabel;
+    private ReservationFormDAO reservationFormDAO;
+    private RoomDAO roomDAO;
+    private DecimalFormat df = new DecimalFormat("#,###.##");
 
     public Bill_UI(){
         setLayout(null);
         setBounds(0, 0, 1175, 770);
 
         //phan viet code
+        try {
+            ConnectDB.getInstance().connect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        reservationFormDAO = new ReservationFormDAO();
+        roomDAO =new RoomDAO();
         JLabel labelHeader = new JLabel("LẬP HOÁ ĐƠN");
         labelHeader.setBounds(520, 10, 1175, 40);
         labelHeader.setFont(new Font("Arial", Font.BOLD, 25));
@@ -56,11 +82,11 @@ public class Bill_UI extends JPanel {
 
 
 
-        JTextField textFieldTK = new JTextField();
-        textFieldTK.setBounds(820, 20, 150, 30);
-        textFieldTK.setColumns(6);
-        panelFull.add(textFieldTK);
-        JButton btnTim = new JButton("Tìm");
+        txtTK = new JTextField();
+        txtTK.setBounds(820, 20, 150, 30);
+        txtTK.setColumns(6);
+        panelFull.add(txtTK);
+        btnTim = new JButton("Tìm");
         btnTim.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnTim);
         btnTim.setBounds(990, 20, 100, 30);
@@ -69,7 +95,7 @@ public class Bill_UI extends JPanel {
 
 
         //
-        JButton btnLap = new JButton("Lập Hóa Đơn");
+        btnLap = new JButton("Lập Hóa Đơn");
         btnLap.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnLap);
         btnLap.setBounds(100, 230, 200, 50);
@@ -114,10 +140,10 @@ public class Bill_UI extends JPanel {
         panelCTHD.setOpaque(false);
 
         String[] colsCTHD = { "STT", "Mã Phòng", "Loại Phòng","Giờ Vào","Giá Phòng" };
-        DefaultTableModel modelTableLDV = new DefaultTableModel(colsCTHD, 0) ;
+        modelTablePDP = new DefaultTableModel(colsCTHD, 0) ;
         JScrollPane scrollPaneCTHD;
 
-        JTable tableCTHD = new JTable(modelTableLDV);
+        JTable tableCTHD = new JTable(modelTablePDP);
         tableCTHD.setFont(new Font("Arial", Font.BOLD, 14));
         tableCTHD.setBackground(new Color(255, 255, 255, 0));
         tableCTHD.setForeground(new Color(255, 255, 255));
@@ -132,11 +158,82 @@ public class Bill_UI extends JPanel {
         scrollPaneCTHD.getViewport().setOpaque(false);
         scrollPaneCTHD.getViewport().setBackground(Color.WHITE);
         panelFull.add(panelCTHD);
-
+        btnTim.addActionListener(this);
+        loadPDP();
         //
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/images/background.png"));
         backgroundLabel = new JLabel(backgroundImage);
         backgroundLabel.setBounds(0, 0, getWidth(), getHeight());
         add(backgroundLabel);
+    }
+    private String formatDate(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        return sdf.format(date);
+    }
+    public void loadPDP() {
+        int i = 1;
+
+        for (ReservationForm rsvf :reservationFormDAO.getAllForm()) {
+            String date = formatDate(rsvf.getThoiGianDat());
+
+            Object[] rowData = {i, rsvf.getMaPhong().getMaPhong(), rsvf.getMaPhong().getLoaiPhong().getTenLoaiPhong(), date, df.format(rsvf.getMaPhong().getGiaPhong())};
+            modelTablePDP.addRow(rowData);
+            i++;
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+//        Object o = e.getSource();
+//        String txtMaP = txtTK.getText();
+//        ArrayList<ReservationForm> rsvf = (ArrayList<ReservationForm>) reservationFormDAO.getReservationFormByRoomId(txtMaP);
+//        if (txtTK.getText().trim().equals("") ) {
+//            JOptionPane.showMessageDialog(this, "Bạn phải nhập thông tin tìm kiếm");
+//            modelTablePDP.getDataVector().removeAllElements();
+//            loadPDP();
+//        } else if (!txtTK.getText().trim().equals("")) {
+//            modelTablePDP.getDataVector().removeAllElements();
+//            int i = 1;
+//
+//            if (rsvf.size() != 0) {
+//                for (ReservationForm reservationForm : rsvf) {
+//                    String date = formatDate(reservationForm.getThoiGianDat());
+//
+//                    Object[] rowData = {i, reservationForm.getMaPhong().getMaPhong(), reservationForm.getMaPhong().getLoaiPhong().getTenLoaiPhong(), date, df.format(reservationForm.getMaPhong().getGiaPhong())};
+//                    modelTablePDP.addRow(rowData);
+//                    i++;
+//                }
+//            } else {
+//                JOptionPane.showMessageDialog(this, "Không có phòng đang được sử dụng khớp với thông tin tìm kiếm");
+//                txtTK.selectAll();
+//                txtTK.requestFocus();
+//            }
+//        }
+
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
     }
 }

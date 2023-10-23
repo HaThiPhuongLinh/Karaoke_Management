@@ -128,4 +128,25 @@ public class ReservationFormDAO {
         }
         return nextId;
     }
+//    public ArrayList<ReservationForm> getListReservationFormByRoomId(String ma) {
+//        ArrayList<ReservationForm> rsvfList = new ArrayList<ReservationForm>();
+//        ConnectDB.getInstance();
+//        Connection con = ConnectDB.getConnection();
+//        String query =  "SELECT * FROM PhieuDatPhong where maPhong like ?";
+//
+//        try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
+//            preparedStatement.setString(1, "%" + ma + "%");
+//
+//            try (ResultSet rs = preparedStatement.executeQuery()) {
+//                while (rs.next()) {
+//                    ReservationForm rsvf;
+//                    rsvf = new ReservationForm(rs);
+//                    rsvfList.add(rsvf);
+//                }
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return rsvfList;
+//    }
 }
