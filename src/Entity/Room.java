@@ -1,5 +1,8 @@
 package Entity;
 
+import DAO.RoomDAO;
+import DAO.TypeOfRoomDAO;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
@@ -22,7 +25,13 @@ public class Room {
     }
 
     public Room(String maPhong) {
-        this.maPhong = maPhong;
+        RoomDAO roomDAO = new RoomDAO();
+        Room r = roomDAO.getRoomByRoomId(maPhong);
+        this.maPhong = r.getMaPhong();
+        this.loaiPhong = r.getLoaiPhong();
+        this.tinhTrang = r.getTinhTrang();
+        this.viTri = r.getViTri();
+        this.giaPhong = r.getGiaPhong();
     }
 
     public String getMaPhong() {
