@@ -85,6 +85,11 @@ public class Menu extends JPanel implements ActionListener {
         header.setText(staffName);
     }
 
+    public void setLogoutAction(ActionListener actionListener) {
+        buttonLogout.addActionListener(actionListener);
+    }
+
+
     private void init() {
         setLayout(new MenuLayout());
         setBorder(BorderFactory.createEmptyBorder(
@@ -112,16 +117,6 @@ public class Menu extends JPanel implements ActionListener {
             }
         });
 
-        buttonLogout.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (staffLogin != null) {
-                    Main.getInstance(staffLogin).dispose();
-                }
-                LoginUI login = new LoginUI();
-                login.setVisible(true);
-            }
-        });
         Color backgroundColor = new Color(51, 51, 51);
         setBackground(backgroundColor);
 

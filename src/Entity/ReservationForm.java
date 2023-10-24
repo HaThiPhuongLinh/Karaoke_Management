@@ -1,5 +1,8 @@
 package Entity;
 
+import DAO.ReservationFormDAO;
+import DAO.RoomDAO;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
@@ -24,6 +27,17 @@ public class ReservationForm {
         this.maNhanVien = maNhanVien;
         this.maKhachHang = maKhachHang;
         this.maPhong = maPhong;
+    }
+
+    public ReservationForm(String maPhieuDat) {
+        ReservationFormDAO reservationFormDAO = new ReservationFormDAO();
+        ReservationForm r = reservationFormDAO.getReservationFormByFormId(maPhieuDat);
+        this.maPhieuDat = r.getMaPhieuDat();
+        this.thoiGianDat = r.getThoiGianDat();
+        this.thoiGianNhanPhong = r.getThoiGianNhanPhong();
+        this.maNhanVien = r.getMaNhanVien();
+        this.maKhachHang = r.getMaKhachHang();
+        this.maPhong = r.getMaPhong();
     }
 
     public String getMaPhieuDat() {

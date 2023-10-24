@@ -1,6 +1,7 @@
 package UI.component.Dialog;
 
 import Entity.Staff;
+import UI.LoginUI;
 import UI.component.*;
 import menu.swing.RoundPanel;
 import menu.Header;
@@ -30,6 +31,15 @@ public class Main extends JFrame {
         if (staffLogin != null) {
             menu21.setHeader(staffLogin.getTenNhanVien());
         }
+
+        menu21.setLogoutAction(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+               dispose();
+                LoginUI login = new LoginUI();
+                login.setVisible(true);
+            }
+        });
 
         setBackground(new Color(0, 0, 0, 0));
         menu21.addMenuEvent((int index, int subIndex, MenuAction action) -> {

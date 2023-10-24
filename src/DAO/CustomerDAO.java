@@ -190,6 +190,32 @@ public class CustomerDAO {
         return cccdlist;
     }
 
+    public  Customer getKhachHangBySDT(String sdt) {
+       Customer c = null;
+        ConnectDB.getInstance();
+        PreparedStatement stmt = null;
+        try {
+            Connection con = ConnectDB.getConnection();
+            String sql = "SELECT * FROM KhachHang where soDienThoai = ?";
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, sdt);
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+               c = new Customer(rs);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return c;
+    }
+
     public boolean insert(Customer kh) throws SQLException {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
@@ -232,8 +258,7 @@ public class CustomerDAO {
             e.printStackTrace();
         }
         return n > 0;
-
-
     }
+
 
 }

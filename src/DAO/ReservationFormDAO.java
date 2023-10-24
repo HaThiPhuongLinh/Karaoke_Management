@@ -103,6 +103,47 @@ public class ReservationFormDAO {
         return reservationForm;
     }
 
+    public ReservationForm getReservationFormByFormId(String formID) {
+        ReservationForm reservationForm = null;
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+
+        try {
+            String sql = "SELECT * FROM PhieuDatPhong WHERE maPhieuDat = ?";
+            statement = con.prepareStatement(sql);
+            statement.setString(1, formID);
+            rs = statement.executeQuery();
+
+            if (rs.next()) {
+                reservationForm = new ReservationForm(
+                        rs.getString("maPhieuDat"),
+                        rs.getTimestamp("thoiGianDat"),
+                        rs.getTimestamp("thoiGianNhanPhong"),
+                        new Staff(rs.getString("maNhanVien")),
+                        new Customer(rs.getString("maKhachHang")),
+                        new Room(rs.getString("maPhong"))
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return reservationForm;
+    }
+
 
     public String generateNextFormId() {
         ConnectDB.getInstance();
