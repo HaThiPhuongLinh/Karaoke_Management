@@ -93,7 +93,7 @@ public class Main extends JFrame {
                 action.cancel();
             }
         });
-        showForm(new KaraokeBooking_UI(staffLogin));
+        // showForm(new KaraokeBooking_UI(staffLogin));
     }
 
     public static void main(String[] args) {
@@ -157,7 +157,7 @@ public class Main extends JFrame {
 
         minimizeButton = new JButton("–");
         minimizeButton.setFont(new Font("Arial", Font.PLAIN, 15));
-        minimizeButton.setBounds(1300, 12, 50, 30);
+        minimizeButton.setBounds(1440, 12, 50, 30);
         minimizeButton.setFocusPainted(false);
         minimizeButton.setBorderPainted(false);
         minimizeButton.setContentAreaFilled(false);
@@ -184,7 +184,7 @@ public class Main extends JFrame {
 
         exitButton = new JButton("X");
         exitButton.setFont(new Font("Arial", Font.PLAIN, 15));
-        exitButton.setBounds(1350, 12, 50, 30);
+        exitButton.setBounds(1480, 12, 50, 30);
         exitButton.setFocusPainted(false);
         exitButton.setBorderPainted(false);
         exitButton.setContentAreaFilled(false);
@@ -211,8 +211,8 @@ public class Main extends JFrame {
         header2.add(exitButton);
         GroupLayout roundPanel1Layout = new GroupLayout(roundPanel1);
         roundPanel1.setLayout(roundPanel1Layout);
-        roundPanel1Layout.setHorizontalGroup(roundPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(header2, GroupLayout.DEFAULT_SIZE, 1400, Short.MAX_VALUE).addGroup(roundPanel1Layout.createSequentialGroup().addGap(10, 10, 10).addComponent(menu21, GroupLayout.PREFERRED_SIZE, 220, GroupLayout.PREFERRED_SIZE).addGap(10, 10, 10).addComponent(body, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addGap(10, 10, 10)));
-        roundPanel1Layout.setVerticalGroup(roundPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(roundPanel1Layout.createSequentialGroup().addComponent(header2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addGap(10, 10, 10).addGroup(roundPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(menu21, GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE).addComponent(body, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)).addGap(10, 10, 10)));
+        roundPanel1Layout.setHorizontalGroup(roundPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(header2, GroupLayout.DEFAULT_SIZE, 1534, Short.MAX_VALUE).addGroup(roundPanel1Layout.createSequentialGroup().addGap(10, 10, 10).addComponent(menu21, GroupLayout.PREFERRED_SIZE, 240, GroupLayout.PREFERRED_SIZE).addGap(10, 10, 10).addComponent(body, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addGap(10, 10, 10)));
+        roundPanel1Layout.setVerticalGroup(roundPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(roundPanel1Layout.createSequentialGroup().addComponent(header2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addGap(10, 10, 10).addGroup(roundPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(menu21, GroupLayout.DEFAULT_SIZE, 748, Short.MAX_VALUE).addComponent(body, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)).addGap(10, 10, 10)));
 
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
