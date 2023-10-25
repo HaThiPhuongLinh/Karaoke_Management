@@ -35,7 +35,7 @@ public class SearchingRoom_UI extends JPanel implements ActionListener, MouseLis
 
     public SearchingRoom_UI() {
         setLayout(null);
-        setBounds(0, 0, 1175, 770);
+        setBounds(0, 0, 1475, 770);
         typeOfRoomDAO = new TypeOfRoomDAO();
         RoomDAO = new RoomDAO();
         try {

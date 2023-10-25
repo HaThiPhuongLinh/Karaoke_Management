@@ -1,14 +1,12 @@
 package UI.component;
 
 import ConnectDB.ConnectDB;
-import DAO.CustomerDAO;
-import DAO.ReservationFormDAO;
-import DAO.RoomDAO;
-import DAO.TypeOfRoomDAO;
+import DAO.*;
 import Entity.*;
 import UI.CustomUI.Custom;
 import UI.component.Dialog.ChooseCustomer;
 import UI.component.Dialog.PresetRoom;
+import UI.component.Dialog.ReservationFormList;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -40,7 +38,7 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
     private JLabel backgroundLabel, timeLabel, roomLabel, statusLabel, customerLabel, room2Label, typeRoomLabel, locationLabel, nameLabel, startLabel, receiveLabel;
     private JTextField txtRoom, txtLocation, txtName, txtStart, txtReceive, txtTypeRoom;
     private JScrollPane scrShowRoom, scrService;
-    private JButton btnSwitchRoom, btnBookRoom, btnPresetRoom, btnCancelRoom, btnReceiveRoom, btnChooseCustomer, btnForm;
+    private JButton btnSwitchRoom, btnBookRoom, btnPresetRoom, btnChooseCustomer, btnForm;
     private JButton[] btnRoomList;
     private int heightTable = 140;
     private int location = -1;
@@ -51,6 +49,7 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
     private ReservationFormDAO reservationFormDAO;
     private CustomerDAO customerDAO;
     private Room selectedRoom = null;
+    private BillDAO billDAO;
 
     public KaraokeBooking_UI(Staff staff) {
         this.staffLogin = staff;
@@ -67,6 +66,7 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
         customerDAO = new CustomerDAO();
         reservationFormDAO = new ReservationFormDAO();
         roomDAO = new RoomDAO();
+        billDAO= new BillDAO();
 
         timeNow = new JPanel();
         timeNow.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "", TitledBorder.LEADING, TitledBorder.TOP));
@@ -188,26 +188,14 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
         btnBookRoom = new JButton("Đặt phòng");
         btnBookRoom.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnBookRoom);
-        btnBookRoom.setBounds(440, 30, 155, 30);
+        btnBookRoom.setBounds(500, 30, 155, 30);
         pnlShowCustomer.add(btnBookRoom);
 
         btnPresetRoom = new JButton("Đặt phòng chờ");
         btnPresetRoom.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnPresetRoom);
-        btnPresetRoom.setBounds(440, 75, 155, 30);
+        btnPresetRoom.setBounds(500, 75, 155, 30);
         pnlShowCustomer.add(btnPresetRoom);
-
-        btnReceiveRoom = new JButton("Nhận phòng");
-        btnReceiveRoom.setFont(new Font("Arial", Font.BOLD, 14));
-        Custom.setCustomBtn(btnReceiveRoom);
-        btnReceiveRoom.setBounds(610, 30, 155, 30);
-        pnlShowCustomer.add(btnReceiveRoom);
-
-        btnCancelRoom = new JButton("Hủy phòng");
-        btnCancelRoom.setFont(new Font("Arial", Font.BOLD, 14));
-        Custom.setCustomBtn(btnCancelRoom);
-        btnCancelRoom.setBounds(610, 75, 155, 30);
-        pnlShowCustomer.add(btnCancelRoom);
 
         pnlShowDetails = new JPanel();
         pnlShowDetails.setLayout(null);
@@ -295,6 +283,7 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
         btnChooseCustomer.addActionListener(this);
         btnBookRoom.addActionListener(this);
         btnPresetRoom.addActionListener(this);
+        btnForm.addActionListener(this);
 
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/images/background.png"));
         backgroundLabel = new JLabel(backgroundImage);
@@ -564,6 +553,11 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
         return formID;
     }
 
+    private String generateBillID() {
+        String billID = billDAO.generateNextBillId();
+        return billID;
+    }
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -596,12 +590,15 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
                     String formID = generateID();
                     long millis = System.currentTimeMillis();
                     Timestamp startTime = new Timestamp(millis);
-                    Timestamp receiveTime = new Timestamp(millis);
+                    Timestamp receiveTime = null;
+                    int tinhTrang = 0;
+                    String khuyenMai = "";
 
-                    ReservationForm form = new ReservationForm(formID, startTime, receiveTime, staffLogin, c, room);
-                    boolean resultForm = reservationFormDAO.addReservationForm(form);
+                    String billID = generateBillID();
+                    Bill bill = new Bill(billID, staffLogin, c, room, startTime, receiveTime, tinhTrang, khuyenMai);
+                    boolean resultBill = billDAO.addBill(bill);
 
-                    if (resultForm) {
+                    if (resultBill) {
                         JOptionPane.showMessageDialog(this, "Cho thuê phòng thành công");
                         roomDAO.updateRoomStatus(roomID, "Đang sử dụng");
                         ArrayList<Room> roomList = roomDAO.getRoomList();
@@ -633,6 +630,13 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
                     KaraokeBooking_UI.getInstance().LoadRoomList(roomList);
                 }
             }
+        }
+        if (o.equals(btnForm)) {
+            ReservationFormList reservationFormList = new ReservationFormList();
+            reservationFormList.setKaraokeBookingUI(this);
+            reservationFormList.setVisible(true);
+            ArrayList<Room> roomList = roomDAO.getRoomList();
+            KaraokeBooking_UI.getInstance().LoadRoomList(roomList);
         }
     }
 

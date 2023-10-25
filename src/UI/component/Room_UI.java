@@ -48,7 +48,7 @@ public class Room_UI extends JPanel implements ActionListener, MouseListener {
 
     public Room_UI() {
         setLayout(null);
-        setBounds(0, 0, 1175, 770);
+        setBounds(0, 0, 1475, 770);
         RoomDAO = new RoomDAO();
         typeOfRoomDAO = new TypeOfRoomDAO();
         try {

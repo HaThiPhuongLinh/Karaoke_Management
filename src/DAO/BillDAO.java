@@ -29,13 +29,12 @@ public class BillDAO {
                 Staff maNhanVien = new Staff(rs.getString(2));
                 Customer maKhachHang = new Customer(rs.getString(3));
                 Room maPhong = new Room(rs.getString(4));
-                double giaPhong = rs.getDouble(5);
-                Timestamp ngayGioDat = rs.getTimestamp(6);
-                Timestamp ngayGioTra = rs.getTimestamp(7);
-                int tinhTrang = rs.getInt(8);
-                String khuyenMai = rs.getString(9);
+                Timestamp ngayGioDat = rs.getTimestamp(5);
+                Timestamp ngayGioTra = rs.getTimestamp(6);
+                int tinhTrang = rs.getInt(7);
+                String khuyenMai = rs.getString(8);
 
-                Bill bill = new Bill(maHoaDon,maNhanVien,maKhachHang,maPhong,giaPhong,ngayGioDat,ngayGioTra,tinhTrang,khuyenMai);
+                Bill bill = new Bill(maHoaDon,maNhanVien,maKhachHang,maPhong,ngayGioDat,ngayGioTra,tinhTrang,khuyenMai);
 
                 dsStaff.add(bill);
             }
@@ -81,4 +80,65 @@ public class BillDAO {
         }
         return dsStaff;
     }
+    public boolean addBill(Bill bill) {
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        PreparedStatement statement = null;
+
+        try {
+            String sql = "INSERT INTO HoaDon (maHoaDon, maNhanVien, maKhachHang, maPhong, ngayGioDat, ngayGioTra, tinhTrangHD, khuyenMai) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+            statement = con.prepareStatement(sql);
+            statement.setString(1, bill.getMaHoaDon());
+            statement.setString(2, bill.getMaNhanVien().getMaNhanVien());
+            statement.setString(3, bill.getMaKH().getMaKhachHang());
+            statement.setString(4, bill.getMaPhong().getMaPhong());
+            statement.setTimestamp(5, bill.getNgayGioDat());
+            statement.setTimestamp(6, bill.getNgayGioTra());
+            statement.setInt(7, bill.getTinhTrangHD());
+            statement.setString(8, bill.getKhuyenMai());
+
+            int rowsAffected = statement.executeUpdate();
+
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    public String generateNextBillId() {
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+        String nextId = null;
+        try {
+            String sql = "SELECT TOP 1 maHoaDon FROM HoaDon ORDER BY maHoaDon DESC";
+            statement = con.prepareStatement(sql);
+            rs = statement.executeQuery();
+
+            if (rs.next()) {
+                String lastServiceId = rs.getString("maHoaDon");
+                String numericPart = lastServiceId.substring(4); // Lấy phần số từ mã dịch vụ cuối cùng
+                int counter = Integer.parseInt(numericPart) + 1; // Tăng giá trị số lên 1
+                nextId = "HD" + String.format("%07d", counter); // Định dạng lại giá trị số thành chuỗi 3 chữ số, sau đó ghép với tiền tố "HD"
+            } else {
+                nextId = "HD0000001";
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return nextId;
+    }
+
 }

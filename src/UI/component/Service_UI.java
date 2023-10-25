@@ -37,7 +37,7 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
 
     public Service_UI(){
         setLayout(null);
-        setBounds(0, 0, 1175, 770);
+        setBounds(0, 0, 1475, 770);
 
         try {
             ConnectDB.getInstance().connect();

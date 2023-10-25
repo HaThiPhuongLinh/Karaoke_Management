@@ -34,7 +34,7 @@ public class TypeOfRoom_UI extends JPanel implements ActionListener, MouseListen
 
     public TypeOfRoom_UI() {
         setLayout(null);
-        setBounds(0, 0, 1175, 770);
+        setBounds(0, 0, 1475, 770);
         TypeOfRoomDAO = new TypeOfRoomDAO();
         try {
             ConnectDB.getInstance().connect();

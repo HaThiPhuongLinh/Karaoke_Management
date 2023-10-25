@@ -20,6 +20,9 @@ public class ReservationForm {
         this(rs.getString(1), rs.getTimestamp(2), rs.getTimestamp(3), new Staff(rs), new Customer(rs), new Room(rs));
     }
 
+    public ReservationForm() {
+    }
+
     public ReservationForm(String maPhieuDat, Timestamp thoiGianDat, Timestamp thoiGianNhanPhong, Staff maNhanVien, Customer maKhachHang, Room maPhong) {
         this.maPhieuDat = maPhieuDat;
         this.thoiGianDat = thoiGianDat;

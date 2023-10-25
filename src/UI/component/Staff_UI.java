@@ -37,7 +37,7 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
 
     public Staff_UI() {
         setLayout(null);
-        setBounds(0, 0, 1175, 770);
+        setBounds(0, 0, 1475, 770);
 
         //phan viet code
         StaffDAO = new StaffDAO();

@@ -2,6 +2,9 @@ package DAO;
 
 import ConnectDB.ConnectDB;
 import Entity.Customer;
+import Entity.ReservationForm;
+import Entity.Room;
+import Entity.Staff;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -215,6 +218,58 @@ public class CustomerDAO {
         }
         return c;
     }
+
+    public ArrayList<ReservationForm> findReservationFormsByCustomerName(String customerName) {
+        ArrayList<ReservationForm> result = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = ConnectDB.getInstance().getConnection();
+            String query = "SELECT * FROM PhieuDatPhong pdp " +
+                    "INNER JOIN KhachHang kh ON pdp.maKhachHang = kh.maKhachHang " +
+                    "WHERE kh.tenKhachHang LIKE ?";
+            stmt = conn.prepareStatement(query);
+            stmt.setString(1, "%" + customerName + "%");
+
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                ReservationForm reservationForm = new ReservationForm();
+                reservationForm.setMaPhieuDat(rs.getString("maPhieuDat"));
+                reservationForm.setThoiGianDat(rs.getTimestamp("thoiGianDat"));
+                reservationForm.setThoiGianNhanPhong(rs.getTimestamp("thoiGianNhanPhong"));
+
+                Staff staff = new Staff();
+                staff.setMaNhanVien(rs.getString("maNhanVien"));
+                reservationForm.setMaNhanVien(staff);
+
+                Customer customer = new Customer();
+                customer.setMaKhachHang(rs.getString("maKhachHang"));
+                reservationForm.setMaKhachHang(customer);
+
+                Room room = new Room();
+                room.setMaPhong(rs.getString("maPhong"));
+                reservationForm.setMaPhong(room);
+
+                result.add(reservationForm);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return result;
+    }
+
 
     public boolean insert(Customer kh) throws SQLException {
         ConnectDB.getInstance();

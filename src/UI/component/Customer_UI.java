@@ -44,7 +44,7 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
             e.printStackTrace();
         }
         setLayout(null);
-        setBounds(0, 0, 1175, 770);
+        setBounds(0, 0, 1475, 770);
 
         JLabel headerLabel = new JLabel("QUẢN LÝ KHÁCH HÀNG");
         headerLabel.setBounds(470, 10, 1175, 40);

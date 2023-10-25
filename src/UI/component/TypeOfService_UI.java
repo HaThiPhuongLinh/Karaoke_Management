@@ -27,7 +27,7 @@ public class TypeOfService_UI extends JPanel  implements ActionListener, MouseLi
 
     public TypeOfService_UI(){
         setLayout(null);
-        setBounds(0, 0, 1175, 770);
+        setBounds(0, 0, 1475, 770);
 
         try {
             ConnectDB.getInstance().connect();

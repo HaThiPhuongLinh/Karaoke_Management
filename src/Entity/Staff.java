@@ -49,6 +49,10 @@ public class Staff {
         this.taiKhoan = taiKhoan;
     }
 
+    public Staff() {
+
+    }
+
     public String getMaNhanVien() {
         return maNhanVien;
     }

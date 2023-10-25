@@ -8,29 +8,15 @@ public class Bill {
     private Staff maNhanVien;
     private Customer maKhachHang; 
     private Room maPhong;
-    private double giaPhong;
     private Timestamp ngayGioDat;
     private Timestamp ngayGioTra;
     private int tinhTrangHD;
     private String khuyenMai;
 
-
-
     public Bill(String maHoaDon){
         this.maHoaDon =maHoaDon;
     }
 
-    public Bill(String maHoaDon, Staff maNhanVien, Customer maKH, Room maPhong, double giaPhong, Timestamp ngayGioDat, Timestamp ngayGioTra, int tinhTrangHD, String khuyenMai){
-        this.maHoaDon= maHoaDon;
-        this.maNhanVien=maNhanVien;
-        this.maKhachHang=maKH;
-        this.maPhong=maPhong;
-        this.giaPhong=giaPhong;
-        this.ngayGioDat=ngayGioDat;
-        this.ngayGioTra=ngayGioTra;
-        this.tinhTrangHD = tinhTrangHD;
-        this.khuyenMai = khuyenMai;
-    }
 
     public Bill(String maHoaDon, Staff maNhanVien, Customer maKH, Room maPhong, Timestamp ngayGioDat, Timestamp ngayGioTra, int tinhTrangHD, String khuyenMai){
         this.maHoaDon= maHoaDon;
@@ -77,15 +63,7 @@ public class Bill {
         this.maPhong = maPhong;
     }
 
-    public double getGiaPhong() {
-        return giaPhong;
-    }
-
-    public void setGiaPhong(double giaPhong) {
-        this.giaPhong = giaPhong;
-    }
-
-    public Date getNgayGioDat() {
+    public Timestamp getNgayGioDat() {
         return ngayGioDat;
     }
 
@@ -93,7 +71,7 @@ public class Bill {
         this.ngayGioDat = ngayGioDat;
     }
 
-    public Date getNgayGioTra() {
+    public Timestamp getNgayGioTra() {
         return ngayGioTra;
     }
 

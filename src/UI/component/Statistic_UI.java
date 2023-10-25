@@ -22,7 +22,7 @@ public class Statistic_UI extends JPanel {
 
     public Statistic_UI(){
         setLayout(null);
-        setBounds(0, 0, 1175, 770);
+        setBounds(0, 0, 1475, 770);
 
         //phan viet code
 

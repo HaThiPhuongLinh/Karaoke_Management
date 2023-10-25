@@ -37,7 +37,7 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
 
     public StatisticCustomer_UI(){
         setLayout(null);
-        setBounds(0, 0, 1175, 770);
+        setBounds(0, 0, 1475, 770);
 
         billDAO = new BillDAO();
         customerDAO = new CustomerDAO();
