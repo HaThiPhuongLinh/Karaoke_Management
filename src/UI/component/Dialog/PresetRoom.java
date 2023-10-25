@@ -20,6 +20,7 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 
 public class PresetRoom extends JFrame implements ActionListener, MouseListener {
     private static PresetRoom instance = new PresetRoom();
@@ -233,7 +234,6 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
     private void createReservationForm() {
         String formID = generateID();
         Timestamp startTime = Timestamp.valueOf(selectedDateTime);
-        Timestamp receiveTime = null;
         Staff staffLogin = KaraokeBooking_UI.getInstance().staffLogin;
 
         String customerName = lblCName2.getText().trim();
@@ -249,12 +249,14 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
             room = new Room();
         }
 
-        ReservationForm form = new ReservationForm(formID, startTime, receiveTime, staffLogin, c, room);
+        ReservationForm form = new ReservationForm(formID, startTime, staffLogin, c, room);
         boolean resultForm = reservationFormDAO.addReservationForm(form);
 
         if (resultForm) {
             roomDAO.updateRoomStatus(roomID, "Chờ");
             JOptionPane.showMessageDialog(this, "Cho thuê phòng thành công");
+            ArrayList<Room> yourListOfRooms = roomDAO.getRoomList();
+            main.LoadRoomList(yourListOfRooms);
         } else {
             JOptionPane.showMessageDialog(this, "Cho thuê phòng thất bại");
         }

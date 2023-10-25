@@ -1,10 +1,11 @@
 package UI.component.Dialog;
 
 import ConnectDB.ConnectDB;
+import DAO.BillDAO;
 import DAO.CustomerDAO;
 import DAO.ReservationFormDAO;
-import Entity.Customer;
-import Entity.ReservationForm;
+import DAO.RoomDAO;
+import Entity.*;
 import UI.CustomUI.Custom;
 import UI.component.KaraokeBooking_UI;
 
@@ -17,6 +18,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,6 +33,8 @@ public class ReservationFormList extends JFrame implements ActionListener, Mouse
     ArrayList<ReservationForm> lstForms;
     private ReservationFormDAO reservationFormDAO;
     private static ReservationFormList instance;
+    private BillDAO billDAO ;
+    private RoomDAO roomDAO = new RoomDAO();
 
     public static ReservationFormList getInstance() {
         if (instance == null)
@@ -47,6 +51,8 @@ public class ReservationFormList extends JFrame implements ActionListener, Mouse
             setResizable(false);
             this.main = main;
             reservationFormDAO = new ReservationFormDAO();
+            billDAO = new BillDAO();
+            roomDAO = new RoomDAO();
 
             try {
                 ConnectDB.getInstance().connect();
@@ -197,12 +203,53 @@ public class ReservationFormList extends JFrame implements ActionListener, Mouse
                 int row = table.getSelectedRow();
                 if (row == -1) {
                     JOptionPane.showMessageDialog(this, "Chưa chọn khách hàng");
-                }
-                if (row != -1) {
-                    //String name = table.getModel().getValueAt(row, 1).toString();
+                } else {
+                    int maPhongColumn = 3;
+                    String roomID = table.getValueAt(row, maPhongColumn).toString();
+
+                    Room room = roomDAO.getRoomByRoomId(roomID);
+                    if (room == null) {
+                        room = new Room();
+                    }
+
+                    if (room.getTinhTrang().equalsIgnoreCase("Chờ")) {
+                        int khachHangColumn = 1;
+                        String customerName = table.getValueAt(row, khachHangColumn).toString();
+                        String customerID = customerDAO.getIdByTenKhachHang(customerName);
+                        Customer c = customerDAO.getKhachHangById(customerID);
+                        if (c == null) {
+                            c = new Customer();
+                        }
+                        Staff staffLogin = KaraokeBooking_UI.getInstance().staffLogin;
+                        long millis = System.currentTimeMillis();
+                        Timestamp startTime = new Timestamp(millis);
+                        Timestamp receiveTime = null;
+                        int tinhTrang = 0;
+                        String khuyenMai = "";
+
+                        String billID = generateBillID();
+                        Bill bill = new Bill(billID, staffLogin, c, room, startTime, receiveTime, tinhTrang, khuyenMai);
+                        boolean resultBill = billDAO.addBill(bill);
+
+                        if (resultBill) {
+                            int maPhieuColumn = 0;
+                            String reservationFormID = table.getValueAt(row, maPhieuColumn).toString();;
+                            boolean deleteResult = reservationFormDAO.deleteReservationForm(reservationFormID);
+
+                            roomDAO.updateRoomStatus(roomID, "Đang sử dụng");
+                            ArrayList<Room> yourListOfRooms = roomDAO.getRoomList();
+                            main.LoadRoomList(yourListOfRooms);
+                            JOptionPane.showMessageDialog(this, "Nhận phòng thành công");
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Cho thuê phòng thất bại");
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Phòng đang được sử dụng");
+                    }
                     dispose();
                 }
             }
+
 
             if (o.equals(btnALL)) {
                 modelTable.setRowCount(0);
@@ -216,5 +263,9 @@ public class ReservationFormList extends JFrame implements ActionListener, Mouse
                 txtTim.setText("");
             }
         }
+    private String generateBillID() {
+        String billID = billDAO.generateNextBillId();
+        return billID;
+    }
     }
 

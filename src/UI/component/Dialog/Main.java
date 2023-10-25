@@ -93,7 +93,7 @@ public class Main extends JFrame {
                 action.cancel();
             }
         });
-        // showForm(new KaraokeBooking_UI(staffLogin));
+        showForm(new KaraokeBooking_UI(staffLogin));
     }
 
     public static void main(String[] args) {

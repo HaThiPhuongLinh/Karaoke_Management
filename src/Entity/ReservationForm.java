@@ -11,22 +11,20 @@ import java.sql.Timestamp;
 public class ReservationForm {
     private String maPhieuDat;
     private Timestamp thoiGianDat;
-    private Timestamp thoiGianNhanPhong;
     private Staff maNhanVien;
     private Customer maKhachHang;
     private Room maPhong;
 
     public ReservationForm(ResultSet rs) throws SQLException {
-        this(rs.getString(1), rs.getTimestamp(2), rs.getTimestamp(3), new Staff(rs), new Customer(rs), new Room(rs));
+        this(rs.getString(1), rs.getTimestamp(2), new Staff(rs), new Customer(rs), new Room(rs));
     }
 
     public ReservationForm() {
     }
 
-    public ReservationForm(String maPhieuDat, Timestamp thoiGianDat, Timestamp thoiGianNhanPhong, Staff maNhanVien, Customer maKhachHang, Room maPhong) {
+    public ReservationForm(String maPhieuDat, Timestamp thoiGianDat, Staff maNhanVien, Customer maKhachHang, Room maPhong) {
         this.maPhieuDat = maPhieuDat;
         this.thoiGianDat = thoiGianDat;
-        this.thoiGianNhanPhong = thoiGianNhanPhong;
         this.maNhanVien = maNhanVien;
         this.maKhachHang = maKhachHang;
         this.maPhong = maPhong;
@@ -37,7 +35,6 @@ public class ReservationForm {
         ReservationForm r = reservationFormDAO.getReservationFormByFormId(maPhieuDat);
         this.maPhieuDat = r.getMaPhieuDat();
         this.thoiGianDat = r.getThoiGianDat();
-        this.thoiGianNhanPhong = r.getThoiGianNhanPhong();
         this.maNhanVien = r.getMaNhanVien();
         this.maKhachHang = r.getMaKhachHang();
         this.maPhong = r.getMaPhong();
@@ -59,13 +56,6 @@ public class ReservationForm {
         this.thoiGianDat = thoiGianDat;
     }
 
-    public Timestamp getThoiGianNhanPhong() {
-        return thoiGianNhanPhong;
-    }
-
-    public void setThoiGianNhanPhong(Timestamp thoiGianNhanPhong) {
-        this.thoiGianNhanPhong = thoiGianNhanPhong;
-    }
 
     public Staff getMaNhanVien() {
         return maNhanVien;
@@ -96,7 +86,6 @@ public class ReservationForm {
         return "ReservationForm{" +
                 "maPhieuDat='" + maPhieuDat + '\'' +
                 ", thoiGianDat=" + thoiGianDat +
-                ", thoiGianNhanPhong=" + thoiGianNhanPhong +
                 ", maNhanVien=" + maNhanVien +
                 ", maKhachHang=" + maKhachHang +
                 ", maPhong=" + maPhong +

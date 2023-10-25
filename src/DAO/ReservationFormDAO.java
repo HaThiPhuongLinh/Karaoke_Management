@@ -21,7 +21,7 @@ public class ReservationFormDAO {
             ResultSet rs = statement.executeQuery(sql);
             while (rs.next()) {
                 listForm.add(
-                        new ReservationForm(rs.getString(1), rs.getTimestamp(2), rs.getTimestamp(3), new Staff(rs.getString(4)), new Customer(rs.getString(5)),new Room(rs.getString(6))));
+                        new ReservationForm(rs.getString(1), rs.getTimestamp(2), new Staff(rs.getString(3)), new Customer(rs.getString(4)),new Room(rs.getString(5))));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -35,16 +35,15 @@ public class ReservationFormDAO {
         PreparedStatement statement = null;
 
         try {
-            String sql = "INSERT INTO PhieuDatPhong (maPhieuDat, thoiGianDat, thoiGianNhanPhong, maNhanVien, maKhachHang, maPhong) " +
-                    "VALUES (?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO PhieuDatPhong (maPhieuDat, thoiGianDat, maNhanVien, maKhachHang, maPhong) " +
+                    "VALUES (?, ?, ?, ?, ?)";
 
             statement = con.prepareStatement(sql);
             statement.setString(1, form.getMaPhieuDat());
             statement.setTimestamp(2, form.getThoiGianDat());
-            statement.setTimestamp(3, form.getThoiGianNhanPhong());
-            statement.setString(4, form.getMaNhanVien().getMaNhanVien());
-            statement.setString(5, form.getMaKhachHang().getMaKhachHang());
-            statement.setString(6, form.getMaPhong().getMaPhong());
+            statement.setString(3, form.getMaNhanVien().getMaNhanVien());
+            statement.setString(4, form.getMaKhachHang().getMaKhachHang());
+            statement.setString(5, form.getMaPhong().getMaPhong());
 
             int rowsAffected = statement.executeUpdate();
 
@@ -62,6 +61,38 @@ public class ReservationFormDAO {
         }
         return false;
     }
+
+    public boolean deleteReservationForm(String maPhieuDat) {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+
+        try {
+            conn = ConnectDB.getInstance().getConnection();
+            String query = "DELETE FROM PhieuDatPhong WHERE maPhieuDat = ?";
+            stmt = conn.prepareStatement(query);
+            stmt.setString(1, maPhieuDat);
+
+            int rowsAffected = stmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return false;
+    }
+
+
     public ReservationForm getReservationFormByRoomId(String roomID) {
         ReservationForm reservationForm = null;
         ConnectDB.getInstance();
@@ -79,7 +110,6 @@ public class ReservationFormDAO {
                 reservationForm = new ReservationForm(
                         rs.getString("maPhieuDat"),
                         rs.getTimestamp("thoiGianDat"),
-                        rs.getTimestamp("thoiGianNhanPhong"),
                         new Staff(rs.getString("maNhanVien")),
                         new Customer(rs.getString("maKhachHang")),
                         new Room(rs.getString("maPhong"))
@@ -120,7 +150,6 @@ public class ReservationFormDAO {
                 reservationForm = new ReservationForm(
                         rs.getString("maPhieuDat"),
                         rs.getTimestamp("thoiGianDat"),
-                        rs.getTimestamp("thoiGianNhanPhong"),
                         new Staff(rs.getString("maNhanVien")),
                         new Customer(rs.getString("maKhachHang")),
                         new Room(rs.getString("maPhong"))

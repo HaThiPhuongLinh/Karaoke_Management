@@ -1,10 +1,7 @@
 package DAO;
 
 import ConnectDB.ConnectDB;
-import Entity.Customer;
-import Entity.ReservationForm;
-import Entity.Room;
-import Entity.Staff;
+import Entity.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -227,8 +224,11 @@ public class CustomerDAO {
 
         try {
             conn = ConnectDB.getInstance().getConnection();
-            String query = "SELECT * FROM PhieuDatPhong pdp " +
+            String query = "SELECT pdp.*, kh.tenKhachHang, p.maPhong, lp.tenLoaiPhong " +
+                    "FROM PhieuDatPhong pdp " +
                     "INNER JOIN KhachHang kh ON pdp.maKhachHang = kh.maKhachHang " +
+                    "INNER JOIN Phong p ON pdp.maPhong = p.maPhong " +
+                    "INNER JOIN LoaiPhong lp ON p.maLoaiPhong = lp.maLoaiPhong " +
                     "WHERE kh.tenKhachHang LIKE ?";
             stmt = conn.prepareStatement(query);
             stmt.setString(1, "%" + customerName + "%");
@@ -239,19 +239,18 @@ public class CustomerDAO {
                 ReservationForm reservationForm = new ReservationForm();
                 reservationForm.setMaPhieuDat(rs.getString("maPhieuDat"));
                 reservationForm.setThoiGianDat(rs.getTimestamp("thoiGianDat"));
-                reservationForm.setThoiGianNhanPhong(rs.getTimestamp("thoiGianNhanPhong"));
-
-                Staff staff = new Staff();
-                staff.setMaNhanVien(rs.getString("maNhanVien"));
-                reservationForm.setMaNhanVien(staff);
 
                 Customer customer = new Customer();
-                customer.setMaKhachHang(rs.getString("maKhachHang"));
+                customer.setTenKhachHang(rs.getString("tenKhachHang"));
                 reservationForm.setMaKhachHang(customer);
 
                 Room room = new Room();
                 room.setMaPhong(rs.getString("maPhong"));
                 reservationForm.setMaPhong(room);
+
+                TypeOfRoom roomType = new TypeOfRoom();
+                roomType.setTenLoaiPhong(rs.getString("tenLoaiPhong"));
+                room.setLoaiPhong(roomType);
 
                 result.add(reservationForm);
             }
@@ -269,6 +268,7 @@ public class CustomerDAO {
 
         return result;
     }
+
 
 
     public boolean insert(Customer kh) throws SQLException {

@@ -116,6 +116,48 @@ public class BillDAO {
         return false;
     }
 
+    public Bill getBillByRoomID(String roomID) {
+        Bill bill = null;
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = ConnectDB.getInstance().getConnection();
+            String query = "SELECT * FROM HoaDon WHERE maPhong = ?";
+            stmt = conn.prepareStatement(query);
+            stmt.setString(1, roomID);
+
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                String maHoaDon = rs.getString("maHoaDon");
+                Staff maNhanVien = new Staff(rs.getString("maNhanVien"));
+                Customer maKhachHang = new Customer(rs.getString("maKhachHang"));
+                Timestamp ngayGioDat = rs.getTimestamp("ngayGioDat");
+                Timestamp ngayGioTra = rs.getTimestamp("ngayGioTra");
+                int tinhTrang = rs.getInt("tinhTrangHD");
+                String khuyenMai = rs.getString("khuyenMai");
+
+                bill = new Bill(maHoaDon, maNhanVien, maKhachHang, new Room(roomID), ngayGioDat, ngayGioTra, tinhTrang, khuyenMai);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return bill;
+    }
+
+
+
     public String generateNextBillId() {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
