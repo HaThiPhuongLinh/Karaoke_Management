@@ -58,7 +58,7 @@ public class Room_UI extends JPanel implements ActionListener, MouseListener {
         }
 
         JLabel headerLabel = new JLabel("QUẢN LÝ PHÒNG");
-        headerLabel.setBounds(470, 10, 1175, 40);
+        headerLabel.setBounds(520, 10, 1175, 40);
         headerLabel.setFont(new Font("Arial", Font.BOLD, 25));
         headerLabel.setForeground(Color.WHITE);
         add(headerLabel);
@@ -87,7 +87,7 @@ public class Room_UI extends JPanel implements ActionListener, MouseListener {
         pnlRoomList.setBorder(new TitledBorder(
                 new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "PHÒNG",
                 TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
-        pnlRoomList.setBounds(10, 70, 1120, 620);
+        pnlRoomList.setBounds(10, 70, 1240, 670);
         pnlRoomList.setOpaque(false);
         add(pnlRoomList);
         pnlRoomList.setLayout(new BorderLayout(0, 0));
@@ -103,7 +103,7 @@ public class Room_UI extends JPanel implements ActionListener, MouseListener {
         panelDSP.setLayout(null);
         panelDSP.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DANH SÁCH PHÒNG",
                 TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
-        panelDSP.setBounds(30, 310, 1100, 320);
+        panelDSP.setBounds(30, 310, 1220, 370);
         panelDSP.setOpaque(false);
 
         String[] colsP = {"STT", "Mã Phòng", "Loại Phòng", "Vị Trí", "Tình Trạng", "Giá Phòng"};
@@ -122,7 +122,7 @@ public class Room_UI extends JPanel implements ActionListener, MouseListener {
 
         panelDSP.add(scrollPaneP = new JScrollPane(tblPhong, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
                 BorderLayout.CENTER);
-        scrollPaneP.setBounds(10, 20, 1090, 330);
+        scrollPaneP.setBounds(10, 20, 1210, 380);
         scrollPaneP.setOpaque(false);
         scrollPaneP.getViewport().setOpaque(false);
         scrollPaneP.getViewport().setBackground(Color.WHITE);
@@ -131,44 +131,44 @@ public class Room_UI extends JPanel implements ActionListener, MouseListener {
         //        Mã phòng
         JLabel labelMaPhong = new JLabel("Mã Phòng:");
         labelMaPhong.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelMaPhong.setBounds(30, 20, 120, 30);
+        labelMaPhong.setBounds(80, 20, 120, 30);
         labelMaPhong.setForeground(Color.WHITE);
         pnlRoomControl.add(labelMaPhong);
 
         txtMaPhong = new JTextField();
-        txtMaPhong.setBounds(145, 20, 311, 30);
+        txtMaPhong.setBounds(195, 20, 311, 30);
         txtMaPhong.setColumns(10);
         pnlRoomControl.add(txtMaPhong);
 
 //      Vị trí
         JLabel labelViTri = new JLabel("Vị Trí:");
         labelViTri.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelViTri.setBounds(30, 70, 120, 30);
+        labelViTri.setBounds(80, 70, 120, 30);
         labelViTri.setForeground(Color.WHITE);
         pnlRoomControl.add(labelViTri);
 
         txtVitri = new JTextField();
-        txtVitri.setBounds(145, 70, 311, 30);
+        txtVitri.setBounds(195, 70, 311, 30);
         txtVitri.setColumns(10);
         pnlRoomControl.add(txtVitri);
 
         //      Loại phòng
         JLabel labelLoaiPhong = new JLabel("Loại phòng:");
         labelLoaiPhong.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelLoaiPhong.setBounds(30, 120, 120, 30);
+        labelLoaiPhong.setBounds(80, 120, 120, 30);
         labelLoaiPhong.setForeground(Color.WHITE);
         pnlRoomControl.add(labelLoaiPhong);
 
         cboLoaiPhong = new JComboBox<String>();
         cboLoaiPhong.addItem("Tất cả");
-        cboLoaiPhong.setBounds(145, 120, 311, 30);
+        cboLoaiPhong.setBounds(195, 120, 311, 30);
         Custom.setCustomComboBox(cboLoaiPhong);
         pnlRoomControl.add(cboLoaiPhong);
 
         //tinh trang
         JLabel labelTinhTrang = new JLabel("Tình Trạng:");
         labelTinhTrang.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelTinhTrang.setBounds(30, 170, 120, 30);
+        labelTinhTrang.setBounds(80, 170, 120, 30);
         labelTinhTrang.setForeground(Color.WHITE);
         pnlRoomControl.add(labelTinhTrang);
 
@@ -177,26 +177,26 @@ public class Room_UI extends JPanel implements ActionListener, MouseListener {
         cboTinhTrang.addItem("Chờ");
         cboTinhTrang.addItem("Đang sử dụng");
         cboTinhTrang.addItem("Tạm");
-        cboTinhTrang.setBounds(145, 170, 311, 30);
+        cboTinhTrang.setBounds(195, 170, 311, 30);
         Custom.setCustomComboBox(cboTinhTrang);
         pnlRoomControl.add(cboTinhTrang);
 
 
         JLabel labelGiaP = new JLabel("Giá Phòng:");
         labelGiaP.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelGiaP.setBounds(550, 20, 150, 30);
+        labelGiaP.setBounds(600, 20, 150, 30);
         labelGiaP.setForeground(Color.WHITE);
         pnlRoomControl.add(labelGiaP);
 
         txtGiaP = new JTextField();
-        txtGiaP.setBounds(665, 20, 311, 30);
+        txtGiaP.setBounds(715, 20, 311, 30);
         txtGiaP.setColumns(6);
         pnlRoomControl.add(txtGiaP);
 
         txtBaoLoi = new JTextField();
         txtBaoLoi.setFont(new Font("Arial",Font.BOLD,13));
         txtBaoLoi.setForeground(Color.RED);
-        txtBaoLoi.setBounds(550, 120, 426, 30);
+        txtBaoLoi.setBounds(600, 120, 426, 30);
         txtBaoLoi.setColumns(6);
         pnlRoomControl.add(txtBaoLoi);
 
@@ -204,28 +204,28 @@ public class Room_UI extends JPanel implements ActionListener, MouseListener {
         btnThêmP = new JButton("Thêm");
         btnThêmP.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnThêmP);
-        btnThêmP.setBounds(550, 170, 100, 30);
+        btnThêmP.setBounds(600, 170, 100, 30);
         pnlRoomControl.add(btnThêmP);
 
         //        btn Xóa
         btnXoaP = new JButton("Xóa");
         btnXoaP.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnXoaP);
-        btnXoaP.setBounds(690, 170, 100, 30);
+        btnXoaP.setBounds(740, 170, 100, 30);
         pnlRoomControl.add(btnXoaP);
 
         //        btn sửa
         btnSuaP = new JButton("Sửa");
         btnSuaP.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnSuaP);
-        btnSuaP.setBounds(830, 170, 100, 30);
+        btnSuaP.setBounds(880, 170, 100, 30);
         pnlRoomControl.add(btnSuaP);
 
         //        btn làm mới
         btnlamMoiP = new JButton("Làm mới");
         btnlamMoiP.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnlamMoiP);
-        btnlamMoiP.setBounds(970, 170, 100, 30);
+        btnlamMoiP.setBounds(1020, 170, 100, 30);
         pnlRoomControl.add(btnlamMoiP);
 
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/images/background.png"));

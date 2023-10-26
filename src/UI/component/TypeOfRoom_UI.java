@@ -43,7 +43,7 @@ public class TypeOfRoom_UI extends JPanel implements ActionListener, MouseListen
         }
 
         JLabel headerLabel = new JLabel("QUẢN LÝ LOẠI PHÒNG");
-        headerLabel.setBounds(470, 10, 1175, 40);
+        headerLabel.setBounds(520, 10, 1175, 40);
         headerLabel.setFont(new Font("Arial", Font.BOLD, 25));
         headerLabel.setForeground(Color.WHITE);
         Component add = add(headerLabel);
@@ -72,7 +72,7 @@ public class TypeOfRoom_UI extends JPanel implements ActionListener, MouseListen
         pnlTPList.setBorder(new TitledBorder(
                 new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Loại Phòng",
                 TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
-        pnlTPList.setBounds(10, 70, 1120, 620);
+        pnlTPList.setBounds(10, 70, 1240, 670);
         pnlTPList.setOpaque(false);
         add(pnlTPList);
         pnlTPList.setLayout(new BorderLayout(0, 0));
@@ -86,35 +86,35 @@ public class TypeOfRoom_UI extends JPanel implements ActionListener, MouseListen
 
         JLabel labelMaLPhong = new JLabel("Mã loại Phòng:");
         labelMaLPhong.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelMaLPhong.setBounds(330, 10, 150, 30);
+        labelMaLPhong.setBounds(380, 10, 150, 30);
         labelMaLPhong.setForeground(Color.WHITE);
         pnlTPControl.add(labelMaLPhong);
 
         txtMaLoaiPhong = new JTextField();
-        txtMaLoaiPhong.setBounds(465, 10, 311, 30);
+        txtMaLoaiPhong.setBounds(495, 10, 311, 30);
         txtMaLoaiPhong.setColumns(10);
         pnlTPControl.add(txtMaLoaiPhong);
 
 //      Tên loại dịch vụ
         JLabel labelTenLoaiPhong = new JLabel("Tên loại phòng:");
         labelTenLoaiPhong.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelTenLoaiPhong.setBounds(330, 60, 150, 30);
+        labelTenLoaiPhong.setBounds(380, 60, 150, 30);
         labelTenLoaiPhong.setForeground(Color.WHITE);
         pnlTPControl.add(labelTenLoaiPhong);
 
         txtTenLoaiPhong = new JTextField();
-        txtTenLoaiPhong.setBounds(465, 60, 311, 30);
+        txtTenLoaiPhong.setBounds(495, 60, 311, 30);
         txtTenLoaiPhong.setColumns(10);
         pnlTPControl.add(txtTenLoaiPhong);
 
         JLabel labelSucChua = new JLabel("Sức chứa :");
         labelSucChua.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelSucChua.setBounds(330, 110, 150, 30);
+        labelSucChua.setBounds(380, 110, 150, 30);
         labelSucChua.setForeground(Color.WHITE);
         pnlTPControl.add(labelSucChua);
 
         txtSucChua = new JTextField();
-        txtSucChua.setBounds(465, 110, 311, 30);
+        txtSucChua.setBounds(495, 110, 311, 30);
         txtSucChua.setColumns(10);
         pnlTPControl.add(txtSucChua);
 
@@ -124,7 +124,7 @@ public class TypeOfRoom_UI extends JPanel implements ActionListener, MouseListen
         txtBaoLoi = new JTextField();
         txtBaoLoi.setFont(new Font("Arial",Font.BOLD,13));
         txtBaoLoi.setForeground(Color.RED);
-        txtBaoLoi.setBounds(330, 160, 446, 30);
+        txtBaoLoi.setBounds(380, 160, 446, 30);
         txtBaoLoi.setColumns(10);
         pnlTPControl.add(txtBaoLoi);
 
@@ -137,28 +137,28 @@ public class TypeOfRoom_UI extends JPanel implements ActionListener, MouseListen
         btnThem = new JButton("Thêm");
         btnThem.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnThem);
-        btnThem.setBounds(340, 210, 100, 30);
+        btnThem.setBounds(390, 210, 100, 30);
         pnlTPControl.add(btnThem);
 
         //        btn Xóa
         btnXoa = new JButton("Xóa");
         btnXoa.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnXoa);
-        btnXoa.setBounds(450, 210, 100, 30);
+        btnXoa.setBounds(500, 210, 100, 30);
         pnlTPControl.add(btnXoa);
 
         //        btn sửa
         btnSua = new JButton("Sửa");
         btnSua.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnSua);
-        btnSua.setBounds(560, 210, 100, 30);
+        btnSua.setBounds(610, 210, 100, 30);
         pnlTPControl.add(btnSua);
 
         //        btn làm mới
         btnlamMoi = new JButton("Làm mới");
         btnlamMoi.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnlamMoi);
-        btnlamMoi.setBounds(670, 210, 100, 30);
+        btnlamMoi.setBounds(720, 210, 100, 30);
         pnlTPControl.add(btnlamMoi);
 
 
@@ -166,7 +166,7 @@ public class TypeOfRoom_UI extends JPanel implements ActionListener, MouseListen
         panelDSLP.setLayout(null);
         panelDSLP.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DANH SÁCH LOẠI PHÒNG",
                 TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
-        panelDSLP.setBounds(30, 290, 1100, 320);
+        panelDSLP.setBounds(30, 290, 1220, 370);
         panelDSLP.setOpaque(false);
 
         String[] colsLP = {"STT", "Mã Loại Phòng", "Tên Loại Phòng", "Sức Chứa"};
@@ -184,7 +184,7 @@ public class TypeOfRoom_UI extends JPanel implements ActionListener, MouseListen
 
         panelDSLP.add(scrollPaneNV = new JScrollPane(tableLP, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
                 BorderLayout.CENTER);
-        scrollPaneNV.setBounds(10, 20, 1090, 330);
+        scrollPaneNV.setBounds(10, 20, 1210, 380);
         scrollPaneNV.setOpaque(false);
         scrollPaneNV.getViewport().setOpaque(false);
         scrollPaneNV.getViewport().setBackground(Color.WHITE);

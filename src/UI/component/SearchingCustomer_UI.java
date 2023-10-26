@@ -67,7 +67,7 @@ public class SearchingCustomer_UI extends JPanel implements ActionListener {
         pnlCusList.setBorder(new TitledBorder(
                 new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Khách Hàng",
                 TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
-        pnlCusList.setBounds(10, 70, 1120, 620);
+        pnlCusList.setBounds(10, 70, 1240, 670);
         pnlCusList.setOpaque(false);
         add(pnlCusList);
         pnlCusList.setLayout(new BorderLayout(0, 0));
@@ -83,16 +83,16 @@ public class SearchingCustomer_UI extends JPanel implements ActionListener {
         search1Label = new JLabel("Tìm Theo Tên: ");
 
         search1Label.setFont(new Font("Arial", Font.PLAIN, 14));
-        search1Label.setBounds(330, 25, 120, 30);
+        search1Label.setBounds(380, 25, 120, 30);
         search1Label.setForeground(Color.WHITE);
         pnlCusControl.add(search1Label);
 
         txtSearch1 = new JTextField();
-        txtSearch1.setBounds(465, 25, 280, 30);
+        txtSearch1.setBounds(515, 25, 280, 30);
         pnlCusControl.add(txtSearch1);
 
         btnTim = new JButton("Tìm kiếm");
-        btnTim.setBounds(645, 195, 100, 30);
+        btnTim.setBounds(695, 195, 100, 30);
         btnTim.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnTim);
         pnlCusControl.add(btnTim);
@@ -100,38 +100,38 @@ public class SearchingCustomer_UI extends JPanel implements ActionListener {
         btnlamMoi = new JButton("Làm mới");
         btnlamMoi.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnlamMoi);
-        btnlamMoi.setBounds(535, 195, 100, 30);
+        btnlamMoi.setBounds(585, 195, 100, 30);
         pnlCusControl.add(btnlamMoi);
 
 
         search2Label = new JLabel("Tìm Theo SDT: ");
         search2Label.setFont(new Font("Arial", Font.PLAIN, 14));
-        search2Label.setBounds(330, 85, 120, 30);
+        search2Label.setBounds(380, 85, 120, 30);
         search2Label.setForeground(Color.WHITE);
         pnlCusControl.add(search2Label);
 
         txtSearch2 = new JTextField();
-        txtSearch2.setBounds(465, 85, 280, 30);
+        txtSearch2.setBounds(515, 85, 280, 30);
         pnlCusControl.add(txtSearch2);
 
 
         search3Label = new JLabel("Tìm Theo CCCD: ");
 
         search3Label.setFont(new Font("Arial", Font.PLAIN, 14));
-        search3Label.setBounds(330, 145, 120, 30);
+        search3Label.setBounds(380, 145, 120, 30);
         search3Label.setForeground(Color.WHITE);
         pnlCusControl.add(search3Label);
 
         txtSearch3 = new JTextField();
 
-        txtSearch3.setBounds(465, 145, 280, 30);
+        txtSearch3.setBounds(515, 145, 280, 30);
         pnlCusControl.add(txtSearch3);
 
         JPanel panelDSKH = new JPanel();
         panelDSKH.setLayout(null);
         panelDSKH.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DANH SÁCH KHÁCH HÀNG",
                 TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
-        panelDSKH.setBounds(30, 310, 1100, 320);
+        panelDSKH.setBounds(30, 310, 1220, 370);
         panelDSKH.setOpaque(false);
 
         String[] colsKH = {"STT", "Mã KH", "Tên KH", "SDT", "CCCD", "Giới Tính", "Ngày Sinh"};
@@ -148,7 +148,7 @@ public class SearchingCustomer_UI extends JPanel implements ActionListener {
 
         panelDSKH.add(scrollPaneKH = new JScrollPane(tableKH, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
                 BorderLayout.CENTER);
-        scrollPaneKH.setBounds(10, 20, 1090, 330);
+        scrollPaneKH.setBounds(10, 20, 1210, 380);
         scrollPaneKH.setOpaque(false);
         scrollPaneKH.getViewport().setOpaque(false);
         scrollPaneKH.getViewport().setBackground(Color.WHITE);

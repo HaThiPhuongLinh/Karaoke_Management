@@ -46,7 +46,7 @@ public class SearchingRoom_UI extends JPanel implements ActionListener, MouseLis
 
         //phan viet code
         JLabel headerLabel = new JLabel("TÌM KIẾM PHÒNG");
-        headerLabel.setBounds(470, 10, 1175, 40);
+        headerLabel.setBounds(520, 10, 1175, 40);
         headerLabel.setFont(new Font("Arial", Font.BOLD, 25));
         headerLabel.setForeground(Color.WHITE);
         Component add = add(headerLabel);
@@ -75,7 +75,7 @@ public class SearchingRoom_UI extends JPanel implements ActionListener, MouseLis
         pnlCusList.setBorder(new TitledBorder(
                 new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "PHÒNG",
                 TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
-        pnlCusList.setBounds(10, 70, 1120, 620);
+        pnlCusList.setBounds(10, 70, 1240, 670);
         pnlCusList.setOpaque(false);
         add(pnlCusList);
         pnlCusList.setLayout(new BorderLayout(0, 0));
@@ -91,41 +91,41 @@ public class SearchingRoom_UI extends JPanel implements ActionListener, MouseLis
         search1Label = new JLabel("Tìm Theo Tên Loại Phòng: ");
 
         search1Label.setFont(new Font("Arial", Font.PLAIN, 14));
-        search1Label.setBounds(30, 25, 200, 30);
+        search1Label.setBounds(80, 25, 200, 30);
         search1Label.setForeground(Color.WHITE);
         pnlCusControl.add(search1Label);
 
         cboTimTheoTen = new JComboBox();
-        cboTimTheoTen.setBounds(215, 25, 280, 30);
+        cboTimTheoTen.setBounds(265, 25, 280, 30);
         cboTimTheoTen.addItem("Tất Cả");
         pnlCusControl.add(cboTimTheoTen);
 
         btnTim = new JButton("Tìm kiếm");
-        btnTim.setBounds(980, 25, 100, 30);
+        btnTim.setBounds(1030, 25, 100, 30);
         Custom.setCustomBtn(btnTim);
         btnTim.setFont(new Font("Arial", Font.BOLD, 14));
         pnlCusControl.add(btnTim);
         btnLammOi = new JButton("Làm mới");
-        btnLammOi.setBounds(980, 60, 100, 30);
+        btnLammOi.setBounds(1030, 60, 100, 30);
         Custom.setCustomBtn(btnLammOi);
         btnLammOi.setFont(new Font("Arial", Font.BOLD, 14));
         pnlCusControl.add(btnLammOi);
 
         search2Label = new JLabel("Tìm Theo Giá: ");
         search2Label.setFont(new Font("Arial", Font.PLAIN, 14));
-        search2Label.setBounds(540, 25, 120, 30);
+        search2Label.setBounds(590, 25, 120, 30);
         search2Label.setForeground(Color.WHITE);
         pnlCusControl.add(search2Label);
 
         txtSearch2 = new JTextField();
-        txtSearch2.setBounds(645, 25, 280, 30);
+        txtSearch2.setBounds(695, 25, 280, 30);
         pnlCusControl.add(txtSearch2);
 
         JPanel panelDSKH = new JPanel();
         panelDSKH.setLayout(null);
         panelDSKH.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DANH SÁCH PHÒNG",
                 TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
-        panelDSKH.setBounds(30, 20, 1100, 470);
+        panelDSKH.setBounds(30, 20, 1220, 520);
         panelDSKH.setOpaque(false);
 
         String[] colsKH = {"STT", "Mã Phòng", "Loại Phòng", "Tình Trạng", "Vị Trí","Giá Tiền"};
@@ -142,7 +142,7 @@ public class SearchingRoom_UI extends JPanel implements ActionListener, MouseLis
 
         panelDSKH.add(scrollPaneP = new JScrollPane(tableP, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
                 BorderLayout.CENTER);
-        scrollPaneP.setBounds(10, 20, 1090, 470);
+        scrollPaneP.setBounds(10, 20, 1210, 520);
         scrollPaneP.setOpaque(false);
         scrollPaneP.getViewport().setOpaque(false);
         scrollPaneP.getViewport().setBackground(Color.WHITE);
