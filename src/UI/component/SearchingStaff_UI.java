@@ -69,7 +69,7 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
 
         pnlStaffList = new JPanel();
         pnlStaffList.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Nhân Viên", TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
-        pnlStaffList.setBounds(10, 70, 1120, 620);
+        pnlStaffList.setBounds(10, 70, 1240, 670);
         pnlStaffList.setOpaque(false);
         add(pnlStaffList);
         pnlStaffList.setLayout(new BorderLayout(0, 0));
@@ -83,48 +83,48 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
 
         search1Label = new JLabel("Tìm Theo Tên: ");
         search1Label.setFont(new Font("Arial", Font.PLAIN, 14));
-        search1Label.setBounds(330, 15, 120, 30);
+        search1Label.setBounds(380, 15, 120, 30);
         search1Label.setForeground(Color.WHITE);
         pnlStaffControl.add(search1Label);
 
         txtSearch1 = new JTextField();
-        txtSearch1.setBounds(465, 15, 280, 30);
+        txtSearch1.setBounds(515, 15, 280, 30);
         pnlStaffControl.add(txtSearch1);
 
         btnTim = new JButton("Tìm kiếm");
-        btnTim.setBounds(645, 205, 100, 30);
+        btnTim.setBounds(695, 205, 100, 30);
         Custom.setCustomBtn(btnTim);
         btnTim.setFont(new Font("Arial", Font.BOLD, 14));
         pnlStaffControl.add(btnTim);
         btnLamMoi = new JButton("Làm Mới");
-        btnLamMoi.setBounds(535, 205, 100, 30);
+        btnLamMoi.setBounds(585, 205, 100, 30);
         Custom.setCustomBtn(btnLamMoi);
         btnLamMoi.setFont(new Font("Arial", Font.BOLD, 14));
         pnlStaffControl.add(btnLamMoi);
 
         search2Label = new JLabel("Tìm Theo SDT: ");
         search2Label.setFont(new Font("Arial", Font.PLAIN, 14));
-        search2Label.setBounds(330, 65, 120, 30);
+        search2Label.setBounds(380, 65, 120, 30);
         search2Label.setForeground(Color.WHITE);
         pnlStaffControl.add(search2Label);
 
         txtSearch2 = new JTextField();
-        txtSearch2.setBounds(465, 65, 280, 30);
+        txtSearch2.setBounds(515, 65, 280, 30);
         pnlStaffControl.add(txtSearch2);
 
         search3Label = new JLabel("Tìm Theo CCCD: ");
         search3Label.setFont(new Font("Arial", Font.PLAIN, 14));
-        search3Label.setBounds(330, 115, 120, 30);
+        search3Label.setBounds(380, 115, 120, 30);
         search3Label.setForeground(Color.WHITE);
         pnlStaffControl.add(search3Label);
 
         txtSearch3 = new JTextField();
-        txtSearch3.setBounds(465, 115, 280, 30);
+        txtSearch3.setBounds(515, 115, 280, 30);
         pnlStaffControl.add(txtSearch3);
 
         search4Label = new JLabel("Tình Trạng: ");
         search4Label.setFont(new Font("Arial", Font.PLAIN, 14));
-        search4Label.setBounds(330, 165, 120, 30);
+        search4Label.setBounds(380, 165, 120, 30);
         search4Label.setForeground(Color.WHITE);
         pnlStaffControl.add(search4Label);
 
@@ -132,13 +132,13 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
         cboTinhTrang.addItem("Tất cả");
         cboTinhTrang.addItem("Đang làm");
         cboTinhTrang.addItem("Đã nghỉ");
-        cboTinhTrang.setBounds(465, 165, 280, 30);
+        cboTinhTrang.setBounds(515, 165, 280, 30);
         pnlStaffControl.add(cboTinhTrang);
 
         JPanel panelDSNV = new JPanel();
         panelDSNV.setLayout(null);
         panelDSNV.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DANH SÁCH NHÂN VIÊN", TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
-        panelDSNV.setBounds(30, 290, 1100, 320);
+        panelDSNV.setBounds(30, 290, 1220, 370);
         panelDSNV.setOpaque(false);
 
         String[] colsNV = {"Mã NV", "Tên NV", "SDT", "CCCD", "Giới Tính", "Ngày Sinh", "Địa Chỉ", "Chức Vụ", "Tình Trạng", "Tài Khoản"};
@@ -154,7 +154,7 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
         Custom.getInstance().setCustomTable(tblNV);
 
         panelDSNV.add(scrollPaneNV = new JScrollPane(tblNV, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
-        scrollPaneNV.setBounds(10, 20, 1090, 310);
+        scrollPaneNV.setBounds(10, 20, 1210, 360);
         scrollPaneNV.setOpaque(false);
         scrollPaneNV.getViewport().setOpaque(false);
         scrollPaneNV.getViewport().setBackground(Color.WHITE);

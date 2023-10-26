@@ -47,7 +47,7 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
             e.printStackTrace();
         }
         JLabel headerLabel = new JLabel("QUẢN LÝ NHÂN VIÊN");
-        headerLabel.setBounds(470, 10, 1175, 40);
+        headerLabel.setBounds(520, 10, 1175, 40);
         headerLabel.setFont(new Font("Arial", Font.BOLD, 25));
         headerLabel.setForeground(Color.WHITE);
         Component add = add(headerLabel);
@@ -72,7 +72,7 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
 
         pnlStaffList = new JPanel();
         pnlStaffList.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Nhân Viên", TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
-        pnlStaffList.setBounds(10, 70, 1120, 620);
+        pnlStaffList.setBounds(10, 70, 1240, 670);
         pnlStaffList.setOpaque(false);
         add(pnlStaffList);
         pnlStaffList.setLayout(new BorderLayout(0, 0));
@@ -86,141 +86,141 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
 
         maNVLabel = new JLabel("Mã Nhân Viên: ");
         maNVLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        maNVLabel.setBounds(30, 10, 120, 30);
+        maNVLabel.setBounds(80, 10, 120, 30);
         maNVLabel.setForeground(Color.WHITE);
         pnlStaffControl.add(maNVLabel);
         txtMaNV = new JTextField();
-        txtMaNV.setBounds(145, 10, 350, 30);
+        txtMaNV.setBounds(195, 10, 350, 30);
         txtMaNV.setEditable(false);
         pnlStaffControl.add(txtMaNV);
 
         tenNVLabel = new JLabel("Tên Nhân Viên: ");
         tenNVLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        tenNVLabel.setBounds(30, 60, 120, 30);
+        tenNVLabel.setBounds(80, 60, 120, 30);
         tenNVLabel.setForeground(Color.WHITE);
         pnlStaffControl.add(tenNVLabel);
 
         txtTenNV = new JTextField();
-        txtTenNV.setBounds(145, 60, 350, 30);
+        txtTenNV.setBounds(195, 60, 350, 30);
         pnlStaffControl.add(txtTenNV);
 
         gioitinhNVLabel = new JLabel("Giới Tính: ");
         gioitinhNVLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        gioitinhNVLabel.setBounds(315, 110, 70, 30);
+        gioitinhNVLabel.setBounds(365, 110, 70, 30);
         gioitinhNVLabel.setForeground(Color.WHITE);
         pnlStaffControl.add(gioitinhNVLabel);
 
         cboGioiTinhNV = new JComboBox<String>();
         cboGioiTinhNV.addItem("Nam");
         cboGioiTinhNV.addItem("Nữ");
-        cboGioiTinhNV.setBounds(390, 110, 105, 30);
+        cboGioiTinhNV.setBounds(440, 110, 105, 30);
         Custom.setCustomComboBox(cboGioiTinhNV);
         pnlStaffControl.add(cboGioiTinhNV);
 
         sdtNVLabel = new JLabel("SDT: ");
         sdtNVLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        sdtNVLabel.setBounds(30, 110, 50, 30);
+        sdtNVLabel.setBounds(80, 110, 50, 30);
         sdtNVLabel.setForeground(Color.WHITE);
         pnlStaffControl.add(sdtNVLabel);
 
         txtSDTNV = new JTextField();
-        txtSDTNV.setBounds(145, 110, 165, 30);
+        txtSDTNV.setBounds(195, 110, 165, 30);
         pnlStaffControl.add(txtSDTNV);
 
         ngaySinhLabel = new JLabel("Ngày Sinh: ");
         ngaySinhLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        ngaySinhLabel.setBounds(30, 160, 100, 30);
+        ngaySinhLabel.setBounds(80, 160, 100, 30);
         ngaySinhLabel.setForeground(Color.WHITE);
         pnlStaffControl.add(ngaySinhLabel);
 
         dpNgaySinhNV = new DatePicker(205);
-        dpNgaySinhNV.setBounds(145, 160, 165, 30);
+        dpNgaySinhNV.setBounds(195, 160, 165, 30);
         pnlStaffControl.add(dpNgaySinhNV);
 
         btnThem = new JButton("Thêm");
         btnThem.setFont(new Font("Arial", Font.BOLD, 15));
         Custom.setCustomBtn(btnThem);
-        btnThem.setBounds(600, 210, 100, 30);
+        btnThem.setBounds(650, 210, 100, 30);
         pnlStaffControl.add(btnThem);
 
         btnSua = new JButton("Sửa");
         btnSua.setFont(new Font("Arial", Font.BOLD, 15));
         Custom.setCustomBtn(btnSua);
-        btnSua.setBounds(750, 210, 100, 30);
+        btnSua.setBounds(800, 210, 100, 30);
         pnlStaffControl.add(btnSua);
 
         btnLamMoi = new JButton("Làm Mới");
         Custom.setCustomBtn(btnLamMoi);
         btnLamMoi.setFont(new Font("Arial", Font.BOLD, 15));
-        btnLamMoi.setBounds(900, 210, 100, 30);
+        btnLamMoi.setBounds(950, 210, 100, 30);
         pnlStaffControl.add(btnLamMoi);
 
         ChucVuLabel = new JLabel("Chức Vụ: ");
         ChucVuLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        ChucVuLabel.setBounds(315, 160, 120, 30);
+        ChucVuLabel.setBounds(365, 160, 120, 30);
         ChucVuLabel.setForeground(Color.WHITE);
         pnlStaffControl.add(ChucVuLabel);
 
         cboChucVu = new JComboBox<String>();
         cboChucVu.addItem("Nhân Viên");
         cboChucVu.addItem("Quản lý");
-        cboChucVu.setBounds(390, 160, 105, 30);
+        cboChucVu.setBounds(440, 160, 105, 30);
         Custom.setCustomComboBox(cboChucVu);
         pnlStaffControl.add(cboChucVu);
 
         tinhTrangLabel = new JLabel("Tình Trạng: ");
         tinhTrangLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        tinhTrangLabel.setBounds(550, 60, 200, 30);
+        tinhTrangLabel.setBounds(600, 60, 200, 30);
         tinhTrangLabel.setForeground(Color.WHITE);
         pnlStaffControl.add(tinhTrangLabel);
 
         cbotinhTrang = new JComboBox<String>();
         cbotinhTrang.addItem("Đang làm");
         cbotinhTrang.addItem("Đã nghỉ");
-        cbotinhTrang.setBounds(665, 60, 350, 30);
+        cbotinhTrang.setBounds(715, 60, 350, 30);
         Custom.setCustomComboBox(cbotinhTrang);
         pnlStaffControl.add(cbotinhTrang);
 
         taiKhoanLabel = new JLabel("Tài Khoản: ");
         taiKhoanLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        taiKhoanLabel.setBounds(550, 110, 200, 30);
+        taiKhoanLabel.setBounds(600, 110, 200, 30);
         taiKhoanLabel.setForeground(Color.WHITE);
         pnlStaffControl.add(taiKhoanLabel);
 
         txtTaiKhoan = new JTextField();
-        txtTaiKhoan.setBounds(665, 110, 350, 30);
+        txtTaiKhoan.setBounds(715, 110, 350, 30);
         pnlStaffControl.add(txtTaiKhoan);
 
         cmndLabel = new JLabel("CMND: ");
         cmndLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        cmndLabel.setBounds(550, 160, 200, 30);
+        cmndLabel.setBounds(600, 160, 200, 30);
         cmndLabel.setForeground(Color.WHITE);
         pnlStaffControl.add(cmndLabel);
 
         txtCMNDNV = new JTextField();
-        txtCMNDNV.setBounds(665, 160, 350, 30);
+        txtCMNDNV.setBounds(715, 160, 350, 30);
         pnlStaffControl.add(txtCMNDNV);
 
         txtBaoLoi = new JTextField();
         txtBaoLoi.setFont(new Font("Arial",Font.BOLD,13));
         txtBaoLoi.setForeground(Color.RED);
-        txtBaoLoi.setBounds(145, 210, 400, 30);
+        txtBaoLoi.setBounds(195, 210, 400, 30);
         pnlStaffControl.add(txtBaoLoi);
 
         JLabel diaChiLabel = new JLabel("Địa Chỉ: ");
         diaChiLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        diaChiLabel.setBounds(550, 10, 350, 30);
+        diaChiLabel.setBounds(600, 10, 350, 30);
         diaChiLabel.setForeground(Color.WHITE);
         pnlStaffControl.add(diaChiLabel);
 
         txtDiaChi = new JTextField();
-        txtDiaChi.setBounds(665, 10, 350, 30);
+        txtDiaChi.setBounds(715, 10, 350, 30);
         pnlStaffControl.add(txtDiaChi);
 
         JPanel panelDSNV = new JPanel();
         panelDSNV.setLayout(null);
         panelDSNV.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DANH SÁCH NHÂN VIÊN", TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
-        panelDSNV.setBounds(30, 290, 1100, 320);
+        panelDSNV.setBounds(80, 290, 1220, 370);
         panelDSNV.setOpaque(false);
 
         String[] colsNV = {"Mã NV", "Tên NV", "SDT", "CCCD", "Giới Tính", "Ngày Sinh", "Địa Chỉ", "Chức Vụ", "Tình Trạng", "Tài Khoản"};
@@ -235,7 +235,7 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
         tableNV.getTableHeader().setForeground(Color.BLUE);
         Custom.getInstance().setCustomTable(tableNV);
         panelDSNV.add(scrollPaneNV = new JScrollPane(tableNV, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
-        scrollPaneNV.setBounds(10, 20, 1090, 310);
+        scrollPaneNV.setBounds(10, 20, 1210, 360);
         scrollPaneNV.setOpaque(false);
         scrollPaneNV.getViewport().setOpaque(false);
         scrollPaneNV.getViewport().setBackground(Color.WHITE);
