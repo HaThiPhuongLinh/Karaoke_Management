@@ -132,7 +132,6 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
         cboStatus.addItem("Trống");
         cboStatus.addItem("Đang sử dụng");
         cboStatus.addItem("Chờ");
-        cboStatus.addItem("Tạm");
         cboStatus.setBounds(500, 14, 140, 28);
         Custom.setCustomComboBox(cboStatus);
         pnlRoomControl.add(cboStatus);

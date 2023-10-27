@@ -191,7 +191,6 @@ public class ServiceDAO {
         }
 
         return dsdv;
-
     }
 
     public String generateNextServiceId() {
@@ -259,7 +258,8 @@ public class ServiceDAO {
             String sql = "SELECT dv.maDichVu, dv.tenDichVu, dv.giaBan, dv.soLuongTon, dv.donViTinh, ldv.maLoaiDichVu, ldv.tenLoaiDichVu " +
                     "FROM dbo.DichVu dv, dbo.LoaiDichVu ldv " +
                     "WHERE dv.maLoaiDichVu = ldv.maLoaiDichVu " +
-                    "AND ldv.tenLoaiDichVu = ?";
+                    "AND dv.tenDichVu LIKE ? " +
+                    "AND ldv.tenLoaiDichVu = ? ";
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setString(1, "%" + serviceName + "%");
             statement.setString(2, serviceTypeName);

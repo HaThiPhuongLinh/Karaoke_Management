@@ -75,7 +75,7 @@ public class Main extends JFrame {
                 } else if (subIndex == 3) {
                     showForm(new TypeOfService_UI());
                 } else if (subIndex == 4) {
-                    showForm(new ServiceForm_UI());
+                    showForm(new ServiceForm_UI(staffLogin));
                 }
             } else if (index == 4) {
                 if (subIndex == 1) {
