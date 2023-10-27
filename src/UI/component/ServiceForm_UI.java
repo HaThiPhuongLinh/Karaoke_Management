@@ -206,6 +206,7 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
                 selectedServiceIndex = selectedRow;
                 txtName.setText(service.getTenDichVu());
                 txtStock.setText(df.format(service.getSoLuongTon()));
+                txtSum.setText("");
             }
 
             @Override
@@ -259,6 +260,7 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
                 txtName.setText(modelService.getValueAt(selectedRow, 1).toString().trim());
                 int quantityService = serviceOrderList.get(selectedRow).getSoLuongTon();
                 txtStock.setText(String.valueOf(quantityService));
+                txtSum.setText("");
             }
 
             @Override

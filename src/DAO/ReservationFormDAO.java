@@ -198,25 +198,45 @@ public class ReservationFormDAO {
         }
         return nextId;
     }
-//    public ArrayList<ReservationForm> getListReservationFormByRoomId(String ma) {
-//        ArrayList<ReservationForm> rsvfList = new ArrayList<ReservationForm>();
-//        ConnectDB.getInstance();
-//        Connection con = ConnectDB.getConnection();
-//        String query =  "SELECT * FROM PhieuDatPhong where maPhong like ?";
-//
-//        try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
-//            preparedStatement.setString(1, "%" + ma + "%");
-//
-//            try (ResultSet rs = preparedStatement.executeQuery()) {
-//                while (rs.next()) {
-//                    ReservationForm rsvf;
-//                    rsvf = new ReservationForm(rs);
-//                    rsvfList.add(rsvf);
-//                }
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return rsvfList;
-//    }
+
+    public ReservationForm getFormByRoomID(String roomID) {
+        ReservationForm reservationForm = null;
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+
+        try {
+            String sql = "SELECT * FROM PhieuDatPhong WHERE maPhong = ? ORDER BY thoiGianDat DESC LIMIT 1";
+            statement = con.prepareStatement(sql);
+            statement.setString(1, roomID);
+            rs = statement.executeQuery();
+
+            if (rs.next()) {
+                reservationForm = new ReservationForm(
+                        rs.getString("maPhieuDat"),
+                        rs.getTimestamp("thoiGianDat"),
+                        new Staff(rs.getString("maNhanVien")),
+                        new Customer(rs.getString("maKhachHang")),
+                        new Room(rs.getString("maPhong"))
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return reservationForm;
+    }
+
 }

@@ -221,9 +221,31 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
                     return;
                 }
 
+                String roomID = lblRoomID2.getText().trim();
+                Room room = roomDAO.getRoomByRoomId(roomID);
+                if (room != null) {
+                    if (room.getTinhTrang().equalsIgnoreCase("Đang sử dụng")) {
+                        LocalDateTime minValidTime = currentDateTime.plusHours(2);
+                        if (selectedDateTime.isBefore(minValidTime)) {
+                            JOptionPane.showMessageDialog(this, "Phòng đang sử dụng. Vui lòng đặt sau 2 tiếng kể từ thời điểm hiện tại.");
+                            return;
+                        }
+                    } else {
+                        ReservationForm existingForm = reservationFormDAO.getFormByRoomID(roomID);
+                        if (existingForm != null) {
+                            LocalDateTime minValidTime = existingForm.getThoiGianDat().toLocalDateTime().plusHours(4);
+                            if (selectedDateTime.isBefore(minValidTime)) {
+                                JOptionPane.showMessageDialog(this, "Phòng đã có phiếu đặt. Vui lòng đặt sau 4 tiếng kể từ thời gian đặt trước đó.");
+                                return;
+                            }
+                        }
+                    }
+                }
+
                 createReservationForm();
             }
         }
+
     }
 
     private String generateID() {
@@ -253,7 +275,6 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
         boolean resultForm = reservationFormDAO.addReservationForm(form);
 
         if (resultForm) {
-            roomDAO.updateRoomStatus(roomID, "Chờ");
             JOptionPane.showMessageDialog(this, "Cho thuê phòng thành công");
             ArrayList<Room> yourListOfRooms = roomDAO.getRoomList();
             main.LoadRoomList(yourListOfRooms);
