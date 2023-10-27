@@ -1,5 +1,8 @@
 package Entity;
 
+import DAO.RoomDAO;
+import DAO.ServiceDAO;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
@@ -16,12 +19,20 @@ public class Service {
     }
 
     public Service(ResultSet rs) throws SQLException {
-        this(rs.getString("maDichVu"), rs.getString("tenDichVu"), new TypeOfService(rs), rs.getString(4), rs.getInt(5),rs.getDouble(6));
+        this(rs.getString(1), rs.getString(2), new TypeOfService(rs.getString(3)), rs.getString(4), rs.getInt(5),rs.getDouble(6));
     }
 
-    public Service(String maDichVu){
-        this.maDichVu=maDichVu;
+    public Service(String maDV) {
+        ServiceDAO serviceDAO = new ServiceDAO();
+        Service s = serviceDAO.getDichVuByMaDichVu(maDV);
+        this.maDichVu = maDV;
+        this.tenDichVu = s.getTenDichVu();
+        this.maLoaiDichVu = s.getMaLoaiDichVu();
+        this.donViTinh = s.getDonViTinh();
+        this.soLuongTon = s.getSoLuongTon();
+        this.giaBan = s.getGiaBan();
     }
+
 
     public String getMaDichVu() {
         return maDichVu;

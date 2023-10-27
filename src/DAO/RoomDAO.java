@@ -359,9 +359,39 @@ public class RoomDAO {
             e.printStackTrace();
         }
         return n > 0;
-
-
     }
+    public ArrayList<Room> getRoomsByRoomIdAndStatus(String roomID, String status) {
+        ArrayList<Room> rooms = new ArrayList<>();
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        PreparedStatement stmt = null;
+
+        try {
+            String sql = "SELECT p.maPhong, p.maLoaiPhong, p.tinhTrang , p.viTri, p.giaPhong, lp.maLoaiPhong, lp.tenLoaiPhong, lp.sucChua " +
+                    "FROM dbo.Phong p, dbo.LoaiPhong lp " +
+                    "WHERE p.maLoaiPhong = lp.maLoaiPhong AND p.maPhong = ? AND p.tinhTrang = ?";
+
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, roomID);
+            stmt.setString(2, status);
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                rooms.add(new Room(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return rooms;
+    }
+
     public String generateNextRoomId() {
         Connection con = null;
         PreparedStatement statement = null;

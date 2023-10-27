@@ -1,7 +1,11 @@
 package Entity;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Bill {
     private String maHoaDon;
@@ -13,23 +17,46 @@ public class Bill {
     private int tinhTrangHD;
     private String khuyenMai;
 
+    private List<DetailsOfService> lstDetails;
+
     public Bill(String maHoaDon){
         this.maHoaDon =maHoaDon;
+        this.lstDetails = new ArrayList<DetailsOfService>();
     }
 
+    public Bill(ResultSet rs) throws SQLException {
+        this(rs.getString("maHoaDon"), rs.getTimestamp("ngayGioDat"), rs.getTimestamp("ngayGioTra"),
+                rs.getInt("tinhTrangHD"), rs.getString("khuyenMai"));
+    }
 
     public Bill(String maHoaDon, Staff maNhanVien, Customer maKH, Room maPhong, Timestamp ngayGioDat, Timestamp ngayGioTra, int tinhTrangHD, String khuyenMai){
         this.maHoaDon= maHoaDon;
         this.maNhanVien=maNhanVien;
         this.maKhachHang=maKH;
         this.maPhong=maPhong;
-//        this.giaPhong=giaPhong;
         this.ngayGioDat=ngayGioDat;
         this.ngayGioTra=ngayGioTra;
         this.tinhTrangHD = tinhTrangHD;
         this.khuyenMai = khuyenMai;
     }
 
+    public Bill(String maHoaDon, Timestamp ngayGioDat, Timestamp ngayGioTra, int tinhTrangHD, String khuyenMai) {
+        this.maHoaDon = maHoaDon;
+        this.ngayGioDat = ngayGioDat;
+        this.ngayGioTra = ngayGioTra;
+        this.tinhTrangHD = tinhTrangHD;
+        this.khuyenMai = khuyenMai;
+
+        this.lstDetails = new ArrayList<DetailsOfService>();
+    }
+
+    public List<DetailsOfService> getLstDetails() {
+        return lstDetails;
+    }
+
+    public void setLstDetails(List<DetailsOfService> lstDetails) {
+        this.lstDetails = lstDetails;
+    }
 
     public String getMaHoaDon() {
         return maHoaDon;

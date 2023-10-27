@@ -126,35 +126,44 @@ public class ServiceDAO {
         }
         return n > 0;
     }
-    public ArrayList<Service> getDichVuTheoMa(String maDichVu) {
-        ArrayList<Service> dsdv = new ArrayList<Service>();
-        PreparedStatement statement = null;
+
+    public Service getDichVuByMaDichVu(String maDichVu) {
+        Service service = null;
+        PreparedStatement stmt = null;
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
+        String sql = "SELECT * FROM dbo.DichVu WHERE maDichVu = ?";
+
         try {
-            String sql = "Select * from dbo.DichVu where maDichVu = ?";
-            statement = con.prepareStatement(sql);
-            statement.setString(1, maDichVu);
-            // Thực thi câu lệnh SQL trả về đối tượng ResultSet.
-            ResultSet rs = statement.executeQuery();
-            // Duyệt kết quả trả về
-            while (rs.next()) {
-                dsdv.add(
-                        new Service(rs.getString(1), rs.getString(2), new TypeOfService(rs.getString(3)), rs.getString(4),rs.getInt(5), rs.getDouble(6)));
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, maDichVu);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                service = new Service(
+                        rs.getString(1),
+                        rs.getString(2),
+                        new TypeOfService(rs.getString(3)),
+                        rs.getString(4),
+                        rs.getInt(5),
+                        rs.getDouble(6)
+                );
             }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             try {
-                statement.close();
-            } catch (SQLException e2) {
-                e2.printStackTrace();
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
-        return dsdv;
-
+        return service;
     }
+
 
     public ArrayList<Service> getDichVuTheoGia(double giaBan) {
         ArrayList<Service> dsdv = new ArrayList<Service>();
@@ -165,9 +174,7 @@ public class ServiceDAO {
             String sql = "SELECT * FROM dbo.DichVu where giaBan like ?";
             statement = con.prepareStatement(sql);
             statement.setDouble(1, giaBan);
-            // Thực thi câu lệnh SQL trả về đối tượng ResultSet.
             ResultSet rs = statement.executeQuery();
-            // Duyệt kết quả trả về
             while (rs.next()) {
                 dsdv.add(
                         new Service(rs.getString(1), rs.getString(2), new TypeOfService(rs.getString(3)), rs.getString(4),rs.getInt(5), rs.getDouble(6)));
@@ -211,5 +218,52 @@ public class ServiceDAO {
             e.printStackTrace();
         }
         return nextServiceId;
+    }
+
+    public ArrayList<Service> getServiceListByServiceTypeName(String serviceTypeName) {
+        ArrayList<Service> serviceList = new ArrayList<>();
+        Connection con = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            con = ConnectDB.getConnection();
+            String sql = "SELECT dv.maDichVu, dv.giaBan, dv.soLuongTon, dv.tenDichVu, ldv.tenLDV, ldv.maLDV " +
+                    "FROM dbo.DichVu dv, dbo.LoaiDichVu ldv " +
+                    "WHERE dv.maLDV = ldv.maLDV AND ldv.tenLDV = ?";
+            statement = con.prepareStatement(sql);
+            statement.setString(1, serviceTypeName);
+            resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                String maDichVu = resultSet.getString("maDichVu");
+                double giaBan = resultSet.getDouble("giaBan");
+                int soLuongTon = resultSet.getInt("soLuongTon");
+                String tenDichVu = resultSet.getString("tenDichVu");
+                String maLDV = resultSet.getString("maLDV");
+                String tenLDV = resultSet.getString("tenLDV");
+
+                Service service = new Service(maDichVu, tenDichVu, new TypeOfService(maLDV), tenLDV, soLuongTon, giaBan);
+                serviceList.add(service);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (statement != null) {
+                    statement.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return serviceList;
     }
 }
