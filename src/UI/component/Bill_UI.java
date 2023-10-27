@@ -1,8 +1,10 @@
 package UI.component;
 
 import ConnectDB.ConnectDB;
+import DAO.BillDAO;
 import DAO.ReservationFormDAO;
 import DAO.RoomDAO;
+import Entity.Bill;
 import Entity.ReservationForm;
 import UI.CustomUI.Custom;
 
@@ -21,6 +23,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Bill_UI extends JPanel implements ActionListener, MouseListener {
     private  JTextField txtTK;
@@ -31,6 +34,8 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
     private ReservationFormDAO reservationFormDAO;
     private RoomDAO roomDAO;
     private DecimalFormat df = new DecimalFormat("#,###.##");
+    private Bill bill;
+    private BillDAO billDAO;
 
     public Bill_UI(){
         setLayout(null);
@@ -42,6 +47,7 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        billDAO = new BillDAO();
         reservationFormDAO = new ReservationFormDAO();
         roomDAO =new RoomDAO();
         JLabel labelHeader = new JLabel("LẬP HOÁ ĐƠN");
@@ -55,7 +61,7 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
         panelFull.setBorder(new TitledBorder(
                 new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "",
                 TitledBorder.LEADING, TitledBorder.TOP));
-        panelFull.setBounds(10,50,1125,635);
+        panelFull.setBounds(10,50,1245,670);
         panelFull.setOpaque(false);
         add(panelFull);
 
@@ -74,31 +80,31 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
         //        btn tìm kiếm
         JLabel labelTK = new JLabel("Tìm Theo Mã Phòng:");
         labelTK.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelTK.setBounds(660, 20, 150, 30);
+        labelTK.setBounds(710, 20, 150, 30);
         labelTK.setForeground(Color.WHITE);
         panelFull.add(labelTK);
 
         txtTK = new JTextField();
-        txtTK.setBounds(820, 20, 150, 30);
+        txtTK.setBounds(870, 20, 150, 30);
         txtTK.setColumns(6);
         panelFull.add(txtTK);
         btnTim = new JButton("Tìm");
         btnTim.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnTim);
-        btnTim.setBounds(990, 20, 100, 30);
+        btnTim.setBounds(1040, 20, 100, 30);
         panelFull.add(btnTim);
 
         btnLap = new JButton("Lập Hóa Đơn");
         btnLap.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnLap);
-        btnLap.setBounds(100, 230, 200, 50);
+        btnLap.setBounds(150, 230, 200, 50);
         panelFull.add(btnLap);
 
         JPanel panelDSHD = new JPanel();
         panelDSHD.setLayout(null);
         panelDSHD.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Danh Sách Dịch Vụ Được Sử Dụng",
                 TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
-        panelDSHD.setBounds(30, 320, 1065, 320);
+        panelDSHD.setBounds(30, 320, 1185, 370);
         panelDSHD.setOpaque(false);
 
         String[] colsHD = { "STT", "Mã Dịch Vụ", "Tên Dịch Vụ","Số Lượng Đặt","Giá Dịch Vụ","Tổng Tiền" };
@@ -115,7 +121,7 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
 
         panelDSHD.add(scrollPaneHD = new JScrollPane(tableHD,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
                 BorderLayout.CENTER);
-        scrollPaneHD.setBounds(10,20,1045,290);
+        scrollPaneHD.setBounds(10,20,1165,340);
         scrollPaneHD.setOpaque(false);
         scrollPaneHD.getViewport().setOpaque(false);
         scrollPaneHD.getViewport().setBackground(Color.WHITE);
@@ -126,7 +132,7 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
         panelCTHD.setLayout(null);
         panelCTHD.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Danh Sách Các Phòng Đang Được Dùng",
                 TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
-        panelCTHD.setBounds(380, 55, 714, 250);
+        panelCTHD.setBounds(500, 55, 714, 250);
         panelCTHD.setOpaque(false);
 
         String[] colsCTHD = { "STT","Mã Phòng", "Loại Phòng","Giờ Vào","Giá Phòng" };
@@ -163,11 +169,12 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
     public void loadPDP() {
         int i = 1;
 
-        for (ReservationForm rsvf :reservationFormDAO.getAllForm()) {
-            String date = formatDate(rsvf.getThoiGianDat());
-
-            Object[] rowData = {i, rsvf.getMaPhong().getMaPhong(), rsvf.getMaPhong().getLoaiPhong().getTenLoaiPhong(), date, df.format(rsvf.getMaPhong().getGiaPhong())};
-            modelTablePDP.addRow(rowData);
+        for (Bill bill :billDAO.getAllBill()) {
+            String date = formatDate(bill.getNgayGioDat());
+if(bill.getTinhTrangHD()==0) {
+    Object[] rowData = {i, bill.getMaPhong().getMaPhong(), bill.getMaPhong().getLoaiPhong().getTenLoaiPhong(), date, df.format(bill.getMaPhong().getGiaPhong())};
+    modelTablePDP.addRow(rowData);
+}
             i++;
         }
     }
