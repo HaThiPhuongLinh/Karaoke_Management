@@ -222,48 +222,64 @@ public class ServiceDAO {
 
     public ArrayList<Service> getServiceListByServiceTypeName(String serviceTypeName) {
         ArrayList<Service> serviceList = new ArrayList<>();
-        Connection con = null;
-        PreparedStatement statement = null;
-        ResultSet resultSet = null;
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
 
         try {
-            con = ConnectDB.getConnection();
-            String sql = "SELECT dv.maDichVu, dv.giaBan, dv.soLuongTon, dv.tenDichVu, ldv.tenLDV, ldv.maLDV " +
+            String sql = "SELECT dv.maDichVu, dv.giaBan, dv.soLuongTon, dv.tenDichVu, dv.donViTinh, ldv.tenLoaiDichVu, ldv.maLoaiDichVu " +
                     "FROM dbo.DichVu dv, dbo.LoaiDichVu ldv " +
-                    "WHERE dv.maLDV = ldv.maLDV AND ldv.tenLDV = ?";
-            statement = con.prepareStatement(sql);
+                    "WHERE dv.maLoaiDichVu = ldv.maLoaiDichVu AND ldv.tenLoaiDichVu = ?";
+            PreparedStatement statement = con.prepareStatement(sql);
             statement.setString(1, serviceTypeName);
-            resultSet = statement.executeQuery();
+            ResultSet  resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
                 String maDichVu = resultSet.getString("maDichVu");
                 double giaBan = resultSet.getDouble("giaBan");
                 int soLuongTon = resultSet.getInt("soLuongTon");
                 String tenDichVu = resultSet.getString("tenDichVu");
-                String maLDV = resultSet.getString("maLDV");
-                String tenLDV = resultSet.getString("tenLDV");
+                String maLDV = resultSet.getString("maLoaiDichVu");
+                String donViTinh = resultSet.getString("donViTinh");
 
-                Service service = new Service(maDichVu, tenDichVu, new TypeOfService(maLDV), tenLDV, soLuongTon, giaBan);
+                Service service = new Service(maDichVu, tenDichVu, new TypeOfService(maLDV), donViTinh, soLuongTon, giaBan);
                 serviceList.add(service);
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (resultSet != null) {
-                    resultSet.close();
-                }
-                if (statement != null) {
-                    statement.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
-
         return serviceList;
     }
+
+    public ArrayList<Service> getServiceListByNameAndServiceTypeName(String serviceName, String serviceTypeName) {
+        ArrayList<Service> serviceList = new ArrayList<>();
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+
+        try {
+            String sql = "SELECT dv.maDichVu, dv.tenDichVu, dv.giaBan, dv.soLuongTon, dv.donViTinh, ldv.maLoaiDichVu, ldv.tenLoaiDichVu " +
+                    "FROM dbo.DichVu dv, dbo.LoaiDichVu ldv " +
+                    "WHERE dv.maLoaiDichVu = ldv.maLoaiDichVu " +
+                    "AND ldv.tenLoaiDichVu = ?";
+            PreparedStatement statement = con.prepareStatement(sql);
+            statement.setString(1, "%" + serviceName + "%");
+            statement.setString(2, serviceTypeName);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                String maDichVu = resultSet.getString("maDichVu");
+                double giaBan = resultSet.getDouble("giaBan");
+                int soLuongTon = resultSet.getInt("soLuongTon");
+                String tenDichVu = resultSet.getString("tenDichVu");
+                String maLDV = resultSet.getString("maLoaiDichVu");
+                String donViTinh = resultSet.getString("donViTinh");
+
+                Service service = new Service(maDichVu, tenDichVu, new TypeOfService(maLDV), donViTinh, soLuongTon, giaBan);
+                serviceList.add(service);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return serviceList;
+    }
+
 }

@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
-public class ServiceForm_UI extends JPanel implements ActionListener, MouseListener {
+public class ServiceForm_UI extends JPanel implements ActionListener, MouseListener, ItemListener {
     private DefaultTableModel serviceModel, modelService;
     private JPanel pnlShowRoom, pnlRoomList, pnlServiceList, pnlShowService, pnlServiceControl,  pnlServiceDetail, timeNow, pnlRoomControl, pnlSelect;
     private JLabel backgroundLabel, timeLabel, searchLabel, searchServiceLable, tOSLabel, quantityLabel, nameLable, stockLabel, sumLabel, returnLabel;
@@ -44,8 +44,8 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
     private boolean isDoubleClick = false;
     private int selectedServiceIndex = -1;
     private int selectedServiceOrderIndex = -1;
-    private ArrayList<Service> lstService = new ArrayList<Service>();
     private ArrayList<Service> serviceList = new ArrayList<Service>();
+    private ArrayList<Service> serviceOrderList = new ArrayList<Service>();
     private DetailsOfService detailsOfService;
     private DetailOfServiceDAO detailOfServiceDAO;
     private DecimalFormat df = new DecimalFormat("#,###.##");
@@ -204,12 +204,13 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
 
             @Override
             public void mouseClicked(MouseEvent e) {
-                // TODO Auto-generated method stub
-                int row= tblSC.getSelectedRow();
-                txtName.setText(serviceModel.getValueAt(row, 1).toString());
-                txtStock.setText(serviceModel.getValueAt(row, 3).toString());
-                selectedServiceIndex = row;
-
+                int selectedRow = tblSC.getSelectedRow();
+//                txtName.setText(serviceModel.getValueAt(row, 1).toString());
+//                txtStock.setText(serviceModel.getValueAt(row, 3).toString());
+                Service service = serviceList.get(selectedRow);
+                selectedServiceIndex = selectedRow;
+                txtName.setText(service.getTenDichVu());
+                txtStock.setText(df.format(service.getSoLuongTon()));
             }
 
             @Override
@@ -237,11 +238,6 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
             }
 
         });
-
-        for (Service dv : serviceDAO.getAllDichVu()) {
-            Object[] rowData = { dv.getMaDichVu(), dv.getTenDichVu(), dv.getDonViTinh(), dv.getSoLuongTon(), df.format(dv.getGiaBan())};
-            serviceModel.addRow(rowData);
-        }
 
         pnlServiceList.add(scrShowService = new JScrollPane(tblSC, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
         scrShowService.getViewport().setOpaque(false);
@@ -318,29 +314,16 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
         txtSum.setFont(new Font("Arial", Font.PLAIN, 14));
         pnlSelect.add(txtSum);
 
-        btnUse = new JButton("Đặt dịch vụ");
+        btnUse = new JButton("Thêm");
         btnUse.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnUse);
-        btnUse.setBounds(100, 230, 145, 30);
+        btnUse.setBounds(330, 55, 110, 30);
         pnlSelect.add(btnUse);
 
-        returnLabel = new JLabel("SL trả: ");
-        returnLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        returnLabel.setBounds(280, 17, 85, 20);
-        returnLabel.setForeground(Color.WHITE);
-        pnlSelect.add(returnLabel);
-
-        txtReturn = new JSpinner();
-        txtReturn.setBounds(340, 13, 150, 28);
-        txtReturn.setFont(new Font("Arial", Font.PLAIN, 14));
-        JSpinner.DefaultEditor editor2 = (JSpinner.DefaultEditor) txtReturn.getEditor();
-        editor2.getTextField().setHorizontalAlignment(JTextField.LEFT);
-        pnlSelect.add(txtReturn);
-
-        btnReturn = new JButton("Trả hàng");
+        btnReturn = new JButton("Trả");
         btnReturn.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnReturn);
-        btnReturn.setBounds(350, 55, 110, 30);
+        btnReturn.setBounds(330, 105, 110, 30);
         pnlSelect.add(btnReturn);
 
 
@@ -350,37 +333,22 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
         add(backgroundLabel);
 
         // Lấy danh sách các phòng có trạng thái "Đang sử dụng"
-        ArrayList<Room> roomsInUse = roomDAO.getRoomsByStatus("Đang sử dụng");
-        loadRoomList(roomsInUse);
-        reSizeColumnTableService();
-        reSizeColumnTableService2();
-        loadCboService();
+
         btnFindService.addActionListener(this);
         btnFindRoom.addActionListener(this);
         btnRefresh1.addActionListener(this);
         btnRefresh2.addActionListener(this);
         btnUse.addActionListener(this);
+        cboService.addMouseListener(this);
+        cboService.addItemListener(this);
+
+        allLoaded();
 
         txtFindService.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                     btnFindService.doClick();
-                }
-            }
-        });
-
-        cboService.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String selectedLoaiDichVu = (String) cboService.getSelectedItem();
-                serviceModel.setRowCount(0);
-                for (Service dv : serviceDAO.getAllDichVu()) {
-                    if (selectedLoaiDichVu.equalsIgnoreCase("Tất cả") ||
-                            selectedLoaiDichVu.equalsIgnoreCase(dv.getMaLoaiDichVu().getTenLoaiDichVu())) {
-                        Object[] rowData = { dv.getMaDichVu(), dv.getTenDichVu(), dv.getDonViTinh(), dv.getSoLuongTon(), df.format(dv.getGiaBan())};
-                        serviceModel.addRow(rowData);
-                    }
                 }
             }
         });
@@ -406,10 +374,55 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
         });
     }
 
+    @Override
+    public void mouseClicked(MouseEvent e) {
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
+
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+        Object o = e.getSource();
+        if (o.equals(cboService)) {
+            txtFindService.setText("");
+            String serviceTypeName = cboService.getSelectedItem().toString().trim();
+            serviceList = serviceDAO.getServiceListByServiceTypeName(serviceTypeName);
+            loadServiceList(serviceList);
+        }
+    }
+
+    public void allLoaded() {
+        ArrayList<Room> roomsInUse = roomDAO.getRoomsByStatus("Đang sử dụng");
+        loadRoomList(roomsInUse);
+        reSizeColumnTableService();
+        reSizeColumnTableService2();
+        loadCboService();
+        String serviceName = cboService.getSelectedItem().toString();
+        serviceList = serviceDAO.getServiceListByServiceTypeName(serviceName);
+        loadServiceList(serviceList);
+    }
+
 
     private void loadCboService() {
         java.util.List<TypeOfService> dataList = typeOfServiceDAO.getAllLoaiDichVu();
-        cboService.addItem("Tất cả");
         for (TypeOfService serviceType : dataList) {
             cboService.addItem(serviceType.getTenLoaiDichVu());
         }
@@ -548,22 +561,10 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
 
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
-        if (o.equals(btnFindService)) {
-            if (txtFindService.getText().equals("")) {
-                JOptionPane.showMessageDialog(this, "Chưa nhập tên dịch vụ");
-            } else {
-                String serviceName = txtFindService.getText().trim();
-                serviceModel.getDataVector().removeAllElements();
-                serviceModel.fireTableDataChanged();
-                lstService = serviceDAO.getServiceByName(serviceName);
-                if (lstService == null || lstService.size() <= 0) {
-                    serviceModel.getDataVector().removeAllElements();
-                } else {
-                    for (Service s : lstService) {
-                        serviceModel.addRow(new Object[] { s.getMaDichVu(), s.getTenDichVu(), s.getDonViTinh(), s.getSoLuongTon(), df.format(s.getGiaBan()) });
-                    }
-                }
-            }
+        if (o.equals(btnFindService) || o.equals(btnRefresh2) ) {
+            searchService(0);
+            if (o.equals(btnRefresh2))
+                searchService(1);
         }
         if (o.equals(btnFindRoom)) {
             String roomID = txtFind.getText().trim();
@@ -582,18 +583,6 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
             txtFind.setText("");
             ArrayList<Room> roomsInUse = roomDAO.getRoomsByStatus("Đang sử dụng");
             loadRoomList(roomsInUse);
-        }
-        if (o.equals(btnRefresh2)) {
-            txtFindService.setText("");
-            txtName.setText("");
-            txtStock.setText("");
-            txtSum.setText("");
-            txtQuantity.setValue(0);
-            for (Service dv : serviceDAO.getAllDichVu()) {
-                Object[] rowData = { dv.getMaDichVu(), dv.getTenDichVu(), dv.getDonViTinh(), dv.getSoLuongTon(), df.format(dv.getGiaBan())};
-                serviceModel.addRow(rowData);
-            }
-            cboService.setSelectedIndex(0);
         }
         if (o.equals(btnUse)) {
             if (txtName.getText().trim().equals("")) {
@@ -618,7 +607,7 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
                     if (selectedServiceIndex != -1) {
                         service = serviceList.get(selectedServiceIndex);
                     } else if (selectedServiceOrderIndex != -1) {
-                        service = lstService.get(selectedServiceOrderIndex);
+                        service = serviceOrderList.get(selectedServiceOrderIndex);
                     }
 
                     String roomID = txtFind.getText().trim();
@@ -656,19 +645,20 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
                         // kiểm tra kết quả thêm, cập nhật
                         if (result) {
                             if (isUpdate) {
-                                int lastIndex = lstService.size() - 1;
+                                int lastIndex = serviceOrderList.size() - 1;
                                 for (int i = 0; i < lastIndex; i++) {
-                                    Service serviceOrder = lstService.get(i);
+                                    Service serviceOrder = serviceOrderList.get(i);
                                     if (service.getMaDichVu().equals(serviceOrder.getMaDichVu())) {
                                         serviceOrder.setSoLuongTon(newOrderQuantity);
                                         break;
                                     }
                                 }
                             } else {
-                                lstService.add(service);
+                                serviceOrderList.add(service);
                             }
                             int newQuantity = quantityInStock - orderQuantity;
                             showBillInfo(roomID);
+                            searchService(1);
                             txtQuantity.setValue(1);
                             txtStock.setText(String.valueOf(newQuantity));
                         } else {
@@ -683,14 +673,28 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
             }}
     }
 
-    private Bill getBillForCurrentRoom() {
-        String roomID = txtFind.getText().trim();
-        for (Bill bill : billDAO.getAllBill()) {
-            if (bill.getMaPhong().getMaPhong().equals(roomID)) {
-                return bill;
-            }
+    private void searchService(int isRefresh) {
+        String serviceName = txtFindService.getText().trim();
+        String serviceTypeName = cboService.getSelectedItem().toString().trim();
+        if (serviceName.equalsIgnoreCase("")) {
+            serviceList = serviceDAO.getServiceListByServiceTypeName(serviceTypeName);
+        } else {
+            if (isRefresh == 1) {
+                serviceList = serviceDAO.getServiceListByServiceTypeName(serviceTypeName);
+            } else
+                serviceList = serviceDAO.getServiceListByNameAndServiceTypeName(serviceName,
+                        serviceTypeName);
         }
-        return null;
+        loadServiceList(serviceList);
+    }
+
+    private void loadServiceList(ArrayList<Service> dataList) {
+        serviceModel.getDataVector().removeAllElements();
+        serviceModel.fireTableDataChanged();
+        for (Service dv : dataList) {
+            Object[] rowData = { dv.getMaDichVu(), dv.getTenDichVu(), dv.getDonViTinh(), dv.getSoLuongTon(), df.format(dv.getGiaBan())};
+            serviceModel.addRow(rowData);
+        }
     }
 
     private void loadRoomListByRoomID(String roomID) {
@@ -708,10 +712,10 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
         modelService.getDataVector().removeAllElements();
         modelService.fireTableDataChanged();
         Double totalPrice = 0.0;
-        lstService.clear();
+        serviceOrderList.clear();
         for (DetailsOfService item : dataList) {
             Service service = item.getMaDichVu();
-            lstService.add(service);
+            serviceOrderList.add(service);
             // hiển thị lại phòng đã chọn lúc đầu
             if (selectedServiceOrderIndex <= -1) {
                 if (selectedServiceOrderIndex == i) {
@@ -735,29 +739,5 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String time = sdf.format(new Date());
         timeLabel.setText(time);
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-
     }
 }
