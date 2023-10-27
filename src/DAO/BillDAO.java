@@ -13,7 +13,7 @@ public class BillDAO {
     public static BillDAO getInstance() {
         return instance;
     }
-    public ArrayList<Bill> getAllStaff(){
+    public ArrayList<Bill> getAllBill(){
         ArrayList<Bill> dsStaff = new ArrayList<Bill>();
         try {
             ConnectDB.getInstance();

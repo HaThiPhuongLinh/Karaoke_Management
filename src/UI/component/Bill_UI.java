@@ -1,8 +1,10 @@
 package UI.component;
 
 import ConnectDB.ConnectDB;
+import DAO.BillDAO;
 import DAO.ReservationFormDAO;
 import DAO.RoomDAO;
+import Entity.Bill;
 import Entity.ReservationForm;
 import UI.CustomUI.Custom;
 
@@ -21,6 +23,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Bill_UI extends JPanel implements ActionListener, MouseListener {
     private  JTextField txtTK;
@@ -31,6 +34,8 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
     private ReservationFormDAO reservationFormDAO;
     private RoomDAO roomDAO;
     private DecimalFormat df = new DecimalFormat("#,###.##");
+    private Bill bill;
+    private BillDAO billDAO;
 
     public Bill_UI(){
         setLayout(null);
@@ -42,6 +47,7 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        billDAO = new BillDAO();
         reservationFormDAO = new ReservationFormDAO();
         roomDAO =new RoomDAO();
         JLabel labelHeader = new JLabel("LẬP HOÁ ĐƠN");
@@ -163,11 +169,12 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
     public void loadPDP() {
         int i = 1;
 
-        for (ReservationForm rsvf :reservationFormDAO.getAllForm()) {
-            String date = formatDate(rsvf.getThoiGianDat());
-
-            Object[] rowData = {i, rsvf.getMaPhong().getMaPhong(), rsvf.getMaPhong().getLoaiPhong().getTenLoaiPhong(), date, df.format(rsvf.getMaPhong().getGiaPhong())};
-            modelTablePDP.addRow(rowData);
+        for (Bill bill :billDAO.getAllBill()) {
+            String date = formatDate(bill.getNgayGioDat());
+if(bill.getTinhTrangHD()==0) {
+    Object[] rowData = {i, bill.getMaPhong().getMaPhong(), bill.getMaPhong().getLoaiPhong().getTenLoaiPhong(), date, df.format(bill.getMaPhong().getGiaPhong())};
+    modelTablePDP.addRow(rowData);
+}
             i++;
         }
     }
