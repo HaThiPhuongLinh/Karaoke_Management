@@ -3,17 +3,16 @@ package UI.component;
 import ConnectDB.ConnectDB;
 import DAO.BillDAO;
 import DAO.ReservationFormDAO;
+import DAO.DetailOfServiceDAO;
 import DAO.RoomDAO;
 import Entity.Bill;
-import Entity.ReservationForm;
+import Entity.DetailsOfService;
 import UI.CustomUI.Custom;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,6 +25,8 @@ import java.util.Date;
 import java.util.List;
 
 public class Bill_UI extends JPanel implements ActionListener, MouseListener {
+    private  JTable tblPDP;
+    private  DefaultTableModel modelTableHD;
     private  JTextField txtTK;
     private  JButton btnLap;
     private  JButton btnTim;
@@ -36,6 +37,9 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
     private DecimalFormat df = new DecimalFormat("#,###.##");
     private Bill bill;
     private BillDAO billDAO;
+    private List<DetailsOfService> detailsOfServiceList;
+    private  DetailOfServiceDAO ctdv_dao;
+    private ArrayList<DetailsOfService> ctdv;
 
     public Bill_UI(){
         setLayout(null);
@@ -50,6 +54,7 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
         billDAO = new BillDAO();
         reservationFormDAO = new ReservationFormDAO();
         roomDAO =new RoomDAO();
+        ctdv_dao = new DetailOfServiceDAO();
         JLabel labelHeader = new JLabel("LẬP HOÁ ĐƠN");
         labelHeader.setBounds(520, 10, 1175, 40);
         labelHeader.setFont(new Font("Arial", Font.BOLD, 25));
@@ -108,7 +113,7 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
         panelDSHD.setOpaque(false);
 
         String[] colsHD = { "STT", "Mã Dịch Vụ", "Tên Dịch Vụ","Số Lượng Đặt","Giá Dịch Vụ","Tổng Tiền" };
-        DefaultTableModel modelTableHD = new DefaultTableModel(colsHD, 0) ;
+         modelTableHD = new DefaultTableModel(colsHD, 0) ;
         JScrollPane scrollPaneHD;
 
         JTable tableHD = new JTable(modelTableHD);
@@ -139,14 +144,14 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
         modelTablePDP = new DefaultTableModel(colsCTHD, 0) ;
         JScrollPane scrollPaneCTHD;
 
-        JTable tableCTHD = new JTable(modelTablePDP);
-        tableCTHD.setFont(new Font("Arial", Font.BOLD, 14));
-        tableCTHD.setBackground(new Color(255, 255, 255, 0));
-        tableCTHD.setForeground(new Color(255, 255, 255));
-        tableCTHD.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-        tableCTHD.getTableHeader().setForeground(Color.BLUE);
+       tblPDP = new JTable(modelTablePDP);
+        tblPDP.setFont(new Font("Arial", Font.BOLD, 14));
+        tblPDP.setBackground(new Color(255, 255, 255, 0));
+        tblPDP.setForeground(new Color(255, 255, 255));
+        tblPDP.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
+        tblPDP.getTableHeader().setForeground(Color.BLUE);
 
-        panelCTHD.add(scrollPaneCTHD = new JScrollPane(tableCTHD,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
+        panelCTHD.add(scrollPaneCTHD = new JScrollPane(tblPDP,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
                 BorderLayout.CENTER);
         scrollPaneCTHD.setBounds(10,20,694,220);
         scrollPaneCTHD.setOpaque(false);
@@ -154,19 +159,30 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
         scrollPaneCTHD.getViewport().setBackground(Color.WHITE);
         panelFull.add(panelCTHD);
         btnTim.addActionListener(this);
-        loadPDP();
+        loadHD();
         //
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/images/background.png"));
         backgroundLabel = new JLabel(backgroundImage);
         backgroundLabel.setBounds(0, 0, getWidth(), getHeight());
         add(backgroundLabel);
+        tblPDP.addMouseListener(this);
     }
     private String formatDate(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         return sdf.format(date);
     }
+    public void loadCTDV(){
+        modelTableHD.setRowCount(0);
+        int i = 1;
+        for (DetailsOfService ctdv : detailsOfServiceList) {
+            Double tongtien = ctdv.getGiaBan()*ctdv.getSoLuong();
+            modelTableHD.addRow(new Object[] { i,ctdv.getMaDichVu().getMaDichVu(), ctdv.getMaDichVu().getTenDichVu(), ctdv.getMaDichVu().getSoLuongTon(),
+                    df.format(ctdv.getMaDichVu().getGiaBan()), df.format(tongtien) });
+            i++;
+        }
+    }
 
-    public void loadPDP() {
+    public void loadHD() {
         int i = 1;
 
         for (Bill bill :billDAO.getAllBill()) {
@@ -211,6 +227,14 @@ if(bill.getTinhTrangHD()==0) {
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        Object o = e.getSource();
+        if(o.equals(tblPDP)){
+            int row = tblPDP.getSelectedRow();
+            String maPhong = modelTablePDP.getValueAt(row,1).toString();
+            ctdv = ctdv_dao.getDetailsOfServiceListByRoomId(maPhong);
+            loadCTDV();
+
+        }
 
     }
 

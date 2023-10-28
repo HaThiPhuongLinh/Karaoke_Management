@@ -17,6 +17,7 @@ public class Bill {
     private int tinhTrangHD;
     private String khuyenMai;
 
+
     private List<DetailsOfService> lstDetails;
 
     public Bill(String maHoaDon){
