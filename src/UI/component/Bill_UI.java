@@ -8,7 +8,7 @@ import DAO.RoomDAO;
 import Entity.Bill;
 import Entity.DetailsOfService;
 import UI.CustomUI.Custom;
-
+import Entity.ReservationForm;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.List;
 
 public class Bill_UI extends JPanel implements ActionListener, MouseListener {
+    private  JTable tableHD;
     private  JTable tblPDP;
     private  DefaultTableModel modelTableHD;
     private  JTextField txtTK;
@@ -37,9 +38,9 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
     private DecimalFormat df = new DecimalFormat("#,###.##");
     private Bill bill;
     private BillDAO billDAO;
-    private List<DetailsOfService> detailsOfServiceList;
+
     private  DetailOfServiceDAO ctdv_dao;
-    private ArrayList<DetailsOfService> ctdv;
+    private ArrayList<DetailsOfService> dsCTDV;
 
     public Bill_UI(){
         setLayout(null);
@@ -66,7 +67,7 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
         panelFull.setBorder(new TitledBorder(
                 new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "",
                 TitledBorder.LEADING, TitledBorder.TOP));
-        panelFull.setBounds(10,50,1245,670);
+        panelFull.setBounds(10,50,1245,690);
         panelFull.setOpaque(false);
         add(panelFull);
 
@@ -102,7 +103,7 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
         btnLap = new JButton("Lập Hóa Đơn");
         btnLap.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnLap);
-        btnLap.setBounds(150, 230, 200, 50);
+        btnLap.setBounds(100, 230, 200, 50);
         panelFull.add(btnLap);
 
         JPanel panelDSHD = new JPanel();
@@ -116,13 +117,14 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
          modelTableHD = new DefaultTableModel(colsHD, 0) ;
         JScrollPane scrollPaneHD;
 
-        JTable tableHD = new JTable(modelTableHD);
+         tableHD = new JTable(modelTableHD);
         tableHD.setFont(new Font("Arial", Font.BOLD, 14));
         tableHD.setBackground(new Color(255, 255, 255, 0));
         tableHD.setForeground(new Color(255, 255, 255));
         tableHD.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
         tableHD.getTableHeader().setForeground(Color.BLUE);
 //        tableLDV.getTableHeader().setBackground(new Color(255, 255, 255));
+        Custom.getInstance().setCustomTable(tableHD);
 
         panelDSHD.add(scrollPaneHD = new JScrollPane(tableHD,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
                 BorderLayout.CENTER);
@@ -137,10 +139,10 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
         panelCTHD.setLayout(null);
         panelCTHD.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Danh Sách Các Phòng Đang Được Dùng",
                 TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
-        panelCTHD.setBounds(500, 55, 714, 250);
+        panelCTHD.setBounds(420, 55, 789, 250);
         panelCTHD.setOpaque(false);
 
-        String[] colsCTHD = { "STT","Mã Phòng", "Loại Phòng","Giờ Vào","Giá Phòng" };
+        String[] colsCTHD = { "STT","Mã Phòng", "Loại Phòng","Tên KH","Giờ Vào","Giá Phòng" };
         modelTablePDP = new DefaultTableModel(colsCTHD, 0) ;
         JScrollPane scrollPaneCTHD;
 
@@ -150,10 +152,11 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
         tblPDP.setForeground(new Color(255, 255, 255));
         tblPDP.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
         tblPDP.getTableHeader().setForeground(Color.BLUE);
+        Custom.getInstance().setCustomTable(tblPDP);
 
         panelCTHD.add(scrollPaneCTHD = new JScrollPane(tblPDP,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
                 BorderLayout.CENTER);
-        scrollPaneCTHD.setBounds(10,20,694,220);
+        scrollPaneCTHD.setBounds(10,20,771,220);
         scrollPaneCTHD.setOpaque(false);
         scrollPaneCTHD.getViewport().setOpaque(false);
         scrollPaneCTHD.getViewport().setBackground(Color.WHITE);
@@ -174,9 +177,9 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
     public void loadCTDV(){
         modelTableHD.setRowCount(0);
         int i = 1;
-        for (DetailsOfService ctdv : detailsOfServiceList) {
+        for (DetailsOfService ctdv : dsCTDV) {
             Double tongtien = ctdv.getGiaBan()*ctdv.getSoLuong();
-            modelTableHD.addRow(new Object[] { i,ctdv.getMaDichVu().getMaDichVu(), ctdv.getMaDichVu().getTenDichVu(), ctdv.getMaDichVu().getSoLuongTon(),
+            modelTableHD.addRow(new Object[] { i,ctdv.getMaDichVu().getMaDichVu(), ctdv.getMaDichVu().getTenDichVu(), ctdv.getSoLuong(),
                     df.format(ctdv.getMaDichVu().getGiaBan()), df.format(tongtien) });
             i++;
         }
@@ -188,7 +191,7 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
         for (Bill bill :billDAO.getAllBill()) {
             String date = formatDate(bill.getNgayGioDat());
 if(bill.getTinhTrangHD()==0) {
-    Object[] rowData = {i, bill.getMaPhong().getMaPhong(), bill.getMaPhong().getLoaiPhong().getTenLoaiPhong(), date, df.format(bill.getMaPhong().getGiaPhong())};
+    Object[] rowData = {i, bill.getMaPhong().getMaPhong(), bill.getMaPhong().getLoaiPhong().getTenLoaiPhong(),bill.getMaKH().getTenKhachHang(), date, df.format(bill.getMaPhong().getGiaPhong())};
     modelTablePDP.addRow(rowData);
 }
             i++;
@@ -197,30 +200,35 @@ if(bill.getTinhTrangHD()==0) {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+                          
 //        Object o = e.getSource();
-//        String txtMaP = txtTK.getText();
-//        ArrayList<ReservationForm> rsvf = (ArrayList<ReservationForm>) reservationFormDAO.getReservationFormByRoomId(txtMaP);
-//        if (txtTK.getText().trim().equals("") ) {
-//            JOptionPane.showMessageDialog(this, "Bạn phải nhập thông tin tìm kiếm");
-//            modelTablePDP.getDataVector().removeAllElements();
-//            loadPDP();
-//        } else if (!txtTK.getText().trim().equals("")) {
-//            modelTablePDP.getDataVector().removeAllElements();
-//            int i = 1;
+//        if(o.equals(btnTim)) {
 //
-//            if (rsvf.size() != 0) {
-//                for (ReservationForm reservationForm : rsvf) {
-//                    String date = formatDate(reservationForm.getThoiGianDat());
-//
-//                    Object[] rowData = {i, reservationForm.getMaPhong().getMaPhong(), reservationForm.getMaPhong().getLoaiPhong().getTenLoaiPhong(), date, df.format(reservationForm.getMaPhong().getGiaPhong())};
-//                    modelTablePDP.addRow(rowData);
-//                    i++;
-//                }
-//            } else {
-//                JOptionPane.showMessageDialog(this, "Không có phòng đang được sử dụng khớp với thông tin tìm kiếm");
-//                txtTK.selectAll();
-//                txtTK.requestFocus();
+//            if (txtTK.getText().trim().equals("")) {
+//                JOptionPane.showMessageDialog(this, "Bạn phải nhập thông tin tìm kiếm");
+//                modelTablePDP.getDataVector().removeAllElements();
+//                loadHD();
 //            }
+//            else if (!txtTK.getText().trim().equals("")) {
+//                modelTablePDP.getDataVector().removeAllElements();
+//
+//                String txtMaP = txtTK.getText();
+//                ReservationForm rsvf = reservationFormDAO.getFormByRoomID(txtMaP);
+//
+//
+//                    String date = formatDate(rsvf.getThoiGianDat());
+//
+//                    Object[] rowData = {1, rsvf.getMaPhong().getMaPhong(), rsvf.getMaPhong().getLoaiPhong().getTenLoaiPhong(), date, df.format(rsvf.getMaPhong().getGiaPhong())};
+//                    modelTablePDP.addRow(rowData);
+//
+//
+//            }
+//            else {
+//                    JOptionPane.showMessageDialog(this, "Không có phòng đang được sử dụng khớp với thông tin tìm kiếm");
+//                    txtTK.selectAll();
+//                    txtTK.requestFocus();
+//                }
+//
 //        }
 
     }
@@ -231,7 +239,7 @@ if(bill.getTinhTrangHD()==0) {
         if(o.equals(tblPDP)){
             int row = tblPDP.getSelectedRow();
             String maPhong = modelTablePDP.getValueAt(row,1).toString();
-            ctdv = ctdv_dao.getDetailsOfServiceListByRoomId(maPhong);
+            dsCTDV = ctdv_dao.getDetailsOfServiceListByRoomId(maPhong);
             loadCTDV();
 
         }
