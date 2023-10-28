@@ -66,7 +66,7 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
         customerDAO = new CustomerDAO();
         reservationFormDAO = new ReservationFormDAO();
         roomDAO = new RoomDAO();
-        billDAO= new BillDAO();
+        billDAO = new BillDAO();
 
         timeNow = new JPanel();
         timeNow.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "", TitledBorder.LEADING, TitledBorder.TOP));
@@ -429,7 +429,8 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
                             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
                             txtStart.setText(sdf.format(bill.getNgayGioDat()));
                         }
-                    } if (roomActiveE.getTinhTrang().equalsIgnoreCase("Trống")) {
+                    }
+                    if (roomActiveE.getTinhTrang().equalsIgnoreCase("Trống")) {
                         txtName.setText("");
                         txtStart.setText("");
                     }
@@ -604,16 +605,12 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
                 if (room == null) {
                     room = new Room();
                 }
-                if (room.getTinhTrang().equalsIgnoreCase("Chờ")) {
-                    JOptionPane.showMessageDialog(this, "Phòng đã có lượt chờ. Vui lòng chọn phòng khác");
-                } else {
-                    PresetRoom presetRoom = PresetRoom.getInstance();
-                    presetRoom.setKaraokeBookingUI(this);
-                    presetRoom.setVisible(true);
-                    presetRoom.setRoomID(roomID);
-                    ArrayList<Room> roomList = roomDAO.getRoomList();
-                    KaraokeBooking_UI.getInstance().LoadRoomList(roomList);
-                }
+                PresetRoom presetRoom = PresetRoom.getInstance();
+                presetRoom.setKaraokeBookingUI(this);
+                presetRoom.setVisible(true);
+                presetRoom.setRoomID(roomID);
+                ArrayList<Room> roomList = roomDAO.getRoomList();
+                KaraokeBooking_UI.getInstance().LoadRoomList(roomList);
             }
         }
         if (o.equals(btnForm)) {

@@ -1,10 +1,13 @@
 package DAO;
 
+import Entity.Customer;
+import Entity.ReservationForm;
 import Entity.Room;
 
 import java.sql.*;
 
 import ConnectDB.ConnectDB;
+import Entity.Staff;
 
 import java.util.ArrayList;
 

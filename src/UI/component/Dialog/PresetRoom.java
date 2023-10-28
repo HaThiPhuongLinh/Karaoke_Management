@@ -226,14 +226,22 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
                 if (room != null) {
                     if (room.getTinhTrang().equalsIgnoreCase("Đang sử dụng")) {
                         LocalDateTime minValidTime = currentDateTime.plusHours(2);
+
+                        ReservationForm existingForm = reservationFormDAO.getFormByRoomID(roomID);
+                        if (existingForm != null) {
+                            LocalDateTime previousBookingTime = existingForm.getThoiGianDat().toLocalDateTime();
+                            minValidTime = previousBookingTime.plusHours(4);
+                        }
+
                         if (selectedDateTime.isBefore(minValidTime)) {
-                            JOptionPane.showMessageDialog(this, "Phòng đang sử dụng. Vui lòng đặt sau 2 tiếng kể từ thời điểm hiện tại.");
+                            JOptionPane.showMessageDialog(this, "Phòng đang sử dụng hoặc đã có phiếu đặt. Vui lòng đặt sau giờ hợp lệ.");
                             return;
                         }
                     } else {
                         ReservationForm existingForm = reservationFormDAO.getFormByRoomID(roomID);
                         if (existingForm != null) {
-                            LocalDateTime minValidTime = existingForm.getThoiGianDat().toLocalDateTime().plusHours(4);
+                            LocalDateTime previousBookingTime = existingForm.getThoiGianDat().toLocalDateTime();
+                            LocalDateTime minValidTime = previousBookingTime.plusHours(4);
                             if (selectedDateTime.isBefore(minValidTime)) {
                                 JOptionPane.showMessageDialog(this, "Phòng đã có phiếu đặt. Vui lòng đặt sau 4 tiếng kể từ thời gian đặt trước đó.");
                                 return;
@@ -275,6 +283,9 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
         boolean resultForm = reservationFormDAO.addReservationForm(form);
 
         if (resultForm) {
+            if (room.getTinhTrang().equalsIgnoreCase("Trống")) {
+                roomDAO.updateRoomStatus(roomID, "Chờ");
+            }
             JOptionPane.showMessageDialog(this, "Cho thuê phòng thành công");
             ArrayList<Room> yourListOfRooms = roomDAO.getRoomList();
             main.LoadRoomList(yourListOfRooms);

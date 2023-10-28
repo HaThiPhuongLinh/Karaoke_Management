@@ -207,7 +207,7 @@ public class ReservationFormDAO {
         ResultSet rs = null;
 
         try {
-            String sql = "SELECT * FROM PhieuDatPhong WHERE maPhong = ? ORDER BY thoiGianDat DESC LIMIT 1";
+            String sql = "SELECT TOP 1 * FROM PhieuDatPhong WHERE maPhong = ? ORDER BY thoiGianDat DESC";
             statement = con.prepareStatement(sql);
             statement.setString(1, roomID);
             rs = statement.executeQuery();
@@ -238,5 +238,4 @@ public class ReservationFormDAO {
 
         return reservationForm;
     }
-
 }
