@@ -233,34 +233,6 @@ public class DetailOfServiceDAO {
 
         return dos;
     }
-//    public ArrayList<DetailsOfService> getChiTietDVByMaHDDV(String maHD) {
-//        ArrayList<DetailsOfService> dataList = new ArrayList<DetailsOfService>();
-//        ConnectDB.getInstance();
-//        PreparedStatement stmt = null;
-//        try {
-//            Connection con = ConnectDB.getConnection();
-//            String sql ="select * from ChiTietDichVu join DichVu on ChiTietDichVu.maDichVu = DichVu.maDichVu where maHoaDon = ?";
-//            //"select * from ChiTietDV join DichVu on chiTietDV.maDV = DichVu.maDV where maHDDV = ?";
-//            stmt = con.prepareStatement(sql);
-//            stmt.setString(1, maHD);
-//
-//            ResultSet rs = stmt.executeQuery();
-//            while (rs.next()) {
-//                Bill maHoaDon = new Bill(rs.getString("maHoaDon"));
-//                Service maDichVu = new Service(rs.getString("maDichVu"));
-//                int soLuong = rs.getInt("soLuong");
-//                double donGia = rs.getDouble("giaBan");
-//
-//                dos = new DetailsOfService(maHoaDon, maDichVu, soLuong, donGia);
-//                dataList.add(ctdv);
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return dataList;
-//    }
-
-
 
     public boolean updateServiceDetail(DetailsOfService detailsOfService, int soLuongDat, String maHoaDon) {
         ConnectDB.getInstance();
