@@ -44,7 +44,7 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
 
         //phan viet code
         JLabel headerLabel = new JLabel("THỐNG KÊ KHÁCH HÀNG");
-        headerLabel.setBounds(470, 10, 1175, 40);
+        headerLabel.setBounds(570, 10, 1175, 40);
         headerLabel.setFont(new Font("Arial", Font.BOLD, 25));
         headerLabel.setForeground(Color.WHITE);
         Component add = add(headerLabel);
@@ -72,7 +72,7 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
         JPanel panel1 =  new JPanel();
         panel1.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "THÔNG TIN THỐNG KÊ",
                 TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
-        panel1.setBounds(10, 70, 1120, 620);
+        panel1.setBounds(10, 70, 1245, 670);
         panel1.setOpaque(false);
         add(panel1);
 
@@ -81,30 +81,30 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
         //        Từ ngày
         labelTuNgay = new JLabel("Từ ngày:");
         labelTuNgay.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelTuNgay.setBounds(120, 100, 120, 30);
+        labelTuNgay.setBounds(150, 100, 120, 30);
         labelTuNgay.setForeground(Color.WHITE);
         add(labelTuNgay);
 
         pickerTuNgay = new DatePicker(150);
         pickerTuNgay.setOpaque(false);
-        pickerTuNgay.setBounds(200, 100, 300, 30);
+        pickerTuNgay.setBounds(230, 100, 300, 30);
         add(pickerTuNgay);
 //      Đến ngày
         lblDenNgay = new JLabel("Đến ngày: ");
         lblDenNgay.setFont(new Font("Arial", Font.PLAIN, 14));
-        lblDenNgay.setBounds(420, 100, 120, 30);
+        lblDenNgay.setBounds(450, 100, 120, 30);
         lblDenNgay.setForeground(Color.WHITE);
         add(lblDenNgay);
 
         pickerDenNgay = new DatePicker(150);
         pickerDenNgay.setOpaque(false);
-        pickerDenNgay.setBounds(500, 100, 300, 30);
+        pickerDenNgay.setBounds(530, 100, 300, 30);
         add(pickerDenNgay);
 
 //      Lọc theo
         JLabel labelLocTheo = new JLabel("Lọc theo:");
         labelLocTheo.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelLocTheo.setBounds(720, 100, 150, 30);
+        labelLocTheo.setBounds(750, 100, 150, 30);
         labelLocTheo.setForeground(Color.WHITE);
         add(labelLocTheo);
 
@@ -115,7 +115,7 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
         comboBoxLocTheo.addItem("3 tháng gần nhất");
         comboBoxLocTheo.addItem("6 tháng gần nhất");
         comboBoxLocTheo.addItem("1 năm gần nhất");
-        comboBoxLocTheo.setBounds(800,100,200,30);
+        comboBoxLocTheo.setBounds(830,100,200,30);
         Custom.setCustomComboBox(comboBoxLocTheo);
         add(comboBoxLocTheo);
 
@@ -123,14 +123,14 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
         btnThongKe = new JButton("Thống kê");
         btnThongKe.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnThongKe);
-        btnThongKe.setBounds(400, 160, 150, 30);
+        btnThongKe.setBounds(430, 160, 150, 30);
         add(btnThongKe);
 
         //        btn làm mới
         btnLamMoi = new JButton("Làm mới");
         btnLamMoi.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnLamMoi);
-        btnLamMoi.setBounds(600, 160, 150, 30);
+        btnLamMoi.setBounds(630, 160, 150, 30);
         add(btnLamMoi);
 
 
@@ -139,7 +139,7 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
         panelDSDV.setLayout(null);
         panelDSDV.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DANH SÁCH KHÁCH HÀNG",
                 TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
-        panelDSDV.setBounds(5, 130, 1110, 480);
+        panelDSDV.setBounds(5, 130, 1235, 530);
         panelDSDV.setOpaque(false);
 
         String[] colsDV = { "STT", "Mã khách hàng", "Tên khách hàng","Tổng doanh số" };
@@ -157,7 +157,7 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
 
         panelDSDV.add(scrollPaneDV = new JScrollPane(tableDV,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
                 BorderLayout.CENTER);
-        scrollPaneDV.setBounds(10,20,1090,450);
+        scrollPaneDV.setBounds(10,20,1220,500);
         scrollPaneDV.setOpaque(false);
         scrollPaneDV.getViewport().setOpaque(false);
         scrollPaneDV.getViewport().setBackground(Color.WHITE);
@@ -219,6 +219,7 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
         for (Bill bill : listBill) {
             String s1 = "";
             for (Customer kh : list){
+
                 if (bill.getMaKH().getMaKhachHang().equals(kh.getMaKhachHang())){
                     s1=kh.getTenKhachHang();
                 }
