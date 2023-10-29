@@ -6,9 +6,9 @@ import Entity.DetailsOfService;
 import Entity.Service;
 
 import java.sql.*;
-import java.util.ArrayList;
+//import java.sql.Date;
+import java.util.*;
 import java.util.Date;
-import java.util.List;
 
 public class DetailOfServiceDAO {
     private static DetailOfServiceDAO instance = new DetailOfServiceDAO();
@@ -49,12 +49,14 @@ public class DetailOfServiceDAO {
         Connection con = ConnectDB.getConnection();
         try {
             String sql = "SELECT ct.* FROM ChiTietDichVu ct JOIN HoaDon hd ON ct.maHoaDon = hd.maHoaDon WHERE hd.ngayGioTra >= ? AND hd.ngayGioTra <= ?";
+//            String sql = "SELECT ct.maDichVu, SUM(ct.soLuong) as soLuongBan FROM ChiTietDichVu ct JOIN HoaDon hd ON ct.maHoaDon = hd.maHoaDon WHERE hd.ngayGioTra >= ? AND hd.ngayGioTra <= ? GROUP BY ct.maDichVu";
             statement = con.prepareStatement(sql);
 
             statement.setDate(1, (java.sql.Date) tuNgay);
             statement.setDate(2, (java.sql.Date) denNgay);
 
             ResultSet rs = statement.executeQuery();
+
             while (rs.next()) {
                 Bill maHoaDon = new Bill(rs.getString(1));
                 Service maDichVu = new Service(rs.getString(2));
@@ -62,7 +64,6 @@ public class DetailOfServiceDAO {
                 double donGia = rs.getDouble(4);
 
                 DetailsOfService dos = new DetailsOfService(maHoaDon, maDichVu, soLuong, donGia);
-
                 dataList.add(dos);
             }
         } catch (SQLException e) {

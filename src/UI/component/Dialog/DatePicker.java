@@ -158,4 +158,22 @@ public class DatePicker extends JPanel implements ActionListener {
         txt.setText(sdf.format(date.getTime()));
         return date;
     }
+
+    /**
+     * Trả về ngày được hiển thị dạng {@code java.sql.Date}
+     *
+     * @return {@code java.sql.Date}: trả bề ngày được hiển thị
+     */
+    public Date getValueSqlDate() {
+        String strDate = txt.getText().trim();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        java.util.Date date = null;
+        try {
+            date = sdf.parse(strDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Date sqlDate = new Date(date.getTime());
+        return sqlDate;
+    }
 }

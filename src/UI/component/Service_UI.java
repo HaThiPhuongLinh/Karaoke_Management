@@ -50,7 +50,7 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
 
         //phan viet code
         JLabel headerLabel = new JLabel("QUẢN LÝ DỊCH VỤ");
-        headerLabel.setBounds(470, 10, 1175, 40);
+        headerLabel.setBounds(570, 10, 1175, 40);
         headerLabel.setFont(new Font("Arial", Font.BOLD, 25));
         headerLabel.setForeground(Color.WHITE);
         Component add = add(headerLabel);
@@ -78,7 +78,7 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
         JPanel panel1 =  new JPanel();
         panel1.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DỊCH VỤ",
                 TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
-        panel1.setBounds(10, 70, 1120, 620);
+        panel1.setBounds(10, 70, 1245, 670);
         panel1.setOpaque(false);
         add(panel1);
 
@@ -87,72 +87,72 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
         //        Mã dịch vụ
         JLabel labelMaDichVu = new JLabel("Mã dịch vụ:");
         labelMaDichVu.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelMaDichVu.setBounds(60, 50, 150, 30);
+        labelMaDichVu.setBounds(90, 50, 150, 30);
         labelMaDichVu.setForeground(Color.WHITE);
         panel1.add(labelMaDichVu);
 
         textFieldMaDichVu = new JTextField();
-        textFieldMaDichVu.setBounds(160, 50, 170, 30);
+        textFieldMaDichVu.setBounds(190, 50, 170, 30);
         textFieldMaDichVu.setColumns(10);
         panel1.add(textFieldMaDichVu);
 
 //      Tên dịch vụ
         JLabel labelTenDichVu = new JLabel("Tên dịch vụ:");
         labelTenDichVu.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelTenDichVu.setBounds(60, 100, 150, 30);
+        labelTenDichVu.setBounds(90, 100, 150, 30);
         labelTenDichVu.setForeground(Color.WHITE);
         panel1.add(labelTenDichVu);
 
         textFieldTenDichVu = new JTextField();
-        textFieldTenDichVu.setBounds(160, 100, 170, 30);
+        textFieldTenDichVu.setBounds(190, 100, 170, 30);
         textFieldTenDichVu.setColumns(10);
         panel1.add(textFieldTenDichVu);
         //      Loại dịch vụ
         JLabel labelLDV = new JLabel("Loại dịch vụ:");
         labelLDV.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelLDV.setBounds(420, 50, 150, 30);
+        labelLDV.setBounds(450, 50, 150, 30);
         labelLDV.setForeground(Color.WHITE);
         panel1.add(labelLDV);
 
         comboBoxLDV = new JComboBox<String>();
         comboBoxLDV.addItem(" ");
-        comboBoxLDV.setBounds(520, 50, 170, 30);
+        comboBoxLDV.setBounds(550, 50, 170, 30);
         Custom.setCustomComboBox(comboBoxLDV);
         panel1.add(comboBoxLDV);
 
         //      Đơn vị tính
         JLabel labelDonViTinh = new JLabel("Đơn vị tính:");
         labelDonViTinh.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelDonViTinh.setBounds(420, 100, 150, 30);
+        labelDonViTinh.setBounds(450, 100, 150, 30);
         labelDonViTinh.setForeground(Color.WHITE);
         panel1.add(labelDonViTinh);
 
         textFieldDonViTinh = new JTextField();
-        textFieldDonViTinh.setBounds(520, 100, 170, 30);
+        textFieldDonViTinh.setBounds(550, 100, 170, 30);
         textFieldDonViTinh.setColumns(10);
         panel1.add(textFieldDonViTinh);
 
         //      Số lượng tồn
         JLabel labelSoLuongTon = new JLabel("Số lượng tồn:");
         labelSoLuongTon.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelSoLuongTon.setBounds(780, 50, 150, 30);
+        labelSoLuongTon.setBounds(830, 50, 150, 30);
         labelSoLuongTon.setForeground(Color.WHITE);
         panel1.add(labelSoLuongTon);
 
         textFieldSLT = new JTextField();
-        textFieldSLT.setBounds(880,50,170,30);
+        textFieldSLT.setBounds(950,50,170,30);
 //        textFieldSLT.setColumns(10);
         panel1.add(textFieldSLT);
 
         //      Giá bán
         JLabel labelGiaBan = new JLabel("Giá bán:");
         labelGiaBan.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelGiaBan.setBounds(780, 100, 150 , 30);
+        labelGiaBan.setBounds(830, 100, 150 , 30);
         labelGiaBan.setForeground(Color.WHITE);
         panel1.add(labelGiaBan);
 
         textFieldGiaBan = new JTextField();
-        textFieldGiaBan.setBounds(880,100,170,30);
+        textFieldGiaBan.setBounds(950,100,170,30);
 //        textFieldGiaBan.setColumns(10);
         panel1.add(textFieldGiaBan);
 
@@ -168,28 +168,28 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
         btnThem = new JButton("Thêm");
         btnThem.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnThem);
-        btnThem.setBounds(500, 160, 100, 30);
+        btnThem.setBounds(550, 160, 100, 30);
         panel1.add(btnThem);
 
         //        btn Xóa
         btnXoa = new JButton("Xóa");
         btnXoa.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnXoa);
-        btnXoa.setBounds(650, 160, 100, 30);
+        btnXoa.setBounds(700, 160, 100, 30);
         panel1.add(btnXoa);
 
         //        btn sửa
         btnSua = new JButton("Sửa");
         btnSua.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnSua);
-        btnSua.setBounds(800, 160, 100, 30);
+        btnSua.setBounds(850, 160, 100, 30);
         panel1.add(btnSua);
 
         //        btn làm mới
         btnlamMoi = new JButton("Làm mới");
         btnlamMoi.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnlamMoi);
-        btnlamMoi.setBounds(950, 160, 100, 30);
+        btnlamMoi.setBounds(1000, 160, 100, 30);
         panel1.add(btnlamMoi);
 
 //      danh sách dịch vụ
@@ -197,7 +197,7 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
         panelDSDV.setLayout(null);
         panelDSDV.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DANH SÁCH DỊCH VỤ",
                 TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
-        panelDSDV.setBounds(5, 210, 1110, 405);
+        panelDSDV.setBounds(5, 210, 1235, 455);
         panelDSDV.setOpaque(false);
 
         String[] colsDV = { "STT", "Mã dịch vụ", "Tên dịch vụ","Tên loại dịch vụ","Đơn vị tính","Số lượng tồn","Giá bán"};
@@ -215,7 +215,7 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
 
         panelDSDV.add(scrollPaneDV = new JScrollPane(tableDV,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
                 BorderLayout.CENTER);
-        scrollPaneDV.setBounds(10,20,1090,375);
+        scrollPaneDV.setBounds(10,20,1220,425);
         scrollPaneDV.setOpaque(false);
         scrollPaneDV.getViewport().setOpaque(false);
         scrollPaneDV.getViewport().setBackground(Color.WHITE);
