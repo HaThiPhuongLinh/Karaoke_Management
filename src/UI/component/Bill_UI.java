@@ -1,6 +1,7 @@
 package UI.component;
 
 import ConnectDB.ConnectDB;
+import Entity.Room;
 import DAO.BillDAO;
 import DAO.ReservationFormDAO;
 import DAO.DetailOfServiceDAO;
@@ -9,6 +10,8 @@ import Entity.Bill;
 import Entity.DetailsOfService;
 import UI.CustomUI.Custom;
 import Entity.ReservationForm;
+import UI.component.Dialog.DialogBill;
+
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
@@ -25,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.sql.Timestamp;
 
 public class Bill_UI extends JPanel implements ActionListener, MouseListener {
     private  JTable tableHD;
@@ -43,6 +47,8 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
 
     private  DetailOfServiceDAO ctdv_dao;
     private ArrayList<DetailsOfService> dsCTDV;
+    private Bill rsvf;
+    private static KaraokeBooking_UI main;
 
     public Bill_UI(){
         setLayout(null);
@@ -54,6 +60,7 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        this.main = main;
         billDAO = new BillDAO();
         reservationFormDAO = new ReservationFormDAO();
         roomDAO =new RoomDAO();
@@ -179,6 +186,7 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
         backgroundLabel.setBounds(0, 0, getWidth(), getHeight());
         add(backgroundLabel);
         tblPDP.addMouseListener(this);
+        btnLap.addActionListener(this);
     }
 
     private void reSizeColumnTable() {
@@ -244,39 +252,71 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
             i++;
         }
     }
+    public void setKaraokeBookingUI(KaraokeBooking_UI main) {
+        this.main = main;
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        Object o = e.getSource();
+        if(o.equals(btnTim)) {
+            if (txtTK.getText().trim().equals("")) {
+                JOptionPane.showMessageDialog(this, "Bạn phải nhập thông tin tìm kiếm");
+                modelTablePDP.getDataVector().removeAllElements();
+                loadHD();
+            }
+            else if (!txtTK.getText().trim().equals("")) {
+                modelTablePDP.getDataVector().removeAllElements();
 
-//        Object o = e.getSource();
-//        if(o.equals(btnTim)) {
-//
-//            if (txtTK.getText().trim().equals("")) {
-//                JOptionPane.showMessageDialog(this, "Bạn phải nhập thông tin tìm kiếm");
-//                modelTablePDP.getDataVector().removeAllElements();
-//                loadHD();
-//            }
-//            else if (!txtTK.getText().trim().equals("")) {
-//                modelTablePDP.getDataVector().removeAllElements();
-//
-//                String txtMaP = txtTK.getText();
-//                ReservationForm rsvf = reservationFormDAO.getFormByRoomID(txtMaP);
-//
-//
-//                    String date = formatDate(rsvf.getThoiGianDat());
-//
-//                    Object[] rowData = {1, rsvf.getMaPhong().getMaPhong(), rsvf.getMaPhong().getLoaiPhong().getTenLoaiPhong(), date, df.format(rsvf.getMaPhong().getGiaPhong())};
-//                    modelTablePDP.addRow(rowData);
-//
-//
-//            }
-//            else {
-//                    JOptionPane.showMessageDialog(this, "Không có phòng đang được sử dụng khớp với thông tin tìm kiếm");
-//                    txtTK.selectAll();
-//                    txtTK.requestFocus();
-//                }
-//
-//        }
+                String txtMaP = txtTK.getText();
+                 rsvf =billDAO.getBillByRoomID(txtMaP);
+
+
+                    String date = formatDate(rsvf.getNgayGioDat());
+
+                    Object[] rowData = {1, rsvf.getMaPhong().getMaPhong(), rsvf.getMaPhong().getLoaiPhong().getTenLoaiPhong(), rsvf.getMaKH().getTenKhachHang(),date, df.format(rsvf.getMaPhong().getGiaPhong())};
+                    modelTablePDP.addRow(rowData);
+
+
+            }
+            else {
+                    JOptionPane.showMessageDialog(this, "Không có phòng đang được sử dụng khớp với thông tin tìm kiếm");
+                    txtTK.selectAll();
+                    txtTK.requestFocus();
+                }
+
+        }else if(o.equals(btnLap)){
+            int row = tblPDP.getSelectedRow();
+            String maPhong = modelTablePDP.getValueAt(row,1).toString();
+
+            Bill bill = billDAO.getBillByRoomID(maPhong);
+            if (bill != null) {
+                Room room = roomDAO.getRoomByRoomId(maPhong);
+                if (room == null)
+                    room = new Room();
+                bill.setMaPhong(room);
+                String billId = bill.getMaHoaDon();
+                ArrayList<DetailsOfService> billInfoList = ctdv_dao.getDetailsOfServiceForBill(billId);
+                bill.setLstDetails(billInfoList);
+                long millis = System.currentTimeMillis();
+                Timestamp endTime = new Timestamp(millis);
+                bill.setNgayGioTra(endTime);
+                Double totalPriceBill = bill.getTongTienHD();
+
+                DialogBill winPayment = new DialogBill(bill);
+                winPayment.setModal(true);
+                winPayment.setVisible(true);
+                Boolean isPaid = winPayment.getPaid();
+                if (isPaid) {
+                    ArrayList<Room> yourListOfRooms = roomDAO.getRoomList();
+                    main.LoadRoomList(yourListOfRooms);
+
+                } else {
+                    bill.setNgayGioTra(null);
+                }
+            }
+
+        }
 
     }
 

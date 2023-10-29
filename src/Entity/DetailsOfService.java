@@ -52,4 +52,8 @@ public class DetailsOfService {
         this.soLuong = soLuong;
     }
 
+    public Double tinhTienDichVu() {
+        return giaBan * soLuong;
+    }
+
 }

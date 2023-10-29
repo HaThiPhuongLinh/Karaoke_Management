@@ -277,6 +277,27 @@ public class StaffDAO {
 
         return nextStaffId;
     }
+    public Staff getStaffByBillId(String maHoaDon) {
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        String query = "SELECT NhanVien.* " +
+                "FROM NhanVien " +
+                "INNER JOIN HoaDon ON NhanVien.maNhanVien = HoaDon.maNhanVien " +
+                "WHERE HoaDon.maHoaDon = ?";
+
+        try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
+            preparedStatement.setString(1, maHoaDon);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            if (rs.next()) {
+                Staff staff = new Staff(rs);
+                return staff;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 
 }
