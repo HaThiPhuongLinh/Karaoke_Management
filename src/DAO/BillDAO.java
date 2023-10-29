@@ -156,7 +156,47 @@ public class BillDAO {
         return bill;
     }
 
+//    public int getTotalLineOfBillList(Date fromDate, Date toDate, String staffId) {
+//        String query = "{CALL USP_getTotalLineOfBillListByDate( ? , ? , ? )}";
+//        Object[] params = { fromDate, toDate, staffId };
+//        Object obj = DataProvider.getInstance().executeScalar(query, params);
+//        int result = obj != null ? (int) obj : 0;
+//        return result;
+//    }
 
+    public static int getTotalLineOfBillList(Date startDate, Date endDate) {
+        int totalCount = 0;
+
+        // Thông tin kết nối cơ sở dữ liệu
+//        String url = "jdbc:mysql://localhost:3306/db_name";
+//        String username = "username";
+//        String password = "password";
+
+//        ArrayList<Bill> dataList = new ArrayList<Bill>();
+        ConnectDB.getInstance();
+        PreparedStatement statement = null;
+        Connection con = ConnectDB.getConnection();
+
+        try{
+        // Chuỗi SQL để lấy số lượng hóa đơn trong khoảng thời gian đã chọn
+        String sql = "SELECT COUNT(*) AS total FROM HoaDon WHERE ngayGioTra >= ? AND ngayGioTra <= ?";
+            statement = con.prepareStatement(sql);
+            // Thiết lập các tham số trong câu lệnh SQL
+            statement.setDate(1, (java.sql.Date) startDate);
+            statement.setDate(2, (java.sql.Date) endDate);
+
+            // Thực thi câu lệnh SQL
+            ResultSet rs = statement.executeQuery();
+
+            if (rs.next()) {
+                totalCount = rs.getInt("total");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return totalCount;
+    }
 
     public String generateNextBillId() {
         ConnectDB.getInstance();
