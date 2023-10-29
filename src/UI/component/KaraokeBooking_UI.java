@@ -280,6 +280,11 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
         add(backgroundLabel);
 
         ArrayList<Room> roomList = roomDAO.getRoomList();
+        for (Room room : roomList) {
+            if (room.getTinhTrang().equals("Trong")) {
+                roomDAO.updateRoomStatus(room.getMaPhong(), "Trống");
+            }
+        }
         LoadRoomList(roomList);
 
         cboRoomType.addActionListener(new ActionListener() {

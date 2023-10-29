@@ -269,21 +269,21 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
                 modelTablePDP.getDataVector().removeAllElements();
 
                 String txtMaP = txtTK.getText();
-                 rsvf =billDAO.getBillByRoomID(txtMaP);
+                rsvf =billDAO.getBillByRoomID(txtMaP);
 
 
-                    String date = formatDate(rsvf.getNgayGioDat());
+                String date = formatDate(rsvf.getNgayGioDat());
 
-                    Object[] rowData = {1, rsvf.getMaPhong().getMaPhong(), rsvf.getMaPhong().getLoaiPhong().getTenLoaiPhong(), rsvf.getMaKH().getTenKhachHang(),date, df.format(rsvf.getMaPhong().getGiaPhong())};
-                    modelTablePDP.addRow(rowData);
+                Object[] rowData = {1, rsvf.getMaPhong().getMaPhong(), rsvf.getMaPhong().getLoaiPhong().getTenLoaiPhong(), rsvf.getMaKH().getTenKhachHang(),date, df.format(rsvf.getMaPhong().getGiaPhong())};
+                modelTablePDP.addRow(rowData);
 
 
             }
             else {
-                    JOptionPane.showMessageDialog(this, "Không có phòng đang được sử dụng khớp với thông tin tìm kiếm");
-                    txtTK.selectAll();
-                    txtTK.requestFocus();
-                }
+                JOptionPane.showMessageDialog(this, "Không có phòng đang được sử dụng khớp với thông tin tìm kiếm");
+                txtTK.selectAll();
+                txtTK.requestFocus();
+            }
 
         }else if(o.equals(btnLap)){
             int row = tblPDP.getSelectedRow();
@@ -308,16 +308,13 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
                 winPayment.setVisible(true);
                 Boolean isPaid = winPayment.getPaid();
                 if (isPaid) {
-                    ArrayList<Room> yourListOfRooms = roomDAO.getRoomList();
-                    main.LoadRoomList(yourListOfRooms);
-
+//                    ArrayList<Room> yourListOfRooms = roomDAO.getRoomList();
+////                    main.LoadRoomList(yourListOfRooms);
                 } else {
                     bill.setNgayGioTra(null);
                 }
             }
-
         }
-
     }
 
     @Override

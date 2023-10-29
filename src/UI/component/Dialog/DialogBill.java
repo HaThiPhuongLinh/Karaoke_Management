@@ -8,29 +8,32 @@ import Entity.*;
 import UI.CustomUI.Custom;
 
 import javax.swing.*;
-import java.awt.event.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.border.*;
-import javax.swing.table.*;
-
 //import Event_Handlers.ConvertTime;
 //import Event_Handlers.ExportBill;
 
 
-
 public class DialogBill extends JDialog implements ActionListener {
+    private final String WORKING_DIR = System.getProperty("user.dir");
     private JTextField txtBillId, txtStaffName, txtCustomerName, txtRoomId, txtRoomTypeName, txtRoomPrice, txtStartTime,
             txtEndTime, txtUsedTime, txtTotalPriceService, txtTotalPriceRoom, txtVAT, txtTotalPriceBill;
     private JTable tblTableBillInfo;
     private DefaultTableModel modelTableBillInfo;
     private GradientPaint gra = new GradientPaint(0, 0, new Color(255, 255, 255), getWidth(), 0,
             Color.decode("#FAFFD1"));
-    private JButton btnPayment, btnBack, btnExportPdf, btnExportExcel;
 
 //    private ImageIcon logoApp = new ImageIcon(DialogBill.class.getResource(CustomUI.LOGO_APP));
 //    private ImageIcon backIcon = new ImageIcon(DialogBill.class.getResource(CustomUI.BACK_ICON));
@@ -39,12 +42,11 @@ public class DialogBill extends JDialog implements ActionListener {
 //    private ImageIcon excelIcon = new ImageIcon(DialogBill.class.getResource(CustomUI.EXCEL_ICON));
 //    private ImageIcon logoIcon = new ImageIcon(new ImageIcon(DialogBill.class.getResource(CustomUI.LOGO_ICON))
 //            .getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH));
-
+    private JButton btnPayment, btnBack, btnExportPdf, btnExportExcel;
     private String formatTime = "HH:mm:ss dd/MM/yyyy";
     private DecimalFormat df = new DecimalFormat("#,###.##");
-    private final String WORKING_DIR = System.getProperty("user.dir");
     private String path = WORKING_DIR + "/bill/";
-    private Bill bill =new Bill() ;
+    private Bill bill = new Bill();
     private boolean paid = false;
     private BillDAO billDAO = BillDAO.getInstance();
     private StaffDAO staffDAO = StaffDAO.getInstance();
@@ -57,7 +59,6 @@ public class DialogBill extends JDialog implements ActionListener {
      * @param bill {@code HoaDon}: hóa đơn cần thanh toán
      */
     public DialogBill(Bill bill) {
-
         this.bill = bill;
         Staff staff = null;
         Customer customer = null;
@@ -157,7 +158,7 @@ public class DialogBill extends JDialog implements ActionListener {
         pnTable.setBounds(10, 25, 760, 200);
         pnInfoService.add(pnTable);
 
-        String[] colsBillInfo = { "STT", "Tên dịch vụ ", "SL", "Đơn giá", "Thành tiền" };
+        String[] colsBillInfo = {"STT", "Tên dịch vụ ", "SL", "Đơn giá", "Thành tiền"};
         modelTableBillInfo = new DefaultTableModel(colsBillInfo, 0) {
             @Override
             public boolean isCellEditable(int i, int i1) {
@@ -194,7 +195,7 @@ public class DialogBill extends JDialog implements ActionListener {
         pnMain.add(txtTotalPriceService);
 
         JLabel lblTotalPriceRoom = new JLabel("Tổng tiền giờ:");
-      Custom.getInstance().setCustomLabelBill(lblTotalPriceRoom);
+        Custom.getInstance().setCustomLabelBill(lblTotalPriceRoom);
         lblTotalPriceRoom.setBounds(40, 585, 140, 25);
         pnMain.add(lblTotalPriceRoom);
 
@@ -208,7 +209,7 @@ public class DialogBill extends JDialog implements ActionListener {
         pnMain.add(txtTotalPriceRoom);
 
         JLabel lblVAT = new JLabel("VAT(10%):");
-      Custom.getInstance().setCustomLabelBill(lblVAT);
+        Custom.getInstance().setCustomLabelBill(lblVAT);
         lblVAT.setBounds(40, 610, 140, 25);
         pnMain.add(lblVAT);
 
@@ -243,13 +244,13 @@ public class DialogBill extends JDialog implements ActionListener {
         btnPayment.setBounds(240, 670, 130, 35);
         pnMain.add(btnPayment);
 
-        btnExportPdf = new JButton( "Xuất PDF");
+        btnExportPdf = new JButton("Xuất PDF");
         btnExportPdf.setFont(new Font("Dialog", Font.BOLD, 15));
         btnExportPdf.setBounds(435, 670, 130, 35);
         btnExportPdf.setEnabled(false);
         pnMain.add(btnExportPdf);
 
-        btnExportExcel = new JButton( "Xuất excel");
+        btnExportExcel = new JButton("Xuất excel");
         btnExportExcel.setFont(new Font("Dialog", Font.BOLD, 15));
         btnExportExcel.setBounds(625, 670, 130, 35);
         btnExportExcel.setEnabled(false);
@@ -280,27 +281,27 @@ public class DialogBill extends JDialog implements ActionListener {
         JLabel lblStaffName = new JLabel("Thu ngân:");
         lblStaffName.setBounds(25, 48, 140, 25);
         panel.add(lblStaffName);
-       Custom.getInstance().setCustomLabelBill(lblStaffName);
+        Custom.getInstance().setCustomLabelBill(lblStaffName);
 
         JLabel lblCustomerName = new JLabel("Tên khách hàng:");
         lblCustomerName.setBounds(25, 73, 140, 25);
         panel.add(lblCustomerName);
-       Custom.getInstance().setCustomLabelBill(lblCustomerName);
+        Custom.getInstance().setCustomLabelBill(lblCustomerName);
 
         JLabel lblRoomId = new JLabel("Số phòng:");
         lblRoomId.setBounds(25, 98, 140, 25);
         panel.add(lblRoomId);
-      Custom.getInstance().setCustomLabelBill(lblRoomId);
+        Custom.getInstance().setCustomLabelBill(lblRoomId);
 
         JLabel lblRoomTypeName = new JLabel("Loại phòng:");
         lblRoomTypeName.setBounds(25, 123, 140, 25);
         panel.add(lblRoomTypeName);
-      Custom.getInstance().setCustomLabelBill(lblRoomTypeName);
+        Custom.getInstance().setCustomLabelBill(lblRoomTypeName);
 
         JLabel lblRoomPrice = new JLabel("Giá phòng:");
         lblRoomPrice.setBounds(440, 23, 140, 25);
         panel.add(lblRoomPrice);
-       Custom.getInstance().setCustomLabelBill(lblRoomPrice);
+        Custom.getInstance().setCustomLabelBill(lblRoomPrice);
 
         JLabel lblStartTime = new JLabel("Giờ bắt đầu:");
         lblStartTime.setBounds(440, 48, 140, 25);
@@ -310,7 +311,7 @@ public class DialogBill extends JDialog implements ActionListener {
         JLabel lblEndTime = new JLabel("Giờ kết thúc:");
         lblEndTime.setBounds(440, 73, 140, 25);
         panel.add(lblEndTime);
-       Custom.getInstance().setCustomLabelBill(lblEndTime);
+        Custom.getInstance().setCustomLabelBill(lblEndTime);
 
         JLabel lblUsedTime = new JLabel("Thời gian sử dụng:");
         lblUsedTime.setBounds(440, 98, 140, 25);
@@ -405,24 +406,21 @@ public class DialogBill extends JDialog implements ActionListener {
 //                type = JOptionPane.ERROR_MESSAGE;
 //            }
 //            JOptionPane.showMessageDialog(null, message, "Thông báo", type);
-//          if (o.equals(btnPayment))
-//
-//    {
-//        boolean isPaid = billDAO.makePayment(bill.getMaHoaDon(), bill.getTongTienHD(), bill.getNgayGioTra());
-//        if (isPaid) {
-//            paid = isPaid;
-//            btnExportExcel.setEnabled(true);
-//            btnExportPdf.setEnabled(true);
-//            btnPayment.setEnabled(false);
-//            JOptionPane.showMessageDialog(null, "Thanh toán hóa đơn thành công", "Thông báo",
-//                    JOptionPane.INFORMATION_MESSAGE);
-//        } else {
-//            JOptionPane.showMessageDialog(null, "Lỗi khi thanh toán vui lòng thử lại!!!", "Thông báo",
-//                    JOptionPane.ERROR_MESSAGE);
-//        }
+        if (o.equals(btnPayment)) {
+            boolean isPaid = billDAO.paymentBill(bill.getMaHoaDon(), bill.getNgayGioTra());
+            if (isPaid) {
+                paid = isPaid;
+                btnExportExcel.setEnabled(true);
+                btnExportPdf.setEnabled(true);
+                btnPayment.setEnabled(false);
+                JOptionPane.showMessageDialog(null, "Thanh toán hóa đơn thành công", "Thông báo",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null, "Lỗi khi thanh toán vui lòng thử lại!!!", "Thông báo",
+                        JOptionPane.ERROR_MESSAGE);
+            }
 
-//    }else
-   if (o.equals(btnBack)) {
+        } else if (o.equals(btnBack)) {
             this.dispose();
         }
     }
@@ -497,8 +495,8 @@ public class DialogBill extends JDialog implements ActionListener {
             String quantityStr = df.format(item.getSoLuong());
             String priceStr = df.format(item.getGiaBan());
             String totalPriceStr = df.format(item.tinhTienDichVu());
-            modelTableBillInfo.addRow(new Object[] { addSpaceToString(sttStr), addSpaceToString(service.getTenDichVu()),
-                    addSpaceToString(quantityStr), addSpaceToString(priceStr), addSpaceToString(totalPriceStr) });
+            modelTableBillInfo.addRow(new Object[]{addSpaceToString(sttStr), addSpaceToString(service.getTenDichVu()),
+                    addSpaceToString(quantityStr), addSpaceToString(priceStr), addSpaceToString(totalPriceStr)});
         }
     }
 
@@ -543,10 +541,10 @@ public class DialogBill extends JDialog implements ActionListener {
      * Hiển thị lấy kết quả thanh toán
      *
      * @return {@code boolean}: kết quả thanh toán
-     *         <ul>
-     *         <li>{@code true:} thanh toán thành công</li>
-     *         <li>{@code false:} thanh toán thất bại</li>
-     *         </ul>
+     * <ul>
+     * <li>{@code true:} thanh toán thành công</li>
+     * <li>{@code false:} thanh toán thất bại</li>
+     * </ul>
      */
     public boolean getPaid() {
         return paid;

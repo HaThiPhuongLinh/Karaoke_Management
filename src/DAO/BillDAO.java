@@ -13,7 +13,8 @@ public class BillDAO {
     public static BillDAO getInstance() {
         return instance;
     }
-    public ArrayList<Bill> getAllBill(){
+
+    public ArrayList<Bill> getAllBill() {
         ArrayList<Bill> dsStaff = new ArrayList<Bill>();
         try {
             ConnectDB.getInstance();
@@ -34,7 +35,7 @@ public class BillDAO {
                 int tinhTrang = rs.getInt(7);
                 String khuyenMai = rs.getString(8);
 
-                Bill bill = new Bill(maHoaDon,maNhanVien,maKhachHang,maPhong,ngayGioDat,ngayGioTra,tinhTrang,khuyenMai);
+                Bill bill = new Bill(maHoaDon, maNhanVien, maKhachHang, maPhong, ngayGioDat, ngayGioTra, tinhTrang, khuyenMai);
 
                 dsStaff.add(bill);
             }
@@ -44,7 +45,7 @@ public class BillDAO {
         return dsStaff;
     }
 
-    public ArrayList<Bill> getListBillByDate(Date tuNgay, Date denNgay){
+    public ArrayList<Bill> getListBillByDate(Date tuNgay, Date denNgay) {
         ArrayList<Bill> dsStaff = new ArrayList<Bill>();
         ConnectDB.getInstance();
         PreparedStatement statement = null;
@@ -58,7 +59,7 @@ public class BillDAO {
             statement.setDate(2, (java.sql.Date) denNgay);
 
             ResultSet rs = statement.executeQuery();
-            while(rs.next()) {
+            while (rs.next()) {
 
                 String maHoaDon = rs.getString(1);
                 Staff maNhanVien = new Staff(rs.getString(2));
@@ -71,7 +72,7 @@ public class BillDAO {
                 int tinhTrang = rs.getInt(7);
                 String khuyenMai = rs.getString(8);
 
-                Bill bill = new Bill(maHoaDon,maNhanVien,maKhachHang,maPhong,ngayGioDat,ngayGioTra,tinhTrang,khuyenMai);
+                Bill bill = new Bill(maHoaDon, maNhanVien, maKhachHang, maPhong, ngayGioDat, ngayGioTra, tinhTrang, khuyenMai);
 
                 dsStaff.add(bill);
             }
@@ -80,6 +81,7 @@ public class BillDAO {
         }
         return dsStaff;
     }
+
     public boolean addBill(Bill bill) {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
@@ -172,9 +174,9 @@ public class BillDAO {
         PreparedStatement statement = null;
         Connection con = ConnectDB.getConnection();
 
-        try{
-        // Chuỗi SQL để lấy số lượng hóa đơn trong khoảng thời gian đã chọn
-        String sql = "SELECT COUNT(*) AS total FROM HoaDon WHERE ngayGioTra >= ? AND ngayGioTra <= ?";
+        try {
+            // Chuỗi SQL để lấy số lượng hóa đơn trong khoảng thời gian đã chọn
+            String sql = "SELECT COUNT(*) AS total FROM HoaDon WHERE ngayGioTra >= ? AND ngayGioTra <= ?";
             statement = con.prepareStatement(sql);
             // Thiết lập các tham số trong câu lệnh SQL
             statement.setDate(1, (java.sql.Date) startDate);
@@ -217,89 +219,61 @@ public class BillDAO {
         }
         return nextId;
     }
-//    public boolean makePayment(String billId, double totalPriceBill, Date paymentDate) {
-//        ConnectDB.getInstance();
-//        Connection con = ConnectDB.getConnection();
-//        PreparedStatement stmt = null;
-//        boolean success = false;
-//
-//        try {
-//
-//
-//
-//            // Tạo mã phòng để kiểm tra sự tồn tại của hóa đơn
-//            String roomId = null;
-//
-//            // Nếu ngày thanh toán là null, sử dụng ngày hiện tại
-//            if (paymentDate == null) {
-//                String updateQuery = "UPDATE dbo.HoaDon " +
-//                        "SET tinhTrangHD = 1, " +
-//                        "ngayGioTra = GETDATE() " +
-//                        "WHERE maHoaDon = ?";
-//                stmt = con.prepareStatement(updateQuery);
-//                stmt.setDouble(1, totalPriceBill);
-//                stmt.setString(2, billId);
-//                stmt.executeUpdate();
-//            } else {
-//                String updateQuery = "UPDATE dbo.HoaDon " +
-//                        "SET tinhTrangHD = 1, " +
-//                        "ngayGioTra = ? " +
-//                        "WHERE maHoaDon = ?";
-//                stmt = con.prepareStatement(updateQuery);
-//                stmt.setDouble(1, totalPriceBill);
-//                stmt.setTimestamp(2, new Timestamp(paymentDate.getTime()));
-//                stmt.setString(3, billId);
-//                stmt.executeUpdate();
-//            }
-//
-//            // Kiểm tra sự tồn tại của hóa đơn
-//            String checkQuery = "SELECT maPhong FROM dbo.HoaDon " +
-//                    "WHERE maHoaDon = ? " +
-//                    "AND tinhTrangHD = 1 " +
-//                    "AND ngayGioTra = ?";
-//            stmt = con.prepareStatement(checkQuery);
-//            stmt.setString(1, billId);
-//            stmt.setDouble(2, totalPriceBill);
-//            stmt.setTimestamp(3, new Timestamp(paymentDate.getTime()));
-//            ResultSet resultSet = stmt.executeQuery();
-//
-//            if (resultSet.next()) {
-//                roomId = resultSet.getString("maPhong");
-//                // Cập nhật trạng thái phòng
-//                String updateRoomQuery = "UPDATE dbo.Phong " +
-//                        "SET tinhTrang = 'Chờ " +
-//                        "WHERE maPhong = ?";
-//                stmt = con.prepareStatement(updateRoomQuery);
-//                stmt.setString(1, roomId);
-//                stmt.executeUpdate();
-//                con.commit(); // Kết thúc giao dịch
-//                success = true; // Giao dịch thành công
-//            } else {
-//                con.rollback(); // Rollback nếu không tìm thấy hóa đơn phù hợp
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            if (con != null) {
-//                try {
-//                    con.rollback(); // Rollback nếu có lỗi xảy ra
-//                } catch (SQLException ex) {
-//                    ex.printStackTrace();
-//                }
-//            }
-//        } finally {
-//            try {
-//                if (stmt != null) {
-//                    stmt.close();
-//                }
-//                if (con != null) {
-//                    con.setAutoCommit(true);
-//                }
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        return success;
-//    }
 
+    public boolean paymentBill(String billId, Timestamp ngayGioTra) {
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        PreparedStatement statement = null;
+
+        try {
+            // Update ngày trả và tình trạng hóa đơn
+            String sql = "UPDATE dbo.HoaDon SET ngayGioTra = ?, tinhTrangHD = 1 WHERE maHoaDon = ?;";
+            statement = con.prepareStatement(sql);
+            statement.setTimestamp(1, ngayGioTra);
+            statement.setString(2, billId);
+
+            int rowsAffected = statement.executeUpdate();
+
+            if (rowsAffected > 0) {
+                // Update hóa đơn thành công
+                // Lấy mã phòng của hóa đơn
+                String sql2 = "SELECT maPhong FROM dbo.HoaDon WHERE maHoaDon = ?;";
+                statement = con.prepareStatement(sql2);
+                statement.setString(1, billId);
+
+                ResultSet rs = statement.executeQuery();
+
+                if (rs.next()) {
+                    String maPhong = rs.getString("maPhong");
+
+                    sql = "UPDATE dbo.Phong SET tinhTrang = 'Trong' WHERE maPhong = ?;";
+                    statement = con.prepareStatement(sql);
+                    statement.setString(1, maPhong);
+
+                    int rowsAffected2 = statement.executeUpdate();
+
+                    if (rowsAffected2 > 0) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
