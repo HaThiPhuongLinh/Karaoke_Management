@@ -8,6 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CustomerDAO {
+    private static CustomerDAO instance = new CustomerDAO();
+
+    public static CustomerDAO getInstance() {
+        return instance;
+    }
     public static boolean update(Customer kh) {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
@@ -268,6 +273,30 @@ public class CustomerDAO {
 
         return result;
     }
+    public Customer getCustomerByBillId(String maHoaDon) {
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        String query = "SELECT KhachHang.* " +
+                "FROM KhachHang " +
+                "INNER JOIN HoaDon ON KhachHang.maKhachHang = HoaDon.maKhachHang " +
+                "WHERE HoaDon.maHoaDon = ?";
+
+        try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
+            preparedStatement.setString(1, maHoaDon);
+
+            try (ResultSet rs = preparedStatement.executeQuery()) {
+                if (rs.next()) {
+                    Customer customer = new Customer(rs);
+                    return customer;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
 
 
 

@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class Bill {
     private String maHoaDon;
@@ -19,6 +20,7 @@ public class Bill {
 
 
     private List<DetailsOfService> lstDetails;
+//    private List<DetailsOfBill> lstCTHD;
 
     public Bill(String maHoaDon){
         this.maHoaDon =maHoaDon;
@@ -49,6 +51,10 @@ public class Bill {
         this.khuyenMai = khuyenMai;
 
         this.lstDetails = new ArrayList<DetailsOfService>();
+    }
+
+    public Bill() {
+
     }
 
     public List<DetailsOfService> getLstDetails() {
@@ -121,6 +127,43 @@ public class Bill {
 
     public void setKhuyenMai(String khuyenMai) {
         this.khuyenMai = khuyenMai;
+    }
+
+    public Double tinhGioThue() {
+        int soPhut = 0;
+        if (ngayGioTra != null && ngayGioDat != null) {
+            long difference = ngayGioTra.getTime() - ngayGioDat.getTime();
+            soPhut = (int) TimeUnit.MILLISECONDS.toMinutes(difference);
+        }
+        if(soPhut <= 60) {
+            soPhut = 60;
+        }
+        soPhut = (int) soPhut / 15;
+        return soPhut * 1.0 / 4;
+    }
+    public Double tinhTongTienDichVu() {
+        Double tongTienDV = 0.0;
+        for (DetailsOfService item : lstDetails) {
+            tongTienDV += item.tinhTienDichVu();
+        }
+        return tongTienDV;
+    }
+
+
+    /**
+     * Tính tiền thuê phòng
+     *
+     * @return {@code Double}: tiền phòng đã thuê
+     */
+    public Double tinhTienPhong() {
+        Double soGio = tinhGioThue();
+        if (soGio < 1.0) {
+            soGio = 1.0;
+        }
+        return soGio * getMaPhong().getGiaPhong();
+    }
+    public Double getTongTienHD() {
+        return tinhTienPhong()+tinhTongTienDichVu();
     }
 
 

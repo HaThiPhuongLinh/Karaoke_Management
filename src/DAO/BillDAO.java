@@ -167,12 +167,7 @@ public class BillDAO {
     public static int getTotalLineOfBillList(Date startDate, Date endDate) {
         int totalCount = 0;
 
-        // Thông tin kết nối cơ sở dữ liệu
-//        String url = "jdbc:mysql://localhost:3306/db_name";
-//        String username = "username";
-//        String password = "password";
 
-//        ArrayList<Bill> dataList = new ArrayList<Bill>();
         ConnectDB.getInstance();
         PreparedStatement statement = null;
         Connection con = ConnectDB.getConnection();
@@ -222,5 +217,89 @@ public class BillDAO {
         }
         return nextId;
     }
+//    public boolean makePayment(String billId, double totalPriceBill, Date paymentDate) {
+//        ConnectDB.getInstance();
+//        Connection con = ConnectDB.getConnection();
+//        PreparedStatement stmt = null;
+//        boolean success = false;
+//
+//        try {
+//
+//
+//
+//            // Tạo mã phòng để kiểm tra sự tồn tại của hóa đơn
+//            String roomId = null;
+//
+//            // Nếu ngày thanh toán là null, sử dụng ngày hiện tại
+//            if (paymentDate == null) {
+//                String updateQuery = "UPDATE dbo.HoaDon " +
+//                        "SET tinhTrangHD = 1, " +
+//                        "ngayGioTra = GETDATE() " +
+//                        "WHERE maHoaDon = ?";
+//                stmt = con.prepareStatement(updateQuery);
+//                stmt.setDouble(1, totalPriceBill);
+//                stmt.setString(2, billId);
+//                stmt.executeUpdate();
+//            } else {
+//                String updateQuery = "UPDATE dbo.HoaDon " +
+//                        "SET tinhTrangHD = 1, " +
+//                        "ngayGioTra = ? " +
+//                        "WHERE maHoaDon = ?";
+//                stmt = con.prepareStatement(updateQuery);
+//                stmt.setDouble(1, totalPriceBill);
+//                stmt.setTimestamp(2, new Timestamp(paymentDate.getTime()));
+//                stmt.setString(3, billId);
+//                stmt.executeUpdate();
+//            }
+//
+//            // Kiểm tra sự tồn tại của hóa đơn
+//            String checkQuery = "SELECT maPhong FROM dbo.HoaDon " +
+//                    "WHERE maHoaDon = ? " +
+//                    "AND tinhTrangHD = 1 " +
+//                    "AND ngayGioTra = ?";
+//            stmt = con.prepareStatement(checkQuery);
+//            stmt.setString(1, billId);
+//            stmt.setDouble(2, totalPriceBill);
+//            stmt.setTimestamp(3, new Timestamp(paymentDate.getTime()));
+//            ResultSet resultSet = stmt.executeQuery();
+//
+//            if (resultSet.next()) {
+//                roomId = resultSet.getString("maPhong");
+//                // Cập nhật trạng thái phòng
+//                String updateRoomQuery = "UPDATE dbo.Phong " +
+//                        "SET tinhTrang = 'Chờ " +
+//                        "WHERE maPhong = ?";
+//                stmt = con.prepareStatement(updateRoomQuery);
+//                stmt.setString(1, roomId);
+//                stmt.executeUpdate();
+//                con.commit(); // Kết thúc giao dịch
+//                success = true; // Giao dịch thành công
+//            } else {
+//                con.rollback(); // Rollback nếu không tìm thấy hóa đơn phù hợp
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            if (con != null) {
+//                try {
+//                    con.rollback(); // Rollback nếu có lỗi xảy ra
+//                } catch (SQLException ex) {
+//                    ex.printStackTrace();
+//                }
+//            }
+//        } finally {
+//            try {
+//                if (stmt != null) {
+//                    stmt.close();
+//                }
+//                if (con != null) {
+//                    con.setAutoCommit(true);
+//                }
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        return success;
+//    }
 
 }
