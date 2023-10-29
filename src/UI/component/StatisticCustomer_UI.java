@@ -233,10 +233,10 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
             double gia=0;
             for (DetailsOfService details : list1){
                 if (b.getMaHoaDon().equals(details.getMaHoaDon().getMaHoaDon())){
-                    gia = details.getSoLuong()*details.getGiaBan();
+                    gia += details.getSoLuong()*details.getGiaBan();
                 }
             }
-            double quantity = (b.getMaPhong().getGiaPhong() + gia);
+            double quantity = b.getMaPhong().getGiaPhong() * b.tinhGioThue() + gia;
             if (totalSales.containsKey(customerID)) {
                 // Nếu mã dịch vụ đã tồn tại trong HashMap, cộng dồn số lượng bán
                 double currentQuantity = totalSales.get(customerID);
