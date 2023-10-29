@@ -8,11 +8,13 @@ import DAO.RoomDAO;
 import Entity.Bill;
 import Entity.DetailsOfService;
 import UI.CustomUI.Custom;
-
+import Entity.ReservationForm;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,11 +27,12 @@ import java.util.Date;
 import java.util.List;
 
 public class Bill_UI extends JPanel implements ActionListener, MouseListener {
+    private  JTable tableHD;
     private  JTable tblPDP;
     private  DefaultTableModel modelTableHD;
-    private  JTextField txtTK;
+    private  JTextField txtTK, txtKH;
     private  JButton btnLap;
-    private  JButton btnTim;
+    private  JButton btnTim, btnRefresh;
     private  DefaultTableModel modelTablePDP;
     private JLabel backgroundLabel;
     private ReservationFormDAO reservationFormDAO;
@@ -37,9 +40,9 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
     private DecimalFormat df = new DecimalFormat("#,###.##");
     private Bill bill;
     private BillDAO billDAO;
-    private List<DetailsOfService> detailsOfServiceList;
+
     private  DetailOfServiceDAO ctdv_dao;
-    private ArrayList<DetailsOfService> ctdv;
+    private ArrayList<DetailsOfService> dsCTDV;
 
     public Bill_UI(){
         setLayout(null);
@@ -66,67 +69,74 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
         panelFull.setBorder(new TitledBorder(
                 new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "",
                 TitledBorder.LEADING, TitledBorder.TOP));
-        panelFull.setBounds(10,50,1245,670);
+        panelFull.setBounds(10,50,1245,690);
         panelFull.setOpaque(false);
         add(panelFull);
-
-//        Từ ngày
-//        JLabel labelKM = new JLabel("Mã Khuyến Mãi:");
-//        labelKM.setFont(new Font("Arial", Font.PLAIN, 14));
-//        labelKM.setBounds(20, 60, 150, 30);
-//        labelKM.setForeground(Color.WHITE);
-//        panelFull.add(labelKM);
-//
-//        JTextField textFieldKM = new JTextField();
-//        textFieldKM.setBounds(130, 60, 207, 30);
-//        textFieldKM.setColumns(6);
-//        panelFull.add(textFieldKM);
 
         //        btn tìm kiếm
         JLabel labelTK = new JLabel("Tìm Theo Mã Phòng:");
         labelTK.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelTK.setBounds(710, 20, 150, 30);
+        labelTK.setBounds(310, 20, 150, 30);
         labelTK.setForeground(Color.WHITE);
         panelFull.add(labelTK);
 
         txtTK = new JTextField();
-        txtTK.setBounds(870, 20, 150, 30);
+        txtTK.setBounds(500, 20, 220, 30);
         txtTK.setColumns(6);
         panelFull.add(txtTK);
+
+        JLabel labelKH = new JLabel("Tìm Theo Tên Khách Hàng:");
+        labelKH.setFont(new Font("Arial", Font.PLAIN, 14));
+        labelKH.setBounds(310, 70, 180, 30);
+        labelKH.setForeground(Color.WHITE);
+        panelFull.add(labelKH);
+
+        txtKH = new JTextField();
+        txtKH.setBounds(500, 70, 220, 30);
+        txtKH.setColumns(6);
+        panelFull.add(txtKH);
+
         btnTim = new JButton("Tìm");
         btnTim.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnTim);
-        btnTim.setBounds(1040, 20, 100, 30);
+        btnTim.setBounds(750, 70, 100, 30);
         panelFull.add(btnTim);
+
+        btnRefresh = new JButton("Làm mới");
+        btnRefresh.setFont(new Font("Arial", Font.BOLD, 14));
+        Custom.setCustomBtn(btnRefresh);
+        btnRefresh.setBounds(880, 70, 100, 30);
+        panelFull.add(btnRefresh);
 
         btnLap = new JButton("Lập Hóa Đơn");
         btnLap.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnLap);
-        btnLap.setBounds(150, 230, 200, 50);
+        btnLap.setBounds(1070, 331, 150, 32);
         panelFull.add(btnLap);
 
         JPanel panelDSHD = new JPanel();
         panelDSHD.setLayout(null);
         panelDSHD.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Danh Sách Dịch Vụ Được Sử Dụng",
                 TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
-        panelDSHD.setBounds(30, 320, 1185, 370);
+        panelDSHD.setBounds(30, 380, 1185, 300);
         panelDSHD.setOpaque(false);
 
         String[] colsHD = { "STT", "Mã Dịch Vụ", "Tên Dịch Vụ","Số Lượng Đặt","Giá Dịch Vụ","Tổng Tiền" };
-         modelTableHD = new DefaultTableModel(colsHD, 0) ;
+        modelTableHD = new DefaultTableModel(colsHD, 0) ;
         JScrollPane scrollPaneHD;
 
-        JTable tableHD = new JTable(modelTableHD);
+        tableHD = new JTable(modelTableHD);
         tableHD.setFont(new Font("Arial", Font.BOLD, 14));
         tableHD.setBackground(new Color(255, 255, 255, 0));
         tableHD.setForeground(new Color(255, 255, 255));
         tableHD.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
         tableHD.getTableHeader().setForeground(Color.BLUE);
 //        tableLDV.getTableHeader().setBackground(new Color(255, 255, 255));
+        Custom.getInstance().setCustomTable(tableHD);
 
         panelDSHD.add(scrollPaneHD = new JScrollPane(tableHD,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
                 BorderLayout.CENTER);
-        scrollPaneHD.setBounds(10,20,1165,340);
+        scrollPaneHD.setBounds(10,20,1165,260);
         scrollPaneHD.setOpaque(false);
         scrollPaneHD.getViewport().setOpaque(false);
         scrollPaneHD.getViewport().setBackground(Color.WHITE);
@@ -135,31 +145,34 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
         //      danh sách Chi tiết hóa đơn
         JPanel panelCTHD = new JPanel();
         panelCTHD.setLayout(null);
-        panelCTHD.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Danh Sách Các Phòng Đang Được Dùng",
+        panelCTHD.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "Danh Sách Các Phòng Đang Sử Dụng",
                 TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
-        panelCTHD.setBounds(500, 55, 714, 250);
+        panelCTHD.setBounds(30, 115, 1020, 250);
         panelCTHD.setOpaque(false);
 
-        String[] colsCTHD = { "STT","Mã Phòng", "Loại Phòng","Giờ Vào","Giá Phòng" };
+        String[] colsCTHD = { "STT","Mã Phòng", "Loại Phòng","Tên Khách Hàng","Giờ Vào","Giá Phòng" };
         modelTablePDP = new DefaultTableModel(colsCTHD, 0) ;
         JScrollPane scrollPaneCTHD;
 
-       tblPDP = new JTable(modelTablePDP);
+        tblPDP = new JTable(modelTablePDP);
         tblPDP.setFont(new Font("Arial", Font.BOLD, 14));
         tblPDP.setBackground(new Color(255, 255, 255, 0));
         tblPDP.setForeground(new Color(255, 255, 255));
         tblPDP.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
         tblPDP.getTableHeader().setForeground(Color.BLUE);
+        Custom.getInstance().setCustomTable(tblPDP);
 
         panelCTHD.add(scrollPaneCTHD = new JScrollPane(tblPDP,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
                 BorderLayout.CENTER);
-        scrollPaneCTHD.setBounds(10,20,694,220);
+        scrollPaneCTHD.setBounds(10,20,1000,220);
         scrollPaneCTHD.setOpaque(false);
         scrollPaneCTHD.getViewport().setOpaque(false);
         scrollPaneCTHD.getViewport().setBackground(Color.WHITE);
         panelFull.add(panelCTHD);
         btnTim.addActionListener(this);
         loadHD();
+        reSizeColumnTable();
+        reSizeColumnTable2();
         //
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/images/background.png"));
         backgroundLabel = new JLabel(backgroundImage);
@@ -167,6 +180,43 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
         add(backgroundLabel);
         tblPDP.addMouseListener(this);
     }
+
+    private void reSizeColumnTable() {
+        TableColumnModel tcm = tblPDP.getColumnModel();
+
+        tcm.getColumn(0).setPreferredWidth(30);
+        tcm.getColumn(1).setPreferredWidth(30);
+        tcm.getColumn(2).setPreferredWidth(80);
+        tcm.getColumn(3).setPreferredWidth(150);
+        tcm.getColumn(4).setPreferredWidth(40);
+
+        DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        leftRenderer.setHorizontalAlignment(JLabel.LEFT);
+        rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
+
+        tcm.getColumn(4).setCellRenderer(rightRenderer);
+        tcm.getColumn(5).setCellRenderer(rightRenderer);
+    }
+
+    private void reSizeColumnTable2() {
+        TableColumnModel tcm = tableHD.getColumnModel();
+
+        tcm.getColumn(0).setPreferredWidth(30);
+        tcm.getColumn(1).setPreferredWidth(30);
+        tcm.getColumn(2).setPreferredWidth(150);
+
+        DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        leftRenderer.setHorizontalAlignment(JLabel.LEFT);
+        rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
+
+        tcm.getColumn(3).setCellRenderer(rightRenderer);
+        tcm.getColumn(4).setCellRenderer(rightRenderer);
+        tcm.getColumn(5).setCellRenderer(rightRenderer);
+    }
+
+
     private String formatDate(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         return sdf.format(date);
@@ -174,9 +224,9 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
     public void loadCTDV(){
         modelTableHD.setRowCount(0);
         int i = 1;
-        for (DetailsOfService ctdv : detailsOfServiceList) {
+        for (DetailsOfService ctdv : dsCTDV) {
             Double tongtien = ctdv.getGiaBan()*ctdv.getSoLuong();
-            modelTableHD.addRow(new Object[] { i,ctdv.getMaDichVu().getMaDichVu(), ctdv.getMaDichVu().getTenDichVu(), ctdv.getMaDichVu().getSoLuongTon(),
+            modelTableHD.addRow(new Object[] { i,ctdv.getMaDichVu().getMaDichVu(), ctdv.getMaDichVu().getTenDichVu(), ctdv.getSoLuong(),
                     df.format(ctdv.getMaDichVu().getGiaBan()), df.format(tongtien) });
             i++;
         }
@@ -187,40 +237,45 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
 
         for (Bill bill :billDAO.getAllBill()) {
             String date = formatDate(bill.getNgayGioDat());
-if(bill.getTinhTrangHD()==0) {
-    Object[] rowData = {i, bill.getMaPhong().getMaPhong(), bill.getMaPhong().getLoaiPhong().getTenLoaiPhong(), date, df.format(bill.getMaPhong().getGiaPhong())};
-    modelTablePDP.addRow(rowData);
-}
+            if(bill.getTinhTrangHD()==0) {
+                Object[] rowData = {i, bill.getMaPhong().getMaPhong(), bill.getMaPhong().getLoaiPhong().getTenLoaiPhong(),bill.getMaKH().getTenKhachHang(), date, df.format(bill.getMaPhong().getGiaPhong())};
+                modelTablePDP.addRow(rowData);
+            }
             i++;
         }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+
 //        Object o = e.getSource();
-//        String txtMaP = txtTK.getText();
-//        ArrayList<ReservationForm> rsvf = (ArrayList<ReservationForm>) reservationFormDAO.getReservationFormByRoomId(txtMaP);
-//        if (txtTK.getText().trim().equals("") ) {
-//            JOptionPane.showMessageDialog(this, "Bạn phải nhập thông tin tìm kiếm");
-//            modelTablePDP.getDataVector().removeAllElements();
-//            loadPDP();
-//        } else if (!txtTK.getText().trim().equals("")) {
-//            modelTablePDP.getDataVector().removeAllElements();
-//            int i = 1;
+//        if(o.equals(btnTim)) {
 //
-//            if (rsvf.size() != 0) {
-//                for (ReservationForm reservationForm : rsvf) {
-//                    String date = formatDate(reservationForm.getThoiGianDat());
-//
-//                    Object[] rowData = {i, reservationForm.getMaPhong().getMaPhong(), reservationForm.getMaPhong().getLoaiPhong().getTenLoaiPhong(), date, df.format(reservationForm.getMaPhong().getGiaPhong())};
-//                    modelTablePDP.addRow(rowData);
-//                    i++;
-//                }
-//            } else {
-//                JOptionPane.showMessageDialog(this, "Không có phòng đang được sử dụng khớp với thông tin tìm kiếm");
-//                txtTK.selectAll();
-//                txtTK.requestFocus();
+//            if (txtTK.getText().trim().equals("")) {
+//                JOptionPane.showMessageDialog(this, "Bạn phải nhập thông tin tìm kiếm");
+//                modelTablePDP.getDataVector().removeAllElements();
+//                loadHD();
 //            }
+//            else if (!txtTK.getText().trim().equals("")) {
+//                modelTablePDP.getDataVector().removeAllElements();
+//
+//                String txtMaP = txtTK.getText();
+//                ReservationForm rsvf = reservationFormDAO.getFormByRoomID(txtMaP);
+//
+//
+//                    String date = formatDate(rsvf.getThoiGianDat());
+//
+//                    Object[] rowData = {1, rsvf.getMaPhong().getMaPhong(), rsvf.getMaPhong().getLoaiPhong().getTenLoaiPhong(), date, df.format(rsvf.getMaPhong().getGiaPhong())};
+//                    modelTablePDP.addRow(rowData);
+//
+//
+//            }
+//            else {
+//                    JOptionPane.showMessageDialog(this, "Không có phòng đang được sử dụng khớp với thông tin tìm kiếm");
+//                    txtTK.selectAll();
+//                    txtTK.requestFocus();
+//                }
+//
 //        }
 
     }
@@ -231,7 +286,7 @@ if(bill.getTinhTrangHD()==0) {
         if(o.equals(tblPDP)){
             int row = tblPDP.getSelectedRow();
             String maPhong = modelTablePDP.getValueAt(row,1).toString();
-            ctdv = ctdv_dao.getDetailsOfServiceListByRoomId(maPhong);
+            dsCTDV = ctdv_dao.getDetailsOfServiceListByRoomId(maPhong);
             loadCTDV();
 
         }
