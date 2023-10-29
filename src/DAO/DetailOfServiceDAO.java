@@ -23,7 +23,7 @@ public class DetailOfServiceDAO {
             ConnectDB.getInstance();
             Connection con = ConnectDB.getConnection();
 
-            String sql = "Select * from dbo.CTDichVu";
+            String sql = "Select * from dbo.ChiTietDichVu";
             Statement statement = con.createStatement();
             ResultSet rs = statement.executeQuery(sql);
             while (rs.next()) {

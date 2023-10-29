@@ -2,6 +2,8 @@ package UI.component;
 
 import DAO.BillDAO;
 import DAO.CustomerDAO;
+import DAO.DetailOfServiceDAO;
+import DAO.ServiceDAO;
 import Entity.Bill;
 import Entity.Customer;
 import Entity.DetailsOfService;
@@ -18,11 +20,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 public class StatisticCustomer_UI extends JPanel implements ActionListener, ItemListener {
     private JComboBox<String> comboBoxLocTheo;
@@ -34,6 +38,9 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
     private DatePicker pickerDenNgay,pickerTuNgay;
     private BillDAO billDAO;
     private CustomerDAO customerDAO;
+    private ServiceDAO serviceDAO;
+    private DetailOfServiceDAO detailOfServiceDAO;
+    private DecimalFormat df = new DecimalFormat("#,###.##");
 
     public StatisticCustomer_UI(){
         setLayout(null);
@@ -41,6 +48,8 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
 
         billDAO = new BillDAO();
         customerDAO = new CustomerDAO();
+        serviceDAO = new ServiceDAO();
+        detailOfServiceDAO = new DetailOfServiceDAO();
 
         //phan viet code
         JLabel headerLabel = new JLabel("THỐNG KÊ KHÁCH HÀNG");
@@ -216,15 +225,37 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
     private void docDuLieuVaoTable(ArrayList<Bill> listBill) {
         int i=1;
         java.util.List<Customer> list = customerDAO.getAllKhachHang();
-        for (Bill bill : listBill) {
+        ArrayList<DetailsOfService> list1 = (ArrayList<DetailsOfService>) detailOfServiceDAO.getAllDetailsOfService();
+        HashMap<String, Double> totalSales = new HashMap<>();
+
+        for (Bill b : listBill) {
+            String customerID = b.getMaKH().getMaKhachHang();
+            double gia=0;
+            for (DetailsOfService details : list1){
+                if (b.getMaHoaDon().equals(details.getMaHoaDon().getMaHoaDon())){
+                    gia = details.getSoLuong()*details.getGiaBan();
+                }
+            }
+            double quantity = (b.getMaPhong().getGiaPhong() + gia);
+            if (totalSales.containsKey(customerID)) {
+                // Nếu mã dịch vụ đã tồn tại trong HashMap, cộng dồn số lượng bán
+                double currentQuantity = totalSales.get(customerID);
+                totalSales.put(customerID, (currentQuantity + quantity));
+            } else {
+                // Nếu mã dịch vụ chưa tồn tại trong HashMap, thêm vào với số lượng bán hiện tại
+                totalSales.put(customerID, quantity);
+            }
+        }
+
+        for (String customerID : totalSales.keySet()){
+            double totalQuantity = totalSales.get(customerID);
             String s1 = "";
             for (Customer kh : list){
-
-                if (bill.getMaKH().getMaKhachHang().equals(kh.getMaKhachHang())){
+                if (customerID.equals(kh.getMaKhachHang())){
                     s1=kh.getTenKhachHang();
                 }
             }
-            modelTableDV.addRow(new Object[]{i,bill.getMaKH().getMaKhachHang(),s1,10});
+            modelTableDV.addRow(new Object[] {i,customerID,s1,df.format(totalQuantity)});
             i++;
         }
     }
