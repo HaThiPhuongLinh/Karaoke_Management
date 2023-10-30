@@ -223,6 +223,87 @@ public class StaffDAO {
         }
         return n > 0;
     }
+//    public boolean updateStaff(Staff s, boolean isResigning) {
+//        ConnectDB.getInstance();
+//        Connection con = ConnectDB.getConnection();
+//        PreparedStatement statement = null;
+//        int n = 0;
+//
+//        try {
+//            String sql = "update dbo.NhanVien" +
+//                    " set tenNhanVien = ?, soDienThoai = ?, CCCD = ?, gioiTinh = ?, ngaySinh = ?," +
+//                    " diaChi = ?, chucVu = ?, trangThai = ?, taiKhoan = ?" +
+//                    " where maNhanVien = ?";
+//            statement = con.prepareStatement(sql);
+//            statement.setString(1, s.getTenNhanVien());
+//            statement.setString(2, s.getSoDienThoai());
+//            statement.setString(3, s.getCCCD());
+//            statement.setBoolean(4, s.isGioiTinh());
+//            statement.setDate(5, (Date) s.getNgaySinh());
+//            statement.setString(6, s.getDiaChi());
+//            statement.setString(7, s.getChucVu());
+//
+//            if (isResigning) {
+//                // Nếu nhân viên đang nghỉ, cập nhật trạng thái thành "Đã nghỉ"
+//                statement.setString(8, "Đã nghỉ");
+//            } else {
+//                statement.setString(8, "Đang làm"); // Cập nhật trạng thái thành "Đang làm"
+//            }
+//
+//            statement.setString(9, s.getTaiKhoan().getTaiKhoan());
+//            statement.setString(10, s.getMaNhanVien());
+//
+//            // Thực hiện cập nhật
+//            n = statement.executeUpdate();
+//
+//            if (isResigning) {
+//                // Cập nhật trạng thái tài khoản khi nhân viên nghỉ việc
+//                String updateAccountStatusQuery = "UPDATE TaiKhoan SET tinhTrang = ? WHERE taiKhoan = ?";
+//                statement = con.prepareStatement(updateAccountStatusQuery);
+//                statement.setBoolean(1, false); // Cập nhật trạng thái tài khoản thành 0
+//                statement.setString(2, s.getTaiKhoan().getTaiKhoan());
+//                statement.executeUpdate();
+//            } else {
+//                // Nếu nhân viên đang làm việc, cập nhật trạng thái tài khoản thành 1
+//                String updateAccountStatusQuery = "UPDATE TaiKhoan SET tinhTrang = ? WHERE taiKhoan = ?";
+//                statement = con.prepareStatement(updateAccountStatusQuery);
+//                statement.setBoolean(1, true); // Cập nhật trạng thái tài khoản thành 1
+//                statement.setString(2, s.getTaiKhoan().getTaiKhoan());
+//                statement.executeUpdate();
+//            }
+//
+//            con.commit();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            if (con != null) {
+//                try {
+//                    con.rollback();
+//                } catch (SQLException ex) {
+//                    ex.printStackTrace();
+//                }
+//            }
+//        } finally {
+//            if (statement != null) {
+//                try {
+//                    statement.close();
+//                } catch (SQLException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+//        return n > 0;
+//    }
+
+
+
+
+
+
+
+
+
+
+
 
     public Staff getStaffByID(String maNhanVien) {
         ConnectDB.getInstance();

@@ -6,6 +6,7 @@ import DAO.DetailOfServiceDAO;
 import DAO.StaffDAO;
 import Entity.*;
 import UI.CustomUI.Custom;
+import UI.component.Bill_UI;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -19,7 +20,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 //import Event_Handlers.ConvertTime;
@@ -27,6 +30,7 @@ import java.util.List;
 
 
 public class DialogBill extends JDialog implements ActionListener {
+    private Bill_UI billUI;
     private final String WORKING_DIR = System.getProperty("user.dir");
     private JTextField txtBillId, txtStaffName, txtCustomerName, txtRoomId, txtRoomTypeName, txtRoomPrice, txtStartTime,
             txtEndTime, txtUsedTime, txtTotalPriceService, txtTotalPriceRoom, txtVAT, txtTotalPriceBill;
@@ -208,7 +212,7 @@ public class DialogBill extends JDialog implements ActionListener {
         txtTotalPriceRoom.setHorizontalAlignment(SwingConstants.RIGHT);
         pnMain.add(txtTotalPriceRoom);
 
-        JLabel lblVAT = new JLabel("VAT(10%):");
+        JLabel lblVAT = new JLabel("VAT(8%):");
         Custom.getInstance().setCustomLabelBill(lblVAT);
         lblVAT.setBounds(40, 610, 140, 25);
         pnMain.add(lblVAT);
@@ -380,6 +384,7 @@ public class DialogBill extends JDialog implements ActionListener {
         allLoaded();
     }
 
+
     @Override
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
@@ -416,7 +421,9 @@ public class DialogBill extends JDialog implements ActionListener {
                 btnExportPdf.setEnabled(true);
                 btnPayment.setEnabled(false);
                 JOptionPane.showMessageDialog(null, "Thanh toán hóa đơn thành công", "Thông báo",
+
                         JOptionPane.INFORMATION_MESSAGE);
+
             } else {
                 JOptionPane.showMessageDialog(null, "Lỗi khi thanh toán vui lòng thử lại!!!", "Thông báo",
                         JOptionPane.ERROR_MESSAGE);
@@ -424,7 +431,12 @@ public class DialogBill extends JDialog implements ActionListener {
 
         } else if (o.equals(btnBack)) {
             this.dispose();
+
         }
+    }
+    private String formatDate(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyy");
+        return sdf.format(date);
     }
 
     /**
@@ -510,10 +522,17 @@ public class DialogBill extends JDialog implements ActionListener {
         txtTotalPriceService.setText(df.format(totalPriceService));
         double totalPriceRoom = bill.tinhTienPhong();
         txtTotalPriceRoom.setText(df.format(totalPriceRoom));
-        double vat = (totalPriceService + totalPriceRoom) * 0.1;
-        txtVAT.setText(df.format(vat));
-        double totalPrice = bill.getTongTienHD();
-        txtTotalPriceBill.setText(df.format(totalPrice));
+        double vat =0;
+Date ngayHT = new Date();
+String ngay = formatDate(ngayHT);
+if(bill.getMaKH().getNgaySinh().equals(ngay)){
+    vat = (totalPriceService + totalPriceRoom);
+}else{
+    vat = (totalPriceService + totalPriceRoom) * 0.08;
+}
+txtVAT.setText(df.format(vat));
+double totalPrice = bill.getTongTienHD();
+txtTotalPriceBill.setText(df.format(totalPrice));
     }
 
     /**
