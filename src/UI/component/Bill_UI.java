@@ -9,7 +9,6 @@ import DAO.RoomDAO;
 import Entity.Bill;
 import Entity.DetailsOfService;
 import UI.CustomUI.Custom;
-import Entity.ReservationForm;
 import UI.component.Dialog.DialogBill;
 
 import javax.swing.*;
@@ -27,16 +26,16 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.sql.Timestamp;
 
 public class Bill_UI extends JPanel implements ActionListener, MouseListener {
+
     private  JTable tableHD;
     private  JTable tblPDP;
     private  DefaultTableModel modelTableHD;
     private  JTextField txtTK, txtKH;
     private  JButton btnLap;
-    private  JButton btnTim, btnRefresh;
+    private  JButton btnTim, btnLamMoi;
     private  DefaultTableModel modelTablePDP;
     private JLabel backgroundLabel;
     private ReservationFormDAO reservationFormDAO;
@@ -110,17 +109,18 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
         btnTim.setBounds(750, 70, 100, 30);
         panelFull.add(btnTim);
 
-        btnRefresh = new JButton("Làm mới");
-        btnRefresh.setFont(new Font("Arial", Font.BOLD, 14));
-        Custom.setCustomBtn(btnRefresh);
-        btnRefresh.setBounds(880, 70, 100, 30);
-        panelFull.add(btnRefresh);
+        btnLamMoi = new JButton("Làm mới");
+        btnLamMoi.setFont(new Font("Arial", Font.BOLD, 14));
+        Custom.setCustomBtn(btnLamMoi);
+        btnLamMoi.setBounds(880, 70, 100, 30);
+        panelFull.add(btnLamMoi);
 
         btnLap = new JButton("Lập Hóa Đơn");
         btnLap.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnLap);
         btnLap.setBounds(1070, 331, 150, 32);
         panelFull.add(btnLap);
+
 
         JPanel panelDSHD = new JPanel();
         panelDSHD.setLayout(null);
@@ -188,6 +188,7 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
         add(backgroundLabel);
         tblPDP.addMouseListener(this);
         btnLap.addActionListener(this);
+        btnLamMoi.addActionListener(this);
     }
 
     private void reSizeColumnTable() {
@@ -223,6 +224,21 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
         tcm.getColumn(3).setCellRenderer(rightRenderer);
         tcm.getColumn(4).setCellRenderer(rightRenderer);
         tcm.getColumn(5).setCellRenderer(rightRenderer);
+    }
+    private void reloadBillList() {
+        modelTablePDP.getDataVector().removeAllElements();
+        modelTablePDP.fireTableDataChanged();
+        int i=1;
+
+        for (Bill bill : billDAO.getAllBill()) {
+
+            String date = formatDate(bill.getNgayGioDat());
+            if(bill.getTinhTrangHD()==0) {
+                Object[] rowData = {i, bill.getMaPhong().getMaPhong(), bill.getMaPhong().getLoaiPhong().getTenLoaiPhong(), bill.getMaKH().getTenKhachHang(), date, df.format(bill.getMaPhong().getGiaPhong())};
+                modelTablePDP.addRow(rowData);
+                i++;
+            }
+        }
     }
 
 
@@ -326,13 +342,21 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
                 winPayment.setVisible(true);
                 Boolean isPaid = winPayment.getPaid();
                 if (isPaid) {
-//                    ArrayList<Room> yourListOfRooms = roomDAO.getRoomList();
-////                    main.LoadRoomList(yourListOfRooms);
+
                 } else {
                     bill.setNgayGioTra(null);
                 }
             }
+        }else if(o.equals(btnLamMoi)){
+            txtTK.setText("");
+            txtKH.setText("");
+            reloadBillList();
+            updateBillList();
         }
+    }
+    public void updateBillList() {
+        modelTableHD.setRowCount(0); 
+
     }
 
     @Override
