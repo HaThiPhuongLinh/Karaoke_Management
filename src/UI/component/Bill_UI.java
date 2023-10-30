@@ -271,12 +271,19 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
 
                 String txtMaP = txtTK.getText();
                 rsvf =billDAO.getBillByRoomID(txtMaP);
+                if(rsvf!=null) {
 
 
-                String date = formatDate(rsvf.getNgayGioDat());
+                    String date = formatDate(rsvf.getNgayGioDat());
 
-                Object[] rowData = {1, rsvf.getMaPhong().getMaPhong(), rsvf.getMaPhong().getLoaiPhong().getTenLoaiPhong(), rsvf.getMaKH().getTenKhachHang(),date, df.format(rsvf.getMaPhong().getGiaPhong())};
-                modelTablePDP.addRow(rowData);
+                    Object[] rowData = {1, rsvf.getMaPhong().getMaPhong(), rsvf.getMaPhong().getLoaiPhong().getTenLoaiPhong(), rsvf.getMaKH().getTenKhachHang(), date, df.format(rsvf.getMaPhong().getGiaPhong())};
+                    modelTablePDP.addRow(rowData);
+                }else {
+                    JOptionPane.showMessageDialog(this, "Không có phòng đang được sử dụng khớp với thông tin tìm kiếm");
+                    txtTK.selectAll();
+                    txtTK.requestFocus();
+                }
+
 
 
             }else if(!txtKH.getText().trim().equals("")){
@@ -284,16 +291,17 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
 
                 String txtTen = txtKH.getText();
                 rsvf2 =billDAO.getBillByCustomerName(txtTen);
-                String date2 = formatDate(rsvf2.getNgayGioDat());
-                Object[] rowData = {1, rsvf2.getMaPhong().getMaPhong(), rsvf2.getMaPhong().getLoaiPhong().getTenLoaiPhong(), rsvf2.getMaKH().getTenKhachHang(),date2, df.format(rsvf2.getMaPhong().getGiaPhong())};
-                modelTablePDP.addRow(rowData);
+                if(rsvf2 !=null) {
+                    String date2 = formatDate(rsvf2.getNgayGioDat());
+                    Object[] rowData = {1, rsvf2.getMaPhong().getMaPhong(), rsvf2.getMaPhong().getLoaiPhong().getTenLoaiPhong(), rsvf2.getMaKH().getTenKhachHang(), date2, df.format(rsvf2.getMaPhong().getGiaPhong())};
+                    modelTablePDP.addRow(rowData);
+                }else{
+                    JOptionPane.showMessageDialog(this, "Không có phòng đang được sử dụng khớp với thông tin tìm kiếm");
+                    txtKH.selectAll();
+                    txtKH.requestFocus();
+                }
             }
 
-            else {
-                JOptionPane.showMessageDialog(this, "Không có phòng đang được sử dụng khớp với thông tin tìm kiếm");
-                txtTK.selectAll();
-                txtTK.requestFocus();
-            }
 
         }else if(o.equals(btnLap)){
             int row = tblPDP.getSelectedRow();
