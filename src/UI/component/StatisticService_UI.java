@@ -230,7 +230,7 @@ public class StatisticService_UI extends JPanel implements ActionListener , Item
             modelTableDV.getDataVector().removeAllElements();
             try {
                 Date tuNgay = pickerTuNgay.getFullDate();
-                Date denNgay = pickerDenNgay.getFullDate();
+                Date denNgay = pickerDenNgay.addOneDay();
                 ArrayList<DetailsOfService> listDV = detailOfServiceDAO.getListCTDVByDate(tuNgay, denNgay);
 //                System.out.printf(String.valueOf(listDV.size())+"ádasdasd");
                 if (validData()) {
@@ -270,11 +270,7 @@ public class StatisticService_UI extends JPanel implements ActionListener , Item
                     tableDV.removeAll();
                     Date tuNgay = pickerTuNgay.setDatesFromToday(Calendar.DAY_OF_MONTH, -6);
                     Date denNgay = null;
-                    try {
-                        denNgay = pickerDenNgay.getValueToDay();
-                    } catch (ParseException ex) {
-                        ex.printStackTrace();
-                    }
+                    denNgay = pickerDenNgay.getCurrentDatePlusOneDay();
                     ArrayList<DetailsOfService> listDV = detailOfServiceDAO.getListCTDVByDate(tuNgay, denNgay);
                     docDuLieuVaoTable(listDV);
                     break;
@@ -285,11 +281,7 @@ public class StatisticService_UI extends JPanel implements ActionListener , Item
                     tableDV.removeAll();
                     Date tuNgay1 = pickerTuNgay.setDatesFromToday(Calendar.MONTH, -1);
                     Date denNgay1 = null;
-                    try {
-                        denNgay1 = pickerDenNgay.getValueToDay();
-                    } catch (ParseException ex) {
-                        ex.printStackTrace();
-                    }
+                    denNgay1 = pickerDenNgay.getCurrentDatePlusOneDay();
                     ArrayList<DetailsOfService> listDV1 = detailOfServiceDAO.getListCTDVByDate(tuNgay1, denNgay1);
                     docDuLieuVaoTable(listDV1);
                     break;
@@ -300,11 +292,7 @@ public class StatisticService_UI extends JPanel implements ActionListener , Item
                     tableDV.removeAll();
                     Date tuNgay2 = pickerTuNgay.setDatesFromToday(Calendar.MONTH, -2);
                     Date denNgay2 = null;
-                    try {
-                        denNgay2 = pickerDenNgay.getValueToDay();
-                    } catch (ParseException ex) {
-                        ex.printStackTrace();
-                    }
+                    denNgay2 = pickerDenNgay.getCurrentDatePlusOneDay();
                     ArrayList<DetailsOfService> listDV2 = detailOfServiceDAO.getListCTDVByDate(tuNgay2, denNgay2);
                     docDuLieuVaoTable(listDV2);
                     break;
@@ -315,11 +303,7 @@ public class StatisticService_UI extends JPanel implements ActionListener , Item
                     tableDV.removeAll();
                     Date tuNgay3 = pickerTuNgay.setDatesFromToday(Calendar.MONTH, -5);
                     Date denNgay3 = null;
-                    try {
-                        denNgay3 = pickerDenNgay.getValueToDay();
-                    } catch (ParseException ex) {
-                        ex.printStackTrace();
-                    }
+                    denNgay3 = pickerDenNgay.getCurrentDatePlusOneDay();
                     ArrayList<DetailsOfService> listDV3 = detailOfServiceDAO.getListCTDVByDate(tuNgay3, denNgay3);
                     docDuLieuVaoTable(listDV3);
                     break;
@@ -330,11 +314,7 @@ public class StatisticService_UI extends JPanel implements ActionListener , Item
                     tableDV.removeAll();
                     Date tuNgay4 = pickerTuNgay.setDatesFromToday(Calendar.MONTH, -11);
                     Date denNgay4 = null;
-                    try {
-                        denNgay4 = pickerDenNgay.getValueToDay();
-                    } catch (ParseException ex) {
-                        ex.printStackTrace();
-                    }
+                    denNgay4 = pickerDenNgay.getCurrentDatePlusOneDay();
                     ArrayList<DetailsOfService> listDV4 = detailOfServiceDAO.getListCTDVByDate(tuNgay4, denNgay4);
                     docDuLieuVaoTable(listDV4);
 
