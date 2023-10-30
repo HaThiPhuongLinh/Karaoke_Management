@@ -80,6 +80,14 @@ public class DatePicker extends JPanel implements ActionListener {
         Date sqlDate = new Date(date.getTime());
         return sqlDate;
     }
+    // Lấy ngày hiện tại công thêm 1 ngày
+    public Date getCurrentDatePlusOneDay() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, 1); // Cộng thêm 1 ngày
+        java.util.Date newDate = calendar.getTime();
+        Date sqlDate = new Date(newDate.getTime());
+        return sqlDate;
+    }
 
     // cập nhật giá trị với input java.sql.Date
     public void setValue(Date date) {
@@ -100,6 +108,17 @@ public class DatePicker extends JPanel implements ActionListener {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         java.util.Date date = sdf.parse(strDate);
         Date sqlDate = new Date(date.getTime());
+        return sqlDate;
+    }
+//     lấy ra giá trị ngày và cộng thêm 1 ngày
+    public Date addOneDay() throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        java.util.Date date = sdf.parse(txt.getText());
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DATE, 1); // Cộng thêm 1 ngày
+        java.util.Date newDate = calendar.getTime();
+        Date sqlDate = new Date(newDate.getTime());
         return sqlDate;
     }
 
