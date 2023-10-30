@@ -347,12 +347,16 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
                     bill.setNgayGioTra(null);
                 }
             }
-        }else  if(o.equals(btnLamMoi)){
+        }else if(o.equals(btnLamMoi)){
             txtTK.setText("");
             txtKH.setText("");
-            modelTableHD.getDataVector().removeAllElements();
             reloadBillList();
+            updateBillList();
         }
+    }
+    public void updateBillList() {
+        modelTableHD.setRowCount(0); 
+
     }
 
     @Override

@@ -7,7 +7,7 @@ import DAO.StaffDAO;
 import Entity.*;
 import UI.CustomUI.Custom;
 import UI.component.Bill_UI;
-
+import java.util.Calendar;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
@@ -523,10 +523,24 @@ public class DialogBill extends JDialog implements ActionListener {
         double totalPriceRoom = bill.tinhTienPhong();
         txtTotalPriceRoom.setText(df.format(totalPriceRoom));
         double vat =0;
-Date ngayHT = new Date();
-String ngay = formatDate(ngayHT);
-if(bill.getMaKH().getNgaySinh().equals(ngay)){
-    vat = (totalPriceService + totalPriceRoom);
+        Date ngayHienTai = new Date();
+
+// Chuyển ngày hiện tại và ngày sinh của khách hàng thành lớp Calendar
+        Calendar calendarHienTai = Calendar.getInstance();
+        calendarHienTai.setTime(ngayHienTai);
+
+        Calendar calendarNgaySinhKhachHang = Calendar.getInstance();
+        calendarNgaySinhKhachHang.setTime(bill.getMaKH().getNgaySinh());
+
+// Lấy ngày và tháng của ngày hiện tại
+        int ngayHienTaiValue = calendarHienTai.get(Calendar.DAY_OF_MONTH);
+        int thangHienTaiValue = calendarHienTai.get(Calendar.MONTH);
+
+// Lấy ngày và tháng từ ngày sinh của khách hàng
+        int ngaySinhKhachHangValue = calendarNgaySinhKhachHang.get(Calendar.DAY_OF_MONTH);
+        int thangSinhKhachHangValue = calendarNgaySinhKhachHang.get(Calendar.MONTH);
+if(ngayHienTaiValue == ngaySinhKhachHangValue && thangHienTaiValue == thangSinhKhachHangValue){
+    vat = 0.0;
 }else{
     vat = (totalPriceService + totalPriceRoom) * 0.08;
 }
