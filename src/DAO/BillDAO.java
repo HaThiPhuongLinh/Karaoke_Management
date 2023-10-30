@@ -65,8 +65,6 @@ public class BillDAO {
                 Staff maNhanVien = new Staff(rs.getString(2));
                 Customer maKhachHang = new Customer(rs.getString(3));
                 Room maPhong = new Room(rs.getString(4));
-//                double giaPhong = rs.getDouble(5);
-
                 Timestamp ngayGioDat = rs.getTimestamp(5);
                 Timestamp ngayGioTra = rs.getTimestamp(6);
                 int tinhTrang = rs.getInt(7);
@@ -287,16 +285,39 @@ public class BillDAO {
                 if (rs.next()) {
                     String maPhong = rs.getString("maPhong");
 
-                    sql = "UPDATE dbo.Phong SET tinhTrang = 'Trong' WHERE maPhong = ?;";
-                    statement = con.prepareStatement(sql);
+                    // Kiểm tra xem có phiếu đặt phòng nào dựa trên mã phòng không
+                    String sql3 = "SELECT maPhieuDat FROM dbo.PhieuDatPhong WHERE maPhong = ?;";
+                    statement = con.prepareStatement(sql3);
                     statement.setString(1, maPhong);
 
-                    int rowsAffected2 = statement.executeUpdate();
+                    ResultSet rs2 = statement.executeQuery();
 
-                    if (rowsAffected2 > 0) {
-                        return true;
+                    if (rs2.next()) {
+                        // Có phiếu đặt phòng, cập nhật tình trạng phòng thành 'Chờ'
+                        String updateRoomSql = "UPDATE dbo.Phong SET tinhTrang = 'Cho' WHERE maPhong = ?;";
+                        statement = con.prepareStatement(updateRoomSql);
+                        statement.setString(1, maPhong);
+
+                        int rowsAffected2 = statement.executeUpdate();
+
+                        if (rowsAffected2 > 0) {
+                            return true;
+                        } else {
+                            return false;
+                        }
                     } else {
-                        return false;
+                        // Không có phiếu đặt phòng, cập nhật tình trạng phòng thành 'Trống'
+                        String updateRoomSql = "UPDATE dbo.Phong SET tinhTrang = 'Trong' WHERE maPhong = ?;";
+                        statement = con.prepareStatement(updateRoomSql);
+                        statement.setString(1, maPhong);
+
+                        int rowsAffected2 = statement.executeUpdate();
+
+                        if (rowsAffected2 > 0) {
+                            return true;
+                        } else {
+                            return false;
+                        }
                     }
                 } else {
                     return false;
@@ -317,4 +338,5 @@ public class BillDAO {
             }
         }
     }
+
 }

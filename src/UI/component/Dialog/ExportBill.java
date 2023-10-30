@@ -18,18 +18,6 @@ import UI.CustomUI.Custom;
 import Entity.*;
 
 import org.apache.poi.ss.util.CellRangeAddress;
-
-/**
- * Sử dụng xuất hóa đơn dạng pdf và excel
- * <p>
- * Người tham gia thiết kế: Phạm Đăng Đan
- * <p>
- * Ngày tạo: 27/10/2021
- * <p>
- * Lần cập nhật cuối: 07/11/2021
- * <p>
- * Nội dung cập nhật: sửa lỗi không xuất file excel
- */
 public class ExportBill {
     private XSSFWorkbook workbook;
     private XSSFSheet sheet;

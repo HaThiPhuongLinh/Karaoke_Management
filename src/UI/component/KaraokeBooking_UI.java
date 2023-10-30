@@ -284,6 +284,9 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
             if (room.getTinhTrang().equals("Trong")) {
                 roomDAO.updateRoomStatus(room.getMaPhong(), "Trống");
             }
+            if (room.getTinhTrang().equals("Cho")) {
+                roomDAO.updateRoomStatus(room.getMaPhong(), "Chờ");
+            }
         }
         LoadRoomList(roomList);
 
