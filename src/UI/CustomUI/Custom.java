@@ -8,6 +8,9 @@ public class Custom {
     private static Custom instance = new Custom();
     private Font fontBold = new Font("Dialog", Font.BOLD, 14);
     private Font fontNormal = new Font("Dialog", Font.PLAIN, 14);
+    public static String pathFont = "/fonts/";
+    public static String PATH_EXPORT_BILL = System.getProperty("user.dir") +
+            "/../bill/";
     public static Custom getInstance() {
         if (instance == null)
             instance = new Custom();

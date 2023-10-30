@@ -247,16 +247,16 @@ public class DialogBill extends JDialog implements ActionListener {
         btnExportPdf = new JButton("Xuất PDF");
         btnExportPdf.setFont(new Font("Dialog", Font.BOLD, 15));
         btnExportPdf.setBounds(435, 670, 130, 35);
-        btnExportPdf.setEnabled(false);
+
         pnMain.add(btnExportPdf);
 
         btnExportExcel = new JButton("Xuất excel");
         btnExportExcel.setFont(new Font("Dialog", Font.BOLD, 15));
         btnExportExcel.setBounds(625, 670, 130, 35);
-        btnExportExcel.setEnabled(false);
+
         pnMain.add(btnExportExcel);
 
-        JLabel txtPhoneNumber = new JLabel("0303.030.303");
+        JLabel txtPhoneNumber = new JLabel("0828012868");
         txtPhoneNumber.setBackground(Color.WHITE);
         txtPhoneNumber.setFont(new Font("Dialog", Font.PLAIN, 16));
         txtPhoneNumber.setForeground(Color.WHITE);
@@ -322,6 +322,7 @@ public class DialogBill extends JDialog implements ActionListener {
         txtBillId.setBounds(160, 23, 220, 25);
 //       Custom.getInstance().setCustomTextFieldBill(txtBillId);
         panel.add(txtBillId);
+        txtBillId.setEditable(false);
 
         txtStaffName = new JTextField("");
         txtStaffName.setBounds(160, 48, 220, 25);
@@ -382,31 +383,32 @@ public class DialogBill extends JDialog implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
-//        if (o.equals(btnExportExcel)) {
-//            Boolean result = ExportBill.getInstance().exportBillToExcel(bill, path);
-//            String message = "";
-//            int type = JOptionPane.INFORMATION_MESSAGE;
-//            if (result) {
-//                message = "Xuất file pdf thành công";
-//                type = JOptionPane.INFORMATION_MESSAGE;
-//            } else {
-//                message = "Xuất file pdf thất bại";
-//                type = JOptionPane.ERROR_MESSAGE;
-//            }
-//            JOptionPane.showMessageDialog(null, message, "Thông báo", type);
-//        } else if (o.equals(btnExportPdf)) {
-//            Boolean result = ExportBill.getInstance().exportBillToPdf(bill, path);
-//            String message = "";
-//            int type = JOptionPane.INFORMATION_MESSAGE;
-//            if (result) {
-//                message = "Xuất file pdf thành công";
-//                type = JOptionPane.INFORMATION_MESSAGE;
-//            } else {
-//                message = "Xuất file pdf thất bại";
-//                type = JOptionPane.ERROR_MESSAGE;
-//            }
-//            JOptionPane.showMessageDialog(null, message, "Thông báo", type);
-        if (o.equals(btnPayment)) {
+        if (o.equals(btnExportExcel)) {
+            Boolean result = ExportBill.getInstance().exportBillToExcel(bill, path);
+            String message = "";
+            int type = JOptionPane.INFORMATION_MESSAGE;
+            if (result) {
+                message = "Xuất file pdf thành công";
+                type = JOptionPane.INFORMATION_MESSAGE;
+            } else {
+                message = "Xuất file pdf thất bại";
+                type = JOptionPane.ERROR_MESSAGE;
+            }
+            JOptionPane.showMessageDialog(null, message, "Thông báo", type);
+        } else if (o.equals(btnExportPdf)) {
+            Boolean result = ExportBill.getInstance().exportBillToPdf(bill, path);
+            String message = "";
+            int type = JOptionPane.INFORMATION_MESSAGE;
+            if (result) {
+                message = "Xuất file pdf thành công";
+                type = JOptionPane.INFORMATION_MESSAGE;
+            } else {
+                message = "Xuất file pdf thất bại";
+                type = JOptionPane.ERROR_MESSAGE;
+            }
+            JOptionPane.showMessageDialog(null, message, "Thông báo", type);
+        }
+        else if (o.equals(btnPayment)) {
             boolean isPaid = billDAO.paymentBill(bill.getMaHoaDon(), bill.getNgayGioTra());
             if (isPaid) {
                 paid = isPaid;
