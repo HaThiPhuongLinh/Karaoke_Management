@@ -157,6 +157,47 @@ public class BillDAO {
 
         return bill;
     }
+    public Bill getBillByCustomerName(String customerName) {
+        ConnectDB.getInstance();
+        PreparedStatement statement = null;
+        Connection con = ConnectDB.getConnection();
+        Bill bill = null;
+
+        try {
+            // Tìm mã khách hàng dựa trên tên khách hàng
+            String customerQuery = "SELECT maKhachHang FROM dbo.KhachHang WHERE tenKhachHang like ?";
+            statement = con.prepareStatement(customerQuery);
+            statement.setString(1, "%" + customerName + "%");
+            ResultSet customerResultSet = statement.executeQuery();
+
+            if (customerResultSet.next()) {
+                String customerID = customerResultSet.getString("maKhachHang");
+
+                // Lấy hóa đơn dựa trên mã khách hàng
+                String sql = "SELECT * FROM dbo.HoaDon WHERE maKhachHang = ?";
+                statement = con.prepareStatement(sql);
+                statement.setString(1, customerID);
+                ResultSet rs = statement.executeQuery();
+
+                if (rs.next()) {
+                    String maHoaDon = rs.getString(1);
+                    Staff maNhanVien = new Staff(rs.getString(2));
+                    Customer maKhachHang = new Customer(rs.getString(3));
+                    Room maPhong = new Room(rs.getString(4));
+                    Timestamp ngayGioDat = rs.getTimestamp(5);
+                    Timestamp ngayGioTra = rs.getTimestamp(6);
+                    int tinhTrang = rs.getInt(7);
+                    String khuyenMai = rs.getString(8);
+
+                    bill = new Bill(maHoaDon, maNhanVien, maKhachHang, maPhong, ngayGioDat, ngayGioTra, tinhTrang, khuyenMai);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return bill;
+    }
 
 //    public int getTotalLineOfBillList(Date fromDate, Date toDate, String staffId) {
 //        String query = "{CALL USP_getTotalLineOfBillListByDate( ? , ? , ? )}";

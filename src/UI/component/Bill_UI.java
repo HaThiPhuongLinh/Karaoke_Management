@@ -49,6 +49,7 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
     private ArrayList<DetailsOfService> dsCTDV;
     private Bill rsvf;
     private static KaraokeBooking_UI main;
+    private Bill rsvf2;
 
     public Bill_UI(){
         setLayout(null);
@@ -260,7 +261,7 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         if(o.equals(btnTim)) {
-            if (txtTK.getText().trim().equals("")) {
+            if (txtTK.getText().trim().equals("")&&txtKH.getText().trim().equals("")) {
                 JOptionPane.showMessageDialog(this, "Bạn phải nhập thông tin tìm kiếm");
                 modelTablePDP.getDataVector().removeAllElements();
                 loadHD();
@@ -278,7 +279,16 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
                 modelTablePDP.addRow(rowData);
 
 
+            }else if(!txtKH.getText().trim().equals("")){
+                modelTablePDP.getDataVector().removeAllElements();
+
+                String txtTen = txtKH.getText();
+                rsvf2 =billDAO.getBillByCustomerName(txtTen);
+                String date2 = formatDate(rsvf2.getNgayGioDat());
+                Object[] rowData = {1, rsvf2.getMaPhong().getMaPhong(), rsvf2.getMaPhong().getLoaiPhong().getTenLoaiPhong(), rsvf2.getMaKH().getTenKhachHang(),date2, df.format(rsvf2.getMaPhong().getGiaPhong())};
+                modelTablePDP.addRow(rowData);
             }
+
             else {
                 JOptionPane.showMessageDialog(this, "Không có phòng đang được sử dụng khớp với thông tin tìm kiếm");
                 txtTK.selectAll();
