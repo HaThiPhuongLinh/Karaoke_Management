@@ -195,15 +195,16 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
             modelTableDV.getDataVector().removeAllElements();
             try {
                 Date tuNgay = pickerTuNgay.getFullDate();
-                Date denNgay = pickerDenNgay.getFullDate();
+                Date denNgay = pickerDenNgay.addOneDay();
                 ArrayList<Bill> listBill = billDAO.getListBillByDate(tuNgay, denNgay);
                 System.out.printf(String.valueOf(listBill.size())+"ádasdasd");
                 if (validData()) {
                     if (tuNgay.before(denNgay)) {
-                        if (listBill == null || listBill.isEmpty() || listBill.size() <= 0)
+                        if (listBill == null || listBill.isEmpty() || listBill.size() <= 0) {
                             JOptionPane.showMessageDialog(this, "Không tìm thấy thông tin thông kê");
-                        else
+                        } else {
                             docDuLieuVaoTable(listBill);
+                        }
                     }
                 } else if (denNgay.before(tuNgay)) {
                     pickerDenNgay.setValueToDay();
@@ -282,11 +283,7 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
                     tableDV.removeAll();
                     Date tuNgay = pickerTuNgay.setDatesFromToday(Calendar.DAY_OF_MONTH, -6);
                     Date denNgay = null;
-                    try {
-                        denNgay = pickerDenNgay.getValueToDay();
-                    } catch (ParseException ex) {
-                        ex.printStackTrace();
-                    }
+                    denNgay = pickerDenNgay.getCurrentDatePlusOneDay();
                     ArrayList<Bill> listBill = billDAO.getListBillByDate(tuNgay, denNgay);
                     docDuLieuVaoTable(listBill);
                     break;
@@ -297,11 +294,7 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
                     tableDV.removeAll();
                     Date tuNgay1 = pickerTuNgay.setDatesFromToday(Calendar.MONTH, -1);
                     Date denNgay1 = null;
-                    try {
-                        denNgay1 = pickerDenNgay.getValueToDay();
-                    } catch (ParseException ex) {
-                        ex.printStackTrace();
-                    }
+                    denNgay1 = pickerDenNgay.getCurrentDatePlusOneDay();
                     ArrayList<Bill> listBill1 = billDAO.getListBillByDate(tuNgay1, denNgay1);
                     docDuLieuVaoTable(listBill1);
                     break;
@@ -312,11 +305,7 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
                     tableDV.removeAll();
                     Date tuNgay2 = pickerTuNgay.setDatesFromToday(Calendar.MONTH, -2);
                     Date denNgay2 = null;
-                    try {
-                        denNgay2 = pickerDenNgay.getValueToDay();
-                    } catch (ParseException ex) {
-                        ex.printStackTrace();
-                    }
+                    denNgay2 = pickerDenNgay.getCurrentDatePlusOneDay();
                     ArrayList<Bill> listBill2 = billDAO.getListBillByDate(tuNgay2, denNgay2);
                     docDuLieuVaoTable(listBill2);
                     break;
@@ -327,11 +316,7 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
                     tableDV.removeAll();
                     Date tuNgay3 = pickerTuNgay.setDatesFromToday(Calendar.MONTH, -5);
                     Date denNgay3 = null;
-                    try {
-                        denNgay3 = pickerDenNgay.getValueToDay();
-                    } catch (ParseException ex) {
-                        ex.printStackTrace();
-                    }
+                    denNgay3 = pickerDenNgay.getCurrentDatePlusOneDay();
                     ArrayList<Bill> listBill3 = billDAO.getListBillByDate(tuNgay3, denNgay3);
                     docDuLieuVaoTable(listBill3);
                     break;
@@ -342,11 +327,7 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
                     tableDV.removeAll();
                     Date tuNgay4 = pickerTuNgay.setDatesFromToday(Calendar.MONTH, -11);
                     Date denNgay4 = null;
-                    try {
-                        denNgay4 = pickerDenNgay.getValueToDay();
-                    } catch (ParseException ex) {
-                        ex.printStackTrace();
-                    }
+                    denNgay4 = pickerDenNgay.getCurrentDatePlusOneDay();
                     ArrayList<Bill> listBill4 = billDAO.getListBillByDate(tuNgay4, denNgay4);
                     docDuLieuVaoTable(listBill4);
 
