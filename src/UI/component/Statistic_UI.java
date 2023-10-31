@@ -1,17 +1,23 @@
 package UI.component;
 
 import DAO.BillDAO;
+import DAO.DetailOfServiceDAO;
 import Entity.Bill;
+import Entity.DetailsOfService;
 import UI.CustomUI.Custom;
 import UI.component.Dialog.DatePicker;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 
 import javax.swing.*;
+import javax.swing.Timer;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
@@ -19,26 +25,31 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class Statistic_UI extends JPanel implements  ActionListener, ItemListener {
+    private JTextField textFieldTongDoanhThu;
     private ChartPanel chartPanel;
     private JButton btnLamMoi, btnThongKe;
     private JComboBox<String> comboBoxLocTheo;
     private DatePicker pickerTuNgay,pickerDenNgay;
     private JLabel backgroundLabel,timeLabel;
     private BillDAO billDAO;
+    private static DetailOfServiceDAO detailOfServiceDAO;
+    private DecimalFormat df = new DecimalFormat("#,###.##");
+    private DefaultCategoryDataset dataset;
+
 
     public Statistic_UI(){
         setLayout(null);
         setBounds(0, 0, 1475, 770);
 
         billDAO = new BillDAO();
+        detailOfServiceDAO = new DetailOfServiceDAO();
         //phan viet code
 
         JLabel headerLabel = new JLabel("THỐNG KÊ DOANH THU");
@@ -108,6 +119,11 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
 
         comboBoxLocTheo = new JComboBox<String>();
         comboBoxLocTheo.addItem("Tùy chỉnh");
+        comboBoxLocTheo.addItem("7 ngày gần nhất");
+//        comboBoxLocTheo.addItem("1 tháng gần nhất");
+//        comboBoxLocTheo.addItem("3 tháng gần nhất");
+//        comboBoxLocTheo.addItem("6 tháng gần nhất");
+//        comboBoxLocTheo.addItem("1 năm gần nhất");
         comboBoxLocTheo.setBounds(830,100,200,30);
         Custom.setCustomComboBox(comboBoxLocTheo);
         add(comboBoxLocTheo);
@@ -136,7 +152,7 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
 
         JFreeChart chart = ChartFactory.createBarChart("BIỂU ĐỒ DOANH THU", "Ngày", "VND", null,
                 PlotOrientation.VERTICAL, false, false, false);
-        // chart.getPlot().setBackgroundPaint(Color.WHITE);
+//         chart.getPlot().setBackgroundPaint(Color.WHITE);
         chart.setBackgroundPaint(Color.WHITE);
 
         chartPanel = new ChartPanel(chart);
@@ -151,7 +167,7 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
         labelTongDoanhThu.setForeground(Color.WHITE);
         panelDoanhThu.add(labelTongDoanhThu);
 
-        JTextField textFieldTongDoanhThu = new JTextField();
+        textFieldTongDoanhThu = new JTextField();
         textFieldTongDoanhThu.setBounds(980, 80, 150, 30);
         textFieldTongDoanhThu.setColumns(3);
         panelDoanhThu.add(textFieldTongDoanhThu);
@@ -168,6 +184,10 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
         backgroundLabel = new JLabel(backgroundImage);
         backgroundLabel.setBounds(0, 0, getWidth(), getHeight());
         add(backgroundLabel);
+
+        btnThongKe.addActionListener(this);
+        btnLamMoi.addActionListener(this);
+        comboBoxLocTheo.addItemListener(this);
     }
     private void updateTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
@@ -177,102 +197,99 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
 
     @Override
     public void itemStateChanged(ItemEvent e) {
-//        Object o = e.getSource();
-//        if (o.equals(comboBoxLocTheo)) {
-//            String search = comboBoxLocTheo.getSelectedItem().toString();
-//            switch (search) {
-//                case "7 ngày gần nhất":
-//                    pickerTuNgay.setActive(false);
-//                    pickerDenNgay.setActive(false);
-//                    modelTableDV.getDataVector().removeAllElements();
-//                    tableDV.removeAll();
-//                    Date tuNgay = pickerTuNgay.setDatesFromToday(Calendar.DAY_OF_MONTH, -6);
-//                    Date denNgay = null;
-//                    try {
-//                        denNgay = pickerDenNgay.getValueToDay();
-//                    } catch (ParseException ex) {
-//                        ex.printStackTrace();
-//                    }
-//                    ArrayList<Bill> listBill = billDAO.getListBillByDate(tuNgay, denNgay);
-//                    docDuLieuVaoTable(listBill);
-//                    break;
-//                case "1 tháng gần nhất":
-//                    pickerTuNgay.setActive(false);
-//                    pickerDenNgay.setActive(false);
-//                    modelTableDV.getDataVector().removeAllElements();
-//                    tableDV.removeAll();
-//                    Date tuNgay1 = pickerTuNgay.setDatesFromToday(Calendar.MONTH, -1);
-//                    Date denNgay1 = null;
-//                    try {
-//                        denNgay1 = pickerDenNgay.getValueToDay();
-//                    } catch (ParseException ex) {
-//                        ex.printStackTrace();
-//                    }
-//                    ArrayList<Bill> listBill1 = billDAO.getListBillByDate(tuNgay1, denNgay1);
-//                    docDuLieuVaoTable(listBill1);
-//                    break;
-//                case "3 tháng gần nhất":
-//                    pickerTuNgay.setActive(false);
-//                    pickerDenNgay.setActive(false);
-//                    modelTableDV.getDataVector().removeAllElements();
-//                    tableDV.removeAll();
-//                    Date tuNgay2 = pickerTuNgay.setDatesFromToday(Calendar.MONTH, -2);
-//                    Date denNgay2 = null;
-//                    try {
-//                        denNgay2 = pickerDenNgay.getValueToDay();
-//                    } catch (ParseException ex) {
-//                        ex.printStackTrace();
-//                    }
-//                    ArrayList<Bill> listBill2 = billDAO.getListBillByDate(tuNgay2, denNgay2);
-//                    docDuLieuVaoTable(listBill2);
-//                    break;
-//                case "6 tháng gần nhất":
-//                    pickerTuNgay.setActive(false);
-//                    pickerDenNgay.setActive(false);
-//                    modelTableDV.getDataVector().removeAllElements();
-//                    tableDV.removeAll();
-//                    Date tuNgay3 = pickerTuNgay.setDatesFromToday(Calendar.MONTH, -5);
-//                    Date denNgay3 = null;
-//                    try {
-//                        denNgay3 = pickerDenNgay.getValueToDay();
-//                    } catch (ParseException ex) {
-//                        ex.printStackTrace();
-//                    }
-//                    ArrayList<Bill> listBill3 = billDAO.getListBillByDate(tuNgay3, denNgay3);
-//                    docDuLieuVaoTable(listBill3);
-//                    break;
-//                case "1 năm gần nhất":
-//                    pickerTuNgay.setActive(false);
-//                    pickerDenNgay.setActive(false);
-//                    modelTableDV.getDataVector().removeAllElements();
-//                    tableDV.removeAll();
-//                    Date tuNgay4 = pickerTuNgay.setDatesFromToday(Calendar.MONTH, -11);
-//                    Date denNgay4 = null;
-//                    try {
-//                        denNgay4 = pickerDenNgay.getValueToDay();
-//                    } catch (ParseException ex) {
-//                        ex.printStackTrace();
-//                    }
-//                    ArrayList<Bill> listBill4 = billDAO.getListBillByDate(tuNgay4, denNgay4);
-//                    docDuLieuVaoTable(listBill4);
-//
-//                    break;
-//                case "Tùy chỉnh":
-//                    pickerTuNgay.setActive(true);
-//                    pickerDenNgay.setActive(true);
-//                    pickerTuNgay.setValueToDay();
-//                    break;
-//            }
-//        }
+        Object o = e.getSource();
+        if (o.equals(comboBoxLocTheo)) {
+            String search = comboBoxLocTheo.getSelectedItem().toString();
+            switch (search) {
+                case "7 ngày gần nhất":
+                    pickerTuNgay.setActive(false);
+                    pickerDenNgay.setActive(false);
+                    Date tuNgay = pickerTuNgay.setDatesFromToday(Calendar.DAY_OF_MONTH, -6);
+                    Date denNgay = null;
+                    denNgay = pickerDenNgay.getCurrentDatePlusOneDay();
+                    ArrayList<Bill> listBill = billDAO.getListBillByDate(tuNgay, denNgay);
+                    try {
+                        statistical(listBill);
+                    } catch (ParseException ex) {
+                        ex.printStackTrace();
+                    }
+                    break;
+                case "1 tháng gần nhất":
+                    pickerTuNgay.setActive(false);
+                    pickerDenNgay.setActive(false);
+                    Date tuNgay1 = pickerTuNgay.setDatesFromToday(Calendar.MONTH, -1);
+                    Date denNgay1 = null;
+                    denNgay1 = pickerDenNgay.getCurrentDatePlusOneDay();
+                    ArrayList<Bill> listBill1 = billDAO.getListBillByDate(tuNgay1, denNgay1);
+                    try {
+                        statistical(listBill1);
+                    } catch (ParseException ex) {
+                        ex.printStackTrace();
+                    }
+                case "3 tháng gần nhất":
+                    pickerTuNgay.setActive(false);
+                    pickerDenNgay.setActive(false);
+                    Date tuNgay2 = pickerTuNgay.setDatesFromToday(Calendar.MONTH, -2);
+                    Date denNgay2 = null;
+                    denNgay2 = pickerDenNgay.getCurrentDatePlusOneDay();
+                    ArrayList<Bill> listBill2 = billDAO.getListBillByDate(tuNgay2, denNgay2);
+                    try {
+                        statistical(listBill2);
+                    } catch (ParseException ex) {
+                        ex.printStackTrace();
+                    }
+                case "6 tháng gần nhất":
+                    pickerTuNgay.setActive(false);
+                    pickerDenNgay.setActive(false);
+                    Date tuNgay3 = pickerTuNgay.setDatesFromToday(Calendar.MONTH, -5);
+                    Date denNgay3 = null;
+                    denNgay3 = pickerDenNgay.getCurrentDatePlusOneDay();
+                    ArrayList<Bill> listBill3 = billDAO.getListBillByDate(tuNgay3, denNgay3);
+                    try {
+                        statistical(listBill3);
+                    } catch (ParseException ex) {
+                        ex.printStackTrace();
+                    }
+                case "1 năm gần nhất":
+                    pickerTuNgay.setActive(false);
+                    pickerDenNgay.setActive(false);
+                    Date tuNgay4 = pickerTuNgay.setDatesFromToday(Calendar.MONTH, -11);
+                    Date denNgay4 = null;
+                    denNgay4 = pickerDenNgay.getCurrentDatePlusOneDay();
+                    ArrayList<Bill> listBill4 = billDAO.getListBillByDate(tuNgay4, denNgay4);
+                    try {
+                        statistical(listBill4);
+                    } catch (ParseException ex) {
+                        ex.printStackTrace();
+                    }
+                case "Tùy chỉnh":
+                    pickerTuNgay.setActive(true);
+                    pickerDenNgay.setActive(true);
+                    break;
+            }
+        }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         if (o.equals(btnThongKe)){
+            Date tuNgay = null;
+            try {
+                tuNgay = pickerTuNgay.getFullDate();
+                Date denNgay = pickerDenNgay.addOneDay();
+                ArrayList<Bill> listBill = billDAO.getListBillByDate(tuNgay, denNgay);
+                System.out.printf(String.valueOf(listBill.size())+"ádasdasd");
+                statistical(listBill);
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+            }
 
         }else if (o.equals(btnLamMoi)){
-
+            dataset.clear();
+            comboBoxLocTheo.setSelectedIndex(0);
+            pickerTuNgay.setValueToDay();
+            pickerDenNgay.setValueToDay();
         }
     }
 
@@ -317,8 +334,9 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
             timeUnit = "Năm";
         }
 
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        dataset = new DefaultCategoryDataset();
         int size = totalPriceList.size();
+//        System.out.printf(size+"     ");
         Double total = 0.0;
         int totalPriceListIndex = 0;
 
@@ -352,23 +370,41 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
             }
 
             Double totalPrice = 0.0;
-            if (size > totalPriceListIndex && size != 0) {
-                if (totalPriceList.get(totalPriceListIndex)[0].equals(fullDayStr)) {
-                    totalPrice = (Double) totalPriceList.get(totalPriceListIndex)[1];
+//            if (size > totalPriceListIndex && size != 0) {
+////                if (totalPriceList.get(totalPriceListIndex)[0].equals(fullDayStr)) {
+//                if (fullDayStr.trim().equals(totalPriceList.get(totalPriceListIndex)[0])) {
+//                    System.out.printf(fullDayStr+"----------------");
+//                    totalPrice = (Double) totalPriceList.get(totalPriceListIndex)[1];
+//                    if (totalPrice == null) {
+//                        totalPrice = 0.0;
+//                    }
+//                    total += totalPrice;
+//                    totalPriceListIndex++;
+//                }
+//            }
+            for (int k=0;k<size;k++){
+                System.out.printf(totalPriceList.get(k)[0]+"\n");
+                System.out.printf(totalPriceList.get(k)[1]+"\n");
+                if (fullDayStr.trim().equals(totalPriceList.get(k)[0])) {
+                    System.out.printf(fullDayStr+"----------------");
+                    totalPrice = (Double) totalPriceList.get(k)[1];
                     if (totalPrice == null) {
                         totalPrice = 0.0;
                     }
                     total += totalPrice;
                     totalPriceListIndex++;
+                    break;
                 }
             }
+
 
             if (totalPrice < 0.0 || totalPrice == null) {
                 totalPrice = 0.0;
             }
+            System.out.println("Ngày: " + fullDayStr + ", Doanh thu: " + totalPrice);
             dataset.addValue(totalPrice, "VND", timeStr);
         }
-//        txtTotalPrice.setText(df.format(total));
+        textFieldTongDoanhThu.setText(df.format(total));
 
         JFreeChart chart = ChartFactory.createBarChart("BIỂU ĐỒ DOANH THU " + title, timeUnit, "VND", dataset,
                 PlotOrientation.VERTICAL, false, false, false);
@@ -376,13 +412,88 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
         chartPanel.setChart(chart);
     }
 
-    private void statistical(){
-        Date fromDate = pickerTuNgay.getValueSqlDate();
-        Date toDate = pickerDenNgay.getValueSqlDate();
+
+    public static ArrayList<Object[]> calculateTotalByDate(ArrayList<Bill> listBill) {
+        Map<String, Double> totalByDate = new HashMap<>();
+//        java.util.List<Customer> list = customerDAO.getAllKhachHang();
+        ArrayList<DetailsOfService> list1 = detailOfServiceDAO.getAllDetailsOfService();
+
+
+        for (Bill b : listBill) {
+            Date ngay = b.getNgayGioTra();
+            System.out.printf("----------------"+ngay+"----------------");
+
+            String dateTimeString = String.valueOf(ngay);
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+            SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+
+            String formattedDate = null;
+            try {
+                Date date = inputFormat.parse(dateTimeString);
+                formattedDate = outputFormat.format(date);
+                System.out.println(formattedDate);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            double gia = 0;
+            for (DetailsOfService details : list1){
+                if (b.getMaHoaDon().equals(details.getMaHoaDon().getMaHoaDon())){
+                    gia += details.getSoLuong()*details.getGiaBan();
+                }
+            }
+            double quantity = b.getMaPhong().getGiaPhong() * b.tinhGioThue() + gia;
+
+
+            if (totalByDate.containsKey(formattedDate)) {
+                // Nếu ngày đã tồn tại trong HashMap, cộng dồn tổng tiền
+                double existingTotal = totalByDate.get(formattedDate);
+                totalByDate.put(formattedDate, existingTotal + quantity);
+            } else {
+                // Nếu ngày chưa tồn tại trong HashMap, thêm mới với tổng tiền
+                totalByDate.put(formattedDate, quantity);
+            }
+        }
+
+        // Chuyển HashMap thành ArrayList<Object>
+        ArrayList<Object[]> resultList = new ArrayList<>();
+        for (Map.Entry<String, Double> entry : totalByDate.entrySet()) {
+
+//            String dateTimeString = String.valueOf(entry.getKey());
+//            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+//            SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+//
+//            String formattedDate = null;
+//            try {
+//                Date date = inputFormat.parse(dateTimeString);
+//                formattedDate = outputFormat.format(date);
+//                System.out.println(formattedDate);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+
+            Object[] item = new Object[]{entry.getKey(), entry.getValue()};
+            System.out.printf(entry.getKey() + "\n");
+            System.out.printf(entry.getValue() + "\n");
+            resultList.add(item);
+        }
+
+        return resultList;
+    }
+
+    private void statistical(ArrayList<Bill> listBill) throws ParseException {
+//        Date fromDate = pickerTuNgay.getValueSqlDate();
+//        Date toDate = pickerDenNgay.getValueSqlDate();
+
+        Date fromDate = pickerTuNgay.getFullDate();
+        Date toDate = pickerDenNgay.getFullDate();
+//        ArrayList<Bill> listBill = billDAO.getListBillByDate(fromDate, toDate);
 
         int TotalBill = 0;
         TotalBill = billDAO.getTotalLineOfBillList(fromDate, toDate);
 //        txtTotalBill.setText(df.format(TotalBill));
+
+        System.out.printf(TotalBill+"");
 
         ArrayList<Object[]> totalPriceList = new ArrayList<>();
         long difference = toDate.getTime() - fromDate.getTime();
@@ -413,22 +524,19 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
                 }
                 break;
         }
-//        if (days < 0) {
-//            String message = "Ngày kết thúc thống kê phải lớn hơn hoặc bằng ngày bắt đầu thống kê";
-//            JOptionPane.showMessageDialog(this, message, "Lỗi", JOptionPane.ERROR_MESSAGE);
-//        } else if (days >= 0 && days <= dayOfMonth) {
-//            totalPriceList = billDAO.getTotalPriceBillListByDate(fromDate, toDate,
-//                    DAY);
-//            showStatistical(fromDate, toDate, dayOfMonth, dayOfYear, "dd", totalPriceList);
-//        } else if (days > dayOfMonth && days <= dayOfYear) {
-//            totalPriceList = billDAO.getTotalPriceBillListByDate(fromDate, toDate,
-//                    MONTH);
-//            showStatistical(fromDate, toDate, dayOfMonth, dayOfYear, "mm", totalPriceList);
-//        } else if (days > dayOfYear) {
-//            totalPriceList = billDAO.getTotalPriceBillListByDate(fromDate, toDate,
-//                    YEAR);
-//            showStatistical(fromDate, toDate, dayOfMonth, dayOfYear, "yyyy", totalPriceList);
-//        }
+        if (days < 0) {
+            String message = "Ngày kết thúc thống kê phải lớn hơn hoặc bằng ngày bắt đầu thống kê";
+            JOptionPane.showMessageDialog(this, message, "Lỗi", JOptionPane.ERROR_MESSAGE);
+        } else if (days >= 0 && days <= dayOfMonth) {
+            totalPriceList = calculateTotalByDate(listBill);
+            showStatistical(fromDate, toDate, dayOfMonth, dayOfYear, "dd",totalPriceList);
+        } else if (days > dayOfMonth && days <= dayOfYear) {
+            totalPriceList =  calculateTotalByDate(listBill);
+            showStatistical(fromDate, toDate, dayOfMonth, dayOfYear, "mm", totalPriceList);
+        } else if (days > dayOfYear) {
+            totalPriceList =  calculateTotalByDate(listBill);
+            showStatistical(fromDate, toDate, dayOfMonth, dayOfYear, "yyyy",totalPriceList);
+        }
     }
 
 }
