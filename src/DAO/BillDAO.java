@@ -124,7 +124,7 @@ public class BillDAO {
 
         try {
             conn = ConnectDB.getInstance().getConnection();
-            String query = "SELECT * FROM HoaDon WHERE maPhong = ?";
+            String query = "SELECT * FROM HoaDon WHERE maPhong = ? AND tinhTrangHD = 0";
             stmt = conn.prepareStatement(query);
             stmt.setString(1, roomID);
 
@@ -155,6 +155,7 @@ public class BillDAO {
 
         return bill;
     }
+
     public Bill getBillByCustomerName(String customerName) {
         ConnectDB.getInstance();
         PreparedStatement statement = null;

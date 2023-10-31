@@ -21,6 +21,8 @@ import java.awt.event.MouseListener;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 
 public class ReservationFormList extends JFrame implements ActionListener, MouseListener {
@@ -226,43 +228,60 @@ public class ReservationFormList extends JFrame implements ActionListener, Mouse
                 }
 
                 if (room.getTinhTrang().equalsIgnoreCase("Chờ")) {
-                    int khachHangColumn = 1;
-                    String customerName = table.getValueAt(row, khachHangColumn).toString();
-                    String customerID = customerDAO.getIdByTenKhachHang(customerName);
-                    Customer c = customerDAO.getKhachHangById(customerID);
-                    if (c == null) {
-                        c = new Customer();
-                    }
-                    Staff staffLogin = KaraokeBooking_UI.getInstance().staffLogin;
-                    long millis = System.currentTimeMillis();
-                    Timestamp startTime = new Timestamp(millis);
-                    Timestamp receiveTime = null;
-                    int tinhTrang = 0;
-                    String khuyenMai = "";
+                    ArrayList<ReservationForm> reservations = reservationFormDAO.getReservationsByRoomID(roomID);
 
-                    String billID = generateBillID();
-                    Bill bill = new Bill(billID, staffLogin, c, room, startTime, receiveTime, tinhTrang, khuyenMai);
-                    boolean resultBill = billDAO.addBill(bill);
-
-                    if (resultBill) {
-                        int maPhieuColumn = 0;
-                        String reservationFormID = table.getValueAt(row, maPhieuColumn).toString();
-                        ;
-                        boolean deleteResult = reservationFormDAO.deleteReservationForm(reservationFormID);
-
-                        roomDAO.updateRoomStatus(roomID, "Đang sử dụng");
-                        ArrayList<Room> yourListOfRooms = roomDAO.getRoomList();
-                        main.LoadRoomList(yourListOfRooms);
-                        JOptionPane.showMessageDialog(this, "Nhận phòng thành công");
-                        dispose();
+                    if (reservations.isEmpty()) {
+                        // Không có phiếu đặt nào
+                        receiveRoom(roomID);
                     } else {
-                        JOptionPane.showMessageDialog(this, "Cho thuê phòng thất bại");
+                        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+
+                        // Sắp xếp phiếu đặt theo thời gian đặt
+                        Collections.sort(reservations, new Comparator<ReservationForm>() {
+                            @Override
+                            public int compare(ReservationForm r1, ReservationForm r2) {
+                                return r1.getThoiGianDat().compareTo(r2.getThoiGianDat());
+                            }
+                        });
+
+                        ReservationForm selectedReservation = reservations.get(row);
+                        Timestamp selectedReservationTime = selectedReservation.getThoiGianDat();
+
+                        String message = "Phòng đã được đặt vào các thời điểm sau:\n";
+                        SimpleDateFormat sdf = new SimpleDateFormat(" HH:mm:ss dd/MM/yyyy");
+
+                        for (int i = 0; i < reservations.size(); i++) {
+                            ReservationForm reservation = reservations.get(i);
+                            Timestamp reservationTime = reservation.getThoiGianDat();
+                            if (reservationTime.before(selectedReservationTime)) {
+                                String timeDiffMessage = sdf.format(reservationTime);
+                                message += "- " + timeDiffMessage + "\n";
+                            }
+                        }
+
+                        if (message.equals("Phòng đã được đặt vào các thời điểm sau:\n")) {
+                            long timeDifference = (selectedReservationTime.getTime() - currentTime.getTime());
+
+                            int minutes = (int) ((timeDifference / (1000 * 60)) % 60);
+                            int hours = (int) (timeDifference / (1000 * 60 * 60));
+
+                            message = "Còn " + hours + " giờ " + minutes + " phút mới đến giờ đặt. Bạn có muốn nhận phòng ngay bây giờ không?";
+                            int choice = JOptionPane.showConfirmDialog(this, message, "Thông báo", JOptionPane.YES_NO_OPTION);
+
+                            if (choice == JOptionPane.YES_OPTION) {
+                                receiveRoom(roomID);
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(this, message);
+                        }
                     }
                 } else {
                     JOptionPane.showMessageDialog(this, "Phòng đang được sử dụng");
                 }
             }
         }
+
+
 
         if (o.equals(btnCancel)) {
             int row = table.getSelectedRow();
@@ -282,6 +301,11 @@ public class ReservationFormList extends JFrame implements ActionListener, Mouse
                 boolean deleteResult = reservationFormDAO.deleteReservationForm(reservationFormID);
                 if (deleteResult) {
                     JOptionPane.showMessageDialog(this, "Hủy đặt phòng thành công");
+                    ArrayList<ReservationForm> reservations = reservationFormDAO.getReservationsByRoomID(roomID);
+
+                    if (reservations.isEmpty()) {
+                        roomDAO.updateRoomStatus(roomID, "Trống");
+                    }
                     modelTable.setRowCount(0);
                     for (ReservationForm r : reservationFormDAO.getAllForm()) {
                         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -309,6 +333,18 @@ public class ReservationFormList extends JFrame implements ActionListener, Mouse
             }
             txtTim.setText("");
         }
+    }
+
+    private void receiveRoom(String roomID) {
+        int maPhieuColumn = 0;
+        String reservationFormID = table.getValueAt(table.getSelectedRow(), maPhieuColumn).toString();
+        boolean deleteResult = reservationFormDAO.deleteReservationForm(reservationFormID);
+
+        roomDAO.updateRoomStatus(roomID, "Đang sử dụng");
+        ArrayList<Room> yourListOfRooms = roomDAO.getRoomList();
+        main.LoadRoomList(yourListOfRooms);
+        JOptionPane.showMessageDialog(this, "Nhận phòng thành công");
+        dispose();
     }
 
     private String generateBillID() {

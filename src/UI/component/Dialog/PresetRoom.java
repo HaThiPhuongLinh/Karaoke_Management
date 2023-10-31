@@ -105,7 +105,7 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
         lblTDay = new JLabel("Giờ nhận phòng:");
         lblTDay.setFont(new Font("Dialog", Font.BOLD, 14));
         lblTDay.setBounds(10, 220, 120, 20);
-        cboHour = new JComboBox<>(new String[]{"8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21"});
+        cboHour = new JComboBox<>(new String[]{"2","8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21"});
         cboHour.setBounds(150, 220, 60, 25);
         cboHour.setFont(new Font("Dialog", Font.BOLD, 15));
         lblHour = new JLabel("giờ");

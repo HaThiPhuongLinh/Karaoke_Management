@@ -238,4 +238,44 @@ public class ReservationFormDAO {
 
         return reservationForm;
     }
+
+    public ArrayList<ReservationForm> getReservationsByRoomID(String roomID) {
+        ArrayList<ReservationForm> reservations = new ArrayList<>();
+        Connection con = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            con = ConnectDB.getInstance().getConnection();
+            String query = "SELECT * FROM PhieuDatPhong WHERE maPhong = ? ORDER BY thoiGianDat ASC;";
+            stmt = con.prepareStatement(query);
+            stmt.setString(1, roomID);
+
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                ReservationForm reservation = new ReservationForm(
+                        rs.getString("maPhieuDat"),
+                        rs.getTimestamp("thoiGianDat"),
+                        new Staff(rs.getString("maNhanVien")),
+                        new Customer(rs.getString("maKhachHang")),
+                        new Room(rs.getString("maPhong"))
+                );
+                reservations.add(reservation);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return reservations;
+    }
+
 }
