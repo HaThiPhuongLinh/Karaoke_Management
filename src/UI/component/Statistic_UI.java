@@ -123,10 +123,10 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
         comboBoxLocTheo = new JComboBox<String>();
         comboBoxLocTheo.addItem("Tùy chỉnh");
         comboBoxLocTheo.addItem("7 ngày gần nhất");
-//        comboBoxLocTheo.addItem("1 tháng gần nhất");
-//        comboBoxLocTheo.addItem("3 tháng gần nhất");
-//        comboBoxLocTheo.addItem("6 tháng gần nhất");
-//        comboBoxLocTheo.addItem("1 năm gần nhất");
+        comboBoxLocTheo.addItem("1 tháng gần nhất");
+        comboBoxLocTheo.addItem("3 tháng gần nhất");
+        comboBoxLocTheo.addItem("6 tháng gần nhất");
+        comboBoxLocTheo.addItem("1 năm gần nhất");
         comboBoxLocTheo.setBounds(830,100,200,30);
         Custom.setCustomComboBox(comboBoxLocTheo);
         add(comboBoxLocTheo);
@@ -198,6 +198,9 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
         timeLabel.setText(time);
     }
 
+
+
+
     @Override
     public void itemStateChanged(ItemEvent e) {
         Object o = e.getSource();
@@ -229,6 +232,7 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
                     } catch (ParseException ex) {
                         ex.printStackTrace();
                     }
+                    break;
                 case "3 tháng gần nhất":
                     pickerTuNgay.setActive(false);
                     pickerDenNgay.setActive(false);
@@ -241,6 +245,7 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
                     } catch (ParseException ex) {
                         ex.printStackTrace();
                     }
+                    break;
                 case "6 tháng gần nhất":
                     pickerTuNgay.setActive(false);
                     pickerDenNgay.setActive(false);
@@ -253,10 +258,11 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
                     } catch (ParseException ex) {
                         ex.printStackTrace();
                     }
+                    break;
                 case "1 năm gần nhất":
                     pickerTuNgay.setActive(false);
                     pickerDenNgay.setActive(false);
-                    Date tuNgay4 = pickerTuNgay.setDatesFromToday(Calendar.MONTH, -11);
+                    Date tuNgay4 = pickerTuNgay.setDatesFromToday(Calendar.MONTH, -13);
                     Date denNgay4 = null;
                     denNgay4 = pickerDenNgay.getCurrentDatePlusOneDay();
                     ArrayList<Bill> listBill4 = billDAO.getListBillByDate(tuNgay4, denNgay4);
@@ -265,9 +271,12 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
                     } catch (ParseException ex) {
                         ex.printStackTrace();
                     }
+                    break;
                 case "Tùy chỉnh":
                     pickerTuNgay.setActive(true);
                     pickerDenNgay.setActive(true);
+                    pickerTuNgay.setValueToDay();
+                    pickerDenNgay.setValueToDay();
                     break;
             }
         }
@@ -448,6 +457,12 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
             double quantity = b.getMaPhong().getGiaPhong() * b.tinhGioThue() + gia;
 
 
+            if (b.getKhuyenMai().trim().equalsIgnoreCase("KM")){
+                quantity += quantity*8/100;
+            }else{
+                quantity += 0;
+            }
+
             if (totalByDate.containsKey(formattedDate)) {
                 // Nếu ngày đã tồn tại trong HashMap, cộng dồn tổng tiền
                 double existingTotal = totalByDate.get(formattedDate);
@@ -480,7 +495,6 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
             System.out.printf(entry.getValue() + "\n");
             resultList.add(item);
         }
-
         return resultList;
     }
 
@@ -534,12 +548,172 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
             totalPriceList = calculateTotalByDate(listBill);
             showStatistical(fromDate, toDate, dayOfMonth, dayOfYear, "dd",totalPriceList);
         } else if (days > dayOfMonth && days <= dayOfYear) {
-            totalPriceList =  calculateTotalByDate(listBill);
+            totalPriceList =  calculateTotalByMonth(listBill);
             showStatistical(fromDate, toDate, dayOfMonth, dayOfYear, "mm", totalPriceList);
         } else if (days > dayOfYear) {
-            totalPriceList =  calculateTotalByDate(listBill);
+            totalPriceList =  calculateTotalByYear(listBill);
             showStatistical(fromDate, toDate, dayOfMonth, dayOfYear, "yyyy",totalPriceList);
         }
+    }
+
+    public static ArrayList<Object[]> calculateTotalByYear(ArrayList<Bill> listBill) {
+        Map<String, Double> totalByDate = new HashMap<>();
+//        java.util.List<Customer> list = customerDAO.getAllKhachHang();
+        ArrayList<DetailsOfService> list1 = detailOfServiceDAO.getAllDetailsOfService();
+
+
+        for (Bill b : listBill) {
+            Date ngay = b.getNgayGioTra();
+            System.out.printf("----------------"+ngay+"----------------");
+
+            String dateTimeString = String.valueOf(ngay);
+
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy");
+
+            String formattedDate = null;
+            try {
+                Date date = inputFormat.parse(dateTimeString);
+                formattedDate = outputFormat.format(date);
+                System.out.println("Ngày định dạng lại: " + formattedDate);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            double gia = 0;
+            for (DetailsOfService details : list1){
+                if (b.getMaHoaDon().equals(details.getMaHoaDon().getMaHoaDon())){
+                    gia += details.getSoLuong()*details.getGiaBan();
+                }
+            }
+            double quantity = b.getMaPhong().getGiaPhong() * b.tinhGioThue() + gia;
+
+
+            if (b.getKhuyenMai().trim().equalsIgnoreCase("KM")){
+                quantity += quantity*8/100;
+            }else{
+                quantity += 0;
+            }
+
+            if (totalByDate.containsKey(formattedDate)) {
+                // Nếu ngày đã tồn tại trong HashMap, cộng dồn tổng tiền
+                double existingTotal = totalByDate.get(formattedDate);
+                totalByDate.put(formattedDate, existingTotal + quantity);
+            } else {
+                // Nếu ngày chưa tồn tại trong HashMap, thêm mới với tổng tiền
+                totalByDate.put(formattedDate, quantity);
+            }
+        }
+
+        // Chuyển HashMap thành ArrayList<Object>
+        ArrayList<Object[]> resultList = new ArrayList<>();
+        for (Map.Entry<String, Double> entry : totalByDate.entrySet()) {
+
+//            String dateTimeString = String.valueOf(entry.getKey());
+//            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+//            SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+//
+//            String formattedDate = null;
+//            try {
+//                Date date = inputFormat.parse(dateTimeString);
+//                formattedDate = outputFormat.format(date);
+//                System.out.println(formattedDate);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+
+            Object[] item = new Object[]{entry.getKey(), entry.getValue()};
+            System.out.printf(entry.getKey() + "\n");
+            System.out.printf(entry.getValue() + "\n");
+            resultList.add(item);
+        }
+        return resultList;
+    }
+
+
+    public static ArrayList<Object[]> calculateTotalByMonth(ArrayList<Bill> listBill) {
+        Map<String, Double> totalByDate = new HashMap<>();
+//        java.util.List<Customer> list = customerDAO.getAllKhachHang();
+        ArrayList<DetailsOfService> list1 = detailOfServiceDAO.getAllDetailsOfService();
+
+
+        for (Bill b : listBill) {
+            Date ngay = b.getNgayGioTra();
+            System.out.printf("----------------"+ngay+"----------------");
+
+            String dateTimeString = String.valueOf(ngay);
+//            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+//            SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+//
+//            String formattedDate = null;
+//            try {
+//                Date date = inputFormat.parse(dateTimeString);
+//                formattedDate = outputFormat.format(date);
+//                System.out.println(formattedDate);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+            SimpleDateFormat outputFormat = new SimpleDateFormat("MM-yyyy");
+
+            String formattedDate = null;
+            try {
+                Date date = inputFormat.parse(dateTimeString);
+                formattedDate = outputFormat.format(date);
+                System.out.println("Ngày định dạng lại: " + formattedDate);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            double gia = 0;
+            for (DetailsOfService details : list1){
+                if (b.getMaHoaDon().equals(details.getMaHoaDon().getMaHoaDon())){
+                    gia += details.getSoLuong()*details.getGiaBan();
+                }
+            }
+            double quantity = b.getMaPhong().getGiaPhong() * b.tinhGioThue() + gia;
+
+
+            if (b.getKhuyenMai().trim().equalsIgnoreCase("KM")){
+                quantity += quantity*8/100;
+            }else{
+                quantity += 0;
+            }
+
+            if (totalByDate.containsKey(formattedDate)) {
+                // Nếu ngày đã tồn tại trong HashMap, cộng dồn tổng tiền
+                double existingTotal = totalByDate.get(formattedDate);
+                totalByDate.put(formattedDate, existingTotal + quantity);
+            } else {
+                // Nếu ngày chưa tồn tại trong HashMap, thêm mới với tổng tiền
+                totalByDate.put(formattedDate, quantity);
+            }
+        }
+
+        // Chuyển HashMap thành ArrayList<Object>
+        ArrayList<Object[]> resultList = new ArrayList<>();
+        for (Map.Entry<String, Double> entry : totalByDate.entrySet()) {
+
+//            String dateTimeString = String.valueOf(entry.getKey());
+//            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+//            SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+//
+//            String formattedDate = null;
+//            try {
+//                Date date = inputFormat.parse(dateTimeString);
+//                formattedDate = outputFormat.format(date);
+//                System.out.println(formattedDate);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+
+            Object[] item = new Object[]{entry.getKey(), entry.getValue()};
+            System.out.printf(entry.getKey() + "\n");
+            System.out.printf(entry.getValue() + "\n");
+            resultList.add(item);
+        }
+        return resultList;
     }
 
 }
