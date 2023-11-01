@@ -294,17 +294,6 @@ public class StaffDAO {
 //        return n > 0;
 //    }
 
-
-
-
-
-
-
-
-
-
-
-
     public Staff getStaffByID(String maNhanVien) {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();

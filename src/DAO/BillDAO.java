@@ -355,4 +355,21 @@ public class BillDAO {
         }
     }
 
+    public static boolean updateKM(String b) {
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        PreparedStatement statement = null;
+        int n = 0;
+        try {
+            String sql = "update dbo.HoaDon" + " set khuyenMai = 'KM'"
+                    + " where maHoaDon = ?";
+            statement = con.prepareStatement(sql);
+            statement.setString(1,b);
+            n = statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return n > 0;
+    }
+
 }

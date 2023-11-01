@@ -409,7 +409,6 @@ public class DialogBill extends JDialog implements ActionListener {
                 btnExportPdf.setEnabled(true);
                 btnPayment.setEnabled(false);
                 JOptionPane.showMessageDialog(null, "Thanh toán hóa đơn thành công", "Thông báo",
-
                         JOptionPane.INFORMATION_MESSAGE);
 
             } else {
@@ -530,6 +529,7 @@ public class DialogBill extends JDialog implements ActionListener {
         int thangSinhKhachHangValue = calendarNgaySinhKhachHang.get(Calendar.MONTH);
         if (ngayHienTaiValue == ngaySinhKhachHangValue && thangHienTaiValue == thangSinhKhachHangValue) {
             vat = 0.0;
+            boolean b = billDAO.updateKM(bill.getMaHoaDon());
         } else {
             vat = (totalPriceService + totalPriceRoom) * 0.08;
         }
