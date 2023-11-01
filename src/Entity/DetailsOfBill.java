@@ -3,22 +3,22 @@ package Entity;
 public class DetailsOfBill {
     private Bill maHoaDon;
     private Room maPhong;
-    private int thoiGianSuDung;
-    private int giaPhong;
+    private String thoiGianSuDung;
+    private double giaPhong;
 
     public DetailsOfBill(Bill maHoaDon) {
         this.maHoaDon = maHoaDon;
     }
 
-    public int getGiaPhong() {
+    public double getGiaPhong() {
         return giaPhong;
     }
 
-    public void setGiaPhong(int giaPhong) {
+    public void setGiaPhong(double giaPhong) {
         this.giaPhong = giaPhong;
     }
 
-    public DetailsOfBill(Bill maHoaDon, Room maPhong, int thoiGianSuDung, int giaPhong) {
+    public DetailsOfBill(Bill maHoaDon, Room maPhong, String thoiGianSuDung, double giaPhong) {
         this.maHoaDon = maHoaDon;
         this.maPhong = maPhong;
         this.thoiGianSuDung = thoiGianSuDung;
@@ -41,11 +41,11 @@ public class DetailsOfBill {
         this.maPhong = maPhong;
     }
 
-    public int getThoiGianSuDung() {
+    public String getThoiGianSuDung() {
         return thoiGianSuDung;
     }
 
-    public void setThoiGianSuDung(int thoiGianSuDung) {
+    public void setThoiGianSuDung(String thoiGianSuDung) {
         this.thoiGianSuDung = thoiGianSuDung;
     }
 }
