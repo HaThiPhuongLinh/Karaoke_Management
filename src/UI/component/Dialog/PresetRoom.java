@@ -8,6 +8,7 @@ import Entity.Customer;
 import Entity.ReservationForm;
 import Entity.Room;
 import Entity.Staff;
+import UI.component.Customer_UI;
 import UI.component.KaraokeBooking_UI;
 
 import javax.swing.*;
@@ -34,6 +35,7 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
     private JComboBox<String> cboHour, cboMin;
     private CustomerDAO customerDAO;
     private KaraokeBooking_UI main;
+    private Main m;
     private boolean reservationSuccess = false;
     private Staff staffLogin = null;
     private ReservationFormDAO reservationFormDAO;
@@ -171,6 +173,10 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
         this.main = main;
     }
 
+    public void setM(Main m) {
+        this.m = m;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
@@ -185,6 +191,12 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
                     lblCName2.setText(c.getTenKhachHang());
                 } else {
                     JOptionPane.showMessageDialog(this, "Chưa có khách hàng trong hệ thống");
+                    int choice =  JOptionPane.showConfirmDialog(this, "Bạn có muốn thêm khách hàng", "Thông báo", JOptionPane.YES_NO_OPTION);
+
+                    if (choice == JOptionPane.YES_OPTION) {
+                        dispose();
+                        m.showForm(new Customer_UI(staffLogin));
+                    }
                 }
             } else {
                 JOptionPane.showMessageDialog(this, "Chưa nhập số điện thoại khách hàng");

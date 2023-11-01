@@ -255,7 +255,6 @@ public class ReservationFormList extends JFrame implements ActionListener, Mouse
                                 message += "- " + timeDiffMessage + "\n";
                             }
                         }
-
                         if (message.equals("Phòng đã được đặt vào các thời điểm sau:\n")) {
                             long timeDifference = (selectedReservationTime.getTime() - currentTime.getTime());
 

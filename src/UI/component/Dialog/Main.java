@@ -31,7 +31,8 @@ public class Main extends JFrame {
         if (staffLogin != null) {
             menu21.setHeader(staffLogin.getTenNhanVien());
         }
-
+        PresetRoom presetRoom = PresetRoom.getInstance();
+        presetRoom.setM(this);
         menu21.setLogoutAction(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -156,7 +157,7 @@ public class Main extends JFrame {
         });
     }
 
-    private void showForm(Component com) {
+    public void showForm(Component com) {
         body.removeAll();
         body.add(com);
         body.revalidate();

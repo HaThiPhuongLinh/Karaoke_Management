@@ -262,14 +262,13 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
 
     public void loadHD() {
         int i = 1;
-
         for (Bill bill :billDAO.getAllBill()) {
             String date = formatDate(bill.getNgayGioDat());
             if(bill.getTinhTrangHD()==0) {
                 Object[] rowData = {i, bill.getMaPhong().getMaPhong(), bill.getMaPhong().getLoaiPhong().getTenLoaiPhong(),bill.getMaKH().getTenKhachHang(), date, df.format(bill.getMaPhong().getGiaPhong())};
                 modelTablePDP.addRow(rowData);
+                i++;
             }
-            i++;
         }
     }
     public void setKaraokeBookingUI(KaraokeBooking_UI main) {
