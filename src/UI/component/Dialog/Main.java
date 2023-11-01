@@ -124,7 +124,7 @@ public class Main extends JFrame {
                 action.cancel();
             }
         });
-        //showForm(new KaraokeBooking_UI(staffLogin));
+        showForm(new Home());
     }
 
     public static void main(String[] args) {

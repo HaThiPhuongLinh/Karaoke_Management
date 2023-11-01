@@ -179,7 +179,6 @@ public class Room_UI extends JPanel implements ActionListener, MouseListener {
         cboTinhTrang.addItem("Trống");
         cboTinhTrang.addItem("Chờ");
         cboTinhTrang.addItem("Đang sử dụng");
-        cboTinhTrang.addItem("Tạm");
         cboTinhTrang.setBounds(195, 170, 311, 30);
         Custom.setCustomComboBox(cboTinhTrang);
         pnlRoomControl.add(cboTinhTrang);

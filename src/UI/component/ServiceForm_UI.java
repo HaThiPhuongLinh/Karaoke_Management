@@ -198,7 +198,6 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
         Custom.getInstance().setCustomTable(tblSC);
 
         tblSC.addMouseListener(new MouseListener() {
-
             @Override
             public void mouseClicked(MouseEvent e) {
                 int selectedRow = tblSC.getSelectedRow();
@@ -324,6 +323,7 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
         txtQuantity.setFont(new Font("Arial", Font.PLAIN, 14));
         JSpinner.DefaultEditor editor = (JSpinner.DefaultEditor) txtQuantity.getEditor();
         editor.getTextField().setHorizontalAlignment(JTextField.LEFT);
+        txtQuantity.setValue(1);
         pnlSelect.add(txtQuantity);
 
         stockLabel = new JLabel("SL tồn: ");
@@ -394,8 +394,8 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
                 int soLuongTon = Integer.parseInt(serviceModel.getValueAt(row, 3).toString().replace(",", "")); // Chuyển đổi số lượng từ chuỗi thành số
                 if (quantity > soLuongTon) {
                     txtQuantity.setValue(soLuongTon);
-                } else if (quantity < 0) {
-                    txtQuantity.setValue(0);
+                } else if (quantity < 1) {
+                    txtQuantity.setValue(1);
                 } else {
                     double giaBan = Double.parseDouble(serviceModel.getValueAt(row, 4).toString().replace(",", "")); // Chuyển đổi giá từ chuỗi thành số
                     double sum = giaBan * quantity;
@@ -403,6 +403,23 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
                 }
             }
         });
+
+//        txtQuantity.addChangeListener(e -> {
+//            int row2 = tblService.getSelectedRow();
+//            if (row2 != -1) {
+//                int quantity = (int) txtQuantity.getValue();
+//                int soLuongDat = Integer.parseInt(modelService.getValueAt(row2, 3).toString()); // Chuyển đổi số lượng từ chuỗi thành số
+//                if (quantity > soLuongDat) {
+//                    txtQuantity.setValue(soLuongDat);
+//                } else if (quantity < 1) {
+//                    txtQuantity.setValue(1);
+//                } else {
+//                    double giaBan = Double.parseDouble(modelService.getValueAt(row2, 4).toString()); // Chuyển đổi giá từ chuỗi thành số
+//                    double sum = giaBan * quantity;
+//                    txtSum.setText(df.format(sum));
+//                }
+//            }
+//        });
     }
 
     @Override
