@@ -141,6 +141,22 @@ public class Bill {
         soPhut = (int) soPhut / 15;
         return soPhut * 1.0 / 4;
     }
+    public String tinhThoiGianSuDung() {
+        int soPhut = 0;
+        if (ngayGioTra != null && ngayGioDat != null) {
+            long difference = ngayGioTra.getTime() - ngayGioDat.getTime();
+            soPhut = (int) TimeUnit.MILLISECONDS.toMinutes(difference);
+        }
+
+        if (soPhut <= 60) {
+            soPhut = 60;
+        }
+
+        int gio = soPhut / 60;
+        int phut = soPhut % 60;
+
+        return gio + " giờ " + phut + " phút";
+    }
     public Double tinhTongTienDichVu() {
         Double tongTienDV = 0.0;
         for (DetailsOfService item : lstDetails) {
