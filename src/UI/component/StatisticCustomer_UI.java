@@ -236,6 +236,7 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
                     gia += details.getSoLuong()*details.getGiaBan();
                 }
             }
+
             double quantity = b.getMaPhong().getGiaPhong() * b.tinhGioThue() + gia;
             if (totalSales.containsKey(customerID)) {
                 // Nếu mã dịch vụ đã tồn tại trong HashMap, cộng dồn số lượng bán
@@ -253,6 +254,15 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
             for (Customer kh : list){
                 if (customerID.equals(kh.getMaKhachHang())){
                     s1=kh.getTenKhachHang();
+                }
+            }
+            for (Bill bill : listBill){
+                if (customerID.equals(bill.getMaKH().getMaKhachHang())){
+                    if (bill.getKhuyenMai().trim().equalsIgnoreCase("KM")){
+                        totalQuantity += totalQuantity*8/100;
+                    }else{
+                        totalQuantity += 0;
+                    }
                 }
             }
             modelTableDV.addRow(new Object[] {i,customerID,s1,df.format(totalQuantity)});
