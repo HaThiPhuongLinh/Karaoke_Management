@@ -1,9 +1,6 @@
 package UI.component.Dialog;
 
-import DAO.BillDAO;
-import DAO.CustomerDAO;
-import DAO.DetailOfServiceDAO;
-import DAO.StaffDAO;
+import DAO.*;
 import Entity.*;
 import UI.CustomUI.Custom;
 import UI.component.Bill_UI;
@@ -18,6 +15,7 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -49,6 +47,7 @@ public class DialogBill extends JDialog implements ActionListener {
     private BillDAO billDAO = BillDAO.getInstance();
     private StaffDAO staffDAO = StaffDAO.getInstance();
     private CustomerDAO customerDAO = CustomerDAO.getInstance();
+    private  DetailOfBillDAO detailOfBillDAO;
     private DetailOfServiceDAO serviceDetailDAO = DetailOfServiceDAO.getInstance();
 
     /**
@@ -58,6 +57,7 @@ public class DialogBill extends JDialog implements ActionListener {
      */
     public DialogBill(Bill bill) {
         this.bill = bill;
+        detailOfBillDAO =new DetailOfBillDAO();
         Staff staff = null;
         Customer customer = null;
         List<DetailsOfService> serviceOrders = new ArrayList<>();
@@ -410,6 +410,16 @@ public class DialogBill extends JDialog implements ActionListener {
                 btnPayment.setEnabled(false);
                 JOptionPane.showMessageDialog(null, "Thanh toán hóa đơn thành công", "Thông báo",
                         JOptionPane.INFORMATION_MESSAGE);
+                String maHD = bill.getMaHoaDon();
+                String maPhong =bill.getMaPhong().getMaPhong();
+                String soGio = bill.tinhThoiGianSuDung();
+                double giaPhong =bill.getMaPhong().getGiaPhong();
+                DetailsOfBill dtbill =new DetailsOfBill(new Bill(maHD),new Room(maPhong),soGio,giaPhong);
+                try {
+                    detailOfBillDAO.insert(dtbill);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
 
             } else {
                 JOptionPane.showMessageDialog(null, "Lỗi khi thanh toán vui lòng thử lại!!!", "Thông báo",
