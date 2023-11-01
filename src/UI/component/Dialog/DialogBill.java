@@ -7,7 +7,7 @@ import DAO.StaffDAO;
 import Entity.*;
 import UI.CustomUI.Custom;
 import UI.component.Bill_UI;
-import java.util.Calendar;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
@@ -22,6 +22,7 @@ import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -30,8 +31,8 @@ import java.util.List;
 
 
 public class DialogBill extends JDialog implements ActionListener {
-    private Bill_UI billUI;
     private final String WORKING_DIR = System.getProperty("user.dir");
+    private Bill_UI billUI;
     private JTextField txtBillId, txtStaffName, txtCustomerName, txtRoomId, txtRoomTypeName, txtRoomPrice, txtStartTime,
             txtEndTime, txtUsedTime, txtTotalPriceService, txtTotalPriceRoom, txtVAT, txtTotalPriceBill;
     private JTable tblTableBillInfo;
@@ -39,13 +40,6 @@ public class DialogBill extends JDialog implements ActionListener {
     private GradientPaint gra = new GradientPaint(0, 0, new Color(255, 255, 255), getWidth(), 0,
             Color.decode("#FAFFD1"));
 
-//    private ImageIcon logoApp = new ImageIcon(DialogBill.class.getResource(CustomUI.LOGO_APP));
-//    private ImageIcon backIcon = new ImageIcon(DialogBill.class.getResource(CustomUI.BACK_ICON));
-//    private ImageIcon paymentIcon = new ImageIcon(DialogBill.class.getResource(CustomUI.PAYMENT_ICON));
-//    private ImageIcon pdfIcon = new ImageIcon(DialogBill.class.getResource(CustomUI.PDF_ICON));
-//    private ImageIcon excelIcon = new ImageIcon(DialogBill.class.getResource(CustomUI.EXCEL_ICON));
-//    private ImageIcon logoIcon = new ImageIcon(new ImageIcon(DialogBill.class.getResource(CustomUI.LOGO_ICON))
-//            .getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH));
     private JButton btnPayment, btnBack, btnExportPdf, btnExportExcel;
     private String formatTime = "HH:mm:ss dd/MM/yyyy";
     private DecimalFormat df = new DecimalFormat("#,###.##");
@@ -78,8 +72,6 @@ public class DialogBill extends JDialog implements ActionListener {
         bill.setMaKH(customer);
         bill.setLstDetails(serviceOrders);
         setSize(800, 720);
-//        setIconImage(logoApp.getImage());
-        // setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setUndecorated(true);
         this.setLayout(null);
@@ -94,9 +86,6 @@ public class DialogBill extends JDialog implements ActionListener {
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 GradientPaint gra = new GradientPaint(179, 0, Color.decode("#FF69B4"), 180, getHeight(),
                         Color.decode("#2c7da0"));
-                // GradientPaint gra = new GradientPaint(179, 0, Color.decode("#5a189a"), 180,
-                // getHeight(),
-                // Color.decode("#7b2cbf"));
                 g2.setPaint(gra);
                 g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 30, 30);
                 setFont(new Font("Dialog", Font.BOLD, 16));
@@ -412,8 +401,7 @@ public class DialogBill extends JDialog implements ActionListener {
                 type = JOptionPane.ERROR_MESSAGE;
             }
             JOptionPane.showMessageDialog(null, message, "Thông báo", type);
-        }
-        else if (o.equals(btnPayment)) {
+        } else if (o.equals(btnPayment)) {
             boolean isPaid = billDAO.paymentBill(bill.getMaHoaDon(), bill.getNgayGioTra());
             if (isPaid) {
                 paid = isPaid;
@@ -434,6 +422,7 @@ public class DialogBill extends JDialog implements ActionListener {
 
         }
     }
+
     private String formatDate(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyy");
         return sdf.format(date);
@@ -522,7 +511,7 @@ public class DialogBill extends JDialog implements ActionListener {
         txtTotalPriceService.setText(df.format(totalPriceService));
         double totalPriceRoom = bill.tinhTienPhong();
         txtTotalPriceRoom.setText(df.format(totalPriceRoom));
-        double vat =0;
+        double vat = 0;
         Date ngayHienTai = new Date();
 
 // Chuyển ngày hiện tại và ngày sinh của khách hàng thành lớp Calendar
@@ -539,14 +528,14 @@ public class DialogBill extends JDialog implements ActionListener {
 // Lấy ngày và tháng từ ngày sinh của khách hàng
         int ngaySinhKhachHangValue = calendarNgaySinhKhachHang.get(Calendar.DAY_OF_MONTH);
         int thangSinhKhachHangValue = calendarNgaySinhKhachHang.get(Calendar.MONTH);
-if(ngayHienTaiValue == ngaySinhKhachHangValue && thangHienTaiValue == thangSinhKhachHangValue){
-    vat = 0.0;
-}else{
-    vat = (totalPriceService + totalPriceRoom) * 0.08;
-}
-txtVAT.setText(df.format(vat));
-double totalPrice = bill.getTongTienHD();
-txtTotalPriceBill.setText(df.format(totalPrice));
+        if (ngayHienTaiValue == ngaySinhKhachHangValue && thangHienTaiValue == thangSinhKhachHangValue) {
+            vat = 0.0;
+        } else {
+            vat = (totalPriceService + totalPriceRoom) * 0.08;
+        }
+        txtVAT.setText(df.format(vat));
+        double totalPrice = bill.getTongTienHD();
+        txtTotalPriceBill.setText(df.format(totalPrice));
     }
 
     /**

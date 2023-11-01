@@ -4,6 +4,7 @@ import DAO.BillDAO;
 import DAO.DetailOfServiceDAO;
 import Entity.Bill;
 import Entity.DetailsOfService;
+import Entity.Staff;
 import UI.CustomUI.Custom;
 import UI.component.Dialog.DatePicker;
 import org.jfree.chart.ChartFactory;
@@ -42,9 +43,11 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
     private static DetailOfServiceDAO detailOfServiceDAO;
     private DecimalFormat df = new DecimalFormat("#,###.##");
     private DefaultCategoryDataset dataset;
+    public static Staff staffLogin = null;
 
 
-    public Statistic_UI(){
+    public Statistic_UI(Staff staff){
+        this.staffLogin = staff;
         setLayout(null);
         setBounds(0, 0, 1475, 770);
 

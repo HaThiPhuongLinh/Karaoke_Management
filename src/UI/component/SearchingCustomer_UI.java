@@ -3,6 +3,7 @@ package UI.component;
 import ConnectDB.ConnectDB;
 import DAO.CustomerDAO;
 import Entity.Customer;
+import Entity.Staff;
 import UI.CustomUI.Custom;
 
 import javax.swing.*;
@@ -25,8 +26,10 @@ public class SearchingCustomer_UI extends JPanel implements ActionListener {
 
     private JButton btnTim;
     private CustomerDAO CustomerDAO;
+    public static Staff staffLogin = null;
 
-    public SearchingCustomer_UI() {
+    public SearchingCustomer_UI(Staff staff) {
+        this.staffLogin = staff;
         setLayout(null);
         setBounds(0, 0, 1475, 770);
         CustomerDAO = new CustomerDAO();

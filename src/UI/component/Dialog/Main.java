@@ -45,55 +45,85 @@ public class Main extends JFrame {
         menu21.addMenuEvent((int index, int subIndex, MenuAction action) -> {
             if (index == 0) {
                 if (subIndex == 1) {
-                    showForm(new SearchingCustomer_UI());
+                    showForm(new SearchingCustomer_UI(staffLogin));
                 } else if (subIndex == 2) {
-                    showForm(new Customer_UI());
+                    showForm(new Customer_UI(staffLogin));
                 }
             } else if (index == 1) {
                 if (subIndex == 1) {
-                    showForm(new SearchingStaff_UI());
+                    showForm(new SearchingStaff_UI(staffLogin));
                 } else if (subIndex == 2) {
-                    showForm(new Staff_UI());
+                    if(staffLogin.getChucVu().equalsIgnoreCase("Quản lý")){
+                    showForm(new Staff_UI(staffLogin));}
+                    else {
+                        JOptionPane.showMessageDialog(this,"Không có quyền truy cập");
+                    }
                 }
             } else if (index == 2) {
                 if (subIndex == 1) {
-                    showForm(new SearchingRoom_UI());
+                    showForm(new SearchingRoom_UI(staffLogin));
                 } else if (subIndex == 2) {
-                    showForm(new Room_UI());
-
+                    if(staffLogin.getChucVu().equalsIgnoreCase("Quản lý")){
+                        showForm(new Room_UI(staffLogin));}
+                    else {
+                        JOptionPane.showMessageDialog(this,"Không có quyền truy cập");
+                    }
                 } else if (subIndex == 3) {
-                    showForm(new TypeOfRoom_UI());
-
+                    if(staffLogin.getChucVu().equalsIgnoreCase("Quản lý")){
+                        showForm(new TypeOfRoom_UI(staffLogin));}
+                    else {
+                        JOptionPane.showMessageDialog(this,"Không có quyền truy cập");
+                    }
                 } else if (subIndex == 4) {
                     showForm(new KaraokeBooking_UI(staffLogin));
                 }
             } else if (index == 3) {
                 if (subIndex == 1) {
-                    showForm(new SearchingService_UI());
+                    showForm(new SearchingService_UI(staffLogin));
                 } else if (subIndex == 2) {
-                    showForm(new Service_UI());
+                    if(staffLogin.getChucVu().equalsIgnoreCase("Quản lý")){
+                        showForm(new Service_UI(staffLogin));}
+                    else {
+                        JOptionPane.showMessageDialog(this,"Không có quyền truy cập");
+                    }
                 } else if (subIndex == 3) {
-                    showForm(new TypeOfService_UI());
+                    if(staffLogin.getChucVu().equalsIgnoreCase("Quản lý")){
+                        showForm(new TypeOfService_UI(staffLogin));}
+                    else {
+                        JOptionPane.showMessageDialog(this,"Không có quyền truy cập");
+                    }
                 } else if (subIndex == 4) {
                     showForm(new ServiceForm_UI(staffLogin));
                 }
             } else if (index == 4) {
                 if (subIndex == 1) {
-                    showForm(new Bill_UI());
+                    showForm(new Bill_UI(staffLogin));
                 }
             } else if (index == 5) {
                 if (subIndex == 1) {
-                    showForm(new Statistic_UI());
+                    if(staffLogin.getChucVu().equalsIgnoreCase("Quản lý")){
+                        showForm(new Statistic_UI(staffLogin));}
+                    else {
+                        JOptionPane.showMessageDialog(this,"Không có quyền truy cập");
+                    }
                 } else if (subIndex == 2) {
-                    showForm(new StatisticCustomer_UI());
+                    if(staffLogin.getChucVu().equalsIgnoreCase("Quản lý")){
+                        showForm(new StatisticCustomer_UI(staffLogin));}
+                    else {
+                        JOptionPane.showMessageDialog(this,"Không có quyền truy cập");
+                    }
                 } else if (subIndex == 3) {
-                    showForm(new StatisticService_UI());
+                    if(staffLogin.getChucVu().equalsIgnoreCase("Quản lý")){
+                        showForm(new StatisticService_UI(staffLogin));}
+                    else {
+                        JOptionPane.showMessageDialog(this,"Không có quyền truy cập");
+                    }
                 }
             } else {
                 action.cancel();
             }
         });
-        showForm(new KaraokeBooking_UI(staffLogin));
+        //showForm(new KaraokeBooking_UI(staffLogin));
     }
 
     public static void main(String[] args) {

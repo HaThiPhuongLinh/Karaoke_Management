@@ -3,6 +3,7 @@ package UI.component;
 import ConnectDB.ConnectDB;
 import DAO.CustomerDAO;
 import Entity.Customer;
+import Entity.Staff;
 import UI.CustomUI.Custom;
 import UI.component.Dialog.DatePicker;
 
@@ -35,8 +36,10 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
     private JButton btnThem, btnXoa, btnSua, btnLamMoi, btnXemHet;
     private CustomerDAO CustomerDAO;
     private Date date;
+    public static Staff staffLogin = null;
 
-    public Customer_UI() {
+    public Customer_UI(Staff staff) {
+        this.staffLogin = staff;
         CustomerDAO = new CustomerDAO();
         try {
             ConnectDB.getInstance().connect();

@@ -34,8 +34,10 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
     private DatePicker dpNgaySinhNV;
     private JButton btnThem, btnSua, btnLamMoi;
     private StaffDAO StaffDAO;
+    public static Staff staffLogin = null;
 
-    public Staff_UI() {
+    public Staff_UI(Staff staff) {
+        this.staffLogin = staff;
         setLayout(null);
         setBounds(0, 0, 1475, 770);
 

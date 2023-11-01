@@ -32,8 +32,10 @@ public class SearchingRoom_UI extends JPanel implements ActionListener, MouseLis
     private RoomDAO RoomDAO;
     private TypeOfRoomDAO typeOfRoomDAO;
     private DecimalFormat df = new DecimalFormat("#,###.##");
+    public static Staff staffLogin = null;
 
-    public SearchingRoom_UI() {
+    public SearchingRoom_UI(Staff staff) {
+        this.staffLogin = staff;
         setLayout(null);
         setBounds(0, 0, 1475, 770);
         typeOfRoomDAO = new TypeOfRoomDAO();

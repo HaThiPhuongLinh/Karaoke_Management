@@ -2,6 +2,7 @@ package UI.component;
 
 import ConnectDB.ConnectDB;
 import DAO.TypeOfServiceDAO;
+import Entity.Staff;
 import Entity.TypeOfService;
 import UI.CustomUI.Custom;
 
@@ -24,8 +25,10 @@ public class TypeOfService_UI extends JPanel  implements ActionListener, MouseLi
     private DefaultTableModel modelTableDV;
     private JLabel backgroundLabel,timeLabel;
     private TypeOfServiceDAO typeOfServiceDAO;
+    public static Staff staffLogin = null;
 
-    public TypeOfService_UI(){
+    public TypeOfService_UI(Staff staff){
+        this.staffLogin = staff;
         setLayout(null);
         setBounds(0, 0, 1475, 770);
 

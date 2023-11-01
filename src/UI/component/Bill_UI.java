@@ -8,6 +8,7 @@ import DAO.DetailOfServiceDAO;
 import DAO.RoomDAO;
 import Entity.Bill;
 import Entity.DetailsOfService;
+import Entity.Staff;
 import UI.CustomUI.Custom;
 import UI.component.Dialog.DialogBill;
 
@@ -49,8 +50,10 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
     private Bill rsvf;
     private static KaraokeBooking_UI main;
     private Bill rsvf2;
+    public static Staff staffLogin = null;
 
-    public Bill_UI(){
+    public Bill_UI(Staff staff){
+        this.staffLogin = staff;
         setLayout(null);
         setBounds(0, 0, 1475, 770);
 

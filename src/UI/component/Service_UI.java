@@ -4,6 +4,7 @@ import ConnectDB.ConnectDB;
 import DAO.ServiceDAO;
 import DAO.TypeOfServiceDAO;
 import Entity.Service;
+import Entity.Staff;
 import Entity.TypeOfService;
 import UI.CustomUI.Custom;
 
@@ -34,8 +35,10 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
     private ServiceDAO serviceDAO;
     private TypeOfServiceDAO typeOfServiceDAO;
     private DecimalFormat df = new DecimalFormat("#,###.##");
+    public static Staff staffLogin = null;
 
-    public Service_UI(){
+    public Service_UI(Staff staff){
+        this.staffLogin = staff;
         setLayout(null);
         setBounds(0, 0, 1475, 770);
 

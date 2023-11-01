@@ -32,8 +32,10 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
     private JTextField txtSearch1, txtSearch2, txtSearch3;
     private JButton btnTim;
     private StaffDAO StaffDAO;
+    public static Staff staffLogin = null;
 
-    public SearchingStaff_UI() {
+    public SearchingStaff_UI(Staff staff) {
+        this.staffLogin = staff;
         setLayout(null);
         setBounds(0, 0, 1475, 770);
         StaffDAO = new StaffDAO();

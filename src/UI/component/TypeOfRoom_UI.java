@@ -2,6 +2,7 @@ package UI.component;
 
 import ConnectDB.ConnectDB;
 import DAO.TypeOfRoomDAO;
+import Entity.Staff;
 import Entity.TypeOfRoom;
 import UI.CustomUI.Custom;
 
@@ -31,8 +32,10 @@ public class TypeOfRoom_UI extends JPanel implements ActionListener, MouseListen
     private JPanel timeNow, pnlTPList, pnlTPControl;
 
     private TypeOfRoomDAO TypeOfRoomDAO;
+    public static Staff staffLogin = null;
 
-    public TypeOfRoom_UI() {
+    public TypeOfRoom_UI(Staff staff) {
+        this.staffLogin = staff;
         setLayout(null);
         setBounds(0, 0, 1475, 770);
         TypeOfRoomDAO = new TypeOfRoomDAO();

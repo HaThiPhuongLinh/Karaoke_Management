@@ -6,6 +6,7 @@ import ConnectDB.ConnectDB;
 import DAO.RoomDAO;
 import DAO.TypeOfRoomDAO;
 import Entity.Room;
+import Entity.Staff;
 import Entity.TypeOfRoom;
 import UI.CustomUI.Custom;
 
@@ -45,8 +46,10 @@ public class Room_UI extends JPanel implements ActionListener, MouseListener {
     private JLabel backgroundLabel, timeLabel;
     private RoomDAO RoomDAO;
     private TypeOfRoomDAO typeOfRoomDAO;
+    public static Staff staffLogin = null;
 
-    public Room_UI() {
+    public Room_UI(Staff staff) {
+        this.staffLogin = staff;
         setLayout(null);
         setBounds(0, 0, 1475, 770);
         RoomDAO = new RoomDAO();

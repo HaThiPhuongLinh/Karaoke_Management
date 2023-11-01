@@ -4,10 +4,7 @@ import DAO.BillDAO;
 import DAO.CustomerDAO;
 import DAO.DetailOfServiceDAO;
 import DAO.ServiceDAO;
-import Entity.Bill;
-import Entity.Customer;
-import Entity.DetailsOfService;
-import Entity.Service;
+import Entity.*;
 import UI.CustomUI.Custom;
 import UI.component.Dialog.DatePicker;
 
@@ -41,8 +38,10 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
     private ServiceDAO serviceDAO;
     private DetailOfServiceDAO detailOfServiceDAO;
     private DecimalFormat df = new DecimalFormat("#,###.##");
+    public static Staff staffLogin = null;
 
-    public StatisticCustomer_UI(){
+    public StatisticCustomer_UI(Staff staff){
+        this.staffLogin = staff;
         setLayout(null);
         setBounds(0, 0, 1475, 770);
 
