@@ -425,7 +425,7 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
                         e3.printStackTrace();
                     }
                     Staff kh = new Staff(ma, ten, sdt, cccd, gt, ngaysinh ,diachi,chucVu,trangthai,new Account(taikhoan));
-                    boolean result = StaffDAO.update(kh);
+                    boolean result = StaffDAO.updateStaff(kh,trangthai.trim().equalsIgnoreCase("Đã nghỉ"));
                     if (result == true) {
                         String date = formatDate(kh.getNgaySinh());
                         modelTableNV.setValueAt(kh.getMaNhanVien(), row, 0);

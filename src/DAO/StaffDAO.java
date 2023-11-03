@@ -14,7 +14,7 @@ public class StaffDAO {
         return instance;
     }
 
-    public ArrayList<Staff> getAllStaff(){
+    public ArrayList<Staff> getAllStaff() {
         ArrayList<Staff> dsStaff = new ArrayList<Staff>();
         try {
             ConnectDB.getInstance();
@@ -69,7 +69,7 @@ public class StaffDAO {
         ArrayList<Staff> staffList = new ArrayList<Staff>();
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
-        String query =  "SELECT * FROM NhanVien where tenNhanVien like ?";
+        String query = "SELECT * FROM NhanVien where tenNhanVien like ?";
 
         try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
             preparedStatement.setString(1, "%" + name + "%");
@@ -85,6 +85,7 @@ public class StaffDAO {
         }
         return staffList;
     }
+
     public List<Staff> getListNhanVienBySDT(String sdt) {
         List<Staff> sdtlistt = new ArrayList<Staff>();
         ConnectDB.getInstance();
@@ -111,6 +112,7 @@ public class StaffDAO {
         }
         return sdtlistt;
     }
+
     public List<Staff> getListNhanVienByCCCD(String cccd) {
         List<Staff> cccdlistt = new ArrayList<Staff>();
         ConnectDB.getInstance();
@@ -137,6 +139,7 @@ public class StaffDAO {
         }
         return cccdlistt;
     }
+
     public boolean addStaff(Staff staff) {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
@@ -198,14 +201,17 @@ public class StaffDAO {
         }
     }
 
-    public boolean update(Staff s) {
+    public boolean updateStaff(Staff s, boolean isResigning) {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
         PreparedStatement statement = null;
         int n = 0;
+
         try {
-            String sql = "update dbo.NhanVien" + " set tenNhanVien = ?, soDienThoai=?, CCCD = ?, gioiTinh = ?,ngaySinh=?,diaChi=?,chucVu=?,trangThai=?,taiKhoan=?"
-                    + " where maNhanVien = ?";
+            String sql = "update dbo.NhanVien" +
+                    " set tenNhanVien = ?, soDienThoai = ?, CCCD = ?, gioiTinh = ?, ngaySinh = ?," +
+                    " diaChi = ?, chucVu = ?, trangThai = ?, taiKhoan = ?" +
+                    " where maNhanVien = ?";
             statement = con.prepareStatement(sql);
             statement.setString(1, s.getTenNhanVien());
             statement.setString(2, s.getSoDienThoai());
@@ -214,85 +220,56 @@ public class StaffDAO {
             statement.setDate(5, (Date) s.getNgaySinh());
             statement.setString(6, s.getDiaChi());
             statement.setString(7, s.getChucVu());
-            statement.setString(8, s.getTrangThai());
+
+            if (isResigning) {
+                statement.setString(8, "Đã nghỉ");
+            } else {
+                statement.setString(8, "Đang làm");
+            }
+
             statement.setString(9, s.getTaiKhoan().getTaiKhoan());
             statement.setString(10, s.getMaNhanVien());
+
+
             n = statement.executeUpdate();
+
+            if (isResigning) {
+                // Cập nhật trạng thái tài khoản khi nhân viên nghỉ việc
+                String updateAccountStatusQuery = "UPDATE TaiKhoan SET tinhTrang = ? WHERE taiKhoan = ?";
+                statement = con.prepareStatement(updateAccountStatusQuery);
+                statement.setBoolean(1, false); // Cập nhật trạng thái tài khoản thành 0
+                statement.setString(2, s.getTaiKhoan().getTaiKhoan());
+                statement.executeUpdate();
+            } else {
+                // Nếu nhân viên đang làm việc, cập nhật trạng thái tài khoản thành 1
+                String updateAccountStatusQuery = "UPDATE TaiKhoan SET tinhTrang = ? WHERE taiKhoan = ?";
+                statement = con.prepareStatement(updateAccountStatusQuery);
+                statement.setBoolean(1, true); // Cập nhật trạng thái tài khoản thành 1
+                statement.setString(2, s.getTaiKhoan().getTaiKhoan());
+                statement.executeUpdate();
+            }
+            con.commit();
         } catch (SQLException e) {
             e.printStackTrace();
+            if (con != null) {
+                try {
+                    con.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return n > 0;
     }
-//    public boolean updateStaff(Staff s, boolean isResigning) {
-//        ConnectDB.getInstance();
-//        Connection con = ConnectDB.getConnection();
-//        PreparedStatement statement = null;
-//        int n = 0;
-//
-//        try {
-//            String sql = "update dbo.NhanVien" +
-//                    " set tenNhanVien = ?, soDienThoai = ?, CCCD = ?, gioiTinh = ?, ngaySinh = ?," +
-//                    " diaChi = ?, chucVu = ?, trangThai = ?, taiKhoan = ?" +
-//                    " where maNhanVien = ?";
-//            statement = con.prepareStatement(sql);
-//            statement.setString(1, s.getTenNhanVien());
-//            statement.setString(2, s.getSoDienThoai());
-//            statement.setString(3, s.getCCCD());
-//            statement.setBoolean(4, s.isGioiTinh());
-//            statement.setDate(5, (Date) s.getNgaySinh());
-//            statement.setString(6, s.getDiaChi());
-//            statement.setString(7, s.getChucVu());
-//
-//            if (isResigning) {
-//                // Nếu nhân viên đang nghỉ, cập nhật trạng thái thành "Đã nghỉ"
-//                statement.setString(8, "Đã nghỉ");
-//            } else {
-//                statement.setString(8, "Đang làm"); // Cập nhật trạng thái thành "Đang làm"
-//            }
-//
-//            statement.setString(9, s.getTaiKhoan().getTaiKhoan());
-//            statement.setString(10, s.getMaNhanVien());
-//
-//            // Thực hiện cập nhật
-//            n = statement.executeUpdate();
-//
-//            if (isResigning) {
-//                // Cập nhật trạng thái tài khoản khi nhân viên nghỉ việc
-//                String updateAccountStatusQuery = "UPDATE TaiKhoan SET tinhTrang = ? WHERE taiKhoan = ?";
-//                statement = con.prepareStatement(updateAccountStatusQuery);
-//                statement.setBoolean(1, false); // Cập nhật trạng thái tài khoản thành 0
-//                statement.setString(2, s.getTaiKhoan().getTaiKhoan());
-//                statement.executeUpdate();
-//            } else {
-//                // Nếu nhân viên đang làm việc, cập nhật trạng thái tài khoản thành 1
-//                String updateAccountStatusQuery = "UPDATE TaiKhoan SET tinhTrang = ? WHERE taiKhoan = ?";
-//                statement = con.prepareStatement(updateAccountStatusQuery);
-//                statement.setBoolean(1, true); // Cập nhật trạng thái tài khoản thành 1
-//                statement.setString(2, s.getTaiKhoan().getTaiKhoan());
-//                statement.executeUpdate();
-//            }
-//
-//            con.commit();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            if (con != null) {
-//                try {
-//                    con.rollback();
-//                } catch (SQLException ex) {
-//                    ex.printStackTrace();
-//                }
-//            }
-//        } finally {
-//            if (statement != null) {
-//                try {
-//                    statement.close();
-//                } catch (SQLException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
-//        return n > 0;
-//    }
+
 
     public Staff getStaffByID(String maNhanVien) {
         ConnectDB.getInstance();
@@ -347,6 +324,7 @@ public class StaffDAO {
 
         return nextStaffId;
     }
+
     public Staff getStaffByBillId(String maHoaDon) {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
