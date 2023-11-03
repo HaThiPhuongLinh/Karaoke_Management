@@ -196,7 +196,7 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
                 Date tuNgay = pickerTuNgay.getFullDate();
                 Date denNgay = pickerDenNgay.addOneDay();
                 ArrayList<Bill> listBill = billDAO.getListBillByDate(tuNgay, denNgay);
-                System.out.printf(String.valueOf(listBill.size())+"ádasdasd");
+                System.out.printf(String.valueOf(listBill.size()) + "ádasdasd");
                 if (validData()) {
                     if (tuNgay.before(denNgay)) {
                         if (listBill == null || listBill.isEmpty() || listBill.size() <= 0) {
@@ -213,7 +213,7 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
             } catch (ParseException e2) {
                 e2.printStackTrace();
             }
-        }else if (o.equals(btnLamMoi)){
+        } else if (o.equals(btnLamMoi)) {
             modelTableDV.getDataVector().removeAllElements();
             tableDV.removeAll();
             comboBoxLocTheo.setSelectedIndex(0);
@@ -223,49 +223,51 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
     }
 
     private void docDuLieuVaoTable(ArrayList<Bill> listBill) {
-        int i=1;
+        int i = 1;
         java.util.List<Customer> list = customerDAO.getAllKhachHang();
         ArrayList<DetailsOfService> list1 = (ArrayList<DetailsOfService>) detailOfServiceDAO.getAllDetailsOfService();
         HashMap<String, Double> totalSales = new HashMap<>();
 
-        for (Bill b : listBill) {
-            String customerID = b.getMaKH().getMaKhachHang();
-            double gia=0;
-            for (DetailsOfService details : list1){
-                if (b.getMaHoaDon().equals(details.getMaHoaDon().getMaHoaDon())){
-                    gia += details.getSoLuong()*details.getGiaBan();
+        for (Bill bill : listBill) {
+            String customerID = bill.getMaKH().getMaKhachHang();
+            double gia = 0;
+            for (DetailsOfService details : list1) {
+                if (bill.getMaHoaDon().equals(details.getMaHoaDon().getMaHoaDon())) {
+                    gia += details.getSoLuong() * details.getGiaBan();
                 }
             }
 
-            double quantity = b.getMaPhong().getGiaPhong() * b.tinhGioThue() + gia;
-            if (totalSales.containsKey(customerID)) {
-                // Nếu mã dịch vụ đã tồn tại trong HashMap, cộng dồn số lượng bán
-                double currentQuantity = totalSales.get(customerID);
-                totalSales.put(customerID, (currentQuantity + quantity));
+            double roomPrice = bill.getMaPhong().getGiaPhong() * bill.tinhGioThue();
+            double totalServicePrice = gia;
+
+            double totalQuantity;
+            if (bill.getKhuyenMai().trim().equalsIgnoreCase("KM")) {
+                // Nếu hóa đơn có mã khuyến mãi "KM", không tính VAT
+                totalQuantity = roomPrice + totalServicePrice;
             } else {
-                // Nếu mã dịch vụ chưa tồn tại trong HashMap, thêm vào với số lượng bán hiện tại
-                totalSales.put(customerID, quantity);
+                // Nếu hóa đơn không có mã khuyến mãi hoặc khuyến mãi khác "", tính VAT 8%
+                totalQuantity = (roomPrice + totalServicePrice) * 1.08;
+            }
+
+            if (totalSales.containsKey(customerID)) {
+                // Nếu mã khách hàng đã tồn tại trong HashMap, cộng dồn số tiền
+                double currentQuantity = totalSales.get(customerID);
+                totalSales.put(customerID, (currentQuantity + totalQuantity));
+            } else {
+                // Nếu mã khách hàng chưa tồn tại trong HashMap, thêm vào với số tiền hiện tại
+                totalSales.put(customerID, totalQuantity);
             }
         }
 
-        for (String customerID : totalSales.keySet()){
+        for (String customerID : totalSales.keySet()) {
             double totalQuantity = totalSales.get(customerID);
             String s1 = "";
-            for (Customer kh : list){
-                if (customerID.equals(kh.getMaKhachHang())){
-                    s1=kh.getTenKhachHang();
+            for (Customer kh : list) {
+                if (customerID.equals(kh.getMaKhachHang())) {
+                    s1 = kh.getTenKhachHang();
                 }
             }
-            for (Bill bill : listBill){
-                if (customerID.equals(bill.getMaKH().getMaKhachHang())){
-                    if (bill.getKhuyenMai().trim().equalsIgnoreCase("KM")){
-                        totalQuantity += totalQuantity*8/100;
-                    }else{
-                        totalQuantity += 0;
-                    }
-                }
-            }
-            modelTableDV.addRow(new Object[] {i,customerID,s1,df.format(totalQuantity)});
+            modelTableDV.addRow(new Object[] { i, customerID, s1, df.format(totalQuantity) });
             i++;
         }
     }
@@ -339,7 +341,6 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
                     denNgay4 = pickerDenNgay.getCurrentDatePlusOneDay();
                     ArrayList<Bill> listBill4 = billDAO.getListBillByDate(tuNgay4, denNgay4);
                     docDuLieuVaoTable(listBill4);
-
                     break;
                 case "Tùy chỉnh":
                     pickerTuNgay.setActive(true);

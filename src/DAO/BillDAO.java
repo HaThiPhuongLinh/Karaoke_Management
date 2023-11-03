@@ -198,14 +198,6 @@ public class BillDAO {
         return bill;
     }
 
-//    public int getTotalLineOfBillList(Date fromDate, Date toDate, String staffId) {
-//        String query = "{CALL USP_getTotalLineOfBillListByDate( ? , ? , ? )}";
-//        Object[] params = { fromDate, toDate, staffId };
-//        Object obj = DataProvider.getInstance().executeScalar(query, params);
-//        int result = obj != null ? (int) obj : 0;
-//        return result;
-//    }
-
     public static int getTotalLineOfBillList(Date startDate, Date endDate) {
         int totalCount = 0;
         ConnectDB.getInstance();
@@ -232,23 +224,6 @@ public class BillDAO {
 
         return totalCount;
     }
-
-//    public ArrayList<Object[]> getTotalPriceBillListByDate(Date fromDate, Date toDate, String format) {
-//        String query = "SELECT DATE(ngayGioTra) AS ngay, SUM(tongTien) AS tong_tien FROM HoaDon WHERE ngayGioTra BETWEEN ? AND ? GROUP BY DATE(ngayGioTra)";
-//        Object[] params = { fromDate, toDate, format };
-//        ResultSet rs = DataProvider.getInstance().executeQuery(query, params);
-//        ArrayList<Object[]> result = new ArrayList<>();
-//        try {
-//            while (rs.next()) {
-//                String dateStr = rs.getString("ngayGioDat");
-//                Double totalPrice = rs.getDouble("totalPrice");
-//                result.add(new Object[] { dateStr, totalPrice });
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return result;
-//    }
 
     public String generateNextBillId() {
         ConnectDB.getInstance();

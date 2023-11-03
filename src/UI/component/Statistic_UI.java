@@ -382,18 +382,7 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
             }
 
             Double totalPrice = 0.0;
-//            if (size > totalPriceListIndex && size != 0) {
-////                if (totalPriceList.get(totalPriceListIndex)[0].equals(fullDayStr)) {
-//                if (fullDayStr.trim().equals(totalPriceList.get(totalPriceListIndex)[0])) {
-//                    System.out.printf(fullDayStr+"----------------");
-//                    totalPrice = (Double) totalPriceList.get(totalPriceListIndex)[1];
-//                    if (totalPrice == null) {
-//                        totalPrice = 0.0;
-//                    }
-//                    total += totalPrice;
-//                    totalPriceListIndex++;
-//                }
-//            }
+
             for (int k=0;k<size;k++){
                 System.out.printf(totalPriceList.get(k)[0]+"\n");
                 System.out.printf(totalPriceList.get(k)[1]+"\n");
@@ -458,9 +447,9 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
 
 
             if (b.getKhuyenMai().trim().equalsIgnoreCase("KM")){
-                quantity += quantity*8/100;
-            }else{
                 quantity += 0;
+            }else{
+                quantity += quantity*8/100;
             }
 
             if (totalByDate.containsKey(formattedDate)) {
@@ -476,20 +465,6 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
         // Chuyển HashMap thành ArrayList<Object>
         ArrayList<Object[]> resultList = new ArrayList<>();
         for (Map.Entry<String, Double> entry : totalByDate.entrySet()) {
-
-//            String dateTimeString = String.valueOf(entry.getKey());
-//            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-//            SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
-//
-//            String formattedDate = null;
-//            try {
-//                Date date = inputFormat.parse(dateTimeString);
-//                formattedDate = outputFormat.format(date);
-//                System.out.println(formattedDate);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-
             Object[] item = new Object[]{entry.getKey(), entry.getValue()};
             System.out.printf(entry.getKey() + "\n");
             System.out.printf(entry.getValue() + "\n");
@@ -499,12 +474,8 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
     }
 
     private void statistical(ArrayList<Bill> listBill) throws ParseException {
-//        Date fromDate = pickerTuNgay.getValueSqlDate();
-//        Date toDate = pickerDenNgay.getValueSqlDate();
-
         Date fromDate = pickerTuNgay.getFullDate();
         Date toDate = pickerDenNgay.getFullDate();
-//        ArrayList<Bill> listBill = billDAO.getListBillByDate(fromDate, toDate);
 
         int TotalBill = 0;
         TotalBill = billDAO.getTotalLineOfBillList(fromDate, toDate);
@@ -590,9 +561,9 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
 
 
             if (b.getKhuyenMai().trim().equalsIgnoreCase("KM")){
-                quantity += quantity*8/100;
-            }else{
                 quantity += 0;
+            }else{
+                quantity += quantity*8/100;
             }
 
             if (totalByDate.containsKey(formattedDate)) {
@@ -608,20 +579,6 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
         // Chuyển HashMap thành ArrayList<Object>
         ArrayList<Object[]> resultList = new ArrayList<>();
         for (Map.Entry<String, Double> entry : totalByDate.entrySet()) {
-
-//            String dateTimeString = String.valueOf(entry.getKey());
-//            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-//            SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
-//
-//            String formattedDate = null;
-//            try {
-//                Date date = inputFormat.parse(dateTimeString);
-//                formattedDate = outputFormat.format(date);
-//                System.out.println(formattedDate);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-
             Object[] item = new Object[]{entry.getKey(), entry.getValue()};
             System.out.printf(entry.getKey() + "\n");
             System.out.printf(entry.getValue() + "\n");
@@ -642,18 +599,6 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
             System.out.printf("----------------"+ngay+"----------------");
 
             String dateTimeString = String.valueOf(ngay);
-//            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-//            SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
-//
-//            String formattedDate = null;
-//            try {
-//                Date date = inputFormat.parse(dateTimeString);
-//                formattedDate = outputFormat.format(date);
-//                System.out.println(formattedDate);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-
             SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
             SimpleDateFormat outputFormat = new SimpleDateFormat("MM-yyyy");
 
@@ -676,9 +621,9 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
 
 
             if (b.getKhuyenMai().trim().equalsIgnoreCase("KM")){
-                quantity += quantity*8/100;
-            }else{
                 quantity += 0;
+            }else{
+                quantity += quantity*8/100;
             }
 
             if (totalByDate.containsKey(formattedDate)) {
@@ -694,19 +639,6 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
         // Chuyển HashMap thành ArrayList<Object>
         ArrayList<Object[]> resultList = new ArrayList<>();
         for (Map.Entry<String, Double> entry : totalByDate.entrySet()) {
-
-//            String dateTimeString = String.valueOf(entry.getKey());
-//            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-//            SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
-//
-//            String formattedDate = null;
-//            try {
-//                Date date = inputFormat.parse(dateTimeString);
-//                formattedDate = outputFormat.format(date);
-//                System.out.println(formattedDate);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
 
             Object[] item = new Object[]{entry.getKey(), entry.getValue()};
             System.out.printf(entry.getKey() + "\n");
