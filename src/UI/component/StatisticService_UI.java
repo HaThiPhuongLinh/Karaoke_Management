@@ -187,6 +187,7 @@ public class StatisticService_UI extends JPanel implements ActionListener , Item
         ArrayList<Service> list = (ArrayList<Service>) serviceDAO.getAllDichVu();
 
         HashMap<String, Integer> totalSales = new HashMap<>();
+        ArrayList<Object[]> dataToAdd = new ArrayList<>();
 
         for (DetailsOfService CTDV : listService) {
             String serviceId = CTDV.getMaDichVu().getMaDichVu();
@@ -211,10 +212,18 @@ public class StatisticService_UI extends JPanel implements ActionListener , Item
                     gia = totalQuantity*s.getGiaBan();
                 }
             }
-            modelTableDV.addRow(new Object[] {i,serviceId,s1,totalQuantity,df.format(gia)});
+            dataToAdd.add(new Object[] { i, serviceId, s1, totalQuantity, df.format(gia) });
             i++;
         }
 
+        // Sắp xếp danh sách tạm thời theo thứ tự giảm dần của giá
+        dataToAdd.sort((o1, o2) -> Double.compare(Double.valueOf(o2[4].toString().replace(",", "")), Double.valueOf(o1[4].toString().replace(",", ""))));
+
+        modelTableDV.getDataVector().removeAllElements();
+        tableDV.removeAll();
+        for (Object[] rowData : dataToAdd) {
+            modelTableDV.addRow(rowData);
+        }
     }
 
     public boolean validData() throws ParseException {

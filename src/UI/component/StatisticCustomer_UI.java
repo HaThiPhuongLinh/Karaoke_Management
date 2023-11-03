@@ -227,6 +227,7 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
         java.util.List<Customer> list = customerDAO.getAllKhachHang();
         ArrayList<DetailsOfService> list1 = (ArrayList<DetailsOfService>) detailOfServiceDAO.getAllDetailsOfService();
         HashMap<String, Double> totalSales = new HashMap<>();
+        ArrayList<Object[]> dataToAdd = new ArrayList<>();
 
         for (Bill bill : listBill) {
             String customerID = bill.getMaKH().getMaKhachHang();
@@ -267,8 +268,17 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
                     s1 = kh.getTenKhachHang();
                 }
             }
-            modelTableDV.addRow(new Object[] { i, customerID, s1, df.format(totalQuantity) });
+            dataToAdd.add(new Object[] { i, customerID, s1, df.format(totalQuantity) });
             i++;
+        }
+
+        // Sắp xếp danh sách tạm thời theo thứ tự giảm dần của doanh thu
+        dataToAdd.sort((o1, o2) -> Double.compare(Double.valueOf(o2[3].toString().replace(",", "")), Double.valueOf(o1[3].toString().replace(",", ""))));
+
+        modelTableDV.getDataVector().removeAllElements();
+        tableDV.removeAll();
+        for (Object[] rowData : dataToAdd) {
+            modelTableDV.addRow(rowData);
         }
     }
 
