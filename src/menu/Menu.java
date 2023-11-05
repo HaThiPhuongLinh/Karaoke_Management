@@ -33,7 +33,7 @@ public class Menu extends JPanel implements ActionListener {
             {"~Dịch Vụ~"},
             {"Dịch Vụ", "Tìm kiếm dịch vụ", "Cập nhật dịch vụ", "Loại dịch vụ", "Đặt dịch vụ"},
             {"~Hóa Đơn~"},
-            {"Hóa Đơn", "Lập hóa đơn"},
+            {"Hóa Đơn", "Lập hóa đơn", "Hóa đơn"},
             {"~Thống Kê~"},
             { "Thống Kê ","Thống kê doanh thu", "Thống kê khách hàng", "Thống kê dịch vụ"},
     };
