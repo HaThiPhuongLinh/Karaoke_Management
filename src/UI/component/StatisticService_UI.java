@@ -217,7 +217,12 @@ public class StatisticService_UI extends JPanel implements ActionListener , Item
         }
 
         // Sắp xếp danh sách tạm thời theo thứ tự giảm dần của giá
+
         dataToAdd.sort((o1, o2) -> Double.compare(Double.valueOf(o2[4].toString().replace(",", "")), Double.valueOf(o1[4].toString().replace(",", ""))));
+        // Tăng stt
+        for (int j = 0; j < dataToAdd.size(); j++) {
+            dataToAdd.get(j)[0] = j + 1;
+        }
 
         modelTableDV.getDataVector().removeAllElements();
         tableDV.removeAll();

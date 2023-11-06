@@ -269,11 +269,16 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
                 }
             }
             dataToAdd.add(new Object[] { i, customerID, s1, df.format(totalQuantity) });
-            i++;
+
         }
 
         // Sắp xếp danh sách tạm thời theo thứ tự giảm dần của doanh thu
         dataToAdd.sort((o1, o2) -> Double.compare(Double.valueOf(o2[3].toString().replace(",", "")), Double.valueOf(o1[3].toString().replace(",", ""))));
+
+        // Tăng stt
+        for (int j = 0; j < dataToAdd.size(); j++) {
+            dataToAdd.get(j)[0] = j + 1;
+        }
 
         modelTableDV.getDataVector().removeAllElements();
         tableDV.removeAll();
