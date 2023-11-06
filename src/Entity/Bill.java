@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 public class Bill {
     private String maHoaDon;
     private Staff maNhanVien;
-    private Customer maKhachHang; 
+    private Customer maKhachHang;
     private Room maPhong;
     private Timestamp ngayGioDat;
     private Timestamp ngayGioTra;
@@ -20,7 +20,7 @@ public class Bill {
 
 
     private List<DetailsOfService> lstDetails;
-//    private List<DetailsOfBill> lstCTHD;
+
 
     public Bill(String maHoaDon){
         this.maHoaDon =maHoaDon;
@@ -41,6 +41,22 @@ public class Bill {
         this.ngayGioTra=ngayGioTra;
         this.tinhTrangHD = tinhTrangHD;
         this.khuyenMai = khuyenMai;
+    }
+
+    public Bill(String maHoaDon, Staff maNhanVien, Customer maKhachHang, Room maPhong, Timestamp ngayGioDat, Timestamp ngayGioTra, int tinhTrangHD, String khuyenMai, List<DetailsOfService> lstDetails) {
+        this.maHoaDon = maHoaDon;
+        this.maNhanVien = maNhanVien;
+        this.maKhachHang = maKhachHang;
+        this.maPhong = maPhong;
+        this.ngayGioDat = ngayGioDat;
+        this.ngayGioTra = ngayGioTra;
+        this.tinhTrangHD = tinhTrangHD;
+        this.khuyenMai = khuyenMai;
+        this.lstDetails = lstDetails;
+    }
+
+    public Bill(List<DetailsOfService> lstDetails) {
+        this.lstDetails = lstDetails;
     }
 
     public Bill(String maHoaDon, Timestamp ngayGioDat, Timestamp ngayGioTra, int tinhTrangHD, String khuyenMai) {
@@ -129,6 +145,21 @@ public class Bill {
         this.khuyenMai = khuyenMai;
     }
 
+    @Override
+    public String toString() {
+        return "Bill{" +
+                "maHoaDon='" + maHoaDon + '\'' +
+                ", maNhanVien=" + maNhanVien +
+                ", maKhachHang=" + maKhachHang +
+                ", maPhong=" + maPhong +
+                ", ngayGioDat=" + ngayGioDat +
+                ", ngayGioTra=" + ngayGioTra +
+                ", tinhTrangHD=" + tinhTrangHD +
+                ", khuyenMai='" + khuyenMai + '\'' +
+                ", lstDetails=" + lstDetails +
+                '}';
+    }
+
     public Double tinhGioThue() {
         int soPhut = 0;
         if (ngayGioTra != null && ngayGioDat != null) {
@@ -158,12 +189,20 @@ public class Bill {
         return gio + " giờ " + phut + " phút";
     }
     public Double tinhTongTienDichVu() {
-        Double tongTienDV = 0.0;
-        for (DetailsOfService item : lstDetails) {
-            tongTienDV += item.tinhTienDichVu();
+        if (lstDetails == null) {
+
+            return 0.0;
         }
-        return tongTienDV;
+        else {
+            Double tongTienDV = 0.0;
+            for (DetailsOfService item : lstDetails) {
+                tongTienDV += item.tinhTienDichVu();
+            }
+            return tongTienDV;
+        }
     }
+
+
 
 
     /**

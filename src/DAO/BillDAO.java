@@ -15,7 +15,7 @@ public class BillDAO {
     }
 
     public ArrayList<Bill> getAllBill() {
-        ArrayList<Bill> dsStaff = new ArrayList<Bill>();
+        ArrayList<Bill> dsBill = new ArrayList<Bill>();
         try {
             ConnectDB.getInstance();
             Connection con = ConnectDB.getConnection();
@@ -37,12 +37,42 @@ public class BillDAO {
 
                 Bill bill = new Bill(maHoaDon, maNhanVien, maKhachHang, maPhong, ngayGioDat, ngayGioTra, tinhTrang, khuyenMai);
 
-                dsStaff.add(bill);
+                dsBill.add(bill);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return dsStaff;
+        return dsBill;
+    }
+    public ArrayList<Bill> getAllBill2() {
+        ArrayList<Bill> dsBill = new ArrayList<Bill>();
+        try {
+            ConnectDB.getInstance();
+            Connection con = ConnectDB.getConnection();
+
+            String sql = "Select * from dbo.HoaDon";
+            Statement statement = con.createStatement();
+            // Thực thi câu lệnh SQL trả về đối tượng ResultSet
+            ResultSet rs = statement.executeQuery(sql);
+            // Duyệt trên kết quả trả về
+            while (rs.next()) {
+                String maHoaDon = rs.getString(1);
+                Staff maNhanVien = new Staff(rs.getString(2));
+                Customer maKhachHang = new Customer(rs.getString(3));
+                Room maPhong = new Room(rs.getString(4));
+                Timestamp ngayGioDat = rs.getTimestamp(5);
+                Timestamp ngayGioTra = rs.getTimestamp(6);
+                int tinhTrang = rs.getInt(7);
+                String khuyenMai = rs.getString(8);
+                ArrayList<DetailsOfService> ctDV = new ArrayList<DetailsOfService>(9);
+                Bill bill = new Bill(maHoaDon, maNhanVien, maKhachHang, maPhong, ngayGioDat, ngayGioTra, tinhTrang, khuyenMai,ctDV);
+
+                dsBill.add(bill);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return dsBill;
     }
 
     public ArrayList<Bill> getListBillByDate(Date tuNgay, Date denNgay) {

@@ -234,20 +234,16 @@ public class DialogBill extends JDialog implements ActionListener {
 
         btnPayment = new JButton("Thanh toán");
         btnPayment.setFont(new Font("Dialog", Font.BOLD, 15));
-        btnPayment.setBounds(240, 670, 130, 35);
+        btnPayment.setBounds(320, 670, 130, 35);
         pnMain.add(btnPayment);
 
         btnExportPdf = new JButton("Xuất PDF");
         btnExportPdf.setFont(new Font("Dialog", Font.BOLD, 15));
-        btnExportPdf.setBounds(435, 670, 130, 35);
+        btnExportPdf.setBounds(620, 670, 130, 35);
 
         pnMain.add(btnExportPdf);
 
-        btnExportExcel = new JButton("Xuất excel");
-        btnExportExcel.setFont(new Font("Dialog", Font.BOLD, 15));
-        btnExportExcel.setBounds(625, 670, 130, 35);
 
-        pnMain.add(btnExportExcel);
 
         JLabel txtPhoneNumber = new JLabel("0828012868");
         txtPhoneNumber.setBackground(Color.WHITE);
@@ -365,7 +361,7 @@ public class DialogBill extends JDialog implements ActionListener {
         txtUsedTime.setEditable(false);
 //       Custom.getInstance().setCustomTextFieldBill(txtUsedTime);
 
-        btnExportExcel.addActionListener(this);
+
         btnExportPdf.addActionListener(this);
         btnPayment.addActionListener(this);
         btnBack.addActionListener(this);
@@ -377,19 +373,7 @@ public class DialogBill extends JDialog implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
-        if (o.equals(btnExportExcel)) {
-            Boolean result = ExportBill.getInstance().exportBillToExcel(bill, path);
-            String message = "";
-            int type = JOptionPane.INFORMATION_MESSAGE;
-            if (result) {
-                message = "Xuất file pdf thành công";
-                type = JOptionPane.INFORMATION_MESSAGE;
-            } else {
-                message = "Xuất file pdf thất bại";
-                type = JOptionPane.ERROR_MESSAGE;
-            }
-            JOptionPane.showMessageDialog(null, message, "Thông báo", type);
-        } else if (o.equals(btnExportPdf)) {
+         if (o.equals(btnExportPdf)) {
             Boolean result = ExportBill.getInstance().exportBillToPdf(bill, path);
             String message = "";
             int type = JOptionPane.INFORMATION_MESSAGE;
@@ -405,7 +389,7 @@ public class DialogBill extends JDialog implements ActionListener {
             boolean isPaid = billDAO.paymentBill(bill.getMaHoaDon(), bill.getNgayGioTra());
             if (isPaid) {
                 paid = isPaid;
-                btnExportExcel.setEnabled(true);
+
                 btnExportPdf.setEnabled(true);
                 btnPayment.setEnabled(false);
                 JOptionPane.showMessageDialog(null, "Thanh toán hóa đơn thành công", "Thông báo",
@@ -544,7 +528,7 @@ public class DialogBill extends JDialog implements ActionListener {
             vat = (totalPriceService + totalPriceRoom) * 0.08;
         }
         txtVAT.setText(df.format(vat));
-        double totalPrice = bill.getTongTienHD();
+        double totalPrice = bill.getTongTienHD() +vat;
         txtTotalPriceBill.setText(df.format(totalPrice));
     }
 
