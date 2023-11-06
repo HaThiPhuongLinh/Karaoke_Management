@@ -8,6 +8,12 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import Entity.DetailsOfBill;
 public class DetailOfBillDAO {
+    /**
+     * Thêm chi tiết hóa đơn
+     * @param ro:Chi tiết hóa đơn cần thêm
+     * @return {@code boolean} :Được hoặc không
+     * @throws SQLException
+     */
     public boolean insert(DetailsOfBill ro) throws SQLException {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
