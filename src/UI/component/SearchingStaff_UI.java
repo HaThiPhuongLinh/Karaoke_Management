@@ -18,18 +18,24 @@ import java.awt.event.MouseListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-
+/**
+ * Giao diện dùng để tìm kiếm nhân viên
+ * Người thiết kế Nguyễn Đình Dương
+ * Ngày tạo:7/10/2023
+ * Lần cập nhật cuối : 18/10/2023
+ * Nội dung cập nhật : Sửa tính năng tìm theo SDT
+ */
 public class SearchingStaff_UI extends JPanel implements ActionListener, MouseListener {
 
     private  JButton btnLamMoi;
     private JTable tblNV;
     private DefaultTableModel modelTableNV;
-    private JLabel backgroundLabel, timeLabel, search1Label, search2Label, search3Label, search4Label;
-    private JPanel timeNow, pnlStaffList, pnlStaffControl, panelDSNV;
+    private JLabel lblBackground, lblTime, lblSearchbyName, lblSearchbyNumber, lblSearchbyCCCD, lblSearchStatus;
+    private JPanel timeNow, pnlStaffList, pnlStaffControl;
     private DefaultTableModel tableModelNV;
     private JComboBox<String> cboTinhTrang;
-    private JCheckBox cb;
-    private JTextField txtSearch1, txtSearch2, txtSearch3;
+
+    private JTextField txtSearchbyName, txtSearchbyNumber, txtSearchbyCCCD;
     private JButton btnTim;
     private StaffDAO StaffDAO;
     public static Staff staffLogin = null;
@@ -57,10 +63,10 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
         timeNow.setOpaque(false);
         add(timeNow);
 
-        timeLabel = new JLabel();
-        timeLabel.setFont(new Font("Arial", Font.BOLD, 33));
-        timeLabel.setForeground(Color.WHITE);
-        timeNow.add(timeLabel);
+        lblTime = new JLabel();
+        lblTime.setFont(new Font("Arial", Font.BOLD, 33));
+        lblTime.setForeground(Color.WHITE);
+        timeNow.add(lblTime);
         Timer timer = new Timer(10, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -83,15 +89,15 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
         pnlStaffControl.setLayout(null);
         pnlStaffControl.setPreferredSize(new Dimension(1100, 250));
 
-        search1Label = new JLabel("Tìm Theo Tên: ");
-        search1Label.setFont(new Font("Arial", Font.PLAIN, 14));
-        search1Label.setBounds(380, 15, 120, 30);
-        search1Label.setForeground(Color.WHITE);
-        pnlStaffControl.add(search1Label);
+        lblSearchbyName = new JLabel("Tìm Theo Tên: ");
+        lblSearchbyName.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblSearchbyName.setBounds(380, 15, 120, 30);
+        lblSearchbyName.setForeground(Color.WHITE);
+        pnlStaffControl.add(lblSearchbyName);
 
-        txtSearch1 = new JTextField();
-        txtSearch1.setBounds(515, 15, 280, 30);
-        pnlStaffControl.add(txtSearch1);
+        txtSearchbyName = new JTextField();
+        txtSearchbyName.setBounds(515, 15, 280, 30);
+        pnlStaffControl.add(txtSearchbyName);
 
         btnTim = new JButton("Tìm kiếm");
         btnTim.setBounds(695, 205, 100, 30);
@@ -104,31 +110,31 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
         btnLamMoi.setFont(new Font("Arial", Font.BOLD, 14));
         pnlStaffControl.add(btnLamMoi);
 
-        search2Label = new JLabel("Tìm Theo SDT: ");
-        search2Label.setFont(new Font("Arial", Font.PLAIN, 14));
-        search2Label.setBounds(380, 65, 120, 30);
-        search2Label.setForeground(Color.WHITE);
-        pnlStaffControl.add(search2Label);
+        lblSearchbyNumber = new JLabel("Tìm Theo SDT: ");
+        lblSearchbyNumber.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblSearchbyNumber.setBounds(380, 65, 120, 30);
+        lblSearchbyNumber.setForeground(Color.WHITE);
+        pnlStaffControl.add(lblSearchbyNumber);
 
-        txtSearch2 = new JTextField();
-        txtSearch2.setBounds(515, 65, 280, 30);
-        pnlStaffControl.add(txtSearch2);
+        txtSearchbyNumber = new JTextField();
+        txtSearchbyNumber.setBounds(515, 65, 280, 30);
+        pnlStaffControl.add(txtSearchbyNumber);
 
-        search3Label = new JLabel("Tìm Theo CCCD: ");
-        search3Label.setFont(new Font("Arial", Font.PLAIN, 14));
-        search3Label.setBounds(380, 115, 120, 30);
-        search3Label.setForeground(Color.WHITE);
-        pnlStaffControl.add(search3Label);
+        lblSearchbyCCCD = new JLabel("Tìm Theo CCCD: ");
+        lblSearchbyCCCD.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblSearchbyCCCD.setBounds(380, 115, 120, 30);
+        lblSearchbyCCCD.setForeground(Color.WHITE);
+        pnlStaffControl.add(lblSearchbyCCCD);
 
-        txtSearch3 = new JTextField();
-        txtSearch3.setBounds(515, 115, 280, 30);
-        pnlStaffControl.add(txtSearch3);
+        txtSearchbyCCCD = new JTextField();
+        txtSearchbyCCCD.setBounds(515, 115, 280, 30);
+        pnlStaffControl.add(txtSearchbyCCCD);
 
-        search4Label = new JLabel("Tình Trạng: ");
-        search4Label.setFont(new Font("Arial", Font.PLAIN, 14));
-        search4Label.setBounds(380, 165, 120, 30);
-        search4Label.setForeground(Color.WHITE);
-        pnlStaffControl.add(search4Label);
+        lblSearchStatus = new JLabel("Tình Trạng: ");
+        lblSearchStatus.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblSearchStatus.setBounds(380, 165, 120, 30);
+        lblSearchStatus.setForeground(Color.WHITE);
+        pnlStaffControl.add(lblSearchStatus);
 
         cboTinhTrang = new JComboBox<>();
         cboTinhTrang.addItem("Tất cả");
@@ -164,9 +170,9 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
         loadNV();
 
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/images/background.png"));
-        backgroundLabel = new JLabel(backgroundImage);
-        backgroundLabel.setBounds(0, 0, getWidth(), getHeight());
-        add(backgroundLabel);
+        lblBackground = new JLabel(backgroundImage);
+        lblBackground.setBounds(0, 0, getWidth(), getHeight());
+        add(lblBackground);
         btnTim.addActionListener(this);
         btnLamMoi.addActionListener(this);
 
@@ -199,7 +205,7 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
     private void updateTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String time = sdf.format(new Date());
-        timeLabel.setText(time);
+        lblTime.setText(time);
     }
     //Custom size cua bang
     private void reSizeColumnTableStaff() {
@@ -213,7 +219,11 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
         tcm.getColumn(8).setPreferredWidth(70);
         tcm.getColumn(9).setPreferredWidth(120);
     }
-
+    /**
+     * hàm sử dụng định dạng "HH:mm:ss" để biểu diễn thời gian (giờ, phút và giây) của đối tượng date
+     * @param date : ngày cần định dạng
+     * @return {@code String}: ngày cần định dạng
+     */
     private String formatDate(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyy");
         return sdf.format(date);
@@ -238,18 +248,18 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         if (o.equals(btnTim)) {
-            String txtTenKH = txtSearch1.getText();
+            String txtTenKH = txtSearchbyName.getText();
             ArrayList<Staff> cus1 = (ArrayList<Staff>) StaffDAO.getListNhanVienByName(txtTenKH);
 
-            String txtSDT = txtSearch2.getText();
+            String txtSDT = txtSearchbyNumber.getText();
             ArrayList<Staff> cus2 = (ArrayList<Staff>) StaffDAO.getListNhanVienBySDT(txtSDT);
 
-            String txtcccd = txtSearch3.getText();
+            String txtcccd = txtSearchbyCCCD.getText();
             ArrayList<Staff> cus3 = (ArrayList<Staff>) StaffDAO.getListNhanVienByCCCD(txtcccd);
 
-            if (txtSearch1.getText().trim().equals("") && txtSearch2.getText().trim().equals("") && txtSearch3.getText().trim().equals("")) {
+            if (txtSearchbyName.getText().trim().equals("") && txtSearchbyNumber.getText().trim().equals("") && txtSearchbyCCCD.getText().trim().equals("")) {
                 JOptionPane.showMessageDialog(this, "Bạn phải nhập thông tin tìm kiếm");
-            } else if (!txtSearch1.getText().trim().equals("")) {
+            } else if (!txtSearchbyName.getText().trim().equals("")) {
                 modelTableNV.getDataVector().removeAllElements();
                 int i = 1;
                 String gt ="";
@@ -268,10 +278,10 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
                     }
                 } else {
                     JOptionPane.showMessageDialog(this, "Không tìm thấy nhân viên");
-                    txtSearch1.selectAll();
-                    txtSearch1.requestFocus();
+                    txtSearchbyName.selectAll();
+                    txtSearchbyName.requestFocus();
                 }
-            } else if (!txtSearch2.getText().trim().equals("")) {
+            } else if (!txtSearchbyNumber.getText().trim().equals("")) {
                 modelTableNV.getDataVector().removeAllElements();
                 int i = 1;
                 String gt ="";
@@ -290,10 +300,10 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
                     }
                 } else {
                     JOptionPane.showMessageDialog(this, "Không tìm thấy nhân viên");
-                    txtSearch2.selectAll();
-                    txtSearch2.requestFocus();
+                    txtSearchbyNumber.selectAll();
+                    txtSearchbyNumber.requestFocus();
                 }
-            } else if (!txtSearch3.getText().trim().equals("")) {
+            } else if (!txtSearchbyCCCD.getText().trim().equals("")) {
                 modelTableNV.getDataVector().removeAllElements();
                 int i = 1;
                 String gt ="";
@@ -312,15 +322,15 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
                     }
                 } else {
                     JOptionPane.showMessageDialog(this, "Không tìm thấy nhân viên");
-                    txtSearch3.selectAll();
-                    txtSearch3.requestFocus();
+                    txtSearchbyCCCD.selectAll();
+                    txtSearchbyCCCD.requestFocus();
                 }
             }
 
         } else if (o.equals(btnLamMoi)) {
-            txtSearch1.setText("");
-            txtSearch2.setText("");
-            txtSearch3.setText("");
+            txtSearchbyName.setText("");
+            txtSearchbyNumber.setText("");
+            txtSearchbyCCCD.setText("");
             modelTableNV.setRowCount(0);
             loadNV();
         }

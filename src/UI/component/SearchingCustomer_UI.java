@@ -16,12 +16,18 @@ import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-
+/**
+ * Giao diện dùng để tìm kiếm khách hàng
+ * Người thiết kế Nguyễn Đình Dương
+ * Ngày tạo:7/10/2023
+ * Lần cập nhật cuối : 18/10/2023
+ * Nội dung cập nhật : Sửa tính năng tìm theo SDT
+ */
 public class SearchingCustomer_UI extends JPanel implements ActionListener {
     private  JButton btnlamMoi;
     private DefaultTableModel modelTableKH;
-    private JLabel backgroundLabel, timeLabel, search1Label, search2Label, search3Label;
-    private JTextField txtSearch1, txtSearch2, txtSearch3;
+    private JLabel lblBackground, lblTime, lblSearchbyName, lblSearchbyNumber, lblSearchbyCCCD;
+    private JTextField txtSearchbyName, txtSearchbyNumber, txtSearchbyCCCD;
     private JPanel timeNow, pnlCusList, pnlCusControl;
 
     private JButton btnTim;
@@ -54,10 +60,10 @@ public class SearchingCustomer_UI extends JPanel implements ActionListener {
         timeNow.setOpaque(false);
         add(timeNow);
 
-        timeLabel = new JLabel();
-        timeLabel.setFont(new Font("Arial", Font.BOLD, 33));
-        timeLabel.setForeground(Color.WHITE);
-        timeNow.add(timeLabel);
+        lblTime = new JLabel();
+        lblTime.setFont(new Font("Arial", Font.BOLD, 33));
+        lblTime.setForeground(Color.WHITE);
+        timeNow.add(lblTime);
         Timer timer = new Timer(10, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -83,16 +89,16 @@ public class SearchingCustomer_UI extends JPanel implements ActionListener {
         pnlCusControl.setLayout(null);
         pnlCusControl.setPreferredSize(new Dimension(1100, 230));
 
-        search1Label = new JLabel("Tìm Theo Tên: ");
+        lblSearchbyName = new JLabel("Tìm Theo Tên: ");
 
-        search1Label.setFont(new Font("Arial", Font.PLAIN, 14));
-        search1Label.setBounds(380, 25, 120, 30);
-        search1Label.setForeground(Color.WHITE);
-        pnlCusControl.add(search1Label);
+        lblSearchbyName.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblSearchbyName.setBounds(380, 25, 120, 30);
+        lblSearchbyName.setForeground(Color.WHITE);
+        pnlCusControl.add(lblSearchbyName);
 
-        txtSearch1 = new JTextField();
-        txtSearch1.setBounds(515, 25, 280, 30);
-        pnlCusControl.add(txtSearch1);
+        txtSearchbyName = new JTextField();
+        txtSearchbyName.setBounds(515, 25, 280, 30);
+        pnlCusControl.add(txtSearchbyName);
 
         btnTim = new JButton("Tìm kiếm");
         btnTim.setBounds(695, 195, 100, 30);
@@ -107,28 +113,28 @@ public class SearchingCustomer_UI extends JPanel implements ActionListener {
         pnlCusControl.add(btnlamMoi);
 
 
-        search2Label = new JLabel("Tìm Theo SDT: ");
-        search2Label.setFont(new Font("Arial", Font.PLAIN, 14));
-        search2Label.setBounds(380, 85, 120, 30);
-        search2Label.setForeground(Color.WHITE);
-        pnlCusControl.add(search2Label);
+        lblSearchbyNumber = new JLabel("Tìm Theo SDT: ");
+        lblSearchbyNumber.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblSearchbyNumber.setBounds(380, 85, 120, 30);
+        lblSearchbyNumber.setForeground(Color.WHITE);
+        pnlCusControl.add(lblSearchbyNumber);
 
-        txtSearch2 = new JTextField();
-        txtSearch2.setBounds(515, 85, 280, 30);
-        pnlCusControl.add(txtSearch2);
+        txtSearchbyNumber = new JTextField();
+        txtSearchbyNumber.setBounds(515, 85, 280, 30);
+        pnlCusControl.add(txtSearchbyNumber);
 
 
-        search3Label = new JLabel("Tìm Theo CCCD: ");
+        lblSearchbyCCCD = new JLabel("Tìm Theo CCCD: ");
 
-        search3Label.setFont(new Font("Arial", Font.PLAIN, 14));
-        search3Label.setBounds(380, 145, 120, 30);
-        search3Label.setForeground(Color.WHITE);
-        pnlCusControl.add(search3Label);
+        lblSearchbyCCCD.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblSearchbyCCCD.setBounds(380, 145, 120, 30);
+        lblSearchbyCCCD.setForeground(Color.WHITE);
+        pnlCusControl.add(lblSearchbyCCCD);
 
-        txtSearch3 = new JTextField();
+        txtSearchbyCCCD = new JTextField();
 
-        txtSearch3.setBounds(515, 145, 280, 30);
-        pnlCusControl.add(txtSearch3);
+        txtSearchbyCCCD.setBounds(515, 145, 280, 30);
+        pnlCusControl.add(txtSearchbyCCCD);
 
         JPanel panelDSKH = new JPanel();
         panelDSKH.setLayout(null);
@@ -163,20 +169,32 @@ public class SearchingCustomer_UI extends JPanel implements ActionListener {
 
         //
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/images/background.png"));
-        backgroundLabel = new JLabel(backgroundImage);
-        backgroundLabel.setBounds(0, 0, getWidth(), getHeight());
-        add(backgroundLabel);
+        lblBackground = new JLabel(backgroundImage);
+        lblBackground.setBounds(0, 0, getWidth(), getHeight());
+        add(lblBackground);
     }
 
+    /**
+     * Thiết lập thời gian hiện tại cho lblTime
+     */
     private void updateTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String time = sdf.format(new Date());
-        timeLabel.setText(time);
+        lblTime.setText(time);
     }
+    /**
+     * hàm sử dụng định dạng "HH:mm:ss" để biểu diễn thời gian (giờ, phút và giây) của đối tượng date
+     * @param date : ngày cần định dạng
+     * @return {@code String}: ngày cần định dạng
+     */
     private String formatDate(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyy");
         return sdf.format(date);
     }
+
+    /**
+     * Đọc dữ liệu tất cả khách hàng lên bảng
+     */
     public void loadKH() {
         int i = 1;
         String gt = "";
@@ -199,18 +217,18 @@ public class SearchingCustomer_UI extends JPanel implements ActionListener {
         Object o = e.getSource();
         if (o.equals(btnTim)) {
 
-            String txtTenKH = txtSearch1.getText();
+            String txtTenKH = txtSearchbyName.getText();
             ArrayList<Customer> cus1 = (ArrayList<Customer>) CustomerDAO.getListKhachHangByName(txtTenKH);
 
-            String txtSDT = txtSearch2.getText();
+            String txtSDT = txtSearchbyNumber.getText();
             ArrayList<Customer> cus2 = (ArrayList<Customer>) CustomerDAO.getListKhachHangBySDT(txtSDT);
 
-            String txtcccd = txtSearch3.getText();
+            String txtcccd = txtSearchbyCCCD.getText();
             ArrayList<Customer> cus3 = (ArrayList<Customer>) CustomerDAO.getListKhachHangByCCCD(txtcccd);
 
-            if (txtSearch1.getText().trim().equals("") && txtSearch2.getText().trim().equals("") && txtSearch3.getText().trim().equals("")) {
+            if (txtSearchbyName.getText().trim().equals("") && txtSearchbyNumber.getText().trim().equals("") && txtSearchbyCCCD.getText().trim().equals("")) {
                 JOptionPane.showMessageDialog(this, "Bạn phải nhập thông tin tìm kiếm");
-            } else if (!txtSearch1.getText().trim().equals("")) {
+            } else if (!txtSearchbyName.getText().trim().equals("")) {
                 modelTableKH.getDataVector().removeAllElements();
                 int i = 1;
                 String gt = "";
@@ -227,10 +245,10 @@ public class SearchingCustomer_UI extends JPanel implements ActionListener {
                     }
                 } else {
                     JOptionPane.showMessageDialog(this, "Không tìm thấy khách hàng");
-                    txtSearch1.selectAll();
-                    txtSearch1.requestFocus();
+                    txtSearchbyName.selectAll();
+                    txtSearchbyName.requestFocus();
                 }
-            } else if (!txtSearch2.getText().trim().equals("")) {
+            } else if (!txtSearchbyNumber.getText().trim().equals("")) {
                 modelTableKH.getDataVector().removeAllElements();
                 int i = 1;
                 String gt ="";
@@ -247,10 +265,10 @@ public class SearchingCustomer_UI extends JPanel implements ActionListener {
                     }
                 } else {
                     JOptionPane.showMessageDialog(this, "Không tìm thấy khách hàng");
-                    txtSearch2.selectAll();
-                    txtSearch2.requestFocus();
+                    txtSearchbyNumber.selectAll();
+                    txtSearchbyNumber.requestFocus();
                 }
-            } else if (!txtSearch3.getText().trim().equals("")) {
+            } else if (!txtSearchbyCCCD.getText().trim().equals("")) {
                 modelTableKH.getDataVector().removeAllElements();
                 int i = 1;
                 String gt ="";
@@ -267,14 +285,14 @@ public class SearchingCustomer_UI extends JPanel implements ActionListener {
                     }
                 } else {
                     JOptionPane.showMessageDialog(this, "Không tìm thấy khách hàng");
-                    txtSearch3.selectAll();
-                    txtSearch3.requestFocus();
+                    txtSearchbyCCCD.selectAll();
+                    txtSearchbyCCCD.requestFocus();
                 }
             }
         }else if(o.equals(btnlamMoi)){
-            txtSearch2.setText("");
-            txtSearch1.setText("");
-            txtSearch3.setText("");
+            txtSearchbyNumber.setText("");
+            txtSearchbyName.setText("");
+            txtSearchbyCCCD.setText("");
 
 
             modelTableKH.getDataVector().removeAllElements();

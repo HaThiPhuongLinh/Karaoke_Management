@@ -8,6 +8,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Entity:Hóa đơn
+ * Người thiết kế :Nguyễn Đình Dương
+ */
 public class Bill {
     private String maHoaDon;
     private Staff maNhanVien;
@@ -160,6 +164,10 @@ public class Bill {
                 '}';
     }
 
+    /**
+     * Hàm tính giờ thuê phòng dựa trên thời gian bắt đầu thuê (ngày giờ đặt) và thời gian kết thúc thuê (ngày giờ trả)
+     * @return {@code Double}: Thời gian sử dụng phòng
+     */
     public Double tinhGioThue() {
         int soPhut = 0;
         if (ngayGioTra != null && ngayGioDat != null) {
@@ -172,6 +180,11 @@ public class Bill {
         soPhut = (int) soPhut / 15;
         return soPhut * 1.0 / 4;
     }
+
+    /**
+     * Hàm tính thời gian sử dụng phòng trả về dạng chuỗi
+     * @return {@code String}: Thời gian sử dụng phòng
+     */
     public String tinhThoiGianSuDung() {
         int soPhut = 0;
         if (ngayGioTra != null && ngayGioDat != null) {
@@ -188,6 +201,11 @@ public class Bill {
 
         return gio + " giờ " + phut + " phút";
     }
+
+    /**
+     * Tính tổng tiền dịch vụ
+     * @return {@code Double}: tiền dịch vụ đã đặt
+     */
     public Double tinhTongTienDichVu() {
         if (lstDetails == null) {
 

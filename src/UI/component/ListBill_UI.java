@@ -3,21 +3,15 @@ package UI.component;
 import ConnectDB.ConnectDB;
 import DAO.*;
 import Entity.Staff;
-import ConnectDB.ConnectDB;
-import Entity.Room;
 import Entity.Bill;
 import Entity.DetailsOfService;
-import Entity.Staff;
 import UI.CustomUI.Custom;
 import UI.component.Dialog.DatePicker;
-import UI.component.Dialog.DialogBill;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.text.DecimalFormat;
@@ -26,18 +20,23 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.sql.Timestamp;
-import javax.swing.*;
 
+/**
+ * Giao diện dùng để thống kê hóa đơn đã thanh toán
+ * Người thiết kế Nguyễn Đình Dương
+ * Ngày tạo:5/11/2023
+ * Lần cập nhật cuối : 06/11/2023
+ * Nội dung cập nhật : Sửa tổng tiền dịch vụ
+ */
 public class ListBill_UI extends JPanel implements ActionListener,MouseListener,ItemListener {
     public static Staff staffLogin = null;
-    private JComboBox<String> comboBoxLocTheo;
+    private JComboBox<String> cboLocTheo;
     private JTable tblHD;
     private DefaultTableModel modelTblHD;
     private JButton btnThongKe, btnLamMoi;
-    private JLabel lblDenNgay,labelTuNgay;
-    private JLabel backgroundLabel,timeLabel;
-    private DatePicker pickerDenNgay,pickerTuNgay;
+    private JLabel lblDenNgay, lblTuNgay;
+    private JLabel lblBackground, lblTime;
+    private DatePicker dpDenNgay, dpTuNgay;
     private BillDAO billDAO;
     private DetailOfServiceDAO serviceDetailDAO = DetailOfServiceDAO.getInstance();
     private Bill bills = new Bill();
@@ -66,10 +65,10 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
         timeNow.setOpaque(false);
         add(timeNow);
 
-        timeLabel = new JLabel();
-        timeLabel.setFont(new Font("Arial", Font.BOLD, 33));
-        timeLabel.setForeground(Color.WHITE);
-        timeNow.add(timeLabel);
+        lblTime = new JLabel();
+        lblTime.setFont(new Font("Arial", Font.BOLD, 33));
+        lblTime.setForeground(Color.WHITE);
+        timeNow.add(lblTime);
         Timer timer = new Timer(10, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -88,16 +87,16 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
         panel1.setLayout(null);
 
         //        Từ ngày
-        labelTuNgay = new JLabel("Từ ngày:");
-        labelTuNgay.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelTuNgay.setBounds(150, 100, 120, 30);
-        labelTuNgay.setForeground(Color.WHITE);
-        add(labelTuNgay);
+        lblTuNgay = new JLabel("Từ ngày:");
+        lblTuNgay.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblTuNgay.setBounds(150, 100, 120, 30);
+        lblTuNgay.setForeground(Color.WHITE);
+        add(lblTuNgay);
 
-        pickerTuNgay = new DatePicker(150);
-        pickerTuNgay.setOpaque(false);
-        pickerTuNgay.setBounds(230, 100, 300, 30);
-        add(pickerTuNgay);
+        dpTuNgay = new DatePicker(150);
+        dpTuNgay.setOpaque(false);
+        dpTuNgay.setBounds(230, 100, 300, 30);
+        add(dpTuNgay);
 //      Đến ngày
         lblDenNgay = new JLabel("Đến ngày: ");
         lblDenNgay.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -105,10 +104,10 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
         lblDenNgay.setForeground(Color.WHITE);
         add(lblDenNgay);
 
-        pickerDenNgay = new DatePicker(150);
-        pickerDenNgay.setOpaque(false);
-        pickerDenNgay.setBounds(530, 100, 300, 30);
-        add(pickerDenNgay);
+        dpDenNgay = new DatePicker(150);
+        dpDenNgay.setOpaque(false);
+        dpDenNgay.setBounds(530, 100, 300, 30);
+        add(dpDenNgay);
 
 //      Lọc theo
         JLabel labelLocTheo = new JLabel("Lọc theo:");
@@ -117,16 +116,16 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
         labelLocTheo.setForeground(Color.WHITE);
         add(labelLocTheo);
 
-        comboBoxLocTheo = new JComboBox<String>();
-        comboBoxLocTheo.addItem("Tùy chỉnh");
-        comboBoxLocTheo.addItem("7 ngày gần nhất");
-        comboBoxLocTheo.addItem("1 tháng gần nhất");
-        comboBoxLocTheo.addItem("3 tháng gần nhất");
-        comboBoxLocTheo.addItem("6 tháng gần nhất");
-        comboBoxLocTheo.addItem("1 năm gần nhất");
-        comboBoxLocTheo.setBounds(830,100,200,30);
-        Custom.setCustomComboBox(comboBoxLocTheo);
-        add(comboBoxLocTheo);
+        cboLocTheo = new JComboBox<String>();
+        cboLocTheo.addItem("Tùy chỉnh");
+        cboLocTheo.addItem("7 ngày gần nhất");
+        cboLocTheo.addItem("1 tháng gần nhất");
+        cboLocTheo.addItem("3 tháng gần nhất");
+        cboLocTheo.addItem("6 tháng gần nhất");
+        cboLocTheo.addItem("1 năm gần nhất");
+        cboLocTheo.setBounds(830,100,200,30);
+        Custom.setCustomComboBox(cboLocTheo);
+        add(cboLocTheo);
 
         //        btn thống kê
         btnThongKe = new JButton("Thống kê");
@@ -173,14 +172,14 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
         panel1.add(panelDSDV);
         //
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/images/background.png"));
-        backgroundLabel = new JLabel(backgroundImage);
-        backgroundLabel.setBounds(0, 0, getWidth(), getHeight());
-        add(backgroundLabel);
+        lblBackground = new JLabel(backgroundImage);
+        lblBackground.setBounds(0, 0, getWidth(), getHeight());
+        add(lblBackground);
 
         btnThongKe.addActionListener(this);
         btnLamMoi.addActionListener(this);
 
-        comboBoxLocTheo.addItemListener(this);
+        cboLocTheo.addItemListener(this);
         loadHD();
 
         //phan viet code
@@ -193,10 +192,14 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
 
 
     }
+
+    /**
+     * gán thời gian hiện tại cho lblTime
+     */
     private void updateTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String time = sdf.format(new Date());
-        timeLabel.setText(time);
+        lblTime.setText(time);
     }
 
     @Override
@@ -205,8 +208,8 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
         if (o.equals(btnThongKe)) {
             modelTblHD.getDataVector().removeAllElements();
             try {
-                Date tuNgay = pickerTuNgay.getFullDate();
-                Date denNgay = pickerDenNgay.addOneDay();
+                Date tuNgay = dpTuNgay.getFullDate();
+                Date denNgay = dpDenNgay.addOneDay();
                 ArrayList<Bill> listBill = billDAO.getListBillByDate(tuNgay, denNgay);
                 System.out.printf(String.valueOf(listBill.size()) + "ádasdasd");
                 if (validData()) {
@@ -218,7 +221,7 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
                         }
                     }
                 } else if (denNgay.before(tuNgay)) {
-                    pickerDenNgay.setValueToDay();
+                    dpDenNgay.setValueToDay();
                     JOptionPane.showMessageDialog(this, "Ngày kết thúc phải >= ngày bắt đầu", "Cảnh báo",
                             JOptionPane.ERROR_MESSAGE);
                 }
@@ -228,15 +231,16 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
         } else if (o.equals(btnLamMoi)) {
             modelTblHD.getDataVector().removeAllElements();
             tblHD.removeAll();
-            comboBoxLocTheo.setSelectedIndex(0);
-            pickerTuNgay.setValueToDay();
-            pickerDenNgay.setValueToDay();
+            cboLocTheo.setSelectedIndex(0);
+            dpTuNgay.setValueToDay();
+            dpDenNgay.setValueToDay();
         }
     }
-    private String formatDate(Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-        return sdf.format(date);
-    }
+
+    /**
+     * Load lại danh sách hóa đơn đã thanh toán
+     * @param listBill:Danh sách hóa đơn cần load
+     */
     public void reloadHD(ArrayList<Bill> listBill) {
 
         for (Bill bill :listBill) {
@@ -281,7 +285,10 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
             }
         }
     }
-
+    /**
+     * Load  danh sách hóa đơn đã thanh toán
+     *
+     */
     public void loadHD() {
 
         for (Bill bill :billDAO.getAllBill2()) {
@@ -327,78 +334,88 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
         }
     }
 
+    /**
+     * Hàm để regex dữ liệu nhập vào
+     * @return {@code boolean}:Dữ liệu nhập đúng hoặc sai
+     * @throws ParseException
+     */
     public boolean validData() throws ParseException {
-        Date tuNgay = pickerTuNgay.getFullDate();
-        Date denNgay = pickerDenNgay.getFullDate();
+        Date tuNgay = dpTuNgay.getFullDate();
+        Date denNgay = dpDenNgay.getFullDate();
         if (denNgay.before(tuNgay)) {
             return false;
         }
         return true;
     }
+
+    /**
+     * Lọc hóa đơn đã thanh toán theo các mốc thời gian khác nhau
+     * @param e the event to be processed
+     */
     public void itemStateChanged(ItemEvent e) {
         Object o = e.getSource();
-        if (o.equals(comboBoxLocTheo)) {
-            String search = comboBoxLocTheo.getSelectedItem().toString();
+        if (o.equals(cboLocTheo)) {
+            String search = cboLocTheo.getSelectedItem().toString();
             switch (search) {
                 case "7 ngày gần nhất":
-                    pickerTuNgay.setActive(false);
-                    pickerDenNgay.setActive(false);
+                    dpTuNgay.setActive(false);
+                    dpDenNgay.setActive(false);
                     modelTblHD.getDataVector().removeAllElements();
                     tblHD.removeAll();
-                    Date tuNgay = pickerTuNgay.setDatesFromToday(Calendar.DAY_OF_MONTH, -6);
+                    Date tuNgay = dpTuNgay.setDatesFromToday(Calendar.DAY_OF_MONTH, -6);
                     Date denNgay = null;
-                    denNgay = pickerDenNgay.getCurrentDatePlusOneDay();
+                    denNgay = dpDenNgay.getCurrentDatePlusOneDay();
                     ArrayList<Bill> listBill = billDAO.getListBillByDate(tuNgay, denNgay);
                     reloadHD(listBill);
                     break;
                 case "1 tháng gần nhất":
-                    pickerTuNgay.setActive(false);
-                    pickerDenNgay.setActive(false);
+                    dpTuNgay.setActive(false);
+                    dpDenNgay.setActive(false);
                     modelTblHD.getDataVector().removeAllElements();
                     tblHD.removeAll();
-                    Date tuNgay1 = pickerTuNgay.setDatesFromToday(Calendar.MONTH, -1);
+                    Date tuNgay1 = dpTuNgay.setDatesFromToday(Calendar.MONTH, -1);
                     Date denNgay1 = null;
-                    denNgay1 = pickerDenNgay.getCurrentDatePlusOneDay();
+                    denNgay1 = dpDenNgay.getCurrentDatePlusOneDay();
                     ArrayList<Bill> listBill1 = billDAO.getListBillByDate(tuNgay1, denNgay1);
                     reloadHD(listBill1);
                     break;
                 case "3 tháng gần nhất":
-                    pickerTuNgay.setActive(false);
-                    pickerDenNgay.setActive(false);
+                    dpTuNgay.setActive(false);
+                    dpDenNgay.setActive(false);
                     modelTblHD.getDataVector().removeAllElements();
                     tblHD.removeAll();
-                    Date tuNgay2 = pickerTuNgay.setDatesFromToday(Calendar.MONTH, -2);
+                    Date tuNgay2 = dpTuNgay.setDatesFromToday(Calendar.MONTH, -2);
                     Date denNgay2 = null;
-                    denNgay2 = pickerDenNgay.getCurrentDatePlusOneDay();
+                    denNgay2 = dpDenNgay.getCurrentDatePlusOneDay();
                     ArrayList<Bill> listBill2 = billDAO.getListBillByDate(tuNgay2, denNgay2);
                     reloadHD(listBill2);
                     break;
                 case "6 tháng gần nhất":
-                    pickerTuNgay.setActive(false);
-                    pickerDenNgay.setActive(false);
+                    dpTuNgay.setActive(false);
+                    dpDenNgay.setActive(false);
                     modelTblHD.getDataVector().removeAllElements();
                     tblHD.removeAll();
-                    Date tuNgay3 = pickerTuNgay.setDatesFromToday(Calendar.MONTH, -5);
+                    Date tuNgay3 = dpTuNgay.setDatesFromToday(Calendar.MONTH, -5);
                     Date denNgay3 = null;
-                    denNgay3 = pickerDenNgay.getCurrentDatePlusOneDay();
+                    denNgay3 = dpDenNgay.getCurrentDatePlusOneDay();
                     ArrayList<Bill> listBill3 = billDAO.getListBillByDate(tuNgay3, denNgay3);
                     reloadHD(listBill3);
                     break;
                 case "1 năm gần nhất":
-                    pickerTuNgay.setActive(false);
-                    pickerDenNgay.setActive(false);
+                    dpTuNgay.setActive(false);
+                    dpDenNgay.setActive(false);
                     modelTblHD.getDataVector().removeAllElements();
                     tblHD.removeAll();
-                    Date tuNgay4 = pickerTuNgay.setDatesFromToday(Calendar.MONTH, -11);
+                    Date tuNgay4 = dpTuNgay.setDatesFromToday(Calendar.MONTH, -11);
                     Date denNgay4 = null;
-                    denNgay4 = pickerDenNgay.getCurrentDatePlusOneDay();
+                    denNgay4 = dpDenNgay.getCurrentDatePlusOneDay();
                     ArrayList<Bill> listBill4 = billDAO.getListBillByDate(tuNgay4, denNgay4);
                     reloadHD(listBill4);
                     break;
                 case "Tùy chỉnh":
-                    pickerTuNgay.setActive(true);
-                    pickerDenNgay.setActive(true);
-                    pickerTuNgay.setValueToDay();
+                    dpTuNgay.setActive(true);
+                    dpDenNgay.setActive(true);
+                    dpTuNgay.setValueToDay();
                     break;
             }
         }
