@@ -39,14 +39,18 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
     private JLabel backgroundLabel,timeLabel;
     private DatePicker pickerDenNgay,pickerTuNgay;
     private BillDAO billDAO;
+    private DetailOfServiceDAO serviceDetailDAO = DetailOfServiceDAO.getInstance();
+    private Bill bills = new Bill();
 
+    private DecimalFormat df = new DecimalFormat("#,###.##");
     public ListBill_UI(Staff staff) {
         this.staffLogin = staff;
         setLayout(null);
         setBounds(0, 0, 1475, 770);
         billDAO = new BillDAO();
-
-
+        java.util.List<DetailsOfService> serviceOrders = new ArrayList<>();
+        serviceOrders = serviceDetailDAO.getDetailsOfServiceForBill(bills.getMaHoaDon());
+        bills.setLstDetails(serviceOrders);
         //phan viet code
         JLabel headerLabel = new JLabel("THỐNG KÊ HOÁ ĐƠN");
         headerLabel.setBounds(570, 10, 1175, 40);
@@ -147,7 +151,7 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
         panelDSDV.setBounds(5, 130, 1235, 530);
         panelDSDV.setOpaque(false);
 
-        String[] colsDV = { "Mã HD", "Tên Nhân Viên", "Tên Hhách Hàng","Mã Phòng","Giờ Đặt","Giờ Trả","Khuyến Mãi" };
+        String[] colsDV = { "Mã HD", "Tên Nhân Viên", "Tên Hhách Hàng","Mã Phòng","Tiền Phòng","Tiền Dich Vụ","Tổng Tiền" };
         modelTblHD = new DefaultTableModel(colsDV, 0) ;
         JScrollPane scrollPaneDV;
 
@@ -238,10 +242,41 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
         for (Bill bill :listBill) {
 
             if(bill.getTinhTrangHD()==1) {
-                String ngayDat = formatDate(bill.getNgayGioDat());
-                String ngayTra=formatDate(bill.getNgayGioTra());
-                Object[] rowData = {bill.getMaHoaDon(),bill.getMaNhanVien().getMaNhanVien(),bill.getMaKH().getTenKhachHang(), bill.getMaPhong().getMaPhong(), ngayDat,ngayTra,bill.getKhuyenMai()};
+                java.util.List<DetailsOfService> serviceOrders = new ArrayList<>();
+                serviceOrders = serviceDetailDAO.getDetailsOfServiceForBill(bill.getMaHoaDon());
+                bill.setLstDetails(serviceOrders);
+                double totalPriceService = bill.tinhTongTienDichVu();
+
+                double totalPriceRoom = bill.tinhTienPhong();
+
+                double vat = 0;
+                Date ngayHienTai = new Date();
+
+// Chuyển ngày hiện tại và ngày sinh của khách hàng thành lớp Calendar
+                Calendar calendarHienTai = Calendar.getInstance();
+                calendarHienTai.setTime(ngayHienTai);
+
+                Calendar calendarNgaySinhKhachHang = Calendar.getInstance();
+                calendarNgaySinhKhachHang.setTime(bill.getMaKH().getNgaySinh());
+
+// Lấy ngày và tháng của ngày hiện tại
+                int ngayHienTaiValue = calendarHienTai.get(Calendar.DAY_OF_MONTH);
+                int thangHienTaiValue = calendarHienTai.get(Calendar.MONTH);
+
+// Lấy ngày và tháng từ ngày sinh của khách hàng
+                int ngaySinhKhachHangValue = calendarNgaySinhKhachHang.get(Calendar.DAY_OF_MONTH);
+                int thangSinhKhachHangValue = calendarNgaySinhKhachHang.get(Calendar.MONTH);
+                if (ngayHienTaiValue == ngaySinhKhachHangValue && thangHienTaiValue == thangSinhKhachHangValue) {
+                    vat = 0.0;
+                    boolean b = billDAO.updateKM(bill.getMaHoaDon());
+                } else {
+                    vat = (totalPriceService + totalPriceRoom) * 0.08;
+                }
+
+                double totalPrice = bill.getTongTienHD() +vat;
+                Object[] rowData = {bill.getMaHoaDon(),bill.getMaNhanVien().getTenNhanVien(),bill.getMaKH().getTenKhachHang(), bill.getMaPhong().getMaPhong(), df.format(totalPriceRoom),df.format(totalPriceService),df.format(totalPrice)};
                 modelTblHD.addRow(rowData);
+
 
             }
         }
@@ -249,12 +284,43 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
 
     public void loadHD() {
 
-        for (Bill bill :billDAO.getAllBill()) {
+        for (Bill bill :billDAO.getAllBill2()) {
 
             if(bill.getTinhTrangHD()==1) {
-                String ngayDat = formatDate(bill.getNgayGioDat());
-                String ngayTra=formatDate(bill.getNgayGioTra());
-                Object[] rowData = {bill.getMaHoaDon(),bill.getMaNhanVien().getMaNhanVien(),bill.getMaKH().getTenKhachHang(), bill.getMaPhong().getMaPhong(), ngayDat,ngayTra,bill.getKhuyenMai()};
+                java.util.List<DetailsOfService> serviceOrders = new ArrayList<>();
+                serviceOrders = serviceDetailDAO.getDetailsOfServiceForBill(bill.getMaHoaDon());
+                bill.setLstDetails(serviceOrders);
+
+                double totalPriceService = bill.tinhTongTienDichVu();
+
+                double totalPriceRoom = bill.tinhTienPhong();
+
+                double vat = 0;
+                Date ngayHienTai = new Date();
+
+// Chuyển ngày hiện tại và ngày sinh của khách hàng thành lớp Calendar
+                Calendar calendarHienTai = Calendar.getInstance();
+                calendarHienTai.setTime(ngayHienTai);
+
+                Calendar calendarNgaySinhKhachHang = Calendar.getInstance();
+                calendarNgaySinhKhachHang.setTime(bill.getMaKH().getNgaySinh());
+
+// Lấy ngày và tháng của ngày hiện tại
+                int ngayHienTaiValue = calendarHienTai.get(Calendar.DAY_OF_MONTH);
+                int thangHienTaiValue = calendarHienTai.get(Calendar.MONTH);
+
+// Lấy ngày và tháng từ ngày sinh của khách hàng
+                int ngaySinhKhachHangValue = calendarNgaySinhKhachHang.get(Calendar.DAY_OF_MONTH);
+                int thangSinhKhachHangValue = calendarNgaySinhKhachHang.get(Calendar.MONTH);
+                if (ngayHienTaiValue == ngaySinhKhachHangValue && thangHienTaiValue == thangSinhKhachHangValue) {
+                    vat = 0.0;
+                    boolean b = billDAO.updateKM(bill.getMaHoaDon());
+                } else {
+                    vat = (totalPriceService + totalPriceRoom) * 0.08;
+                }
+
+                double totalPrice = bill.getTongTienHD() +vat;
+                Object[] rowData = {bill.getMaHoaDon(),bill.getMaNhanVien().getTenNhanVien(),bill.getMaKH().getTenKhachHang(), bill.getMaPhong().getMaPhong(), df.format(totalPriceRoom),df.format(totalPriceService),df.format(totalPrice)};
                 modelTblHD.addRow(rowData);
 
             }

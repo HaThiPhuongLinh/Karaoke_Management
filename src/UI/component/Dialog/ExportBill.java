@@ -21,14 +21,10 @@ import Entity.*;
 
 import org.apache.poi.ss.util.CellRangeAddress;
 /**
- * Sử dụng xuất hóa đơn dạng pdf và excel
- * <p>
+ * Sử dụng xuất hóa đơn dạng pdf
  * Người tham gia thiết kế: Nguyen Dinh Duong
- * <p>
  * Ngày tạo: 27/10/2023
- * <p>
  * Lần cập nhật cuối: 06/11/2021
- * <p>
  * Nội dung cập nhật: sửa lỗi hiển thị khi xuất file pdf
  */
 public class ExportBill {
