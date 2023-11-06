@@ -13,6 +13,12 @@ public class CustomerDAO {
     public static CustomerDAO getInstance() {
         return instance;
     }
+
+    /**
+     * Cập nhật khách hàng
+     * @param kh:Khách hàng cần cập nhật
+     * @return {@code boolean}: True or false
+     */
     public static boolean update(Customer kh) {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
@@ -35,6 +41,11 @@ public class CustomerDAO {
         return n > 0;
     }
 
+    /**
+     * Lấy ra danh sách toàn bộ khách hàng
+     * @return {@code List<Customer> }:Danh sách khách hàng
+     */
+
     public List<Customer> getAllKhachHang() {
         List<Customer> dsKhachHang = new ArrayList<Customer>();
         ConnectDB.getInstance();
@@ -53,6 +64,11 @@ public class CustomerDAO {
         return dsKhachHang;
     }
 
+    /**
+     * Lấy ra mã khách hàng dựa trên tên khách hàng
+     * @param tenKhachHang:Tên khách hàng cần lấy mã
+     * @return
+     */
     public String getIdByTenKhachHang(String tenKhachHang) {
         String id = null;
         ConnectDB.getInstance();
@@ -83,7 +99,11 @@ public class CustomerDAO {
         return id;
     }
 
-
+    /**
+     * Lấy ra khách hàng dựa trên mã khách hàng
+     * @param id
+     * @return {@code Customer }: khách hàng
+     */
     public Customer getKhachHangById(String id) {
         Customer customer = null;
         ConnectDB.getInstance();
@@ -114,6 +134,11 @@ public class CustomerDAO {
         return customer;
     }
 
+    /**
+     * Lấy ra danh sách khách hàng dựa theo tên khách hàng
+     * @param name:Tên khách hàng cần tìm
+     * @return {@code List<Customer> }:Danh sách khách hàng
+     */
     public List<Customer> getListKhachHangByName(String name) {
         List<Customer> namelist = new ArrayList<Customer>();
         ConnectDB.getInstance();
@@ -141,6 +166,11 @@ public class CustomerDAO {
         return namelist;
     }
 
+    /**
+     * Lấy ra danh sách khách hàng dựa trên số điện thoại
+     * @param sdt:Số điện thoại của khách hàng cần tìm
+     * @return {@code List<Customer> }:Danh sách khách hàng
+     */
     public List<Customer> getListKhachHangBySDT(String sdt) {
         List<Customer> sdtlist = new ArrayList<Customer>();
         ConnectDB.getInstance();
@@ -168,6 +198,11 @@ public class CustomerDAO {
         return sdtlist;
     }
 
+    /**
+     * Lấy ra danh sách khách hàng dựa trên cccd
+     * @param cccd:Căn cước công dân của khách hàng cần tìm
+     * @return {@code List<Customer> }:Danh sách hách hàng
+     */
     public List<Customer> getListKhachHangByCCCD(String cccd) {
         List<Customer> cccdlist = new ArrayList<Customer>();
         ConnectDB.getInstance();
@@ -195,6 +230,11 @@ public class CustomerDAO {
         return cccdlist;
     }
 
+    /**
+     * Lấy ra khách hàng dựa trên số điện thoại
+     * @param sdt:Số điện thoại của khách hàng cần tìm
+     * @return {@code Customer }:Khách hàng
+     */
     public  Customer getKhachHangBySDT(String sdt) {
        Customer c = null;
         ConnectDB.getInstance();
@@ -221,6 +261,11 @@ public class CustomerDAO {
         return c;
     }
 
+    /**
+     * Tìm phiếu đặt phòng dựa trên tên khách hàng
+     * @param customerName:Tên khách hàng cần tìm phiếu đặt phòng
+     * @return {@code ArrayList<ReservationForm> }:Danh sách phiếu đặt phòng
+     */
     public ArrayList<ReservationForm> findReservationFormsByCustomerName(String customerName) {
         ArrayList<ReservationForm> result = new ArrayList<>();
         Connection conn = null;
@@ -273,6 +318,12 @@ public class CustomerDAO {
 
         return result;
     }
+
+    /**
+     * Lấy ra khách hàng dựa trên mã Hóa đơn
+     * @param maHoaDon:Mã hóa đơn của khách hàng cần lấy
+     * @return {@code Customer }:Khách hàng
+     */
     public Customer getCustomerByBillId(String maHoaDon) {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
@@ -297,8 +348,12 @@ public class CustomerDAO {
     }
 
 
-
-
+    /**
+     * Thêm khách hàng
+     * @param kh:Khách hàng cần thêm
+     * @return {@code boolean} :True or false
+     * @throws SQLException
+     */
 
     public boolean insert(Customer kh) throws SQLException {
         ConnectDB.getInstance();
@@ -328,6 +383,11 @@ public class CustomerDAO {
         return n > 0;
     }
 
+    /**
+     * Xóa khách hàng
+     * @param kh:Khách hàng cần xóa
+     * @return {@code boolean} :True or false
+     */
     public boolean delete(Customer kh) {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();

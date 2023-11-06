@@ -6,7 +6,6 @@ import Entity.Customer;
 import Entity.Staff;
 import UI.CustomUI.Custom;
 import UI.component.Dialog.DatePicker;
-import UI.component.Dialog.PresetRoom;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -23,20 +22,26 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
-
+/**
+ * Giao diện dùng để quản lí khách hàng
+ * Người thiết kế Nguyễn Đình Dương
+ * Ngày tạo:9/10/2023
+ * Lần cập nhật cuối : 15/10/2023
+ * Nội dung cập nhật : Update sự kiện mouseclicked cho bảng
+ */
 
 public class Customer_UI extends JPanel implements ActionListener, MouseListener {
     private JTable tblKH;
     private DefaultTableModel modelTableKH;
-    private JLabel backgroundLabel, timeLabel, maKHLabel, tenKHLabel, gioitinhKHLabel, sdtKHLabel, ngaySinhLabel, cmndLabel;
+    private JLabel lblBackground, lblTime, lblMaKH, lblTenKH, lblGioitinhKH, lblSdtKH, lblNgaySinh, lblCmnd;
     private JTextField txtMaKH, txtTenKH, txtSDTKH, txtCMNDKH, txtHienThiLoi;
     private JComboBox cboGioiTinh;
-    private JPanel timeNow, pnlCusList, pnlCusControl, pnlCusListRight;
+    private JPanel timeNow, pnlCusList, pnlCusControl;
     private DatePicker dpNgaySinh;
-    private DefaultTableModel tableModel;
-    private JButton btnThem, btnXoa, btnSua, btnLamMoi, btnXemHet;
+
+    private JButton btnThem,  btnSua, btnLamMoi;
     private CustomerDAO CustomerDAO;
-    private Date date;
+
     public static Staff staffLogin = null;
 
     public Customer_UI(Staff staff) {
@@ -64,10 +69,10 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
         timeNow.setOpaque(false);
         add(timeNow);
 
-        timeLabel = new JLabel();
-        timeLabel.setFont(new Font("Arial", Font.BOLD, 33));
-        timeLabel.setForeground(Color.WHITE);
-        timeNow.add(timeLabel);
+        lblTime = new JLabel();
+        lblTime.setFont(new Font("Arial", Font.BOLD, 33));
+        lblTime.setForeground(Color.WHITE);
+        timeNow.add(lblTime);
         Timer timer = new Timer(10, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -93,50 +98,50 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
         pnlCusControl.setLayout(null);
         pnlCusControl.setPreferredSize(new Dimension(1100, 230));
 
-        maKHLabel = new JLabel("Mã Khách Hàng: ");
-        maKHLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        maKHLabel.setBounds(80, 20, 120, 30);
-        maKHLabel.setForeground(Color.WHITE);
-        pnlCusControl.add(maKHLabel);
+        lblMaKH = new JLabel("Mã Khách Hàng: ");
+        lblMaKH.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblMaKH.setBounds(80, 20, 120, 30);
+        lblMaKH.setForeground(Color.WHITE);
+        pnlCusControl.add(lblMaKH);
         txtMaKH = new JTextField();
         txtMaKH.setBounds(195, 20, 350, 30);
 //        txtMaKH.setEditable(false);
         pnlCusControl.add(txtMaKH);
 
-        tenKHLabel = new JLabel("Tên Khách Hàng: ");
-        tenKHLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        tenKHLabel.setBounds(80, 70, 120, 30);
-        tenKHLabel.setForeground(Color.WHITE);
-        pnlCusControl.add(tenKHLabel);
+        lblTenKH = new JLabel("Tên Khách Hàng: ");
+        lblTenKH.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblTenKH.setBounds(80, 70, 120, 30);
+        lblTenKH.setForeground(Color.WHITE);
+        pnlCusControl.add(lblTenKH);
         txtTenKH = new JTextField();
         txtTenKH.setBounds(195, 70, 350, 30);
         pnlCusControl.add(txtTenKH);
 
-        sdtKHLabel = new JLabel("SDT: ");
-        sdtKHLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        sdtKHLabel.setBounds(700, 20, 50, 30);
-        sdtKHLabel.setForeground(Color.WHITE);
-        pnlCusControl.add(sdtKHLabel);
+        lblSdtKH = new JLabel("SDT: ");
+        lblSdtKH.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblSdtKH.setBounds(700, 20, 50, 30);
+        lblSdtKH.setForeground(Color.WHITE);
+        pnlCusControl.add(lblSdtKH);
 
         txtSDTKH = new JTextField();
         txtSDTKH.setBounds(815, 20, 165, 30);
         pnlCusControl.add(txtSDTKH);
 
-        ngaySinhLabel = new JLabel("Ngày Sinh: ");
-        ngaySinhLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        ngaySinhLabel.setBounds(700, 70, 100, 30);
-        ngaySinhLabel.setForeground(Color.WHITE);
-        pnlCusControl.add(ngaySinhLabel);
+        lblNgaySinh = new JLabel("Ngày Sinh: ");
+        lblNgaySinh.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblNgaySinh.setBounds(700, 70, 100, 30);
+        lblNgaySinh.setForeground(Color.WHITE);
+        pnlCusControl.add(lblNgaySinh);
 
         dpNgaySinh = new DatePicker(205);
         dpNgaySinh.setBounds(815, 70, 165, 30);
         pnlCusControl.add(dpNgaySinh);
 
-        gioitinhKHLabel = new JLabel("Giới Tính: ");
-        gioitinhKHLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        gioitinhKHLabel.setBounds(700, 120, 70, 30);
-        gioitinhKHLabel.setForeground(Color.WHITE);
-        pnlCusControl.add(gioitinhKHLabel);
+        lblGioitinhKH = new JLabel("Giới Tính: ");
+        lblGioitinhKH.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblGioitinhKH.setBounds(700, 120, 70, 30);
+        lblGioitinhKH.setForeground(Color.WHITE);
+        pnlCusControl.add(lblGioitinhKH);
 
         cboGioiTinh = new JComboBox<String>();
         cboGioiTinh.addItem("Nam");
@@ -145,11 +150,11 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
         Custom.setCustomComboBox(cboGioiTinh);
         pnlCusControl.add(cboGioiTinh);
 
-        cmndLabel = new JLabel("CCCD: ");
-        cmndLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        cmndLabel.setBounds(80, 120, 60, 30);
-        cmndLabel.setForeground(Color.WHITE);
-        pnlCusControl.add(cmndLabel);
+        lblCmnd = new JLabel("CCCD: ");
+        lblCmnd.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblCmnd.setBounds(80, 120, 60, 30);
+        lblCmnd.setForeground(Color.WHITE);
+        pnlCusControl.add(lblCmnd);
 
         txtCMNDKH = new JTextField();
         txtCMNDKH.setBounds(195, 120, 350, 30);
@@ -216,22 +221,29 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
         btnLamMoi.addActionListener(this);
 
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/images/background.png"));
-        backgroundLabel = new JLabel(backgroundImage);
-        backgroundLabel.setBounds(0, 0, getWidth(), getHeight());
-        add(backgroundLabel);
+        lblBackground = new JLabel(backgroundImage);
+        lblBackground.setBounds(0, 0, getWidth(), getHeight());
+        add(lblBackground);
     }
-
+//Thiết lập thời gian thực cho lblTime
     private void updateTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String time = sdf.format(new Date());
-        timeLabel.setText(time);
+        lblTime.setText(time);
     }
-
+    /**
+     * hàm sử dụng định dạng "HH:mm:ss" để biểu diễn thời gian (giờ, phút và giây) của đối tượng date
+     * @param date : ngày cần định dạng
+     * @return {@code String}: ngày cần định dạng
+     */
     private String formatDate(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyy");
         return sdf.format(date);
     }
 
+    /**
+     * Load danh sách tất cả khách hàng lên bảng
+     */
     public void loadKH() {
         int i = 1;
         String gt = "";
@@ -248,12 +260,12 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
         }
     }
 
-
+//Hiển thị lỗi
     private void showMessage(JTextField txt, String message) {
         txt.requestFocus();
         txtHienThiLoi.setText(message);
     }
-
+//Regex dữ liệu nhập
     private boolean validData() {
         String ten = txtTenKH.getText().trim();
         String sdt = txtSDTKH.getText().trim();
@@ -405,7 +417,7 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
             }
         }
     }
-
+//Làm mới
     private void reFresh() {
         txtMaKH.setText("");
         txtTenKH.setText("");

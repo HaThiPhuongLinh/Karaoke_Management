@@ -6,20 +6,11 @@ import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
-import javax.swing.JOptionPane;
-
 import com.itextpdf.text.*;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.pdf.*;
-
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.*;
-
 import UI.CustomUI.Custom;
 import Entity.*;
-
-import org.apache.poi.ss.util.CellRangeAddress;
 /**
  * Sử dụng xuất hóa đơn dạng pdf
  * Người tham gia thiết kế: Nguyen Dinh Duong
@@ -28,23 +19,10 @@ import org.apache.poi.ss.util.CellRangeAddress;
  * Nội dung cập nhật: sửa lỗi hiển thị khi xuất file pdf
  */
 public class ExportBill {
-    private XSSFWorkbook workbook;
-    private XSSFSheet sheet;
-    private XSSFRow row = null;
-    private Cell cell = null;
-    private int rowHeight = 300;
-    private IndexedColors excelWhiteColor = IndexedColors.WHITE;
-    private IndexedColors excelBlackColor = IndexedColors.BLACK;
-    private HorizontalAlignment excelAlignCenter = HorizontalAlignment.CENTER;
-    private HorizontalAlignment excelAlignRight = HorizontalAlignment.RIGHT;
-    private HorizontalAlignment excelAlignLeft = HorizontalAlignment.LEFT;
-    private BorderStyle borderStyleThin = BorderStyle.THIN;
-    private BorderStyle borderStyleThick = BorderStyle.THICK;
+
 
     private URL fontPath = ExportBill.class.getResource(Custom.pathFont);
-    private String pdfFontLight = fontPath + "Roboto-300.ttf";
-    private  String pdfFontLightItalic = fontPath + "Roboto-300_Italic.ttf";
-    private  String pdfFontMedium = fontPath + "Roboto-500.ttf";
+
     private BaseFont baseFontMedium;
     private BaseFont baseFontLight;
     private BaseFont baseFontLightItalic;

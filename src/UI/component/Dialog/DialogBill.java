@@ -27,6 +27,10 @@ import java.util.List;
 //import Event_Handlers.ConvertTime;
 //import Event_Handlers.ExportBill;
 
+/**
+ * Thiết kế giao diện Hóa đơn
+ * Người thiết kế :Nguyễn Đình Dương
+ */
 
 public class DialogBill extends JDialog implements ActionListener {
     private final String WORKING_DIR = System.getProperty("user.dir");
