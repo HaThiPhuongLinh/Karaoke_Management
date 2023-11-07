@@ -298,6 +298,22 @@ Sửa chiều rộng các cột của bảng CTDV
             }
         }
     }
+
+    public void loadHD2(ArrayList<Bill> lst) {
+        modelTablePDP.setRowCount(0);
+        int i = 1;
+        for (Bill bill : lst) {
+            if (bill.getTinhTrangHD() == 0) {
+                String date = formatDate(bill.getNgayGioDat());
+                Object[] rowData = {i, bill.getMaPhong().getMaPhong(), bill.getMaPhong().getLoaiPhong().getTenLoaiPhong(), bill.getMaKH().getTenKhachHang(), date, df.format(bill.getMaPhong().getGiaPhong())};
+                modelTablePDP.addRow(rowData);
+                i++;
+            }
+        }
+        reloadBillList();
+        updateBillList();
+    }
+
     public void setKaraokeBookingUI(KaraokeBooking_UI main) {
         this.main = main;
     }
@@ -317,10 +333,7 @@ Sửa chiều rộng các cột của bảng CTDV
                 String txtMaP = txtTK.getText();
                 rsvf =billDAO.getBillByRoomID(txtMaP);
                 if(rsvf!=null) {
-
-
                     String date = formatDate(rsvf.getNgayGioDat());
-
                     Object[] rowData = {1, rsvf.getMaPhong().getMaPhong(), rsvf.getMaPhong().getLoaiPhong().getTenLoaiPhong(), rsvf.getMaKH().getTenKhachHang(), date, df.format(rsvf.getMaPhong().getGiaPhong())};
                     modelTablePDP.addRow(rowData);
                 }else {
@@ -328,8 +341,6 @@ Sửa chiều rộng các cột của bảng CTDV
                     txtTK.selectAll();
                     txtTK.requestFocus();
                 }
-
-
 
             }else if(!txtKH.getText().trim().equals("")){
                 modelTablePDP.getDataVector().removeAllElements();
@@ -367,6 +378,7 @@ Sửa chiều rộng các cột của bảng CTDV
                 Double totalPriceBill = bill.getTongTienHD();
 
                 DialogBill winPayment = new DialogBill(bill);
+                winPayment.setBillUI(this);
                 winPayment.setModal(true);
                 winPayment.setVisible(true);
                 Boolean isPaid = winPayment.getPaid();

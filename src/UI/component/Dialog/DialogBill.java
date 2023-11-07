@@ -4,6 +4,7 @@ import DAO.*;
 import Entity.*;
 import UI.CustomUI.Custom;
 import UI.component.Bill_UI;
+import UI.component.KaraokeBooking_UI;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -53,6 +54,7 @@ public class DialogBill extends JDialog implements ActionListener {
     private CustomerDAO customerDAO = CustomerDAO.getInstance();
     private  DetailOfBillDAO detailOfBillDAO;
     private DetailOfServiceDAO serviceDetailDAO = DetailOfServiceDAO.getInstance();
+    private Bill_UI main;
 
     /**
      * Khởi tạo giao diện thanh toán hóa đơn
@@ -107,8 +109,6 @@ public class DialogBill extends JDialog implements ActionListener {
                 super.paintComponent(g);
                 Graphics2D g2 = (Graphics2D) g;
                 g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-//                Image bgMain = logoIcon.getImage();
-//                g2.drawImage(bgMain, 20, 20, 70, 70, null);
             }
         };
         lblKaraokeName.setVerticalAlignment(SwingConstants.TOP);
@@ -398,6 +398,8 @@ public class DialogBill extends JDialog implements ActionListener {
                 btnPayment.setEnabled(false);
                 JOptionPane.showMessageDialog(null, "Thanh toán hóa đơn thành công", "Thông báo",
                         JOptionPane.INFORMATION_MESSAGE);
+                ArrayList<Bill> bills = billDAO.getAllBill();
+                main.loadHD2(bills);
                 String maHD = bill.getMaHoaDon();
                 String maPhong =bill.getMaPhong().getMaPhong();
                 String soGio = bill.tinhThoiGianSuDung();
@@ -418,6 +420,10 @@ public class DialogBill extends JDialog implements ActionListener {
             this.dispose();
 
         }
+    }
+
+    public void setBillUI(Bill_UI main) {
+        this.main = main;
     }
 
     private String formatDate(Date date) {
