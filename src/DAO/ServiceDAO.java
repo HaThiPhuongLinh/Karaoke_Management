@@ -5,8 +5,23 @@ import ConnectDB.ConnectDB;
 import Entity.TypeOfService;
 import Entity.Service;
 import java.util.ArrayList;
+/**
+ * Thêm, sửa, đọc dữ liệu từ database cho lớp {@code ServiceDAO}
+ * <p>
+ * Người tham gia thiết kế: Nguyễn Quang Duy
+ * <p>
+ * Ngày tạo: 07/10/2023
+ * <p>
+ * Lần cập nhật cuối: 7/11/2023
+ * <p>
+ * Nội dung cập nhật: thêm javadoc
+ */
 
 public class ServiceDAO {
+    /**
+     * lấy danh sách thông tin tất cả dịch vụ
+     * @return {@code ArrayList<Service>}: danh sách dịch vụ
+     */
     public List<Service> getAllDichVu() {
         List<Service> dsDichVu = new ArrayList<Service>();
         ConnectDB.getInstance();
@@ -25,6 +40,11 @@ public class ServiceDAO {
         return dsDichVu;
     }
 
+    /**
+     * Lấy danh sách dịch vụ theo tên dịch vụ
+     * @param name tên dịch vụ
+     * @return {@code ArrayList<Service>}: danh sách theo tên dịch vụ
+     */
     public ArrayList<Service> getServiceByName(String name) {
         ArrayList<Service> lst = new ArrayList<>();
         ConnectDB.getInstance();
@@ -54,6 +74,15 @@ public class ServiceDAO {
         return lst;
     }
 
+    /**
+     * Thêm dịch vụ mới vào cơ sở dữ liệu
+     * @param s {@code Service}: dịch vụ cần thêm
+     * @return {@code boolean}: kết quả trả về của câu truy vấn
+     *          <ul>
+     *              <li>Nếu thêm thành công thì trả về {@code true}</li>
+     *              <li>Nếu thêm thất bại thì trả về {@code false}</li>
+     *          </ul>
+     */
     public boolean insert(Service s){
         ConnectDB.getInstance();
         Connection con = new ConnectDB().getConnection();
@@ -75,6 +104,16 @@ public class ServiceDAO {
         }
         return n>0;
     }
+
+    /**
+     * Cập nhật thông tin dịch vụ vào cơ sở dữ liệu
+     * @param s {@code: Service}: dịch vụ cần cập nhật
+     * @return {@code: boolean}: kết quả trả về của câu truy vấn
+     *          <ul>
+     *              <li>Nếu cập nhật thành công thì trả về {@code: true}</li>
+     *              <li>Nếu cập nhật thất bại thì trả về {@code: false}</li>
+     *          </ul>
+     */
     public boolean update(Service s) {
         int n = 0;
         PreparedStatement stmt = null;
@@ -103,7 +142,15 @@ public class ServiceDAO {
         return n > 0;
     }
 
-
+    /**
+     * Xóa thông tin dịch vụ trong cơ sở dữ liệu
+     * @param id {@code: Service}: mã dịch vụ cần cập nhật
+     * @return {@code: boolean}: kết quả trả về của câu truy vấn
+     *          <ul>
+     *              <li>Nếu xóa thành công thì trả về {@code: true}</li>
+     *              <li>Nếu xóa thất bại thì trả về {@code: false}</li>
+     *          </ul>
+     */
     public boolean delete(String id) {
         int n = 0;
         PreparedStatement stmt = null;
@@ -127,6 +174,11 @@ public class ServiceDAO {
         return n > 0;
     }
 
+    /**
+     * lấy dịch vụ theo mã dịch vụ
+     * @param maDichVu mã dịch vụ
+     * @return dịch vụ theo mã dịch vụ được tìm
+     */
     public Service getDichVuByMaDichVu(String maDichVu) {
         Service service = null;
         PreparedStatement stmt = null;
@@ -164,35 +216,10 @@ public class ServiceDAO {
         return service;
     }
 
-
-    public ArrayList<Service> getDichVuTheoGia(double giaBan) {
-        ArrayList<Service> dsdv = new ArrayList<Service>();
-        PreparedStatement statement = null;
-        ConnectDB.getInstance();
-        Connection con = ConnectDB.getConnection();
-        try {
-            String sql = "SELECT * FROM dbo.DichVu where giaBan like ?";
-            statement = con.prepareStatement(sql);
-            statement.setDouble(1, giaBan);
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                dsdv.add(
-                        new Service(rs.getString(1), rs.getString(2), new TypeOfService(rs.getString(3)), rs.getString(4),rs.getInt(5), rs.getDouble(6)));
-
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                statement.close();
-            } catch (SQLException e2) {
-                e2.printStackTrace();
-            }
-        }
-
-        return dsdv;
-    }
-
+    /**
+     * Tạo mã dịch vụ phát sinh tự động bằng cách lấy mã cuối cùng trong database tăng lên 1
+     * @return mã dịch vụ mới
+     */
     public String generateNextServiceId() {
         Connection con = null;
         PreparedStatement statement = null;
@@ -218,7 +245,11 @@ public class ServiceDAO {
         }
         return nextServiceId;
     }
-
+    /**
+     * Lấy danh sách dịch vụ theo tên loại dịch vụ
+     * @param serviceTypeName tên loại dịch vụ
+     * @return {@code ArrayList<Service>}: danh sách theo tên loại dịch vụ
+     */
     public ArrayList<Service> getServiceListByServiceTypeName(String serviceTypeName) {
         ArrayList<Service> serviceList = new ArrayList<>();
         ConnectDB.getInstance();
@@ -248,7 +279,12 @@ public class ServiceDAO {
         }
         return serviceList;
     }
-
+    /**
+     * Lấy danh sách dịch vụ theo tên dịch vụ và tên loại dịch vụ
+     * @param serviceName tên dịch vụ
+     * @param serviceTypeName tên loại dịch vụ
+     * @return {@code ArrayList<Service>}: danh sách theo tên dịch vụ và tên loại dịch vụ
+     */
     public ArrayList<Service> getServiceListByNameAndServiceTypeName(String serviceName, String serviceTypeName) {
         ArrayList<Service> serviceList = new ArrayList<>();
         ConnectDB.getInstance();
