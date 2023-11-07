@@ -25,13 +25,25 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
+/**
+ * Sử dụng để thống kê khách hàng
+ * <p>
+ *     Người tham gia thiết kế: Nguyễn Quang Duy
+ * </p>
+ * ngày tạo: 12/10/2023
+ * <p>
+ *     Lần cập nhật cuối: 06/11/2023
+ * </p>
+ * Nội dung cập nhật: thêm javadoc
+ */
+
 public class StatisticCustomer_UI extends JPanel implements ActionListener, ItemListener {
-    private JComboBox<String> comboBoxLocTheo;
-    private JTable tableDV;
-    private DefaultTableModel modelTableDV;
+    private JComboBox<String> cmbLocTheo;
+    private JTable tblDichVu;
+    private DefaultTableModel modelTblDichVu;
     private JButton btnThongKe, btnLamMoi;
-    private JLabel lblDenNgay,labelTuNgay;
-    private JLabel backgroundLabel,timeLabel;
+    private JLabel lblDenNgay, lblTuNgay;
+    private JLabel lblBackGround, lblTime;
     private DatePicker pickerDenNgay,pickerTuNgay;
     private BillDAO billDAO;
     private CustomerDAO customerDAO;
@@ -51,24 +63,24 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
         detailOfServiceDAO = new DetailOfServiceDAO();
 
         //phan viet code
-        JLabel headerLabel = new JLabel("THỐNG KÊ KHÁCH HÀNG");
-        headerLabel.setBounds(570, 10, 1175, 40);
-        headerLabel.setFont(new Font("Arial", Font.BOLD, 25));
-        headerLabel.setForeground(Color.WHITE);
-        Component add = add(headerLabel);
+        JLabel lblThongKeKhachHang = new JLabel("THỐNG KÊ KHÁCH HÀNG");
+        lblThongKeKhachHang.setBounds(570, 10, 1175, 40);
+        lblThongKeKhachHang.setFont(new Font("Arial", Font.BOLD, 25));
+        lblThongKeKhachHang.setForeground(Color.WHITE);
+        Component add = add(lblThongKeKhachHang);
 
-        JPanel timeNow = new JPanel();
-        timeNow.setBorder(new TitledBorder(
+        JPanel pnlTimeNow = new JPanel();
+        pnlTimeNow.setBorder(new TitledBorder(
                 new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "",
                 TitledBorder.LEADING, TitledBorder.TOP));
-        timeNow.setBounds(12, 10, 300, 50);
-        timeNow.setOpaque(false);
-        add(timeNow);
+        pnlTimeNow.setBounds(12, 10, 300, 50);
+        pnlTimeNow.setOpaque(false);
+        add(pnlTimeNow);
 
-        timeLabel = new JLabel();
-        timeLabel.setFont(new Font("Arial", Font.BOLD, 33));
-        timeLabel.setForeground(Color.WHITE);
-        timeNow.add(timeLabel);
+        lblTime = new JLabel();
+        lblTime.setFont(new Font("Arial", Font.BOLD, 33));
+        lblTime.setForeground(Color.WHITE);
+        pnlTimeNow.add(lblTime);
         Timer timer = new Timer(10, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -77,21 +89,21 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
         });
         timer.start();
 
-        JPanel panel1 =  new JPanel();
-        panel1.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "THÔNG TIN THỐNG KÊ",
+        JPanel pnlThongTinThongKe =  new JPanel();
+        pnlThongTinThongKe.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "THÔNG TIN THỐNG KÊ",
                 TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
-        panel1.setBounds(10, 70, 1245, 670);
-        panel1.setOpaque(false);
-        add(panel1);
+        pnlThongTinThongKe.setBounds(10, 70, 1245, 670);
+        pnlThongTinThongKe.setOpaque(false);
+        add(pnlThongTinThongKe);
 
-        panel1.setLayout(null);
+        pnlThongTinThongKe.setLayout(null);
 
         //        Từ ngày
-        labelTuNgay = new JLabel("Từ ngày:");
-        labelTuNgay.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelTuNgay.setBounds(150, 100, 120, 30);
-        labelTuNgay.setForeground(Color.WHITE);
-        add(labelTuNgay);
+        lblTuNgay = new JLabel("Từ ngày:");
+        lblTuNgay.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblTuNgay.setBounds(150, 100, 120, 30);
+        lblTuNgay.setForeground(Color.WHITE);
+        add(lblTuNgay);
 
         pickerTuNgay = new DatePicker(150);
         pickerTuNgay.setOpaque(false);
@@ -110,22 +122,22 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
         add(pickerDenNgay);
 
 //      Lọc theo
-        JLabel labelLocTheo = new JLabel("Lọc theo:");
-        labelLocTheo.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelLocTheo.setBounds(750, 100, 150, 30);
-        labelLocTheo.setForeground(Color.WHITE);
-        add(labelLocTheo);
+        JLabel lblLocTheo = new JLabel("Lọc theo:");
+        lblLocTheo.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblLocTheo.setBounds(750, 100, 150, 30);
+        lblLocTheo.setForeground(Color.WHITE);
+        add(lblLocTheo);
 
-        comboBoxLocTheo = new JComboBox<String>();
-        comboBoxLocTheo.addItem("Tùy chỉnh");
-        comboBoxLocTheo.addItem("7 ngày gần nhất");
-        comboBoxLocTheo.addItem("1 tháng gần nhất");
-        comboBoxLocTheo.addItem("3 tháng gần nhất");
-        comboBoxLocTheo.addItem("6 tháng gần nhất");
-        comboBoxLocTheo.addItem("1 năm gần nhất");
-        comboBoxLocTheo.setBounds(830,100,200,30);
-        Custom.setCustomComboBox(comboBoxLocTheo);
-        add(comboBoxLocTheo);
+        cmbLocTheo = new JComboBox<String>();
+        cmbLocTheo.addItem("Tùy chỉnh");
+        cmbLocTheo.addItem("7 ngày gần nhất");
+        cmbLocTheo.addItem("1 tháng gần nhất");
+        cmbLocTheo.addItem("3 tháng gần nhất");
+        cmbLocTheo.addItem("6 tháng gần nhất");
+        cmbLocTheo.addItem("1 năm gần nhất");
+        cmbLocTheo.setBounds(830,100,200,30);
+        Custom.setCustomComboBox(cmbLocTheo);
+        add(cmbLocTheo);
 
         //        btn thống kê
         btnThongKe = new JButton("Thống kê");
@@ -143,55 +155,57 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
 
 
 //      danh sách khách hàng
-        JPanel panelDSDV = new JPanel();
-        panelDSDV.setLayout(null);
-        panelDSDV.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DANH SÁCH KHÁCH HÀNG",
+        JPanel pnlDSDV = new JPanel();
+        pnlDSDV.setLayout(null);
+        pnlDSDV.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DANH SÁCH KHÁCH HÀNG",
                 TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
-        panelDSDV.setBounds(5, 130, 1235, 530);
-        panelDSDV.setOpaque(false);
+        pnlDSDV.setBounds(5, 130, 1235, 530);
+        pnlDSDV.setOpaque(false);
 
         String[] colsDV = { "STT", "Mã khách hàng", "Tên khách hàng","Tổng doanh số" };
-        modelTableDV = new DefaultTableModel(colsDV, 0) ;
-        JScrollPane scrollPaneDV;
+        modelTblDichVu = new DefaultTableModel(colsDV, 0) ;
+        JScrollPane scrKhachHang;
 
-        tableDV = new JTable(modelTableDV);
-        tableDV.setFont(new Font("Arial", Font.BOLD, 14));
-        tableDV.setBackground(new Color(255, 255, 255, 0));
-        tableDV.setForeground(new Color(255, 255, 255));
-        tableDV.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-        tableDV.getTableHeader().setForeground(Color.BLUE);
-//        tableLDV.getTableHeader().setBackground(new Color(255, 255, 255));
-        Custom.getInstance().setCustomTable(tableDV);
+        tblDichVu = new JTable(modelTblDichVu);
+        tblDichVu.setFont(new Font("Arial", Font.BOLD, 14));
+        tblDichVu.setBackground(new Color(255, 255, 255, 0));
+        tblDichVu.setForeground(new Color(255, 255, 255));
+        tblDichVu.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
+        tblDichVu.getTableHeader().setForeground(Color.BLUE);
+        Custom.getInstance().setCustomTable(tblDichVu);
 
-        panelDSDV.add(scrollPaneDV = new JScrollPane(tableDV,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
+        pnlDSDV.add(scrKhachHang = new JScrollPane(tblDichVu,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
                 BorderLayout.CENTER);
-        scrollPaneDV.setBounds(10,20,1220,500);
-        scrollPaneDV.setOpaque(false);
-        scrollPaneDV.getViewport().setOpaque(false);
-        scrollPaneDV.getViewport().setBackground(Color.WHITE);
-        panel1.add(panelDSDV);
+        scrKhachHang.setBounds(10,20,1220,500);
+        scrKhachHang.setOpaque(false);
+        scrKhachHang.getViewport().setOpaque(false);
+        scrKhachHang.getViewport().setBackground(Color.WHITE);
+        pnlThongTinThongKe.add(pnlDSDV);
         //
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/images/background.png"));
-        backgroundLabel = new JLabel(backgroundImage);
-        backgroundLabel.setBounds(0, 0, getWidth(), getHeight());
-        add(backgroundLabel);
+        lblBackGround = new JLabel(backgroundImage);
+        lblBackGround.setBounds(0, 0, getWidth(), getHeight());
+        add(lblBackGround);
 
         btnThongKe.addActionListener(this);
         btnLamMoi.addActionListener(this);
 
-        comboBoxLocTheo.addItemListener(this);
+        cmbLocTheo.addItemListener(this);
     }
+    /**
+     * Gán thời gian hiện tại cho label lblTime
+     */
     private void updateTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String time = sdf.format(new Date());
-        timeLabel.setText(time);
+        lblTime.setText(time);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         if (o.equals(btnThongKe)) {
-            modelTableDV.getDataVector().removeAllElements();
+            modelTblDichVu.getDataVector().removeAllElements();
             try {
                 Date tuNgay = pickerTuNgay.getFullDate();
                 Date denNgay = pickerDenNgay.addOneDay();
@@ -214,14 +228,18 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
                 e2.printStackTrace();
             }
         } else if (o.equals(btnLamMoi)) {
-            modelTableDV.getDataVector().removeAllElements();
-            tableDV.removeAll();
-            comboBoxLocTheo.setSelectedIndex(0);
+            modelTblDichVu.getDataVector().removeAllElements();
+            tblDichVu.removeAll();
+            cmbLocTheo.setSelectedIndex(0);
             pickerTuNgay.setValueToDay();
             pickerDenNgay.setValueToDay();
         }
     }
 
+    /**
+     * Đưa dữ liệu thống kê vào table
+     * @param listBill
+     */
     private void docDuLieuVaoTable(ArrayList<Bill> listBill) {
         int i = 1;
         java.util.List<Customer> list = customerDAO.getAllKhachHang();
@@ -275,13 +293,19 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
         // Sắp xếp danh sách tạm thời theo thứ tự giảm dần của doanh thu
         dataToAdd.sort((o1, o2) -> Double.compare(Double.valueOf(o2[3].toString().replace(",", "")), Double.valueOf(o1[3].toString().replace(",", ""))));
 
-        modelTableDV.getDataVector().removeAllElements();
-        tableDV.removeAll();
+        modelTblDichVu.getDataVector().removeAllElements();
+        tblDichVu.removeAll();
+
         for (Object[] rowData : dataToAdd) {
-            modelTableDV.addRow(rowData);
+            modelTblDichVu.addRow(rowData);
         }
     }
 
+    /**
+     * kiểm tra ngày bắt đầu và ngày kết thúc
+     * @return fasle nếu ngày kết thúc < ngày bắt đầu và ngược lại thì true
+     * @throws ParseException
+     */
     public boolean validData() throws ParseException {
         Date tuNgay = pickerTuNgay.getFullDate();
         Date denNgay = pickerDenNgay.getFullDate();
@@ -294,14 +318,14 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
     @Override
     public void itemStateChanged(ItemEvent e) {
         Object o = e.getSource();
-        if (o.equals(comboBoxLocTheo)) {
-            String search = comboBoxLocTheo.getSelectedItem().toString();
+        if (o.equals(cmbLocTheo)) {
+            String search = cmbLocTheo.getSelectedItem().toString();
             switch (search) {
                 case "7 ngày gần nhất":
                     pickerTuNgay.setActive(false);
                     pickerDenNgay.setActive(false);
-                    modelTableDV.getDataVector().removeAllElements();
-                    tableDV.removeAll();
+                    modelTblDichVu.getDataVector().removeAllElements();
+                    tblDichVu.removeAll();
                     Date tuNgay = pickerTuNgay.setDatesFromToday(Calendar.DAY_OF_MONTH, -6);
                     Date denNgay = null;
                     denNgay = pickerDenNgay.getCurrentDatePlusOneDay();
@@ -311,8 +335,8 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
                 case "1 tháng gần nhất":
                     pickerTuNgay.setActive(false);
                     pickerDenNgay.setActive(false);
-                    modelTableDV.getDataVector().removeAllElements();
-                    tableDV.removeAll();
+                    modelTblDichVu.getDataVector().removeAllElements();
+                    tblDichVu.removeAll();
                     Date tuNgay1 = pickerTuNgay.setDatesFromToday(Calendar.MONTH, -1);
                     Date denNgay1 = null;
                     denNgay1 = pickerDenNgay.getCurrentDatePlusOneDay();
@@ -322,8 +346,8 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
                 case "3 tháng gần nhất":
                     pickerTuNgay.setActive(false);
                     pickerDenNgay.setActive(false);
-                    modelTableDV.getDataVector().removeAllElements();
-                    tableDV.removeAll();
+                    modelTblDichVu.getDataVector().removeAllElements();
+                    tblDichVu.removeAll();
                     Date tuNgay2 = pickerTuNgay.setDatesFromToday(Calendar.MONTH, -2);
                     Date denNgay2 = null;
                     denNgay2 = pickerDenNgay.getCurrentDatePlusOneDay();
@@ -333,8 +357,8 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
                 case "6 tháng gần nhất":
                     pickerTuNgay.setActive(false);
                     pickerDenNgay.setActive(false);
-                    modelTableDV.getDataVector().removeAllElements();
-                    tableDV.removeAll();
+                    modelTblDichVu.getDataVector().removeAllElements();
+                    tblDichVu.removeAll();
                     Date tuNgay3 = pickerTuNgay.setDatesFromToday(Calendar.MONTH, -5);
                     Date denNgay3 = null;
                     denNgay3 = pickerDenNgay.getCurrentDatePlusOneDay();
@@ -344,8 +368,8 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
                 case "1 năm gần nhất":
                     pickerTuNgay.setActive(false);
                     pickerDenNgay.setActive(false);
-                    modelTableDV.getDataVector().removeAllElements();
-                    tableDV.removeAll();
+                    modelTblDichVu.getDataVector().removeAllElements();
+                    tblDichVu.removeAll();
                     Date tuNgay4 = pickerTuNgay.setDatesFromToday(Calendar.MONTH, -11);
                     Date denNgay4 = null;
                     denNgay4 = pickerDenNgay.getCurrentDatePlusOneDay();
