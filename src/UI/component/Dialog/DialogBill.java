@@ -4,6 +4,7 @@ import DAO.*;
 import Entity.*;
 import UI.CustomUI.Custom;
 import UI.component.Bill_UI;
+import UI.component.KaraokeBooking_UI;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -27,6 +28,10 @@ import java.util.List;
 //import Event_Handlers.ConvertTime;
 //import Event_Handlers.ExportBill;
 
+/**
+ * Thiết kế giao diện Hóa đơn
+ * Người thiết kế :Nguyễn Đình Dương
+ */
 
 public class DialogBill extends JDialog implements ActionListener {
     private final String WORKING_DIR = System.getProperty("user.dir");
@@ -49,6 +54,7 @@ public class DialogBill extends JDialog implements ActionListener {
     private CustomerDAO customerDAO = CustomerDAO.getInstance();
     private  DetailOfBillDAO detailOfBillDAO;
     private DetailOfServiceDAO serviceDetailDAO = DetailOfServiceDAO.getInstance();
+    private Bill_UI main;
 
     /**
      * Khởi tạo giao diện thanh toán hóa đơn
@@ -103,8 +109,6 @@ public class DialogBill extends JDialog implements ActionListener {
                 super.paintComponent(g);
                 Graphics2D g2 = (Graphics2D) g;
                 g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-//                Image bgMain = logoIcon.getImage();
-//                g2.drawImage(bgMain, 20, 20, 70, 70, null);
             }
         };
         lblKaraokeName.setVerticalAlignment(SwingConstants.TOP);
@@ -234,20 +238,16 @@ public class DialogBill extends JDialog implements ActionListener {
 
         btnPayment = new JButton("Thanh toán");
         btnPayment.setFont(new Font("Dialog", Font.BOLD, 15));
-        btnPayment.setBounds(240, 670, 130, 35);
+        btnPayment.setBounds(320, 670, 130, 35);
         pnMain.add(btnPayment);
 
         btnExportPdf = new JButton("Xuất PDF");
         btnExportPdf.setFont(new Font("Dialog", Font.BOLD, 15));
-        btnExportPdf.setBounds(435, 670, 130, 35);
+        btnExportPdf.setBounds(620, 670, 130, 35);
 
         pnMain.add(btnExportPdf);
 
-        btnExportExcel = new JButton("Xuất excel");
-        btnExportExcel.setFont(new Font("Dialog", Font.BOLD, 15));
-        btnExportExcel.setBounds(625, 670, 130, 35);
 
-        pnMain.add(btnExportExcel);
 
         JLabel txtPhoneNumber = new JLabel("0828012868");
         txtPhoneNumber.setBackground(Color.WHITE);
@@ -365,7 +365,7 @@ public class DialogBill extends JDialog implements ActionListener {
         txtUsedTime.setEditable(false);
 //       Custom.getInstance().setCustomTextFieldBill(txtUsedTime);
 
-        btnExportExcel.addActionListener(this);
+
         btnExportPdf.addActionListener(this);
         btnPayment.addActionListener(this);
         btnBack.addActionListener(this);
@@ -377,19 +377,7 @@ public class DialogBill extends JDialog implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
-        if (o.equals(btnExportExcel)) {
-            Boolean result = ExportBill.getInstance().exportBillToExcel(bill, path);
-            String message = "";
-            int type = JOptionPane.INFORMATION_MESSAGE;
-            if (result) {
-                message = "Xuất file pdf thành công";
-                type = JOptionPane.INFORMATION_MESSAGE;
-            } else {
-                message = "Xuất file pdf thất bại";
-                type = JOptionPane.ERROR_MESSAGE;
-            }
-            JOptionPane.showMessageDialog(null, message, "Thông báo", type);
-        } else if (o.equals(btnExportPdf)) {
+         if (o.equals(btnExportPdf)) {
             Boolean result = ExportBill.getInstance().exportBillToPdf(bill, path);
             String message = "";
             int type = JOptionPane.INFORMATION_MESSAGE;
@@ -405,11 +393,13 @@ public class DialogBill extends JDialog implements ActionListener {
             boolean isPaid = billDAO.paymentBill(bill.getMaHoaDon(), bill.getNgayGioTra());
             if (isPaid) {
                 paid = isPaid;
-                btnExportExcel.setEnabled(true);
+
                 btnExportPdf.setEnabled(true);
                 btnPayment.setEnabled(false);
                 JOptionPane.showMessageDialog(null, "Thanh toán hóa đơn thành công", "Thông báo",
                         JOptionPane.INFORMATION_MESSAGE);
+                ArrayList<Bill> bills = billDAO.getAllBill();
+                main.loadHD2(bills);
                 String maHD = bill.getMaHoaDon();
                 String maPhong =bill.getMaPhong().getMaPhong();
                 String soGio = bill.tinhThoiGianSuDung();
@@ -430,6 +420,10 @@ public class DialogBill extends JDialog implements ActionListener {
             this.dispose();
 
         }
+    }
+
+    public void setBillUI(Bill_UI main) {
+        this.main = main;
     }
 
     private String formatDate(Date date) {
@@ -544,7 +538,7 @@ public class DialogBill extends JDialog implements ActionListener {
             vat = (totalPriceService + totalPriceRoom) * 0.08;
         }
         txtVAT.setText(df.format(vat));
-        double totalPrice = bill.getTongTienHD();
+        double totalPrice = bill.getTongTienHD() +vat;
         txtTotalPriceBill.setText(df.format(totalPrice));
     }
 

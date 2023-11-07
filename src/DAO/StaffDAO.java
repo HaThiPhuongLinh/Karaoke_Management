@@ -14,6 +14,10 @@ public class StaffDAO {
         return instance;
     }
 
+    /**
+     * Lấy ra toàn bộ nhân viên
+     * @return {@code List<Staff> }:danh sách nhân viên
+     */
     public ArrayList<Staff> getAllStaff() {
         ArrayList<Staff> dsStaff = new ArrayList<Staff>();
         try {
@@ -39,6 +43,11 @@ public class StaffDAO {
         return dsStaff;
     }
 
+    /**
+     * Lấy ra nhân viên dựa trên tên tài khoản
+     * @param username
+     * @return {@code Staff }:nhân viên
+     */
     public Staff getStaffByUsername(String username) {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
@@ -65,6 +74,12 @@ public class StaffDAO {
         return null;
     }
 
+    /**
+     * lấy ra danh sách nhân viên theo tên
+     * @param name:Tên của nhân viên cần lấy
+     * @return {@code List<Staff> }:danh sách nhân viên
+     */
+
     public ArrayList<Staff> getListNhanVienByName(String name) {
         ArrayList<Staff> staffList = new ArrayList<Staff>();
         ConnectDB.getInstance();
@@ -85,6 +100,12 @@ public class StaffDAO {
         }
         return staffList;
     }
+
+    /**
+     * Lấy ra danh sách nhân viên dựa trên số điện thoại
+     * @param sdt
+     * @return {@code List<Staff> }:danh sách nhân viên
+     */
 
     public List<Staff> getListNhanVienBySDT(String sdt) {
         List<Staff> sdtlistt = new ArrayList<Staff>();
@@ -113,6 +134,11 @@ public class StaffDAO {
         return sdtlistt;
     }
 
+    /**
+     * Lấy ra danh sách nhân viên dựa trên Căn cước công dân
+     * @param cccd:Căn cước công dân của nhân viên cần lấy
+     * @return
+     */
     public List<Staff> getListNhanVienByCCCD(String cccd) {
         List<Staff> cccdlistt = new ArrayList<Staff>();
         ConnectDB.getInstance();
@@ -140,6 +166,11 @@ public class StaffDAO {
         return cccdlistt;
     }
 
+    /**
+     * Thêm nhân viên
+     * @param staff:Nhân viên cần thêm
+     * @return {@code boolean} : Được hoặc không
+     */
     public boolean addStaff(Staff staff) {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
@@ -201,6 +232,12 @@ public class StaffDAO {
         }
     }
 
+    /**
+     * Update nhân viên
+     * @param s:Nhân viên cần update
+     * @param isResigning:Tình trạng tài khoản của nhân viên cần update
+     * @return {@code boolean} : Được hoặc không
+     */
     public boolean updateStaff(Staff s, boolean isResigning) {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
@@ -270,6 +307,11 @@ public class StaffDAO {
         return n > 0;
     }
 
+    /**
+     * Lấy nhân viên dựa trên mã Nhân Viên
+     * @param maNhanVien:mã nhân viên cần tìm
+     * @return {@code Staff}:Nhân viên
+     */
 
     public Staff getStaffByID(String maNhanVien) {
         ConnectDB.getInstance();
@@ -297,7 +339,10 @@ public class StaffDAO {
         return null;
     }
 
-
+    /**
+     * Tạo mã nhân vien dựa trên mã của nhân viên cuối cùng
+     * @return {@code String}: mã Nhân viên
+     */
     public String generateNextStaffId() {
         Connection con = null;
         PreparedStatement statement = null;

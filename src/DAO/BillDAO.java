@@ -14,8 +14,12 @@ public class BillDAO {
         return instance;
     }
 
+    /**
+     * Lấy ra toàn bộ Hóa Đơn
+     * @return {@code ArrayList<Bill>}:Danh sách hóa đơn
+     */
     public ArrayList<Bill> getAllBill() {
-        ArrayList<Bill> dsStaff = new ArrayList<Bill>();
+        ArrayList<Bill> dsBill = new ArrayList<Bill>();
         try {
             ConnectDB.getInstance();
             Connection con = ConnectDB.getConnection();
@@ -37,13 +41,55 @@ public class BillDAO {
 
                 Bill bill = new Bill(maHoaDon, maNhanVien, maKhachHang, maPhong, ngayGioDat, ngayGioTra, tinhTrang, khuyenMai);
 
-                dsStaff.add(bill);
+                dsBill.add(bill);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return dsStaff;
+        return dsBill;
     }
+
+    /**
+     * Lấy ra toàn bộ hóa đơn bao gồm cả chi tiết dịch vụ
+     * @return {@code ArrayList<Bill>}:Danh sách hóa đơn
+     */
+    public ArrayList<Bill> getAllBill2() {
+        ArrayList<Bill> dsBill = new ArrayList<Bill>();
+        try {
+            ConnectDB.getInstance();
+            Connection con = ConnectDB.getConnection();
+
+            String sql = "Select * from dbo.HoaDon";
+            Statement statement = con.createStatement();
+            // Thực thi câu lệnh SQL trả về đối tượng ResultSet
+            ResultSet rs = statement.executeQuery(sql);
+            // Duyệt trên kết quả trả về
+            while (rs.next()) {
+                String maHoaDon = rs.getString(1);
+                Staff maNhanVien = new Staff(rs.getString(2));
+                Customer maKhachHang = new Customer(rs.getString(3));
+                Room maPhong = new Room(rs.getString(4));
+                Timestamp ngayGioDat = rs.getTimestamp(5);
+                Timestamp ngayGioTra = rs.getTimestamp(6);
+                int tinhTrang = rs.getInt(7);
+                String khuyenMai = rs.getString(8);
+                ArrayList<DetailsOfService> ctDV = new ArrayList<DetailsOfService>(9);
+                Bill bill = new Bill(maHoaDon, maNhanVien, maKhachHang, maPhong, ngayGioDat, ngayGioTra, tinhTrang, khuyenMai,ctDV);
+
+                dsBill.add(bill);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return dsBill;
+    }
+
+    /**
+     * Lấy ra hóa đơn theo ngày
+     * @param tuNgay:Ngày bắt đầu
+     * @param denNgay:Ngày kết thúc
+     * @return {@code ArrayList<Bill>}:Danh sách hóa đơn
+     */
 
     public ArrayList<Bill> getListBillByDate(Date tuNgay, Date denNgay) {
         ArrayList<Bill> dsStaff = new ArrayList<Bill>();
@@ -80,6 +126,12 @@ public class BillDAO {
         return dsStaff;
     }
 
+    /**
+     * Thêm hóa đơn
+     * @param bill: hóa đơn cần thêm
+     * @return {@code boolean} :True or false
+     */
+
     public boolean addBill(Bill bill) {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
@@ -115,6 +167,12 @@ public class BillDAO {
         }
         return false;
     }
+
+    /**
+     * Lấy Hóa Đơn dựa trên mã Phòng
+     * @param roomID: mã phòng được truyền vào
+     * @return {@code Bill}:Hóa đơn
+     */
 
     public Bill getBillByRoomID(String roomID) {
         Bill bill = null;
@@ -155,6 +213,12 @@ public class BillDAO {
 
         return bill;
     }
+
+    /**
+     * Lấy hóa đơn dựa trên tên khách hàng
+     * @param customerName: Tên khách hàng cần tìm hóa đơn
+     * @return {@code Bill}:Hóa đơn
+     */
 
     public Bill getBillByCustomerName(String customerName) {
         ConnectDB.getInstance();
@@ -198,6 +262,13 @@ public class BillDAO {
         return bill;
     }
 
+    /**
+     *Lấy ra số lượng hóa đơn theo khoảng thời gian
+     * @param startDate:Ngày bát đầu
+     * @param endDate:Ngày kết thúc
+     * @return {@code int}:Tổng bill
+     */
+
     public static int getTotalLineOfBillList(Date startDate, Date endDate) {
         int totalCount = 0;
         ConnectDB.getInstance();
@@ -225,6 +296,10 @@ public class BillDAO {
         return totalCount;
     }
 
+    /**
+     *Tạo mã hóa đơn với dựa trên mã của hóa đơn cuối cùng
+     * @return {@code String}:mã hóa đơn
+     */
     public String generateNextBillId() {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
@@ -250,6 +325,12 @@ public class BillDAO {
         return nextId;
     }
 
+    /**
+     * Hàm thanh toán hóa đơn
+     * @param billId:mã hóa đơn
+     * @param ngayGioTra:Ngày giờ thanh toán
+     * @return {@code boolean} :True or false
+     */
     public boolean paymentBill(String billId, Timestamp ngayGioTra) {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
@@ -330,6 +411,11 @@ public class BillDAO {
         }
     }
 
+    /**
+     * Update thuộc tính Khuyến Mãi của hóa đơn
+     * @param b:
+     * @return {@code boolean} :True or false
+     */
     public static boolean updateKM(String b) {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();

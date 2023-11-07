@@ -29,11 +29,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.sql.Timestamp;
 
+/**
+ * Giao diện dùng để lập hóa đơn
+ * Người thiết kế Nguyễn Đình Dương
+ * Ngày tạo:22/10/2023
+ * Lần cập nhật cuối : 06/11/2023
+ * Nội dung cập nhật : Sửa tính năng lập hóa đơn
+ */
 public class Bill_UI extends JPanel implements ActionListener, MouseListener {
 
-    private  JTable tableHD;
+    private  JTable tableCTDV;
     private  JTable tblPDP;
-    private  DefaultTableModel modelTableHD;
+    private  DefaultTableModel modelTableCTDV;
     private  JTextField txtTK, txtKH;
     private  JButton btnLap;
     private  JButton btnTim, btnLamMoi;
@@ -42,7 +49,7 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
     private ReservationFormDAO reservationFormDAO;
     private RoomDAO roomDAO;
     private DecimalFormat df = new DecimalFormat("#,###.##");
-    private Bill bill;
+
     private BillDAO billDAO;
 
     private  DetailOfServiceDAO ctdv_dao;
@@ -133,19 +140,19 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
         panelDSHD.setOpaque(false);
 
         String[] colsHD = { "STT", "Mã Dịch Vụ", "Tên Dịch Vụ","Số Lượng Đặt","Giá Dịch Vụ","Tổng Tiền" };
-        modelTableHD = new DefaultTableModel(colsHD, 0) ;
+        modelTableCTDV = new DefaultTableModel(colsHD, 0) ;
         JScrollPane scrollPaneHD;
 
-        tableHD = new JTable(modelTableHD);
-        tableHD.setFont(new Font("Arial", Font.BOLD, 14));
-        tableHD.setBackground(new Color(255, 255, 255, 0));
-        tableHD.setForeground(new Color(255, 255, 255));
-        tableHD.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-        tableHD.getTableHeader().setForeground(Color.BLUE);
+        tableCTDV = new JTable(modelTableCTDV);
+        tableCTDV.setFont(new Font("Arial", Font.BOLD, 14));
+        tableCTDV.setBackground(new Color(255, 255, 255, 0));
+        tableCTDV.setForeground(new Color(255, 255, 255));
+        tableCTDV.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
+        tableCTDV.getTableHeader().setForeground(Color.BLUE);
 //        tableLDV.getTableHeader().setBackground(new Color(255, 255, 255));
-        Custom.getInstance().setCustomTable(tableHD);
+        Custom.getInstance().setCustomTable(tableCTDV);
 
-        panelDSHD.add(scrollPaneHD = new JScrollPane(tableHD,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
+        panelDSHD.add(scrollPaneHD = new JScrollPane(tableCTDV,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
                 BorderLayout.CENTER);
         scrollPaneHD.setBounds(10,20,1165,260);
         scrollPaneHD.setOpaque(false);
@@ -194,6 +201,9 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
         btnLamMoi.addActionListener(this);
     }
 
+    /**
+     * Sủa độ rộng các cột trong bảng Phiếu đặt phòng
+     */
     private void reSizeColumnTable() {
         TableColumnModel tcm = tblPDP.getColumnModel();
 
@@ -211,9 +221,11 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
         tcm.getColumn(4).setCellRenderer(rightRenderer);
         tcm.getColumn(5).setCellRenderer(rightRenderer);
     }
-
+/**
+Sửa chiều rộng các cột của bảng CTDV
+ */
     private void reSizeColumnTable2() {
-        TableColumnModel tcm = tableHD.getColumnModel();
+        TableColumnModel tcm = tableCTDV.getColumnModel();
 
         tcm.getColumn(0).setPreferredWidth(30);
         tcm.getColumn(1).setPreferredWidth(30);
@@ -228,6 +240,10 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
         tcm.getColumn(4).setCellRenderer(rightRenderer);
         tcm.getColumn(5).setCellRenderer(rightRenderer);
     }
+
+    /**
+     * Làm mới bàng hóa đơn chưa thanh toán
+     */
     private void reloadBillList() {
         modelTablePDP.getDataVector().removeAllElements();
         modelTablePDP.fireTableDataChanged();
@@ -244,22 +260,33 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
         }
     }
 
-
+    /**
+     * hàm sử dụng định dạng "HH:mm:ss" để biểu diễn thời gian (giờ, phút và giây) của đối tượng date
+     * @param date : ngày cần định dạng
+     * @return {@code String}: ngày cần định dạng
+     */
     private String formatDate(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         return sdf.format(date);
     }
+
+    /**
+     * Load dữ liệu chi tiết dịch vụ đã đặt lên bảng
+     */
     public void loadCTDV(){
-        modelTableHD.setRowCount(0);
+        modelTableCTDV.setRowCount(0);
         int i = 1;
         for (DetailsOfService ctdv : dsCTDV) {
             Double tongtien = ctdv.getGiaBan()*ctdv.getSoLuong();
-            modelTableHD.addRow(new Object[] { i,ctdv.getMaDichVu().getMaDichVu(), ctdv.getMaDichVu().getTenDichVu(), ctdv.getSoLuong(),
+            modelTableCTDV.addRow(new Object[] { i,ctdv.getMaDichVu().getMaDichVu(), ctdv.getMaDichVu().getTenDichVu(), ctdv.getSoLuong(),
                     df.format(ctdv.getMaDichVu().getGiaBan()), df.format(tongtien) });
             i++;
         }
     }
 
+    /**
+     * Tải dữ liệu các hóa đơn chưa thanh toán lên bảng
+     */
     public void loadHD() {
         int i = 1;
         for (Bill bill :billDAO.getAllBill()) {
@@ -271,6 +298,22 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
             }
         }
     }
+
+    public void loadHD2(ArrayList<Bill> lst) {
+        modelTablePDP.setRowCount(0);
+        int i = 1;
+        for (Bill bill : lst) {
+            if (bill.getTinhTrangHD() == 0) {
+                String date = formatDate(bill.getNgayGioDat());
+                Object[] rowData = {i, bill.getMaPhong().getMaPhong(), bill.getMaPhong().getLoaiPhong().getTenLoaiPhong(), bill.getMaKH().getTenKhachHang(), date, df.format(bill.getMaPhong().getGiaPhong())};
+                modelTablePDP.addRow(rowData);
+                i++;
+            }
+        }
+        reloadBillList();
+        updateBillList();
+    }
+
     public void setKaraokeBookingUI(KaraokeBooking_UI main) {
         this.main = main;
     }
@@ -290,10 +333,7 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
                 String txtMaP = txtTK.getText();
                 rsvf =billDAO.getBillByRoomID(txtMaP);
                 if(rsvf!=null) {
-
-
                     String date = formatDate(rsvf.getNgayGioDat());
-
                     Object[] rowData = {1, rsvf.getMaPhong().getMaPhong(), rsvf.getMaPhong().getLoaiPhong().getTenLoaiPhong(), rsvf.getMaKH().getTenKhachHang(), date, df.format(rsvf.getMaPhong().getGiaPhong())};
                     modelTablePDP.addRow(rowData);
                 }else {
@@ -301,8 +341,6 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
                     txtTK.selectAll();
                     txtTK.requestFocus();
                 }
-
-
 
             }else if(!txtKH.getText().trim().equals("")){
                 modelTablePDP.getDataVector().removeAllElements();
@@ -340,6 +378,7 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
                 Double totalPriceBill = bill.getTongTienHD();
 
                 DialogBill winPayment = new DialogBill(bill);
+                winPayment.setBillUI(this);
                 winPayment.setModal(true);
                 winPayment.setVisible(true);
                 Boolean isPaid = winPayment.getPaid();
@@ -357,7 +396,7 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
         }
     }
     public void updateBillList() {
-        modelTableHD.setRowCount(0); 
+        modelTableCTDV.setRowCount(0);
 
     }
 

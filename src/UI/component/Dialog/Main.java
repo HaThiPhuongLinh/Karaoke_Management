@@ -100,6 +100,9 @@ public class Main extends JFrame {
                 if (subIndex == 1) {
                     showForm(new Bill_UI(staffLogin));
                 }
+                if (subIndex == 2) {
+                    showForm(new ListBill_UI(staffLogin));
+                }
             } else if (index == 5) {
                 if (subIndex == 1) {
                     if(staffLogin.getChucVu().equalsIgnoreCase("Quản lý")){
@@ -152,9 +155,9 @@ public class Main extends JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        SwingUtilities.invokeLater(() -> {
-            new Main(staffLogin).setVisible(true);
-        });
+//        SwingUtilities.invokeLater(() -> {
+//            new Main(staffLogin).setVisible(true);
+//        });
     }
 
     public void showForm(Component com) {

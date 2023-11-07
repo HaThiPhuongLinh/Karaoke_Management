@@ -422,5 +422,86 @@ public class RoomDAO {
         return nextRoomId;
     }
 
+    public boolean switchRoom(String billId, String oldRoomId, String newRoomId) {
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        PreparedStatement statement = null;
+
+        try {
+            // Cập nhật tình trạng phòng cũ thành trống (0)
+            String updateOldRoomSql = "UPDATE dbo.Phong SET tinhTrang = 'Trong' WHERE maPhong = ?";
+            statement = con.prepareStatement(updateOldRoomSql);
+            statement.setString(1, oldRoomId);
+            statement.executeUpdate();
+
+            // Cập nhật tình trạng phòng mới thành đã được sử dụng (1)
+            String updateNewRoomSql = "UPDATE dbo.Phong SET tinhTrang = 'Dang su dung' WHERE maPhong = ?";
+            statement = con.prepareStatement(updateNewRoomSql);
+            statement.setString(1, newRoomId);
+            statement.executeUpdate();
+
+            // Kiểm tra xem phòng cũ và phòng mới có tồn tại và cập nhật thành công không
+            String checkRoomsSql = "SELECT TOP 1 1 FROM dbo.Phong WHERE maPhong = ? AND tinhTrang = 'Trong'; SELECT TOP 1 1 FROM dbo.Phong WHERE maPhong = ? AND tinhTrang = 'Dang su dung';";
+            statement = con.prepareStatement(checkRoomsSql);
+            statement.setString(1, oldRoomId);
+            statement.setString(2, newRoomId);
+
+            boolean oldRoomExists = false;
+            boolean newRoomExists = false;
+
+            boolean results = statement.execute();
+            int resultSetIndex = 0;
+            while (results) {
+                ResultSet rs = statement.getResultSet();
+                if (resultSetIndex == 0) {
+                    if (rs.next()) {
+                        oldRoomExists = true;
+                    }
+                } else if (resultSetIndex == 1) {
+                    if (rs.next()) {
+                        newRoomExists = true;
+                    }
+                }
+                resultSetIndex++;
+                results = statement.getMoreResults();
+            }
+
+            // Cập nhật hóa đơn với mã phòng mới
+            String updateBillSql = "UPDATE dbo.HoaDon SET maPhong = ? WHERE maHoaDon = ? AND tinhTrangHD = 0";
+            statement = con.prepareStatement(updateBillSql);
+            statement.setString(1, newRoomId);
+            statement.setString(2, billId);
+            int rowsAffected = statement.executeUpdate();
+
+            // Kiểm tra xem có hóa đơn nào có mã phòng mới và mã hóa đơn không
+            String checkBillSql = "SELECT TOP 1 1 FROM dbo.HoaDon WHERE maPhong = ? AND maHoaDon = ?";
+            statement = con.prepareStatement(checkBillSql);
+            statement.setString(1, newRoomId);
+            statement.setString(2, billId);
+            boolean billExists = false;
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                billExists = true;
+            }
+
+
+            if (oldRoomExists && newRoomExists && rowsAffected > 0 &&  billExists) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
 }

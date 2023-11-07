@@ -6,7 +6,7 @@ import ConnectDB.ConnectDB;
 
 import java.sql.*;
 
-public class AccountDAO {
+public class    AccountDAO {
     private static AccountDAO instance = new AccountDAO();
     public static AccountDAO getInstance() {
         return instance;

@@ -8,10 +8,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Entity:Hóa đơn
+ * Người thiết kế :Nguyễn Đình Dương
+ */
 public class Bill {
     private String maHoaDon;
     private Staff maNhanVien;
-    private Customer maKhachHang; 
+    private Customer maKhachHang;
     private Room maPhong;
     private Timestamp ngayGioDat;
     private Timestamp ngayGioTra;
@@ -20,7 +24,7 @@ public class Bill {
 
 
     private List<DetailsOfService> lstDetails;
-//    private List<DetailsOfBill> lstCTHD;
+
 
     public Bill(String maHoaDon){
         this.maHoaDon =maHoaDon;
@@ -41,6 +45,22 @@ public class Bill {
         this.ngayGioTra=ngayGioTra;
         this.tinhTrangHD = tinhTrangHD;
         this.khuyenMai = khuyenMai;
+    }
+
+    public Bill(String maHoaDon, Staff maNhanVien, Customer maKhachHang, Room maPhong, Timestamp ngayGioDat, Timestamp ngayGioTra, int tinhTrangHD, String khuyenMai, List<DetailsOfService> lstDetails) {
+        this.maHoaDon = maHoaDon;
+        this.maNhanVien = maNhanVien;
+        this.maKhachHang = maKhachHang;
+        this.maPhong = maPhong;
+        this.ngayGioDat = ngayGioDat;
+        this.ngayGioTra = ngayGioTra;
+        this.tinhTrangHD = tinhTrangHD;
+        this.khuyenMai = khuyenMai;
+        this.lstDetails = lstDetails;
+    }
+
+    public Bill(List<DetailsOfService> lstDetails) {
+        this.lstDetails = lstDetails;
     }
 
     public Bill(String maHoaDon, Timestamp ngayGioDat, Timestamp ngayGioTra, int tinhTrangHD, String khuyenMai) {
@@ -129,6 +149,25 @@ public class Bill {
         this.khuyenMai = khuyenMai;
     }
 
+    @Override
+    public String toString() {
+        return "Bill{" +
+                "maHoaDon='" + maHoaDon + '\'' +
+                ", maNhanVien=" + maNhanVien +
+                ", maKhachHang=" + maKhachHang +
+                ", maPhong=" + maPhong +
+                ", ngayGioDat=" + ngayGioDat +
+                ", ngayGioTra=" + ngayGioTra +
+                ", tinhTrangHD=" + tinhTrangHD +
+                ", khuyenMai='" + khuyenMai + '\'' +
+                ", lstDetails=" + lstDetails +
+                '}';
+    }
+
+    /**
+     * Hàm tính giờ thuê phòng dựa trên thời gian bắt đầu thuê (ngày giờ đặt) và thời gian kết thúc thuê (ngày giờ trả)
+     * @return {@code Double}: Thời gian sử dụng phòng
+     */
     public Double tinhGioThue() {
         int soPhut = 0;
         if (ngayGioTra != null && ngayGioDat != null) {
@@ -141,6 +180,11 @@ public class Bill {
         soPhut = (int) soPhut / 15;
         return soPhut * 1.0 / 4;
     }
+
+    /**
+     * Hàm tính thời gian sử dụng phòng trả về dạng chuỗi
+     * @return {@code String}: Thời gian sử dụng phòng
+     */
     public String tinhThoiGianSuDung() {
         int soPhut = 0;
         if (ngayGioTra != null && ngayGioDat != null) {
@@ -157,13 +201,26 @@ public class Bill {
 
         return gio + " giờ " + phut + " phút";
     }
+
+    /**
+     * Tính tổng tiền dịch vụ
+     * @return {@code Double}: tiền dịch vụ đã đặt
+     */
     public Double tinhTongTienDichVu() {
-        Double tongTienDV = 0.0;
-        for (DetailsOfService item : lstDetails) {
-            tongTienDV += item.tinhTienDichVu();
+        if (lstDetails == null) {
+
+            return 0.0;
         }
-        return tongTienDV;
+        else {
+            Double tongTienDV = 0.0;
+            for (DetailsOfService item : lstDetails) {
+                tongTienDV += item.tinhTienDichVu();
+            }
+            return tongTienDV;
+        }
     }
+
+
 
 
     /**

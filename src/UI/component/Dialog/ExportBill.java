@@ -3,39 +3,26 @@ package UI.component.Dialog;
 import java.io.*;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
-
-import javax.swing.JOptionPane;
-
 import com.itextpdf.text.*;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.pdf.*;
-
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.*;
-
 import UI.CustomUI.Custom;
 import Entity.*;
-
-import org.apache.poi.ss.util.CellRangeAddress;
+/**
+ * Sử dụng xuất hóa đơn dạng pdf
+ * Người tham gia thiết kế: Nguyen Dinh Duong
+ * Ngày tạo: 27/10/2023
+ * Lần cập nhật cuối: 06/11/2023
+ * Nội dung cập nhật: sửa lỗi hiển thị khi xuất file pdf
+ */
 public class ExportBill {
-    private XSSFWorkbook workbook;
-    private XSSFSheet sheet;
-    private XSSFRow row = null;
-    private Cell cell = null;
-    private int rowHeight = 300;
-    private IndexedColors excelWhiteColor = IndexedColors.WHITE;
-    private IndexedColors excelBlackColor = IndexedColors.BLACK;
-    private HorizontalAlignment excelAlignCenter = HorizontalAlignment.CENTER;
-    private HorizontalAlignment excelAlignRight = HorizontalAlignment.RIGHT;
-    private HorizontalAlignment excelAlignLeft = HorizontalAlignment.LEFT;
-    private BorderStyle borderStyleThin = BorderStyle.THIN;
-    private BorderStyle borderStyleThick = BorderStyle.THICK;
+
 
     private URL fontPath = ExportBill.class.getResource(Custom.pathFont);
-    private String pdfFontLight = fontPath + "Roboto-300.ttf";
-    private  String pdfFontLightItalic = fontPath + "Roboto-300_Italic.ttf";
-    private  String pdfFontMedium = fontPath + "Roboto-500.ttf";
+
     private BaseFont baseFontMedium;
     private BaseFont baseFontLight;
     private BaseFont baseFontLightItalic;
@@ -56,7 +43,12 @@ public class ExportBill {
             instance = new ExportBill();
         return instance;
     }
-
+    /**
+     * Chuyển số giờ thuê thành chuỗi dạng {@code x giờ y phút}
+     *
+     * @param hours {@code double}: số giờ thuê
+     * @return {@code String}: chuỗi dạng {@code x giờ y phút}
+     */
 
     private String convertRentalTime(double hours) {
         int minutes = (int) (hours % 1 * 60);
@@ -68,582 +60,6 @@ public class ExportBill {
     }
 
 
-    private void createCell(String text, int cellIndex, XSSFCellStyle style) {
-        cell = row.createCell(cellIndex, CellType.STRING);
-        cell.setCellValue(text);
-        cell.setCellStyle(style);
-    }
-
-
-    private void createCell(String text, int cellIndex, XSSFCellStyle style, CellType cellType) {
-        cell = row.createCell(cellIndex, cellType);
-        cell.setCellValue(text);
-        cell.setCellStyle(style);
-    }
-
-
-    private void createCell(Double text, int cellIndex, XSSFCellStyle style, CellType cellType) {
-        cell = row.createCell(cellIndex, cellType);
-        cell.setCellValue(text);
-        cell.setCellStyle(style);
-    }
-
-
-    private void createCell(String text, int cellIndex, int fontSize, boolean bold, boolean italic, boolean wrapText,
-                            HorizontalAlignment align) {
-        XSSFFont font = workbook.createFont();
-        font.setBold(bold);
-        font.setItalic(italic);
-        font.setFontHeightInPoints((short) fontSize);
-
-        XSSFCellStyle style = workbook.createCellStyle();
-        style.setFont(font);
-        style.setWrapText(wrapText);
-        style.setAlignment(align);
-        style.setBorderBottom(borderStyleThin);
-        style.setBottomBorderColor(excelWhiteColor.getIndex());
-        style.setBorderTop(borderStyleThin);
-        style.setTopBorderColor(excelWhiteColor.getIndex());
-        style.setBorderLeft(borderStyleThin);
-        style.setLeftBorderColor(excelWhiteColor.getIndex());
-        style.setBorderRight(borderStyleThin);
-        style.setRightBorderColor(excelWhiteColor.getIndex());
-
-        cell = row.createCell(cellIndex, CellType.STRING);
-        cell.setCellValue(text);
-        cell.setCellStyle(style);
-    }
-
-
-    private void createRow(String textCell, int rowIndex, int cellIndex, int rowHeight, int fontSize, boolean bold,
-                           boolean italic, boolean wrapText, CellRangeAddress merge, HorizontalAlignment align) {
-        XSSFFont font = workbook.createFont();
-        font.setBold(bold);
-        font.setItalic(italic);
-        font.setFontHeightInPoints((short) fontSize);
-
-        XSSFCellStyle style = workbook.createCellStyle();
-        style.setFont(font);
-        style.setWrapText(wrapText);
-        style.setAlignment(align);
-        style.setBorderBottom(borderStyleThin);
-        style.setBottomBorderColor(excelWhiteColor.getIndex());
-        style.setBorderTop(borderStyleThin);
-        style.setTopBorderColor(excelWhiteColor.getIndex());
-        style.setBorderLeft(borderStyleThin);
-        style.setLeftBorderColor(excelWhiteColor.getIndex());
-        style.setBorderRight(borderStyleThin);
-        style.setRightBorderColor(excelWhiteColor.getIndex());
-
-        row = sheet.createRow((short) rowIndex);
-        row.setHeight((short) rowHeight);
-        if (merge != null)
-            sheet.addMergedRegion(merge);
-        createCell(textCell, cellIndex, style, CellType.STRING);
-    }
-
-    /**
-     * Tạo viền cho ô được chọn
-     *
-     * @param top         {@code int}:
-     *                    <ul>
-     *                    <li>{@code 1}: tạo viền trên</li>
-     *                    <li>{@code 0}: không tạo viền trên</li>
-     *                    </ul>
-     * @param bottom      {@code int}:
-     *                    <ul>
-     *                    <li>{@code 1}: tạo viền dưới</li>
-     *                    <li>{@code 0}: không tạo viền dưới</li>
-     *                    </ul>
-     * @param left        {@code int}:
-     *                    <ul>
-     *                    <li>{@code 1}: tạo viền trái</li>
-     *                    <li>{@code 0}: không tạo viền trái</li>
-     *                    </ul>
-     * @param right       {@code int}:
-     *                    <ul>
-     *                    <li>{@code 1}: tạo viền phải</li>
-     *                    <li>{@code 0}: không tạo viền phải</li>
-     *                    </ul>
-     * @param borderStyle {@code BorderStyle}: kiểu viền muốn tạo
-     * @return {@code XSSFCellStyle}: style viền được cấu hình dựa trên các tham sô
-     *         truyền vào
-     */
-    private XSSFCellStyle createBordersExcel(int top, int bottom, int left, int right, BorderStyle borderStyle) {
-        XSSFCellStyle style = workbook.createCellStyle();
-        if (top == 1) {
-            style.setBorderTop(borderStyle);
-            style.setTopBorderColor(excelWhiteColor.getIndex());
-        }
-        if (bottom == 1) {
-            style.setBorderBottom(borderStyle);
-            style.setBottomBorderColor(excelWhiteColor.getIndex());
-        }
-        if (left == 1) {
-            style.setBorderLeft(borderStyle);
-            style.setLeftBorderColor(excelWhiteColor.getIndex());
-        }
-        if (right == 1) {
-            style.setBorderRight(borderStyle);
-            style.setRightBorderColor(excelWhiteColor.getIndex());
-        }
-        return style;
-    }
-
-
-    private XSSFCellStyle createBordersExcel(int top, int bottom, int left, int right, BorderStyle borderStyle,
-                                             IndexedColors colorTop, IndexedColors colorBottom, IndexedColors colorLeft, IndexedColors colorRight) {
-        XSSFCellStyle style = workbook.createCellStyle();
-        if (top == 1) {
-            style.setBorderTop(borderStyle);
-            style.setTopBorderColor(colorTop.getIndex());
-        }
-        if (bottom == 1) {
-            style.setBorderBottom(borderStyle);
-            style.setBottomBorderColor(colorBottom.getIndex());
-        }
-        if (left == 1) {
-            style.setBorderLeft(borderStyle);
-            style.setLeftBorderColor(colorLeft.getIndex());
-        }
-        if (right == 1) {
-            style.setBorderRight(borderStyle);
-            style.setRightBorderColor(colorRight.getIndex());
-        }
-        return style;
-    }
-
-
-    private void skipRowExcel(int rowIndex, int addCellHeight) {
-        int cellIndex = 0;
-        createRow("", rowIndex, cellIndex, rowHeight + addCellHeight, 11, true, false, true,
-                new CellRangeAddress(rowIndex, rowIndex, 0, 3), excelAlignCenter);
-        removeBorders(cellIndex);
-    }
-
-
-    private void createRowExcelBillInfo(int rowIndex, String label, String value, int fontSize) {
-        int cellIndex = 0;
-        XSSFCellStyle cellStyle = createBordersExcel(1, 1, 1, 1, borderStyleThin);
-        XSSFCellStyle cellStyleMargin = createBordersExcel(1, 1, 1, 1, borderStyleThin);
-        cellStyleMargin.setAlignment(excelAlignLeft);
-        cellStyleMargin.setIndention((short) 3);
-        XSSFCellStyle cellLastStyle = createBordersExcel(1, 1, 1, 0, borderStyleThin);
-        createRow(label, rowIndex, cellIndex, rowHeight, fontSize, false, false, true, null, excelAlignLeft);
-        createCell("", 1, fontSize, false, false, true, excelAlignLeft);
-        sheet.addMergedRegion(new CellRangeAddress(rowIndex, rowIndex, 1, 3));
-        createCell(value, cellIndex + 1, cellStyleMargin);
-        createCell("", cellIndex + 2, cellStyle);
-        createCell("", cellIndex + 3, cellLastStyle);
-    }
-
-
-    private void removeBorders(int cellIndex) {
-        createCell("", cellIndex + 1, createBordersExcel(1, 1, 1, 1, borderStyleThin));
-        createCell("", cellIndex + 2, createBordersExcel(1, 1, 1, 1, borderStyleThin));
-        createCell("", cellIndex + 3, createBordersExcel(1, 1, 1, 0, borderStyleThin));
-    }
-
-
-    private int showHeaderExcel(int rowIndex) {
-        int fontSize = 11;
-        int cellIndex = 0;
-        // tên quán
-        createRow(karaokeName, rowIndex, cellIndex, rowHeight + 300, 18, true, false, false,
-                new CellRangeAddress(rowIndex, rowIndex, 0, 3), excelAlignCenter);
-        removeBorders(cellIndex);
-        ++rowIndex; // 1
-
-        // địa chỉ
-        createRow(address, rowIndex, cellIndex, rowHeight + 50, fontSize, false, false, true,
-                new CellRangeAddress(rowIndex, rowIndex, 0, 3), excelAlignCenter);
-        removeBorders(cellIndex);
-        ++rowIndex; // 2
-
-        // sdt
-        createRow(phoneNumber, rowIndex, cellIndex, rowHeight, fontSize, false, false, false,
-                new CellRangeAddress(rowIndex, rowIndex, 0, 3), excelAlignCenter);
-        removeBorders(cellIndex);
-        return ++rowIndex; // 3
-    }
-
-    /**
-     * Tạo phần thông tin hóa đơn trên file excel
-     *
-     * @param bill     {@code HoaDon}: Thông tin hóa đơn cần hiển thị
-     * @param rowIndex {@code int}: vị trí của dòng bắt đầu tạo
-     * @return {@code int}: vị trí của dòng cuối cùng + 1
-     */
-    private int showBillInfoExcel(Bill bill, int rowIndex) {
-        int fontSize = 11;
-        int cellIndex = 0;
-        // skip row
-        skipRowExcel(rowIndex, -150);
-        ++rowIndex; // 4
-
-        // tên quán
-        String billName = "HOA ĐON TINH TIEN";
-        createRow(billName, rowIndex, cellIndex, rowHeight + 150, 18, true, false, true,
-                new CellRangeAddress(rowIndex, rowIndex, 0, 3), excelAlignCenter);
-        removeBorders(cellIndex);
-        ++rowIndex; // 5
-
-        // skip row
-        skipRowExcel(rowIndex, -150);
-        ++rowIndex; // 6
-
-        // mã hóa đơn
-        String billLabel = "Ma hoa đon:";
-        String billId = bill.getMaHoaDon() + "";
-        createRowExcelBillInfo(rowIndex, billLabel, billId, fontSize);
-        ++rowIndex; // 7
-
-        // tên nhân viên
-        String staffNameLabel = "Thu ngan:";
-        String staffName = bill.getMaNhanVien().getTenNhanVien();
-        createRowExcelBillInfo(rowIndex, staffNameLabel, staffName, fontSize);
-        ++rowIndex; // 8
-
-        // tên khách hàng
-        String customerNameLabel = "Ten khach hang:";
-        String customerName = bill.getMaKH().getTenKhachHang();
-        createRowExcelBillInfo(rowIndex, customerNameLabel, customerName, fontSize);
-        ++rowIndex; // 9
-
-        // tên số phòng
-        String roomIdLabel = "So phong:";
-        String roomId = bill.getMaPhong().getMaPhong();
-        createRowExcelBillInfo(rowIndex, roomIdLabel, roomId, fontSize);
-
-        ++rowIndex; // 10
-
-        // tên loại phòng
-        String roomTypeNameLabel = "Looi phong:";
-        TypeOfRoom roomType = bill.getMaPhong().getLoaiPhong();
-        String roomTypeName = roomType.getTenLoaiPhong();
-        createRowExcelBillInfo(rowIndex, roomTypeNameLabel, roomTypeName, fontSize);
-        ++rowIndex; // 11
-
-        // Giá phòng
-        String roomTypePriceLabel = "Gia phong:";
-        String roomTypePrice = df.format(bill.getMaPhong().getGiaPhong()) + "đ/Giờ";
-        createRowExcelBillInfo(rowIndex, roomTypePriceLabel, roomTypePrice, fontSize);
-
-        ++rowIndex; // 12
-
-        // thời gian bắt đầu hát
-        String startTimeLabel = "Gio bat dau:";
-        String startTime = ConvertTime.getInstance().convertTimeToString(bill.getNgayGioDat(), formatTime);
-        createRowExcelBillInfo(rowIndex, startTimeLabel, startTime, fontSize);
-        ++rowIndex; // 13
-
-        // thời gian kết thúc hát
-        String endTimeLabel = "Gio ket thuc:";
-        String endTime = ConvertTime.getInstance().convertTimeToString(bill.getNgayGioTra(), formatTime);
-        createRowExcelBillInfo(rowIndex, endTimeLabel, endTime, fontSize);
-        ++rowIndex; // 14
-
-        // thời gian hát
-        String usedTime = convertRentalTime(bill.tinhGioThue());
-        String hoursLabel = "Thoi gian:";
-        createRowExcelBillInfo(rowIndex, hoursLabel, usedTime, fontSize);
-        ++rowIndex; // 15
-
-        // skip row
-        skipRowExcel(rowIndex, -160);
-        ++rowIndex; // 16
-        return rowIndex;
-    }
-
-    /**
-     * Tạo thanh tiêu đề của dịch vụ đã đặt
-     *
-     * @param rowIndex {@code int}: vị trí của dòng bắt đầu tạo
-     * @return {@code int}: vị trí của dòng cuối cùng + 1
-     */
-    private int showServiceOrderHeaderExcel(int rowIndex) {
-        row = sheet.createRow(rowIndex);
-
-        cell = row.createCell(0, CellType.STRING);
-        XSSFCellStyle styleR0 = createBordersExcel(1, 1, 1, 1, borderStyleThick, excelWhiteColor, excelWhiteColor,
-                excelWhiteColor, excelWhiteColor);
-        styleR0.setAlignment(excelAlignLeft);
-        cell.setCellStyle(styleR0);
-        cell.setCellValue("Tên");
-
-        XSSFCellStyle styleR1 = createBordersExcel(1, 1, 1, 1, borderStyleThick, excelWhiteColor, excelWhiteColor,
-                excelWhiteColor, excelWhiteColor);
-        styleR1.setAlignment(excelAlignRight);
-        cell = row.createCell(1, CellType.STRING);
-        cell.setCellStyle(styleR1);
-        cell.setCellValue("SL");
-
-        cell = row.createCell(2, CellType.STRING);
-        cell.setCellStyle(styleR1);
-        cell.setCellValue("Don gia");
-
-        XSSFCellStyle styleR3 = createBordersExcel(1, 1, 1, 0, borderStyleThick, excelWhiteColor, excelWhiteColor,
-                excelWhiteColor, excelWhiteColor);
-        styleR3.setAlignment(excelAlignRight);
-        cell = row.createCell(3, CellType.STRING);
-        cell.setCellValue("T.Tien");
-        cell.setCellStyle(styleR3);
-        ++rowIndex; // 17
-
-        row = sheet.createRow(rowIndex);
-        XSSFCellStyle styleBorderBottom = createBordersExcel(1, 1, 1, 1, borderStyleThick, excelWhiteColor,
-                excelBlackColor, excelWhiteColor, excelWhiteColor);
-        row.setHeight((short) 40);
-        sheet.addMergedRegion(new CellRangeAddress(rowIndex, rowIndex, 0, 3));
-        Cell cell = row.createCell(0, CellType.STRING);
-        cell.setCellStyle(styleBorderBottom);
-        cell = row.createCell(1, CellType.STRING);
-        cell.setCellStyle(styleBorderBottom);
-        cell = row.createCell(2, CellType.STRING);
-        cell.setCellStyle(styleBorderBottom);
-
-        XSSFCellStyle styleBottomRight = createBordersExcel(1, 1, 1, 0, borderStyleThick, excelWhiteColor,
-                excelBlackColor, excelWhiteColor, excelWhiteColor);
-        cell = row.createCell(3, CellType.STRING);
-        cell.setCellStyle(styleBottomRight);
-        ++rowIndex; // 18
-        return rowIndex;
-    }
-
-    /**
-     * Hiển thị thông tin các dịch vụ đã đặt
-     *
-
-     *                     vụ đã đặt
-     * @param rowIndex     {@code int}: vị trí của dòng bắt đầu tạo
-     * @return {@code int}: vị trí của dòng cuối cùng + 1
-     */
-    private int showServiceOrderExcel(Bill bill, int rowIndex) {
-        List<DetailsOfService> billInfoList = bill.getLstDetails();
-        DataFormat dataFormat = workbook.createDataFormat();
-        if (billInfoList != null) {
-            int lastIndex = billInfoList.size();
-            for (int i = 0; i <= lastIndex; i++) {
-                row = sheet.createRow(rowIndex + i);
-                if (i == 0)
-                    row.setHeight((short) 410);
-                if (i == lastIndex) {
-                    XSSFCellStyle styleR0 = createBordersExcel(1, 1, 1, 1, borderStyleThick, excelWhiteColor,
-                            excelBlackColor, excelWhiteColor, excelWhiteColor);
-                    row.setHeight((short) 160);
-                    sheet.addMergedRegion(new CellRangeAddress(rowIndex + lastIndex, rowIndex + lastIndex, 0, 3));
-                    Cell cell = row.createCell(0, CellType.STRING);
-                    cell.setCellStyle(styleR0);
-                    cell = row.createCell(1, CellType.STRING);
-                    cell.setCellStyle(styleR0);
-                    cell = row.createCell(2, CellType.STRING);
-                    cell.setCellStyle(styleR0);
-
-                    XSSFCellStyle styleR3 = createBordersExcel(1, 1, 1, 0, borderStyleThick, excelWhiteColor,
-                            excelBlackColor, excelWhiteColor, excelWhiteColor);
-                    cell = row.createCell(3, CellType.STRING);
-                    cell.setCellStyle(styleR3);
-                } else {
-                    DetailsOfService billInfo = billInfoList.get(i);
-                    Double price = billInfo.getMaDichVu().getGiaBan();
-                    int quantityOrder = billInfo.getSoLuong();
-                    Double totalPriceOrder = price * quantityOrder;
-
-                    XSSFCellStyle styleR0 = createBordersExcel(1, 1, 1, 0, borderStyleThin);
-                    Cell cell = row.createCell(0, CellType.STRING);
-                    cell.setCellStyle(styleR0);
-                    cell.setCellValue(billInfo.getMaDichVu().getTenDichVu());
-
-                    XSSFCellStyle styleR1 = createBordersExcel(1, 1, 1, 0, borderStyleThin);
-                    styleR1.setDataFormat(dataFormat.getFormat("#,###"));
-                    styleR1.setAlignment(excelAlignRight);
-                    cell = row.createCell(1, CellType.NUMERIC);
-                    cell.setCellStyle(styleR1);
-                    cell.setCellValue(quantityOrder);
-
-                    cell = row.createCell(2, CellType.NUMERIC);
-                    cell.setCellStyle(styleR1);
-                    cell.setCellValue(price);
-
-                    cell = row.createCell(3, CellType.NUMERIC);
-                    cell.setCellStyle(styleR1);
-                    cell.setCellValue(totalPriceOrder);
-                }
-            }
-            rowIndex += lastIndex + 1;
-        } else {
-            JOptionPane.showMessageDialog(null, "khong tim thay hoa don", "Thông báo",
-                    JOptionPane.INFORMATION_MESSAGE);
-        }
-        return rowIndex;
-    }
-
-    /**
-     * Hiển thị thông tin thanh toán hóa đơn
-     *
-
-     *                     vụ đã đặt
-     * @param bill         {@code HoaDon}: Thông tin hóa đơn
-     * @param rowIndex     {@code int}: vị trí của dòng bắt đầu tạo
-     * @return {@code int}: vị trí của dòng cuối cùng + 1
-     */
-    private int showTotalPriceExcel(Bill bill, int rowIndex) {
-        int cellIndex = 0;
-        DataFormat dataFormat = workbook.createDataFormat();
-        Double totalPriceService = bill.tinhTongTienDichVu();
-        Double totalPriceRoom = bill.tinhTienPhong();
-
-        // tổng tiền dịch vụ
-        String totalPriceServiceLabel = "Tong tien dich vu:";
-        createRow(totalPriceServiceLabel, rowIndex, cellIndex, rowHeight + 150, 11, false, false, true,
-                new CellRangeAddress(rowIndex, rowIndex, 0, 1), excelAlignLeft);
-        sheet.addMergedRegion(new CellRangeAddress(rowIndex, rowIndex, 2, 3));
-        createCell("", cellIndex + 1, createBordersExcel(0, 1, 1, 1, borderStyleThin));
-
-        XSSFCellStyle styleFormatNumber = createBordersExcel(0, 1, 1, 0, borderStyleThin);
-        styleFormatNumber.setDataFormat(dataFormat.getFormat("#,###"));
-        styleFormatNumber.setAlignment(excelAlignRight);
-        createCell(totalPriceService, cellIndex + 2, styleFormatNumber, CellType.NUMERIC);
-        createCell("", cellIndex + 3, createBordersExcel(1, 1, 1, 0, borderStyleThin));
-        ++rowIndex;
-
-        // tổng tiền giờ
-        String totalPriceRoomLabel = "Tong tien gio:";
-        createRow(totalPriceRoomLabel, rowIndex, cellIndex, rowHeight, 11, false, false, true,
-                new CellRangeAddress(rowIndex, rowIndex, 0, 1), excelAlignLeft);
-        sheet.addMergedRegion(new CellRangeAddress(rowIndex, rowIndex, 2, 3));
-        createCell("", cellIndex + 1, createBordersExcel(1, 1, 1, 1, borderStyleThin));
-
-        createCell(totalPriceRoom, cellIndex + 2, styleFormatNumber, CellType.NUMERIC);
-        createCell("", cellIndex + 3, createBordersExcel(1, 1, 1, 0, borderStyleThin));
-        ++rowIndex;
-
-        // VAT
-        Double vat = (totalPriceRoom + totalPriceService) * 0.1;
-        String vatLabel = "VAT(10%):";
-        createRow(vatLabel, rowIndex, cellIndex, rowHeight, 11, false, false, true,
-                new CellRangeAddress(rowIndex, rowIndex, 0, 1), excelAlignLeft);
-        sheet.addMergedRegion(new CellRangeAddress(rowIndex, rowIndex, 2, 3));
-        createCell("", cellIndex + 1, createBordersExcel(1, 1, 1, 1, borderStyleThin));
-
-        createCell(vat, cellIndex + 2, styleFormatNumber, CellType.NUMERIC);
-        createCell("", cellIndex + 3, createBordersExcel(1, 1, 1, 0, borderStyleThin));
-        ++rowIndex;
-
-        // tổng hoá đơn
-        Double totalPrice = bill.getTongTienHD();
-        String totalPriceBillLabel = "Tong cong:";
-        createRow(totalPriceBillLabel, rowIndex, cellIndex, rowHeight + 50, 13, true, false, true,
-                new CellRangeAddress(rowIndex, rowIndex, 0, 1), excelAlignLeft);
-        sheet.addMergedRegion(new CellRangeAddress(rowIndex, rowIndex, 2, 3));
-        createCell("", cellIndex + 1, createBordersExcel(1, 1, 1, 1, borderStyleThin));
-
-        XSSFFont font = workbook.createFont();
-        font.setBold(true);
-        font.setFontHeightInPoints((short) 13);
-        XSSFCellStyle styleBill = createBordersExcel(0, 1, 1, 0, borderStyleThin);
-        styleBill.setAlignment(excelAlignRight);
-        styleBill.setFont(font);
-        styleBill.setDataFormat(dataFormat.getFormat("#,###"));
-
-        createCell(totalPrice, cellIndex + 2, styleBill, CellType.NUMERIC);
-        createCell("", cellIndex + 3, createBordersExcel(1, 1, 1, 0, borderStyleThin));
-        ++rowIndex;
-        return rowIndex;
-    }
-
-    /**
-     * Tạo chân trang hóa đơn
-     *
-     * @param rowIndex {@code int}: vị trí của dòng bắt đầu tạo
-     * @return {@code int}: vị trí của dòng cuối cùng + 1
-     */
-    private int showFooterExcel(int rowIndex) {
-        int cellIndex = 0;
-        // skip row
-        skipRowExcel(rowIndex, 0);
-        ++rowIndex;
-
-        // goodbye
-        String message = "Quy khach vui lòng kiem tra lai hoa don truoc khi thanh toan. "
-                + "\nXin cam on va hen gap lai quy khach";
-        createRow(message, rowIndex, cellIndex, rowHeight * 2, 11, false, true, true,
-                new CellRangeAddress(rowIndex, rowIndex, 0, 3), excelAlignCenter);
-        removeBorders(cellIndex);
-        ++rowIndex;
-        return rowIndex;
-    }
-
-    /**
-     * Tạo file excel
-     *
-     * @param path     {@code String}: đường dẫn đến thư mục nơi lưu file excel
-     * @param rowIndex {@code int}: vị trí của dòng cuối hóa đơn
-     */
-    private void writeFileExcel(String path, int rowIndex) {
-        int cellIndex = 0;
-        try {
-            // skip row
-            createRow("", rowIndex, cellIndex, rowHeight, 11, true, false, true,
-                    new CellRangeAddress(rowIndex, rowIndex, 0, 3), excelAlignCenter);
-            XSSFCellStyle styleR = createBordersExcel(1, 0, 1, 1, borderStyleThin, excelWhiteColor,
-                    IndexedColors.GREY_25_PERCENT, excelWhiteColor, excelWhiteColor);
-            row.setHeight((short) 200);
-            Cell cell = row.createCell(0);
-            cell.setCellStyle(styleR);
-            cell = row.createCell(1);
-            cell.setCellStyle(styleR);
-            cell = row.createCell(2);
-            cell.setCellStyle(styleR);
-
-            XSSFCellStyle styleR3 = createBordersExcel(1, 0, 1, 0, borderStyleThick, excelWhiteColor, excelBlackColor,
-                    excelWhiteColor, excelWhiteColor);
-            cell = row.createCell(3);
-            cell.setCellStyle(styleR3);
-
-            FileOutputStream out = new FileOutputStream(new File(path));
-            workbook.write(out);
-            out.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Xuất file excel đến thư mục đã chỉ định, tên file sẽ là mã hóa đơn
-     *
-
-     * @param path   {@code String}: đường dẫn đến thư mục nơi lưu file excel
-     */
-    public boolean exportBillToExcel(Bill bill, String path) {
-        File folder = new File(path);
-        if (!folder.exists())
-            folder.mkdir();
-        String fileName = bill.getMaHoaDon() + ".xlsx";
-        if (!path.matches("^.+[\\\\/]$")) {
-            path += "/";
-        }
-        String filePath = path + fileName;
-        workbook = new XSSFWorkbook();
-
-        sheet = workbook.createSheet("Hoa Đon");
-        // sheet.setDisplayGridlines(false);
-        sheet.setColumnWidth(0, 6500); // Cột Tên dịch vụ
-        sheet.setColumnWidth(1, 2300); // Cột số lượng
-        sheet.setColumnWidth(2, 3200); // Cột đơn giá
-        sheet.setColumnWidth(3, 3000); // Cột thành tiền
-        sheet.setColumnWidth(4, 500);
-
-        int rowIndex = 0;
-        rowIndex = showHeaderExcel(rowIndex);
-        rowIndex = showBillInfoExcel(bill, rowIndex);
-        rowIndex = showServiceOrderHeaderExcel(rowIndex);
-        rowIndex = showServiceOrderExcel(bill, rowIndex);
-        rowIndex = showTotalPriceExcel(bill, rowIndex);
-        rowIndex = showFooterExcel(rowIndex);
-        writeFileExcel(filePath, rowIndex);
-        return true;
-    }
 
     /**
      * tạo khoản trắng trên file pdf
@@ -889,9 +305,31 @@ public class ExportBill {
 
         Double totalPriceService = bill.tinhTongTienDichVu();
         Double totalPriceRoom = bill.tinhTienPhong();
-        Double vat = (totalPriceRoom + totalPriceService) * 0.1;
-        Double totalPriceBill = bill.getTongTienHD();
-        String labels[] = { "Tong tien dich vu:", "Tong tien phong:", "VAT(10%):", "Tong cong:" };
+        double vat = 0;
+        Date ngayHienTai = new Date();
+
+// Chuyển ngày hiện tại và ngày sinh của khách hàng thành lớp Calendar
+        Calendar calendarHienTai = Calendar.getInstance();
+        calendarHienTai.setTime(ngayHienTai);
+
+        Calendar calendarNgaySinhKhachHang = Calendar.getInstance();
+        calendarNgaySinhKhachHang.setTime(bill.getMaKH().getNgaySinh());
+
+// Lấy ngày và tháng của ngày hiện tại
+        int ngayHienTaiValue = calendarHienTai.get(Calendar.DAY_OF_MONTH);
+        int thangHienTaiValue = calendarHienTai.get(Calendar.MONTH);
+
+// Lấy ngày và tháng từ ngày sinh của khách hàng
+        int ngaySinhKhachHangValue = calendarNgaySinhKhachHang.get(Calendar.DAY_OF_MONTH);
+        int thangSinhKhachHangValue = calendarNgaySinhKhachHang.get(Calendar.MONTH);
+        if (ngayHienTaiValue == ngaySinhKhachHangValue && thangHienTaiValue == thangSinhKhachHangValue) {
+            vat = 0.0;
+
+        } else {
+            vat = (totalPriceService + totalPriceRoom) * 0.08;
+        }
+        Double totalPriceBill = bill.getTongTienHD() +vat;
+        String labels[] = { "Tong tien dich vu:", "Tong tien phong:", "VAT(8%):", "Tong cong:" };
         String values[] = { df.format(totalPriceService), df.format(totalPriceRoom), df.format(vat),
                 df.format(totalPriceBill) };
         try {
@@ -965,9 +403,7 @@ public class ExportBill {
         String filePath = path + fileName;
         Document document = new Document(PageSize.A4, 50, 50, 50, 50);
         try {
-//            baseFontMedium = BaseFont.createFont(pdfFontMedium, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-//            baseFontLight = BaseFont.createFont(pdfFontLight, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-//            baseFontLightItalic = BaseFont.createFont(pdfFontLightItalic, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+
 
             PdfWriter.getInstance(document, new FileOutputStream(filePath));
             document.open();

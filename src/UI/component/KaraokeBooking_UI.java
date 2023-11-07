@@ -7,16 +7,20 @@ import UI.CustomUI.Custom;
 import UI.component.Dialog.ChooseCustomer;
 import UI.component.Dialog.PresetRoom;
 import UI.component.Dialog.ReservationFormList;
+import UI.component.Dialog.SwitchRoom;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -25,19 +29,19 @@ import java.util.Date;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 
 /**
- * KaraokeBooking (Giao diện quản lý đặt phòng)
+ * Giao diện quản lý đặt phòng
  * Author: Hà Thị Phương Linh
  */
 public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseListener {
     public static JTextField txtCustomer;
     public static Staff staffLogin = null;
-    private static PresetRoom presetRoom;
     private static KaraokeBooking_UI instance = new KaraokeBooking_UI(staffLogin);
+    private DefaultTableModel modelService;
     KaraokeBooking_UI main = this;
-    private DefaultTableModel tableModel;
     private JPanel pnlShowRoom, pnlRoomList, timeNow, pnlRoomControl, pnlShowCustomer, pnlShowDetails;
     private JLabel backgroundLabel, timeLabel, roomLabel, statusLabel, customerLabel, room2Label, typeRoomLabel, locationLabel, nameLabel, startLabel, receiveLabel;
-    private JTextField txtRoom, txtLocation, txtName, txtStart, txtReceive, txtTypeRoom;
+    private JTextField txtLocation, txtName, txtStart, txtTypeRoom;
+    public JTextField txtRoom;
     private JScrollPane scrShowRoom, scrService;
     private JButton btnSwitchRoom, btnBookRoom, btnPresetRoom, btnChooseCustomer, btnForm;
     private JButton[] btnRoomList;
@@ -49,8 +53,11 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
     private JComboBox<String> cboRoomType, cboStatus;
     private ReservationFormDAO reservationFormDAO;
     private CustomerDAO customerDAO;
-    private Room selectedRoom = null;
     private BillDAO billDAO;
+    private DetailOfServiceDAO detailOfServiceDAO = new DetailOfServiceDAO();
+    private ArrayList<Service> serviceOrderList = new ArrayList<Service>();
+    private int selectedServiceOrderIndex = -1;
+    private DecimalFormat df = new DecimalFormat("#,###.##");
 
     public KaraokeBooking_UI(Staff staff) {
         this.staffLogin = staff;
@@ -255,14 +262,10 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
         pnlShowDetails.add(txtStart);
 
         String[] colsService = {"Tên DV", "Số lượng", "Giá bán",};
-        DefaultTableModel modelService = new DefaultTableModel(colsService, 0);
+        modelService = new DefaultTableModel(colsService, 0);
 
         tblService = new JTable(modelService);
-        tblService.setFont(new Font("Arial", Font.BOLD, 14));
-        tblService.setBackground(new Color(255, 255, 255, 0));
-        tblService.setForeground(new Color(255, 255, 255));
-        tblService.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-        tblService.getTableHeader().setForeground(Color.BLUE);
+        Custom.setCustomTable(tblService);
 
         pnlShowDetails.add(scrService = new JScrollPane(tblService, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
         scrService.setBounds(10, 325, 430, 260);
@@ -274,6 +277,7 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
         btnBookRoom.addActionListener(this);
         btnPresetRoom.addActionListener(this);
         btnForm.addActionListener(this);
+        btnSwitchRoom.addActionListener(this);
 
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/images/background.png"));
         backgroundLabel = new JLabel(backgroundImage);
@@ -290,6 +294,7 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
             }
         }
         LoadRoomList(roomList);
+        reSizeColumnTableService();
 
         cboRoomType.addActionListener(new ActionListener() {
             @Override
@@ -313,6 +318,23 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
         if (instance == null)
             instance = new KaraokeBooking_UI(staffLogin);
         return instance;
+    }
+
+    private void reSizeColumnTableService() {
+        TableColumnModel tcm = tblService.getColumnModel();
+
+        tcm.getColumn(0).setPreferredWidth(140);
+        tcm.getColumn(1).setPreferredWidth(50);
+        tcm.getColumn(2).setPreferredWidth(90);
+
+        DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        leftRenderer.setHorizontalAlignment(JLabel.LEFT);
+        rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
+
+        tcm.getColumn(0).setCellRenderer(leftRenderer);
+        tcm.getColumn(1).setCellRenderer(rightRenderer);
+        tcm.getColumn(2).setCellRenderer(rightRenderer);
     }
 
     private void loadCboRoomType() {
@@ -364,12 +386,6 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
                 btnChooseCustomer.setEnabled(true);
                 btnSwitchRoom.setEnabled(false);
                 break;
-            case "Tạm":
-                btnRoomList[index].setBackground(Color.decode("#FAA0AA"));
-                btnBookRoom.setEnabled(true);
-                btnChooseCustomer.setEnabled(true);
-                btnSwitchRoom.setEnabled(false);
-                break;
             default:
                 btnRoomList[index].setBackground(Color.decode("#008000"));
                 btnBookRoom.setEnabled(false);
@@ -382,7 +398,7 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
     }
 
     /**
-     * Hiển thị danh sách phòng được truyền vào
+     * Hiển thị danh sách phòng được truyền vào lên giao diện
      *
      * @param listRoom {@code ArrayList<Room>}: danh sách phòng cần hiển thị
      */
@@ -426,12 +442,16 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
                     btnRoomList[selection].setBorder(lineRed);
                     txtRoom.setText(roomID);
                     txtLocation.setText(location2);
+
+                    showBillInfo(roomID);
+
                     Room roomActiveE = roomDAO.getRoomByRoomId(roomID);
                     if (roomActiveE == null)
                         roomActiveE = new Room();
                     txtTypeRoom.setText(roomActiveE.getLoaiPhong().getTenLoaiPhong());
 
                     if (roomActiveE.getTinhTrang().equalsIgnoreCase("Đang sử dụng")) {
+                        btnSwitchRoom.setEnabled(true);
                         Bill bill = billDAO.getBillByRoomID(roomID);
                         if (bill != null) {
                             txtName.setText(bill.getMaKH().getTenKhachHang());
@@ -440,10 +460,12 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
                         }
                     }
                     if (roomActiveE.getTinhTrang().equalsIgnoreCase("Trống")) {
+                        btnSwitchRoom.setEnabled(false);
                         txtName.setText("");
                         txtStart.setText("");
                     }
                     if (roomActiveE.getTinhTrang().equalsIgnoreCase("Chờ")) {
+                        btnSwitchRoom.setEnabled(false);
                         ReservationForm reservationForm = reservationFormDAO.getReservationFormByRoomId(roomID);
                         if (reservationForm != null) {
                             txtName.setText(reservationForm.getMaKhachHang().getTenKhachHang());
@@ -493,7 +515,7 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
     }
 
     /**
-     * Hiển thị danh sách phòng dựa trên tên loại phòng
+     * Hiển thị danh sách phòng dựa trên tên loại phòng trong cbo roomTypeName
      *
      * @param roomTypeName {@code String}: tên loại phòng
      */
@@ -509,9 +531,9 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
     }
 
     /**
-     * Hiển thị danh sách phòng khi biết loại phòng trên comboBox Phòng
+     * Hiển thị danh sách phòng khi biết loại phòng trên comboBox roomTypeName
      *
-     * @param roomTypeName {@code String}: loại tên phòng
+     * @param roomTypeName {@code String}: tên loại phòng
      */
     private void loadCboRoom(String roomTypeName) {
         ArrayList<Room> roomList = new ArrayList<Room>();
@@ -538,6 +560,9 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
         LoadRoomList(dataList);
     }
 
+    /**
+     * Gán thời gian hiện tại cho label timeLabel
+     */
     private void updateTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String time = sdf.format(new Date());
@@ -689,8 +714,35 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
             ArrayList<Room> roomList = roomDAO.getRoomList();
             KaraokeBooking_UI.getInstance().LoadRoomList(roomList);
         }
+        if (o.equals(btnSwitchRoom)) {
+            SwitchRoom switchRoom = new SwitchRoom();
+            switchRoom.setKaraokeBookingUI(this);
+            switchRoom.setVisible(true);
+        }
     }
 
+    private void showBillInfo(String maPhong) {
+        ArrayList<DetailsOfService> dataList = detailOfServiceDAO.getDetailsOfServiceListByRoomId(maPhong);
+        int i = 1;
+        modelService.getDataVector().removeAllElements();
+        modelService.fireTableDataChanged();
+        Double totalPrice = 0.0;
+        serviceOrderList.clear();
+        for (DetailsOfService item : dataList) {
+            Service service = item.getMaDichVu();
+            serviceOrderList.add(service);
+            // hiển thị lại phòng đã chọn lúc đầu
+            if (selectedServiceOrderIndex <= -1) {
+                if (selectedServiceOrderIndex == i) {
+                    tblService.getSelectionModel().addSelectionInterval(i - 1, i - 1);
+                }
+            }
+            String priceStr = df.format(item.getGiaBan());
+            String quantityStr = df.format(item.getSoLuong());
+            modelService.addRow(new Object[]{service.getTenDichVu(),
+                   quantityStr, priceStr});
+        }
+    }
 
     @Override
     public void mouseClicked(MouseEvent e) {

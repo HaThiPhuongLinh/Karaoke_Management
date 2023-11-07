@@ -10,6 +10,8 @@ import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
@@ -47,6 +49,7 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
     private DetailsOfService detailsOfService;
     private DetailOfServiceDAO detailOfServiceDAO;
     private DecimalFormat df = new DecimalFormat("#,###.##");
+    private JTable selectedTable;
 
     public ServiceForm_UI(Staff staff) {
         this.staffLogin = staff;
@@ -205,7 +208,10 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
                 selectedServiceIndex = selectedRow;
                 txtName.setText(service.getTenDichVu());
                 txtStock.setText(df.format(service.getSoLuongTon()));
-                txtSum.setText("");
+                double price = Double.parseDouble(serviceModel.getValueAt(selectedRow, 4).toString().trim().replace(",", ""));
+                txtSum.setText(df.format(1*price));
+
+                selectedTable = tblSC;
             }
 
             @Override
@@ -257,9 +263,16 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
                 int selectedRow = tblService.getSelectedRow();
                 selectedServiceOrderIndex = selectedRow;
                 txtName.setText(modelService.getValueAt(selectedRow, 1).toString().trim());
+                String quantityString = modelService.getValueAt(selectedRow, 3).toString();
+                quantityString = quantityString.replaceAll(" ", "").replaceAll(",", "");
+                int quantity = Integer.parseInt(quantityString);
+                txtQuantity.setValue(quantity);
                 int quantityService = serviceOrderList.get(selectedRow).getSoLuongTon();
                 txtStock.setText(String.valueOf(quantityService));
-                txtSum.setText("");
+                txtSum.setText(modelService.getValueAt(selectedRow, 5).toString().trim());
+
+                selectedTable = tblService;
+
             }
 
             @Override
@@ -287,6 +300,7 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
             }
 
         });
+
 
         pnlServiceDetail.add(scrShowServiceDetail = new JScrollPane(tblService, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
         scrShowServiceDetail.setBounds(4, 10, 700, 280);
@@ -388,38 +402,40 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
         });
 
         txtQuantity.addChangeListener(e -> {
-            int row = tblSC.getSelectedRow();
-            if (row != -1) {
-                int quantity = (int) txtQuantity.getValue();
-                int soLuongTon = Integer.parseInt(serviceModel.getValueAt(row, 3).toString().replace(",", "")); // Chuyển đổi số lượng từ chuỗi thành số
-                if (quantity > soLuongTon) {
-                    txtQuantity.setValue(soLuongTon);
-                } else if (quantity < 1) {
-                    txtQuantity.setValue(1);
-                } else {
-                    double giaBan = Double.parseDouble(serviceModel.getValueAt(row, 4).toString().replace(",", "")); // Chuyển đổi giá từ chuỗi thành số
-                    double sum = giaBan * quantity;
-                    txtSum.setText(df.format(sum));
+            if (selectedTable == tblSC) {
+                // Xử lý cho tblSC
+                int row = tblSC.getSelectedRow();
+                if (row != -1) {
+                    int quantity = (int) txtQuantity.getValue();
+                    int soLuongTon = Integer.parseInt(serviceModel.getValueAt(row, 3).toString().replace(",", ""));
+                    if (quantity > soLuongTon) {
+                        txtQuantity.setValue(soLuongTon);
+                    } else if (quantity < 1) {
+                        txtQuantity.setValue(1);
+                    } else {
+                        double giaBan = Double.parseDouble(serviceModel.getValueAt(row, 4).toString().replace(",", ""));
+                        double sum = giaBan * quantity;
+                        txtSum.setText(df.format(sum));
+                    }
+                }
+            } else if (selectedTable == tblService) {
+                // Xử lý cho tblService
+                int row = tblService.getSelectedRow();
+                if (row != -1) {
+                    int quantity = (int) txtQuantity.getValue();
+                    int soLuongTon = Integer.parseInt(txtStock.getText());
+                    if (quantity > soLuongTon) {
+                        txtQuantity.setValue(soLuongTon);
+                    } else if (quantity < 1) {
+                        txtQuantity.setValue(1);
+                    } else {
+                        double giaBan = Double.parseDouble(modelService.getValueAt(row, 4).toString().replace(",", ""));
+                        double sum = giaBan * quantity;
+                        txtSum.setText(df.format(sum));
+                    }
                 }
             }
         });
-
-//        txtQuantity.addChangeListener(e -> {
-//            int row2 = tblService.getSelectedRow();
-//            if (row2 != -1) {
-//                int quantity = (int) txtQuantity.getValue();
-//                int soLuongDat = Integer.parseInt(modelService.getValueAt(row2, 3).toString()); // Chuyển đổi số lượng từ chuỗi thành số
-//                if (quantity > soLuongDat) {
-//                    txtQuantity.setValue(soLuongDat);
-//                } else if (quantity < 1) {
-//                    txtQuantity.setValue(1);
-//                } else {
-//                    double giaBan = Double.parseDouble(modelService.getValueAt(row2, 4).toString()); // Chuyển đổi giá từ chuỗi thành số
-//                    double sum = giaBan * quantity;
-//                    txtSum.setText(df.format(sum));
-//                }
-//            }
-//        });
     }
 
     @Override
@@ -631,6 +647,8 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
             txtFind.setText("");
             ArrayList<Room> roomsInUse = roomDAO.getRoomsByStatus("Đang sử dụng");
             loadRoomList(roomsInUse);
+            modelService.setRowCount(0);
+            modelService.getDataVector().removeAllElements();
         }
         if (o.equals(btnUse)) {
             if (txtName.getText().trim().equals("")) {
@@ -742,6 +760,10 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
                     int quantityInStock = 0;
                     if (serviceDetail != null) {
                         newOrderQuantity = serviceDetail.getSoLuong() - cancelQuantity;
+                        if (newOrderQuantity < 0 || newOrderQuantity > service.getSoLuongTon()) {
+                            JOptionPane.showMessageDialog(this, "Số lượng hủy không hợp lệ.");
+                            return;
+                        }
                         serviceDetail.setSoLuong(newOrderQuantity);
                         quantityInStock = service.getSoLuongTon();
                         service.setSoLuongTon(quantityInStock + cancelQuantity);

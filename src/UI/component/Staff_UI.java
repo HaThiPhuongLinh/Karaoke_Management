@@ -21,13 +21,19 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
-
+/**
+ * Giao diện dùng để quản lý nhân viên
+ * Người thiết kế Nguyễn Đình Dương
+ * Ngày tạo:9/10/2023
+ * Lần cập nhật cuối : 15/10/2023
+ * Nội dung cập nhật : Update sự kiện mouseclicked cho bảng
+ */
 public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
     private  JTextField txtBaoLoi;
     private  JTextField txtDiaChi;
-    private JTable tableNV;
+    private JTable tblNV;
     private DefaultTableModel modelTableNV;
-    private JLabel backgroundLabel, ChucVuLabel, taiKhoanLabel, tinhTrangLabel, timeLabel, maNVLabel, tenNVLabel, gioitinhNVLabel, sdtNVLabel, ngaySinhLabel, cmndLabel, search1Label, search2Label, search3Label;
+    private JLabel lblBackground, lblChucVu, lblTaiKhoan, lblTinhTrang, lblTime, lblMaNV, lblTenNV, lblGioitinhNV, lblSdtNV, lblNgaySinh, lblCmnd;
     private JTextField txtMaNV, txtTenNV, txtSDTNV, txtCMNDNV, txtTaiKhoan;
     private JComboBox cboGioiTinhNV, cboChucVu, cbotinhTrang;
     private JPanel timeNow, pnlStaffList, pnlStaffControl;
@@ -60,10 +66,10 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
         timeNow.setOpaque(false);
         add(timeNow);
 
-        timeLabel = new JLabel();
-        timeLabel.setFont(new Font("Arial", Font.BOLD, 33));
-        timeLabel.setForeground(Color.WHITE);
-        timeNow.add(timeLabel);
+        lblTime = new JLabel();
+        lblTime.setFont(new Font("Arial", Font.BOLD, 33));
+        lblTime.setForeground(Color.WHITE);
+        timeNow.add(lblTime);
         Timer timer = new Timer(10, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -86,31 +92,31 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
         pnlStaffControl.setLayout(null);
         pnlStaffControl.setPreferredSize(new Dimension(1100, 250));
 
-        maNVLabel = new JLabel("Mã Nhân Viên: ");
-        maNVLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        maNVLabel.setBounds(80, 10, 120, 30);
-        maNVLabel.setForeground(Color.WHITE);
-        pnlStaffControl.add(maNVLabel);
+        lblMaNV = new JLabel("Mã Nhân Viên: ");
+        lblMaNV.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblMaNV.setBounds(80, 10, 120, 30);
+        lblMaNV.setForeground(Color.WHITE);
+        pnlStaffControl.add(lblMaNV);
         txtMaNV = new JTextField();
         txtMaNV.setBounds(195, 10, 350, 30);
         txtMaNV.setEditable(false);
         pnlStaffControl.add(txtMaNV);
 
-        tenNVLabel = new JLabel("Tên Nhân Viên: ");
-        tenNVLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        tenNVLabel.setBounds(80, 60, 120, 30);
-        tenNVLabel.setForeground(Color.WHITE);
-        pnlStaffControl.add(tenNVLabel);
+        lblTenNV = new JLabel("Tên Nhân Viên: ");
+        lblTenNV.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblTenNV.setBounds(80, 60, 120, 30);
+        lblTenNV.setForeground(Color.WHITE);
+        pnlStaffControl.add(lblTenNV);
 
         txtTenNV = new JTextField();
         txtTenNV.setBounds(195, 60, 350, 30);
         pnlStaffControl.add(txtTenNV);
 
-        gioitinhNVLabel = new JLabel("Giới Tính: ");
-        gioitinhNVLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        gioitinhNVLabel.setBounds(365, 110, 70, 30);
-        gioitinhNVLabel.setForeground(Color.WHITE);
-        pnlStaffControl.add(gioitinhNVLabel);
+        lblGioitinhNV = new JLabel("Giới Tính: ");
+        lblGioitinhNV.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblGioitinhNV.setBounds(365, 110, 70, 30);
+        lblGioitinhNV.setForeground(Color.WHITE);
+        pnlStaffControl.add(lblGioitinhNV);
 
         cboGioiTinhNV = new JComboBox<String>();
         cboGioiTinhNV.addItem("Nam");
@@ -119,21 +125,21 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
         Custom.setCustomComboBox(cboGioiTinhNV);
         pnlStaffControl.add(cboGioiTinhNV);
 
-        sdtNVLabel = new JLabel("SDT: ");
-        sdtNVLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        sdtNVLabel.setBounds(80, 110, 50, 30);
-        sdtNVLabel.setForeground(Color.WHITE);
-        pnlStaffControl.add(sdtNVLabel);
+        lblSdtNV = new JLabel("SDT: ");
+        lblSdtNV.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblSdtNV.setBounds(80, 110, 50, 30);
+        lblSdtNV.setForeground(Color.WHITE);
+        pnlStaffControl.add(lblSdtNV);
 
         txtSDTNV = new JTextField();
         txtSDTNV.setBounds(195, 110, 165, 30);
         pnlStaffControl.add(txtSDTNV);
 
-        ngaySinhLabel = new JLabel("Ngày Sinh: ");
-        ngaySinhLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        ngaySinhLabel.setBounds(80, 160, 100, 30);
-        ngaySinhLabel.setForeground(Color.WHITE);
-        pnlStaffControl.add(ngaySinhLabel);
+        lblNgaySinh = new JLabel("Ngày Sinh: ");
+        lblNgaySinh.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblNgaySinh.setBounds(80, 160, 100, 30);
+        lblNgaySinh.setForeground(Color.WHITE);
+        pnlStaffControl.add(lblNgaySinh);
 
         dpNgaySinhNV = new DatePicker(205);
         dpNgaySinhNV.setBounds(195, 160, 165, 30);
@@ -157,11 +163,11 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
         btnLamMoi.setBounds(950, 210, 100, 30);
         pnlStaffControl.add(btnLamMoi);
 
-        ChucVuLabel = new JLabel("Chức Vụ: ");
-        ChucVuLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        ChucVuLabel.setBounds(365, 160, 120, 30);
-        ChucVuLabel.setForeground(Color.WHITE);
-        pnlStaffControl.add(ChucVuLabel);
+        lblChucVu = new JLabel("Chức Vụ: ");
+        lblChucVu.setFont(new Font("Arial", Font.BOLD, 14));
+        lblChucVu.setBounds(365, 160, 120, 30);
+        lblChucVu.setForeground(Color.WHITE);
+        pnlStaffControl.add(lblChucVu);
 
         cboChucVu = new JComboBox<String>();
         cboChucVu.addItem("Nhân Viên");
@@ -170,11 +176,11 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
         Custom.setCustomComboBox(cboChucVu);
         pnlStaffControl.add(cboChucVu);
 
-        tinhTrangLabel = new JLabel("Tình Trạng: ");
-        tinhTrangLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        tinhTrangLabel.setBounds(600, 60, 200, 30);
-        tinhTrangLabel.setForeground(Color.WHITE);
-        pnlStaffControl.add(tinhTrangLabel);
+        lblTinhTrang = new JLabel("Tình Trạng: ");
+        lblTinhTrang.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblTinhTrang.setBounds(600, 60, 200, 30);
+        lblTinhTrang.setForeground(Color.WHITE);
+        pnlStaffControl.add(lblTinhTrang);
 
         cbotinhTrang = new JComboBox<String>();
         cbotinhTrang.addItem("Đang làm");
@@ -183,21 +189,21 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
         Custom.setCustomComboBox(cbotinhTrang);
         pnlStaffControl.add(cbotinhTrang);
 
-        taiKhoanLabel = new JLabel("Tài Khoản: ");
-        taiKhoanLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        taiKhoanLabel.setBounds(600, 110, 200, 30);
-        taiKhoanLabel.setForeground(Color.WHITE);
-        pnlStaffControl.add(taiKhoanLabel);
+        lblTaiKhoan = new JLabel("Tài Khoản: ");
+        lblTaiKhoan.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblTaiKhoan.setBounds(600, 110, 200, 30);
+        lblTaiKhoan.setForeground(Color.WHITE);
+        pnlStaffControl.add(lblTaiKhoan);
 
         txtTaiKhoan = new JTextField();
         txtTaiKhoan.setBounds(715, 110, 350, 30);
         pnlStaffControl.add(txtTaiKhoan);
 
-        cmndLabel = new JLabel("CMND: ");
-        cmndLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        cmndLabel.setBounds(600, 160, 200, 30);
-        cmndLabel.setForeground(Color.WHITE);
-        pnlStaffControl.add(cmndLabel);
+        lblCmnd = new JLabel("CMND: ");
+        lblCmnd.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblCmnd.setBounds(600, 160, 200, 30);
+        lblCmnd.setForeground(Color.WHITE);
+        pnlStaffControl.add(lblCmnd);
 
         txtCMNDNV = new JTextField();
         txtCMNDNV.setBounds(715, 160, 350, 30);
@@ -229,26 +235,26 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
         modelTableNV = new DefaultTableModel(colsNV, 0);
         JScrollPane scrollPaneNV;
 
-        tableNV = new JTable(modelTableNV);
-        tableNV.setFont(new Font("Arial", Font.BOLD, 14));
-        tableNV.setBackground(new Color(255, 255, 255, 0));
-        tableNV.setForeground(new Color(255, 255, 255));
-        tableNV.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-        tableNV.getTableHeader().setForeground(Color.BLUE);
-        Custom.getInstance().setCustomTable(tableNV);
-        panelDSNV.add(scrollPaneNV = new JScrollPane(tableNV, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
+        tblNV = new JTable(modelTableNV);
+        tblNV.setFont(new Font("Arial", Font.BOLD, 14));
+        tblNV.setBackground(new Color(255, 255, 255, 0));
+        tblNV.setForeground(new Color(255, 255, 255));
+        tblNV.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
+        tblNV.getTableHeader().setForeground(Color.BLUE);
+        Custom.getInstance().setCustomTable(tblNV);
+        panelDSNV.add(scrollPaneNV = new JScrollPane(tblNV, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
         scrollPaneNV.setBounds(10, 20, 1210, 360);
         scrollPaneNV.setOpaque(false);
         scrollPaneNV.getViewport().setOpaque(false);
         scrollPaneNV.getViewport().setBackground(Color.WHITE);
         pnlStaffList.add(panelDSNV);
         loadNV();
-        tableNV.addMouseListener(this);
+        tblNV.addMouseListener(this);
 
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/images/background.png"));
-        backgroundLabel = new JLabel(backgroundImage);
-        backgroundLabel.setBounds(0, 0, getWidth(), getHeight());
-        add(backgroundLabel);
+        lblBackground = new JLabel(backgroundImage);
+        lblBackground.setBounds(0, 0, getWidth(), getHeight());
+        add(lblBackground);
         btnSua.addActionListener(this);
 
         btnThem.addActionListener(this);
@@ -256,15 +262,15 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
 
         reSizeColumnTableStaff();
     }
-
+//Thiết lập thời gian thực cho lblTime
     private void updateTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String time = sdf.format(new Date());
-        timeLabel.setText(time);
+        lblTime.setText(time);
     }
-
+//Set size cho table Nhân viên
     private void reSizeColumnTableStaff() {
-        TableColumnModel tcm = tableNV.getColumnModel();
+        TableColumnModel tcm = tblNV.getColumnModel();
 
         tcm.getColumn(0).setPreferredWidth(50);
         tcm.getColumn(1).setPreferredWidth(120);
@@ -274,10 +280,16 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
         tcm.getColumn(8).setPreferredWidth(70);
         tcm.getColumn(9).setPreferredWidth(120);
     }
+    /**
+     * hàm sử dụng định dạng "HH:mm:ss" để biểu diễn thời gian (giờ, phút và giây) của đối tượng date
+     * @param date : ngày cần định dạng
+     * @return {@code String}: ngày cần định dạng
+     */
     private String formatDate(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyy");
         return sdf.format(date);
     }
+    //Load danh sách tất cả nhân viên lên bảng
     public void loadNV() {
         String gt = "";
         for (Staff staff : StaffDAO.getAllStaff()) {
@@ -291,11 +303,21 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
             modelTableNV.addRow(rowData);
         }
     }
+
+    /**
+     * Hiển thị thông báo lỗi
+     * @param txt:Nơi thông báo lỗi
+     * @param message:Lỗi cần thông báo
+     */
     private void showMessage(JTextField txt, String message) {
         txt.requestFocus();
         txtBaoLoi.setText(message);
     }
 
+    /**
+     * Regex dữ liệu nhập
+     * @return {@code boolean} :True or False
+     */
     private boolean validData() {
         String ten = txtTenNV.getText().trim();
         String diachi = txtDiaChi.getText().trim();
@@ -346,6 +368,11 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
         }
         return true;
     }
+
+    /**
+     * Lấy mã nhân viên
+     * @return {@code String}:Mã nhân viên
+     */
     public String laymaNV(){
         String MaNV = StaffDAO.generateNextStaffId();
         return MaNV;
@@ -397,7 +424,7 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
                 }
             }
         } else if (o.equals(btnSua)) {
-            int row = tableNV.getSelectedRow();
+            int row = tblNV.getSelectedRow();
             if(row > 0){
                 if (txtTenNV.getText().equals("") || txtSDTNV.getText().equals("") || txtCMNDNV.getText().equals("") || txtDiaChi.getText().equals("") || txtTaiKhoan.getText().equals("")) {
                     JOptionPane.showMessageDialog(this, "Bạn phải nhập thông tin nhân viên");
@@ -450,6 +477,9 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
         }
     }
 
+    /**
+     * Làm mới các ô nhập dữ liệu
+     */
     private void reFresh(){
         txtMaNV.setText("");
         txtTenNV.setText("");
@@ -465,7 +495,7 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
     }
     @Override
     public void mouseClicked(MouseEvent e) {
-        int row = tableNV.getSelectedRow();
+        int row = tblNV.getSelectedRow();
         txtMaNV.setText(modelTableNV.getValueAt(row, 0).toString());
         txtTenNV.setText(modelTableNV.getValueAt(row, 1).toString());
         txtSDTNV.setText(modelTableNV.getValueAt(row, 2).toString());
