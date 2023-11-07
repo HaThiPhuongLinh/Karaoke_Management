@@ -15,7 +15,7 @@ import Entity.*;
  * Sử dụng xuất hóa đơn dạng pdf
  * Người tham gia thiết kế: Nguyen Dinh Duong
  * Ngày tạo: 27/10/2023
- * Lần cập nhật cuối: 06/11/2021
+ * Lần cập nhật cuối: 06/11/2023
  * Nội dung cập nhật: sửa lỗi hiển thị khi xuất file pdf
  */
 public class ExportBill {
