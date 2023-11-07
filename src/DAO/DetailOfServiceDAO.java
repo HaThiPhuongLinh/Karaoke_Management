@@ -9,14 +9,27 @@ import java.sql.*;
 //import java.sql.Date;
 import java.util.*;
 import java.util.Date;
-
+/**
+ * Lấy dữ liệu từ database cho lớp {@code DetailOfServiceDAO}
+ * <p>
+ * Người tham gia thiết kế: Nguyễn Quang Duy
+ * <p>
+ * Ngày tạo: 07/10/2023
+ * <p>
+ * Lần cập nhật cuối: 7/11/2023
+ * <p>
+ * Nội dung cập nhật: thêm javadoc
+ */
 public class DetailOfServiceDAO {
     private static DetailOfServiceDAO instance = new DetailOfServiceDAO();
 
     public static DetailOfServiceDAO getInstance() {
         return instance;
     }
-
+    /**
+     * lấy danh sách thông tin tất cả chi tiết dịch vụ
+     * @return {@code ArrayList<DetailsOfService>}: danh sách chi tiết dịch vụ
+     */
     public ArrayList<DetailsOfService> getAllDetailsOfService() {
         ArrayList<DetailsOfService> dsDOS = new ArrayList<DetailsOfService>();
         try {
@@ -42,6 +55,12 @@ public class DetailOfServiceDAO {
         return dsDOS;
     }
 
+    /**
+     * Lấy danh sách chi tiết dịch vụ trong khoản từ ngày bắt đầu đến ngày kết thúc
+     * @param tuNgay ngày bắt đầu
+     * @param denNgay ngày kết thúc
+     * @return {@code ArrayList<DetailsOfService>} danh sách chi tiết dịch vụ
+     */
     public ArrayList<DetailsOfService> getListCTDVByDate(Date tuNgay, Date denNgay) {
         ArrayList<DetailsOfService> dataList = new ArrayList<DetailsOfService>();
         ConnectDB.getInstance();
@@ -72,40 +91,11 @@ public class DetailOfServiceDAO {
         return dataList;
     }
 
-    public boolean addDetailOfService(DetailsOfService dos) {
-        ConnectDB.getInstance();
-        Connection con = ConnectDB.getConnection();
-        PreparedStatement statement = null;
-
-        try {
-            String sql = "INSERT INTO ChiTietDichVu (maHoaDon, maDichVu, soLuong, giaBan) VALUES (?, ?, ?, ?)";
-            statement = con.prepareStatement(sql);
-
-            statement.setString(1, dos.getMaHoaDon().getMaHoaDon());
-            statement.setString(2, dos.getMaDichVu().getMaDichVu());
-            statement.setInt(3, dos.getSoLuong());
-            statement.setDouble(4, dos.getGiaBan());
-
-            int rowsAffected = statement.executeUpdate();
-
-            if (rowsAffected > 0) {
-                return true;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return false;
-    }
-
+    /**
+     * Lấy danh sách dịch vụ theo mã phòng
+     * @param roomId mã phòng
+     * @return {@code ArrayList<DetailsOfService>} danh sách chi tiết dịch vụ
+     */
     public ArrayList<DetailsOfService> getDetailsOfServiceListByRoomId(String roomId) {
         ArrayList<DetailsOfService> dsDOS = new ArrayList<DetailsOfService>();
         ConnectDB.getInstance();
@@ -150,6 +140,11 @@ public class DetailOfServiceDAO {
         return dsDOS;
     }
 
+    /**
+     * Lấy danh sách chi tiết dịch vụ theo mã hóa đơn
+     * @param billID mã hóa đơn
+     * @return {@code ArrayList<DetailsOfService>} danh sách chi tiết dịch vụ
+     */
     public ArrayList<DetailsOfService> getDetailsOfServiceForBill(String billID) {
         ArrayList<DetailsOfService> dataList = new ArrayList<DetailsOfService>();
         ConnectDB.getInstance();
@@ -188,7 +183,12 @@ public class DetailOfServiceDAO {
         return dataList;
     }
 
-
+    /**
+     * Lấy chi tiết dịch vụ theo mã hóa đơn và mã dịch vụ
+     * @param billId mã hóa đơn
+     * @param serviceId mã dịch vụ
+     * @return chi tiết dịch vụ được tìm thấy
+     */
     public DetailsOfService getDetailsOfServiceByBillIdAndServiceId(String billId, String serviceId) {
         DetailsOfService dos = null;
         ConnectDB.getInstance();
@@ -235,7 +235,17 @@ public class DetailOfServiceDAO {
         return dos;
     }
 
-
+    /**
+     * cập nhật chi tiết dịch vụ
+     * @param detailsOfService chi tiết dịch vụ cần cập nhật
+     * @param soLuongDat số lượng đặt
+     * @param maHoaDon mã hóa đơn
+     * @return {@code boolean}: kết quả trả về của câu truy vấn
+     *          <ul>
+     *              <li>Nếu cập nhật thành công thì trả về {@code true}</li>
+     *              <li>Nếu cập nhật thất bại thì trả về {@code false}</li>
+     *          </ul>
+     */
     public boolean updateServiceDetail(DetailsOfService detailsOfService, int soLuongDat, String maHoaDon) {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
