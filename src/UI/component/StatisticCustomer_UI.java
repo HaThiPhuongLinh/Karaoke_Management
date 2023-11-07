@@ -210,7 +210,6 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
                 Date tuNgay = pickerTuNgay.getFullDate();
                 Date denNgay = pickerDenNgay.addOneDay();
                 ArrayList<Bill> listBill = billDAO.getListBillByDate(tuNgay, denNgay);
-                System.out.printf(String.valueOf(listBill.size()) + "ádasdasd");
                 if (validData()) {
                     if (tuNgay.before(denNgay)) {
                         if (listBill == null || listBill.isEmpty() || listBill.size() <= 0) {
@@ -298,8 +297,8 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
             dataToAdd.get(j)[0] = j + 1;
         }
 
-        modelTableDV.getDataVector().removeAllElements();
-        tableDV.removeAll();
+        modelTblDichVu.getDataVector().removeAllElements();
+        tblDichVu.removeAll();
         for (Object[] rowData : dataToAdd) {
             modelTblDichVu.addRow(rowData);
         }
