@@ -86,8 +86,8 @@ public class BillDAO {
 
     /**
      * Lấy ra hóa đơn theo ngày
-     * @param tuNgay
-     * @param denNgay
+     * @param tuNgay:Ngày bắt đầu
+     * @param denNgay:Ngày kết thúc
      * @return {@code ArrayList<Bill>}:Danh sách hóa đơn
      */
 
@@ -263,7 +263,7 @@ public class BillDAO {
     }
 
     /**
-     *Lấy ra số lượng hóa đơn theo khoảnh thời gian
+     *Lấy ra số lượng hóa đơn theo khoảng thời gian
      * @param startDate:Ngày bát đầu
      * @param endDate:Ngày kết thúc
      * @return {@code int}:Tổng bill
@@ -412,7 +412,7 @@ public class BillDAO {
     }
 
     /**
-     * Update thuốc tính Khuyến Mãi của hóa đơn
+     * Update thuộc tính Khuyến Mãi của hóa đơn
      * @param b:
      * @return {@code boolean} :True or false
      */

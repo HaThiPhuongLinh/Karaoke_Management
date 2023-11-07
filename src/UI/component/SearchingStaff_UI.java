@@ -201,13 +201,19 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
 
         reSizeColumnTableStaff();
     }
-    //Cap nhat thoi gian thuc
+
+    /**
+     * Thiết lập thời gian thực cho lblTime
+     */
     private void updateTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String time = sdf.format(new Date());
         lblTime.setText(time);
     }
-    //Custom size cua bang
+
+    /**
+     * Custom size cho bảng Nhân viên
+     */
     private void reSizeColumnTableStaff() {
         TableColumnModel tcm = tblNV.getColumnModel();
 
@@ -228,7 +234,10 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyy");
         return sdf.format(date);
     }
-    //Load danh sach nhan vien len bang
+
+    /**
+     * Load danh sách tất cả nhân viên lên bảng
+     */
     public void loadNV() {
         String gt = "";
         for (Staff staff : StaffDAO.getAllStaff()) {
