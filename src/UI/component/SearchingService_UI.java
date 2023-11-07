@@ -23,16 +23,28 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * Sử dụng để tìm kiếm dịch vụ
+ * <p>
+ *     Người tham gia thiết kế: Nguyễn Quang Duy
+ * </p>
+ * ngày tạo: 12/10/2023
+ * <p>
+ *     Lần cập nhật cuối: 5/11/2023
+ * </p>
+ * Nội dung cập nhật: thêm javadoc
+ */
+
 public class SearchingService_UI extends JPanel implements ActionListener, MouseListener {
-    private JComboBox<String> comboBoxLDV,comboBoxGiaban;
-    private JTable tableDV;
-    private JTextField textFieldMaDichVu,textFieldTenDichVu,textFieldTenLoaiDichVu,textFieldGiaBan;
+    private JComboBox<String> cmbLDV, cmbGiaBan;
+    private JTable tblDichVu;
+    private JTextField txtTenDichVu;
     private JButton btnlamMoi;
     private JButton btnTimKiem;
-    private JLabel backgroundLabel,timeLabel;
+    private JLabel lblBackGround, lblTime;
     private ServiceDAO serviceDAO;
     private TypeOfServiceDAO typeOfServiceDAO;
-    private DefaultTableModel modelTableDV;
+    private DefaultTableModel modelTblDichVu;
     private DecimalFormat df = new DecimalFormat("#,###.##");
     public static Staff staffLogin = null;
 
@@ -51,24 +63,24 @@ public class SearchingService_UI extends JPanel implements ActionListener, Mouse
         typeOfServiceDAO = new TypeOfServiceDAO();
 
         //phan viet code
-        JLabel headerLabel = new JLabel("TÌM KIẾM DỊCH VỤ");
-        headerLabel.setBounds(570, 10, 1175, 40);
-        headerLabel.setFont(new Font("Arial", Font.BOLD, 25));
-        headerLabel.setForeground(Color.WHITE);
-        Component add = add(headerLabel);
+        JLabel lblTimKiemDichVu = new JLabel("TÌM KIẾM DỊCH VỤ");
+        lblTimKiemDichVu.setBounds(570, 10, 1175, 40);
+        lblTimKiemDichVu.setFont(new Font("Arial", Font.BOLD, 25));
+        lblTimKiemDichVu.setForeground(Color.WHITE);
+        Component add = add(lblTimKiemDichVu);
 
-        JPanel timeNow = new JPanel();
-        timeNow.setBorder(new TitledBorder(
+        JPanel pnlTimeNow = new JPanel();
+        pnlTimeNow.setBorder(new TitledBorder(
                 new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "",
                 TitledBorder.LEADING, TitledBorder.TOP));
-        timeNow.setBounds(12, 10, 300, 50);
-        timeNow.setOpaque(false);
-        add(timeNow);
+        pnlTimeNow.setBounds(12, 10, 300, 50);
+        pnlTimeNow.setOpaque(false);
+        add(pnlTimeNow);
 
-        timeLabel = new JLabel();
-        timeLabel.setFont(new Font("Arial", Font.BOLD, 33));
-        timeLabel.setForeground(Color.WHITE);
-        timeNow.add(timeLabel);
+        lblTime = new JLabel();
+        lblTime.setFont(new Font("Arial", Font.BOLD, 33));
+        lblTime.setForeground(Color.WHITE);
+        pnlTimeNow.add(lblTime);
         Timer timer = new Timer(10, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -77,108 +89,101 @@ public class SearchingService_UI extends JPanel implements ActionListener, Mouse
         });
         timer.start();
 
-        JPanel panel1 =  new JPanel();
-        panel1.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DỊCH VỤ",
+        JPanel pnlDichVu =  new JPanel();
+        pnlDichVu.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DỊCH VỤ",
                 TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
-        panel1.setBounds(10, 70, 1245, 670);
-        panel1.setOpaque(false);
-        add(panel1);
+        pnlDichVu.setBounds(10, 70, 1245, 670);
+        pnlDichVu.setOpaque(false);
+        add(pnlDichVu);
 
-        panel1.setLayout(null);
+        pnlDichVu.setLayout(null);
 
 //      Tên dịch vụ
-        JLabel labelTenDichVu = new JLabel("Tên dịch vụ:");
-        labelTenDichVu.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelTenDichVu.setBounds(150, 50, 150, 30);
-        labelTenDichVu.setForeground(Color.WHITE);
-        panel1.add(labelTenDichVu);
+        JLabel lblTenDichVu = new JLabel("Tên dịch vụ:");
+        lblTenDichVu.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblTenDichVu.setBounds(150, 50, 150, 30);
+        lblTenDichVu.setForeground(Color.WHITE);
+        pnlDichVu.add(lblTenDichVu);
 
-        textFieldTenDichVu = new JTextField();
-        textFieldTenDichVu.setBounds(270, 50, 250, 30);
-        textFieldTenDichVu.setColumns(10);
-        panel1.add(textFieldTenDichVu);
+        txtTenDichVu = new JTextField();
+        txtTenDichVu.setBounds(270, 50, 250, 30);
+        txtTenDichVu.setColumns(10);
+        pnlDichVu.add(txtTenDichVu);
 
         //      Loại dịch vụ
-        JLabel labelLDV = new JLabel("Loại dịch vụ:");
-        labelLDV.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelLDV.setBounds(150, 100, 150, 30);
-        labelLDV.setForeground(Color.WHITE);
-        panel1.add(labelLDV);
+        JLabel lblLoaiDichVu = new JLabel("Loại dịch vụ:");
+        lblLoaiDichVu.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblLoaiDichVu.setBounds(150, 100, 150, 30);
+        lblLoaiDichVu.setForeground(Color.WHITE);
+        pnlDichVu.add(lblLoaiDichVu);
 
-        comboBoxLDV = new JComboBox<String>();
-//        comboBoxLDV.addItem(" ");
-        comboBoxLDV.setBounds(270, 100, 250, 30);
-        Custom.setCustomComboBox(comboBoxLDV);
-        panel1.add(comboBoxLDV);
+        cmbLDV = new JComboBox<String>();
+        cmbLDV.setBounds(270, 100, 250, 30);
+        Custom.setCustomComboBox(cmbLDV);
+        pnlDichVu.add(cmbLDV);
 
         //      Giá bán
-        JLabel labelGiaBan = new JLabel("Giá bán:");
-        labelGiaBan.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelGiaBan.setBounds(680, 50, 150, 30);
-        labelGiaBan.setForeground(Color.WHITE);
-        panel1.add(labelGiaBan);
+        JLabel lblGiaBan = new JLabel("Giá bán:");
+        lblGiaBan.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblGiaBan.setBounds(680, 50, 150, 30);
+        lblGiaBan.setForeground(Color.WHITE);
+        pnlDichVu.add(lblGiaBan);
 
-        comboBoxGiaban = new JComboBox<String>();
-        comboBoxGiaban.addItem("Tất cả");
-        comboBoxGiaban.addItem("10.000 - 50.000");
-        comboBoxGiaban.addItem("50.000 - 100.000");
-        comboBoxGiaban.addItem("100.000 - 500.000");
-        comboBoxGiaban.setBounds(800, 50, 250, 30);
-        Custom.setCustomComboBox(comboBoxGiaban);
-        panel1.add(comboBoxGiaban);
-
-//        textFieldGiaBan = new JTextField();
-//        textFieldGiaBan.setBounds(800, 50, 250, 30);
-//        textFieldGiaBan.setColumns(10);
-//        panel1.add(textFieldGiaBan);
+        cmbGiaBan = new JComboBox<String>();
+        cmbGiaBan.addItem("Tất cả");
+        cmbGiaBan.addItem("10.000 - 50.000");
+        cmbGiaBan.addItem("50.000 - 100.000");
+        cmbGiaBan.addItem("100.000 - 500.000");
+        cmbGiaBan.setBounds(800, 50, 250, 30);
+        Custom.setCustomComboBox(cmbGiaBan);
+        pnlDichVu.add(cmbGiaBan);
 
 //        btn tìm kiếm
         btnTimKiem = new JButton("Tìm kiếm");
         btnTimKiem.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnTimKiem);
         btnTimKiem.setBounds(800, 100, 100, 30);
-        panel1.add(btnTimKiem);
+        pnlDichVu.add(btnTimKiem);
 
         //        btn làm mới
         btnlamMoi = new JButton("Làm mới");
         btnlamMoi.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnlamMoi);
         btnlamMoi.setBounds(950, 100, 100, 30);
-        panel1.add(btnlamMoi);
+        pnlDichVu.add(btnlamMoi);
 
 //      danh sách dịch vụ
-        JPanel panelDSDV = new JPanel();
-        panelDSDV.setLayout(null);
-        panelDSDV.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DANH SÁCH DỊCH VỤ",
+        JPanel pnlDSDV = new JPanel();
+        pnlDSDV.setLayout(null);
+        pnlDSDV.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DANH SÁCH DỊCH VỤ",
                 TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
-        panelDSDV.setBounds(5, 160, 1235, 505);
-        panelDSDV.setOpaque(false);
+        pnlDSDV.setBounds(5, 160, 1235, 505);
+        pnlDSDV.setOpaque(false);
 
         String[] colsDV = { "STT", "Mã dịch vụ", "Tên dịch vụ","Tên loại dịch vụ","Đơn vị tính","Số lượng tồn","Giá bán"};
-        modelTableDV = new DefaultTableModel(colsDV, 0) ;
-        JScrollPane scrollPaneDV;
+        modelTblDichVu = new DefaultTableModel(colsDV, 0) ;
+        JScrollPane scrDichVu;
 
-        tableDV = new JTable(modelTableDV);
-        tableDV.setFont(new Font("Arial", Font.BOLD, 14));
-        tableDV.setBackground(new Color(255, 255, 255, 0));
-        tableDV.setForeground(new Color(255, 255, 255));
-        tableDV.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-        tableDV.getTableHeader().setForeground(Color.BLUE);
-//        tableLDV.getTableHeader().setBackground(new Color(255, 255, 255));
-        Custom.getInstance().setCustomTable(tableDV);
+        tblDichVu = new JTable(modelTblDichVu);
+        tblDichVu.setFont(new Font("Arial", Font.BOLD, 14));
+        tblDichVu.setBackground(new Color(255, 255, 255, 0));
+        tblDichVu.setForeground(new Color(255, 255, 255));
+        tblDichVu.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
+        tblDichVu.getTableHeader().setForeground(Color.BLUE);
+        Custom.getInstance().setCustomTable(tblDichVu);
 
-        panelDSDV.add(scrollPaneDV = new JScrollPane(tableDV,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
+        pnlDSDV.add(scrDichVu = new JScrollPane(tblDichVu,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
                 BorderLayout.CENTER);
-        scrollPaneDV.setBounds(10,20,1220,480);
-        scrollPaneDV.setOpaque(false);
-        scrollPaneDV.getViewport().setOpaque(false);
-        scrollPaneDV.getViewport().setBackground(Color.WHITE);
-        panel1.add(panelDSDV);
+        scrDichVu.setBounds(10,20,1220,480);
+        scrDichVu.setOpaque(false);
+        scrDichVu.getViewport().setOpaque(false);
+        scrDichVu.getViewport().setBackground(Color.WHITE);
+        pnlDichVu.add(pnlDSDV);
         //
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/images/background.png"));
-        backgroundLabel = new JLabel(backgroundImage);
-        backgroundLabel.setBounds(0, 0, getWidth(), getHeight());
-        add(backgroundLabel);
+        lblBackGround = new JLabel(backgroundImage);
+        lblBackGround.setBounds(0, 0, getWidth(), getHeight());
+        add(lblBackGround);
 
         btnTimKiem.addActionListener(this);
         btnlamMoi.addActionListener(this);
@@ -187,54 +192,50 @@ public class SearchingService_UI extends JPanel implements ActionListener, Mouse
         loadCboService();
         reSizeColumnTableService();
 
-        comboBoxLDV.addActionListener(new ActionListener() {
+        cmbLDV.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String selectedLoaiDichVu = (String) comboBoxLDV.getSelectedItem();
-                textFieldTenDichVu.setText("");
-//                textFieldGiaBan.setText("");
-                comboBoxGiaban.setSelectedIndex(0);
-                modelTableDV.setRowCount(0);
+                String selectedLoaiDichVu = (String) cmbLDV.getSelectedItem();
+                txtTenDichVu.setText("");
+                cmbGiaBan.setSelectedIndex(0);
+                modelTblDichVu.setRowCount(0);
                 int i=1;
                 for (Service dv : serviceDAO.getAllDichVu()) {
                     if (selectedLoaiDichVu.equalsIgnoreCase("Tất cả") ||
                             selectedLoaiDichVu.equalsIgnoreCase(dv.getMaLoaiDichVu().getTenLoaiDichVu())) {
                         Object[] rowData = {i, dv.getMaDichVu(), dv.getTenDichVu(),dv.getMaLoaiDichVu().getTenLoaiDichVu(), dv.getDonViTinh(), dv.getSoLuongTon(), df.format(dv.getGiaBan())};
-                        modelTableDV.addRow(rowData);
+                        modelTblDichVu.addRow(rowData);
                     }
                     i++;
                 }
             }
         });
 
-        comboBoxGiaban.addActionListener(new ActionListener() {
+        cmbGiaBan.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                String selectedLoaiDichVu = (String) comboBoxLDV.getSelectedItem();
-                textFieldTenDichVu.setText("");
-//                textFieldGiaBan.setText("");
-//                comboBoxLDV.setSelectedIndex(0);
-                modelTableDV.setRowCount(0);
+                txtTenDichVu.setText("");
+                modelTblDichVu.setRowCount(0);
                 int i=1;
                 for (Service dv : serviceDAO.getAllDichVu()) {
-                    if (comboBoxGiaban.getSelectedIndex()==0){
+                    if (cmbGiaBan.getSelectedIndex()==0){
                         Object[] rowData = {i, dv.getMaDichVu(), dv.getTenDichVu(),dv.getMaLoaiDichVu().getTenLoaiDichVu(), dv.getDonViTinh(), dv.getSoLuongTon(), df.format(dv.getGiaBan())};
-                        modelTableDV.addRow(rowData);
+                        modelTblDichVu.addRow(rowData);
 
-                    }else if (comboBoxGiaban.getSelectedIndex()==1){
+                    }else if (cmbGiaBan.getSelectedIndex()==1){
                         if (dv.getGiaBan()>=10000 && dv.getGiaBan()<=50000){
                             Object[] rowData = {i, dv.getMaDichVu(), dv.getTenDichVu(),dv.getMaLoaiDichVu().getTenLoaiDichVu(), dv.getDonViTinh(), dv.getSoLuongTon(), df.format(dv.getGiaBan())};
-                            modelTableDV.addRow(rowData);
+                            modelTblDichVu.addRow(rowData);
                         }
-                    }else if (comboBoxGiaban.getSelectedIndex()==2){
+                    }else if (cmbGiaBan.getSelectedIndex()==2){
                         if (dv.getGiaBan()>=50000 && dv.getGiaBan()<=100000){
                             Object[] rowData = {i, dv.getMaDichVu(), dv.getTenDichVu(),dv.getMaLoaiDichVu().getTenLoaiDichVu(), dv.getDonViTinh(), dv.getSoLuongTon(), df.format(dv.getGiaBan())};
-                            modelTableDV.addRow(rowData);
+                            modelTblDichVu.addRow(rowData);
                         }
-                    }else if (comboBoxGiaban.getSelectedIndex()==3){
+                    }else if (cmbGiaBan.getSelectedIndex()==3){
                         if (dv.getGiaBan()>=100000 && dv.getGiaBan()<=500000){
                             Object[] rowData = {i, dv.getMaDichVu(), dv.getTenDichVu(),dv.getMaLoaiDichVu().getTenLoaiDichVu(), dv.getDonViTinh(), dv.getSoLuongTon(), df.format(dv.getGiaBan())};
-                            modelTableDV.addRow(rowData);
+                            modelTblDichVu.addRow(rowData);
                         }
                     }
                     i++;
@@ -243,101 +244,73 @@ public class SearchingService_UI extends JPanel implements ActionListener, Mouse
         });
     }
 
+    /**
+     * Thay đổi kích thước cột
+     */
     private void reSizeColumnTableService(){
-        TableColumnModel tblModel = tableDV.getColumnModel();
-
+        TableColumnModel tblModel = tblDichVu.getColumnModel();
         tblModel.getColumn(0).setPreferredWidth(20);
         tblModel.getColumn(1).setPreferredWidth(40);
         tblModel.getColumn(2).setPreferredWidth(130);
         tblModel.getColumn(3).setPreferredWidth(100);
     }
 
+    /**
+     * load danh sách dịch vụ vào modelTblDichVu
+     */
     private void loadSearchingService(){
         java.util.List<Service> list = serviceDAO.getAllDichVu();
         int i=1;
         for (Service service : list){
-            modelTableDV.addRow(new Object[]{i,service.getMaDichVu(),service.getTenDichVu(),service.getMaLoaiDichVu().getTenLoaiDichVu(),service.getDonViTinh(),service.getSoLuongTon(),df.format(service.getGiaBan())});
+            modelTblDichVu.addRow(new Object[]{i,service.getMaDichVu(),service.getTenDichVu(),service.getMaLoaiDichVu().getTenLoaiDichVu(),service.getDonViTinh(),service.getSoLuongTon(),df.format(service.getGiaBan())});
             i++;
         }
     }
-
+    /**
+     * tải danh sách loại dịch vụ vào combobox
+     */
     private void loadCboService() {
         java.util.List<TypeOfService> dataList = typeOfServiceDAO.getAllLoaiDichVu();
-        comboBoxLDV.addItem("Tất cả");
+        cmbLDV.addItem("Tất cả");
         for (TypeOfService serviceType : dataList) {
-            comboBoxLDV.addItem(serviceType.getTenLoaiDichVu());
+            cmbLDV.addItem(serviceType.getTenLoaiDichVu());
         }
     }
+    /**
+     * Gán thời gian hiện tại cho label lblTime
+     */
     private void updateTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String time = sdf.format(new Date());
-        timeLabel.setText(time);
+        lblTime.setText(time);
     }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         if (o.equals(btnTimKiem)) {
-            String txtTenDV = textFieldTenDichVu.getText();
+            String txtTenDV = txtTenDichVu.getText();
             ArrayList<Service> services2 = serviceDAO.getServiceByName(txtTenDV);
-//            if (!textFieldGiaBan.getText().trim().equals("") && !textFieldTenDichVu.getText().trim().equals("")) {
-//                modelTableDV.getDataVector().removeAllElements();
-//                int i = 1;
-//                double gia = Double.parseDouble(textFieldGiaBan.getText());
-//                ArrayList<Service> services3 = serviceDAO.getDichVuTheoGia(gia);
-//                if (services3.size() != 0 && services2.size() != 0) {
-//                    for (Service service : services3) {
-//                        for (Service s : services2) {
-//                            if (s.getGiaBan() == service.getGiaBan()) {
-//                                modelTableDV.addRow(new Object[]{i, s.getMaDichVu(), s.getTenDichVu(), s.getMaLoaiDichVu().getTenLoaiDichVu(), s.getDonViTinh(), s.getSoLuongTon(), df.format(s.getGiaBan())});
-//                                i++;
-//                            }
-//                        }
-//                        break;
-//                    }
-//                } else {
-//                    JOptionPane.showMessageDialog(this, "KHÔNG TÌM THẤY!!!");
-//                }
-//            } else {
-                if (!textFieldTenDichVu.getText().trim().equals("")) {
-                    modelTableDV.getDataVector().removeAllElements();
+                if (!txtTenDichVu.getText().trim().equals("")) {
+                    modelTblDichVu.getDataVector().removeAllElements();
                     int i = 1;
                     if (services2.size() != 0) {
                         for (Service service : services2) {
-                            modelTableDV.addRow(new Object[]{i, service.getMaDichVu(), service.getTenDichVu(), service.getMaLoaiDichVu().getTenLoaiDichVu(), service.getDonViTinh(), service.getSoLuongTon(), df.format(service.getGiaBan())});
+                            modelTblDichVu.addRow(new Object[]{i, service.getMaDichVu(), service.getTenDichVu(), service.getMaLoaiDichVu().getTenLoaiDichVu(), service.getDonViTinh(), service.getSoLuongTon(), df.format(service.getGiaBan())});
                             i++;
                         }
                     } else {
                         JOptionPane.showMessageDialog(this, "KHÔNG TÌM THẤY!!!");
-                        textFieldTenDichVu.selectAll();
-                        textFieldTenDichVu.requestFocus();
+                        txtTenDichVu.selectAll();
+                        txtTenDichVu.requestFocus();
                     }
-//                }
-//                else if (!textFieldGiaBan.getText().trim().equals("")) {
-//                    modelTableDV.getDataVector().removeAllElements();
-//                    double gia = Double.parseDouble(textFieldGiaBan.getText());
-//                    ArrayList<Service> services3 = serviceDAO.getDichVuTheoGia(gia);
-//                    int i = 1;
-//                    if (services3.size() != 0) {
-//                        for (Service service : services3) {
-//                            modelTableDV.addRow(new Object[]{i, service.getMaDichVu(), service.getTenDichVu(), service.getMaLoaiDichVu().getTenLoaiDichVu(), service.getDonViTinh(), service.getSoLuongTon(), df.format(service.getGiaBan())});
-//                            i++;
-//                        }
-//                    } else {
-//                        JOptionPane.showMessageDialog(this, "KHÔNG TÌM THẤY!!!");
-//                        textFieldGiaBan.selectAll();
-//                        textFieldGiaBan.requestFocus();
-//
-//                    }
-//                }
             }
 
         }else if(o.equals(btnlamMoi)){
-            textFieldTenDichVu.setText("");
+            txtTenDichVu.setText("");
 //            textFieldGiaBan.setText("");
-            comboBoxGiaban.setSelectedIndex(0);
-            comboBoxLDV.setSelectedIndex(0);
-            modelTableDV.getDataVector().removeAllElements();
+            cmbGiaBan.setSelectedIndex(0);
+            cmbLDV.setSelectedIndex(0);
+            modelTblDichVu.getDataVector().removeAllElements();
             loadSearchingService();
         }
 

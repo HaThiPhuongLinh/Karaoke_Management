@@ -23,15 +23,27 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * Sử dụng để quản lí dịch vụ
+ * <p>
+ *     Người tham gia thiết kế: Nguyễn Quang Duy
+ * </p>
+ * ngày tạo: 12/10/2023
+ * <p>
+ *     Lần cập nhật cuối: 6/11/2023
+ * </p>
+ * Nội dung cập nhật: thêm javadoc
+ */
+
 public class Service_UI extends JPanel implements ActionListener, MouseListener{
-    private JTable tableDV;
-    private JComboBox<String> comboBoxLDV;
-    private JTextField textFieldDonViTinh;
-    private JButton btnThem,btnXoa,btnSua,btnlamMoi;
-    private JTextField textFieldMaDichVu,textFieldTenDichVu,textFieldThongBao;
-    private JTextField textFieldGiaBan, textFieldSLT;
-    private DefaultTableModel modelTableDV;
-    private JLabel backgroundLabel,timeLabel;
+    private JTable tblDichVu;
+    private JComboBox<String> cmbLoaiDichVu;
+    private JTextField txtDonViTinh;
+    private JButton btnThem,btnXoa,btnSua, btnLamMoi;
+    private JTextField txtMaDichVu, txtTenDichVu, txtThongBao;
+    private JTextField txtGiaBan, txtSoLuongTon;
+    private DefaultTableModel modelTblDichVu;
+    private JLabel lblBackGround, lblTime;
     private ServiceDAO serviceDAO;
     private TypeOfServiceDAO typeOfServiceDAO;
     private DecimalFormat df = new DecimalFormat("#,###.##");
@@ -52,24 +64,24 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
         typeOfServiceDAO = new TypeOfServiceDAO();
 
         //phan viet code
-        JLabel headerLabel = new JLabel("QUẢN LÝ DỊCH VỤ");
-        headerLabel.setBounds(570, 10, 1175, 40);
-        headerLabel.setFont(new Font("Arial", Font.BOLD, 25));
-        headerLabel.setForeground(Color.WHITE);
-        Component add = add(headerLabel);
+        JLabel lblLabel = new JLabel("QUẢN LÝ DỊCH VỤ");
+        lblLabel.setBounds(570, 10, 1175, 40);
+        lblLabel.setFont(new Font("Arial", Font.BOLD, 25));
+        lblLabel.setForeground(Color.WHITE);
+        Component add = add(lblLabel);
 
-        JPanel timeNow = new JPanel();
-        timeNow.setBorder(new TitledBorder(
+        JPanel pnlTimeNow = new JPanel();
+        pnlTimeNow.setBorder(new TitledBorder(
                 new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "",
                 TitledBorder.LEADING, TitledBorder.TOP));
-        timeNow.setBounds(12, 10, 300, 50);
-        timeNow.setOpaque(false);
-        add(timeNow);
+        pnlTimeNow.setBounds(12, 10, 300, 50);
+        pnlTimeNow.setOpaque(false);
+        add(pnlTimeNow);
 
-        timeLabel = new JLabel();
-        timeLabel.setFont(new Font("Arial", Font.BOLD, 33));
-        timeLabel.setForeground(Color.WHITE);
-        timeNow.add(timeLabel);
+        lblTime = new JLabel();
+        lblTime.setFont(new Font("Arial", Font.BOLD, 33));
+        lblTime.setForeground(Color.WHITE);
+        pnlTimeNow.add(lblTime);
         Timer timer = new Timer(10, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -78,238 +90,269 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
         });
         timer.start();
 
-        JPanel panel1 =  new JPanel();
-        panel1.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DỊCH VỤ",
+        JPanel pnlDichVu =  new JPanel();
+        pnlDichVu.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DỊCH VỤ",
                 TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
-        panel1.setBounds(10, 70, 1245, 670);
-        panel1.setOpaque(false);
-        add(panel1);
+        pnlDichVu.setBounds(10, 70, 1245, 670);
+        pnlDichVu.setOpaque(false);
+        add(pnlDichVu);
 
-        panel1.setLayout(null);
+        pnlDichVu.setLayout(null);
 
         //        Mã dịch vụ
-        JLabel labelMaDichVu = new JLabel("Mã dịch vụ:");
-        labelMaDichVu.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelMaDichVu.setBounds(90, 50, 150, 30);
-        labelMaDichVu.setForeground(Color.WHITE);
-        panel1.add(labelMaDichVu);
+        JLabel lblMaDichVu = new JLabel("Mã dịch vụ:");
+        lblMaDichVu.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblMaDichVu.setBounds(90, 50, 150, 30);
+        lblMaDichVu.setForeground(Color.WHITE);
+        pnlDichVu.add(lblMaDichVu);
 
-        textFieldMaDichVu = new JTextField();
-        textFieldMaDichVu.setBounds(190, 50, 170, 30);
-        textFieldMaDichVu.setColumns(10);
-        panel1.add(textFieldMaDichVu);
+        txtMaDichVu = new JTextField();
+        txtMaDichVu.setBounds(190, 50, 170, 30);
+        txtMaDichVu.setColumns(10);
+        pnlDichVu.add(txtMaDichVu);
 
 //      Tên dịch vụ
-        JLabel labelTenDichVu = new JLabel("Tên dịch vụ:");
-        labelTenDichVu.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelTenDichVu.setBounds(90, 100, 150, 30);
-        labelTenDichVu.setForeground(Color.WHITE);
-        panel1.add(labelTenDichVu);
+        JLabel lblTenDichVu = new JLabel("Tên dịch vụ:");
+        lblTenDichVu.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblTenDichVu.setBounds(90, 100, 150, 30);
+        lblTenDichVu.setForeground(Color.WHITE);
+        pnlDichVu.add(lblTenDichVu);
 
-        textFieldTenDichVu = new JTextField();
-        textFieldTenDichVu.setBounds(190, 100, 170, 30);
-        textFieldTenDichVu.setColumns(10);
-        panel1.add(textFieldTenDichVu);
+        txtTenDichVu = new JTextField();
+        txtTenDichVu.setBounds(190, 100, 170, 30);
+        txtTenDichVu.setColumns(10);
+        pnlDichVu.add(txtTenDichVu);
         //      Loại dịch vụ
-        JLabel labelLDV = new JLabel("Loại dịch vụ:");
-        labelLDV.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelLDV.setBounds(450, 50, 150, 30);
-        labelLDV.setForeground(Color.WHITE);
-        panel1.add(labelLDV);
+        JLabel lblLoaiDichVu = new JLabel("Loại dịch vụ:");
+        lblLoaiDichVu.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblLoaiDichVu.setBounds(450, 50, 150, 30);
+        lblLoaiDichVu.setForeground(Color.WHITE);
+        pnlDichVu.add(lblLoaiDichVu);
 
-        comboBoxLDV = new JComboBox<String>();
-        comboBoxLDV.addItem(" ");
-        comboBoxLDV.setBounds(550, 50, 170, 30);
-        Custom.setCustomComboBox(comboBoxLDV);
-        panel1.add(comboBoxLDV);
+        cmbLoaiDichVu = new JComboBox<String>();
+        cmbLoaiDichVu.addItem(" ");
+        cmbLoaiDichVu.setBounds(550, 50, 170, 30);
+        Custom.setCustomComboBox(cmbLoaiDichVu);
+        pnlDichVu.add(cmbLoaiDichVu);
 
         //      Đơn vị tính
-        JLabel labelDonViTinh = new JLabel("Đơn vị tính:");
-        labelDonViTinh.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelDonViTinh.setBounds(450, 100, 150, 30);
-        labelDonViTinh.setForeground(Color.WHITE);
-        panel1.add(labelDonViTinh);
+        JLabel lblDonViTinh = new JLabel("Đơn vị tính:");
+        lblDonViTinh.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblDonViTinh.setBounds(450, 100, 150, 30);
+        lblDonViTinh.setForeground(Color.WHITE);
+        pnlDichVu.add(lblDonViTinh);
 
-        textFieldDonViTinh = new JTextField();
-        textFieldDonViTinh.setBounds(550, 100, 170, 30);
-        textFieldDonViTinh.setColumns(10);
-        panel1.add(textFieldDonViTinh);
+        txtDonViTinh = new JTextField();
+        txtDonViTinh.setBounds(550, 100, 170, 30);
+        txtDonViTinh.setColumns(10);
+        pnlDichVu.add(txtDonViTinh);
 
         //      Số lượng tồn
-        JLabel labelSoLuongTon = new JLabel("Số lượng tồn:");
-        labelSoLuongTon.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelSoLuongTon.setBounds(830, 50, 150, 30);
-        labelSoLuongTon.setForeground(Color.WHITE);
-        panel1.add(labelSoLuongTon);
+        JLabel lblSoLuongTon = new JLabel("Số lượng tồn:");
+        lblSoLuongTon.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblSoLuongTon.setBounds(830, 50, 150, 30);
+        lblSoLuongTon.setForeground(Color.WHITE);
+        pnlDichVu.add(lblSoLuongTon);
 
-        textFieldSLT = new JTextField();
-        textFieldSLT.setBounds(950,50,170,30);
-//        textFieldSLT.setColumns(10);
-        panel1.add(textFieldSLT);
+        txtSoLuongTon = new JTextField();
+        txtSoLuongTon.setBounds(950,50,170,30);
+        pnlDichVu.add(txtSoLuongTon);
 
         //      Giá bán
-        JLabel labelGiaBan = new JLabel("Giá bán:");
-        labelGiaBan.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelGiaBan.setBounds(830, 100, 150 , 30);
-        labelGiaBan.setForeground(Color.WHITE);
-        panel1.add(labelGiaBan);
+        JLabel lblGiaBan = new JLabel("Giá bán:");
+        lblGiaBan.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblGiaBan.setBounds(830, 100, 150 , 30);
+        lblGiaBan.setForeground(Color.WHITE);
+        pnlDichVu.add(lblGiaBan);
 
-        textFieldGiaBan = new JTextField();
-        textFieldGiaBan.setBounds(950,100,170,30);
-//        textFieldGiaBan.setColumns(10);
-        panel1.add(textFieldGiaBan);
+        txtGiaBan = new JTextField();
+        txtGiaBan.setBounds(950,100,170,30);
+        pnlDichVu.add(txtGiaBan);
 
         //Thông báo
-        textFieldThongBao = new JTextField();
-        textFieldThongBao.setFont(new Font("Arial",Font.BOLD,13));
-        textFieldThongBao.setForeground(Color.RED);
-        textFieldThongBao.setBounds(30, 160, 450 , 30);
-        textFieldThongBao.setColumns(10);
-        panel1.add(textFieldThongBao);
+        txtThongBao = new JTextField();
+        txtThongBao.setFont(new Font("Arial",Font.BOLD,13));
+        txtThongBao.setForeground(Color.RED);
+        txtThongBao.setBounds(30, 160, 450 , 30);
+        txtThongBao.setColumns(10);
+        pnlDichVu.add(txtThongBao);
 
 //        btn thêm
         btnThem = new JButton("Thêm");
         btnThem.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnThem);
         btnThem.setBounds(550, 160, 100, 30);
-        panel1.add(btnThem);
+        pnlDichVu.add(btnThem);
 
         //        btn Xóa
         btnXoa = new JButton("Xóa");
         btnXoa.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnXoa);
         btnXoa.setBounds(700, 160, 100, 30);
-        panel1.add(btnXoa);
+        pnlDichVu.add(btnXoa);
 
         //        btn sửa
         btnSua = new JButton("Sửa");
         btnSua.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnSua);
         btnSua.setBounds(850, 160, 100, 30);
-        panel1.add(btnSua);
+        pnlDichVu.add(btnSua);
 
         //        btn làm mới
-        btnlamMoi = new JButton("Làm mới");
-        btnlamMoi.setFont(new Font("Arial", Font.BOLD, 14));
-        Custom.setCustomBtn(btnlamMoi);
-        btnlamMoi.setBounds(1000, 160, 100, 30);
-        panel1.add(btnlamMoi);
+        btnLamMoi = new JButton("Làm mới");
+        btnLamMoi.setFont(new Font("Arial", Font.BOLD, 14));
+        Custom.setCustomBtn(btnLamMoi);
+        btnLamMoi.setBounds(1000, 160, 100, 30);
+        pnlDichVu.add(btnLamMoi);
 
 //      danh sách dịch vụ
-        JPanel panelDSDV = new JPanel();
-        panelDSDV.setLayout(null);
-        panelDSDV.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DANH SÁCH DỊCH VỤ",
+        JPanel pnlDSDV = new JPanel();
+        pnlDSDV.setLayout(null);
+        pnlDSDV.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DANH SÁCH DỊCH VỤ",
                 TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
-        panelDSDV.setBounds(5, 210, 1235, 455);
-        panelDSDV.setOpaque(false);
+        pnlDSDV.setBounds(5, 210, 1235, 455);
+        pnlDSDV.setOpaque(false);
 
         String[] colsDV = { "STT", "Mã dịch vụ", "Tên dịch vụ","Tên loại dịch vụ","Đơn vị tính","Số lượng tồn","Giá bán"};
-        modelTableDV = new DefaultTableModel(colsDV, 0) ;
-        JScrollPane scrollPaneDV;
+        modelTblDichVu = new DefaultTableModel(colsDV, 0) ;
+        JScrollPane scrDichVu;
 
-        tableDV = new JTable(modelTableDV);
-        tableDV.setFont(new Font("Arial", Font.BOLD, 14));
-        tableDV.setBackground(new Color(255, 255, 255, 0));
-        tableDV.setForeground(new Color(255, 255, 255));
-        tableDV.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-        tableDV.getTableHeader().setForeground(Color.BLUE);
-//        tableLDV.getTableHeader().setBackground(new Color(255, 255, 255));
-        Custom.getInstance().setCustomTable(tableDV);
+        tblDichVu = new JTable(modelTblDichVu);
+        tblDichVu.setFont(new Font("Arial", Font.BOLD, 14));
+        tblDichVu.setBackground(new Color(255, 255, 255, 0));
+        tblDichVu.setForeground(new Color(255, 255, 255));
+        tblDichVu.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
+        tblDichVu.getTableHeader().setForeground(Color.BLUE);
+        Custom.getInstance().setCustomTable(tblDichVu);
 
-        panelDSDV.add(scrollPaneDV = new JScrollPane(tableDV,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
+        pnlDSDV.add(scrDichVu = new JScrollPane(tblDichVu,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
                 BorderLayout.CENTER);
-        scrollPaneDV.setBounds(10,20,1220,425);
-        scrollPaneDV.setOpaque(false);
-        scrollPaneDV.getViewport().setOpaque(false);
-        scrollPaneDV.getViewport().setBackground(Color.WHITE);
-        panel1.add(panelDSDV);
+        scrDichVu.setBounds(10,20,1220,425);
+        scrDichVu.setOpaque(false);
+        scrDichVu.getViewport().setOpaque(false);
+        scrDichVu.getViewport().setBackground(Color.WHITE);
+        pnlDichVu.add(pnlDSDV);
         //
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/images/background.png"));
-        backgroundLabel = new JLabel(backgroundImage);
-        backgroundLabel.setBounds(0, 0, getWidth(), getHeight());
-        add(backgroundLabel);
+        lblBackGround = new JLabel(backgroundImage);
+        lblBackGround.setBounds(0, 0, getWidth(), getHeight());
+        add(lblBackGround);
 
         loadService();
         loadCboService();
-        comboBoxLDV.addActionListener(this);
-        tableDV.addMouseListener(this);
+        cmbLoaiDichVu.addActionListener(this);
+        tblDichVu.addMouseListener(this);
 
         btnThem.addActionListener(this);
-        btnlamMoi.addActionListener(this);
+        btnLamMoi.addActionListener(this);
         btnSua.addActionListener(this);
         btnXoa.addActionListener(this);
 
-        textFieldMaDichVu.setEditable(false);
+        txtMaDichVu.setEditable(false);
         reSizeColumnTableService();
 
     }
-    private void reSizeColumnTableService(){
-        TableColumnModel tblModel = tableDV.getColumnModel();
 
+    /**
+     * Thay đổi kích thước cột
+     */
+    private void reSizeColumnTableService(){
+        TableColumnModel tblModel = tblDichVu.getColumnModel();
         tblModel.getColumn(0).setPreferredWidth(20);
         tblModel.getColumn(1).setPreferredWidth(40);
         tblModel.getColumn(2).setPreferredWidth(130);
         tblModel.getColumn(3).setPreferredWidth(100);
     }
 
+    /**
+     * Load thông tin dịch vụ lên tblDichVu
+     */
     private void loadService(){
         java.util.List<Service> list = serviceDAO.getAllDichVu();
         int i=1;
         for (Service service : list){
-            modelTableDV.addRow(new Object[]{i,service.getMaDichVu(),service.getTenDichVu(),service.getMaLoaiDichVu().getTenLoaiDichVu(),service.getDonViTinh(),service.getSoLuongTon(),df.format(service.getGiaBan())});
+            modelTblDichVu.addRow(new Object[]{i,service.getMaDichVu(),service.getTenDichVu(),service.getMaLoaiDichVu().getTenLoaiDichVu(),service.getDonViTinh(),service.getSoLuongTon(),df.format(service.getGiaBan())});
             i++;
         }
     }
+
+    /**
+     * Gán thời gian hiện tại cho label lblTime
+     */
     private void updateTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String time = sdf.format(new Date());
-        timeLabel.setText(time);
+        lblTime.setText(time);
     }
+
+    /**
+     * Load các loại dịch vụ vào cmbLoaiDichVu
+     */
 
     private void loadCboService() {
         java.util.List<TypeOfService> dataList = typeOfServiceDAO.getAllLoaiDichVu();
         for (TypeOfService serviceType : dataList) {
-            comboBoxLDV.addItem(serviceType.getTenLoaiDichVu());
+            cmbLoaiDichVu.addItem(serviceType.getTenLoaiDichVu());
         }
     }
 
-    private void showMessage(JTextField txt, String message) {
-        txt.requestFocus();
-        textFieldThongBao.setText(message);
+    /**
+     * Hiển thị thông báo khi kiểm tra thông tin trong form
+     * @param txtTenDichVu
+     * @param message
+     */
+    private void showMessage(JTextField txtTenDichVu, String message) {
+        txtTenDichVu.requestFocus();
+        txtThongBao.setText(message);
     }
 
+    /**
+     * Kiểm tra thông tin trong form
+     * @return {@code boolean}: kết quả trả về của quá trình kiểm tra thông tin
+     *          <ul>
+     *              <li>Nếu hợp lệ thì trả về {@code true}</li>
+     *              <li>Nếu không hợp lệ thì trả về {@code false}</li>
+     *          </ul>
+     */
     private boolean validData() {
-        String ten = textFieldTenDichVu.getText().trim();
-        String donViTinh = textFieldDonViTinh.getText().trim();
-        String soLuongTon = textFieldSLT.getText().toString();
-        String giaBan = textFieldGiaBan.getText().toString();
+        String ten = txtTenDichVu.getText().trim();
+        String donViTinh = txtDonViTinh.getText().trim();
+        String soLuongTon = txtSoLuongTon.getText();
+        String giaBan = txtGiaBan.getText();
 
         if (!((ten.length() > 0) && ten.matches("^[A-Za-z0-9À-ỹ ]+"))) {
-            showMessage(textFieldTenDichVu,"Tên dịch vụ không được chứa kí tự đặc biệt");
+            showMessage(txtTenDichVu,"Tên dịch vụ không được chứa kí tự đặc biệt");
             return false;
         }
         if (!((donViTinh.length()) > 0 && donViTinh.matches("^[A-Za-zÀ-ỹ ]+"))) {
-            showMessage(textFieldDonViTinh,"ĐVT không được chứa số và kí tự đặc biệt");
+            showMessage(txtDonViTinh,"Đơn vị tính không được chứa số và kí tự đặc biệt");
             return false;
         }
         if (!((soLuongTon.length()) > 0 && soLuongTon.matches("^[1-9]\\d*"))) {
-            showMessage(textFieldSLT,"Số lượng tồn phải lớn hơn 0");
+            showMessage(txtSoLuongTon,"Số lượng tồn phải là số và lớn hơn 0");
             return false;
         }
         if (!((giaBan.length()) > 0 && giaBan.matches("^[1-9]\\d*"))) {
-            showMessage(textFieldGiaBan,"Giá bán phải lớn hơn 0");
+            showMessage(txtGiaBan,"Giá bán phải là số và lớn hơn 0");
             return false;
         }
         return true;
     }
 
-    public String laymaLDV(){
-        String tenLDV = comboBoxLDV.getSelectedItem().toString().trim();
+    /**
+     * Lấy mã loại dịch vụ
+     * @return mã loại dịch vụ
+     */
+    public String getMaLoaiDichVu(){
+        String tenLDV = cmbLoaiDichVu.getSelectedItem().toString().trim();
         String maLDV = typeOfServiceDAO.getServiceCodeByName(tenLDV);
         return maLDV;
     }
-
-    public String laymaDV(){
+    /**
+     * Lấy mã dịch vụ
+     * @return mã dịch vụ
+     */
+    public String getMaDichVu(){
         String MaDV = serviceDAO.generateNextServiceId();
         return MaDV;
     }
@@ -317,83 +360,83 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         if (o.equals(btnThem)) {
-            if (textFieldTenDichVu.getText().equals("") || textFieldSLT.getText().equals("") || textFieldDonViTinh.getText().equals("") || textFieldGiaBan.getText().equals("") || comboBoxLDV.getSelectedIndex() == 0) {
+            if (txtTenDichVu.getText().equals("") || txtSoLuongTon.getText().equals("") || txtDonViTinh.getText().equals("") || txtGiaBan.getText().equals("") || cmbLoaiDichVu.getSelectedIndex() == 0) {
                 JOptionPane.showMessageDialog(this, "Bạn phải nhập thông tin dịch vụ");
             } else {
                 if (validData()) {
-                    String MaDV = laymaDV();
-                    String maLDV = laymaLDV();
-                    String tenDv = textFieldTenDichVu.getText().trim();
-                    String donViTinh = textFieldDonViTinh.getText().trim();
-                    int soLuongTon = Integer.parseInt(textFieldSLT.getText().toString());
-                    double giaBan = Double.parseDouble(textFieldGiaBan.getText().toString());
+                    String MaDV = getMaDichVu();
+                    String maLDV = getMaLoaiDichVu();
+                    String tenDv = txtTenDichVu.getText().trim();
+                    String donViTinh = txtDonViTinh.getText().trim();
+                    int soLuongTon = Integer.parseInt(txtSoLuongTon.getText().toString());
+                    double giaBan = Double.parseDouble(txtGiaBan.getText().toString());
 
                     Service service = new Service(MaDV, tenDv, new TypeOfService(maLDV), donViTinh, soLuongTon, giaBan);
                     if (serviceDAO.insert(service)) {
-                        modelTableDV.getDataVector().removeAllElements();
+                        modelTblDichVu.getDataVector().removeAllElements();
                         loadService();
-                        lamMoi();
+                        reset();
                         JOptionPane.showMessageDialog(this,"Thêm dịch vụ thành công");
                     }
                 }
 
             }
-        } else if (o.equals(btnlamMoi)) {
-            lamMoi();
-            modelTableDV.getDataVector().removeAllElements();
+        } else if (o.equals(btnLamMoi)) {
+            reset();
+            modelTblDichVu.getDataVector().removeAllElements();
             loadService();
         } else if (o.equals(btnXoa)) {
-            int row = tableDV.getSelectedRow();
+            int row = tblDichVu.getSelectedRow();
             if (row == -1) {
                 JOptionPane.showMessageDialog(this, "Bạn phải chọn dòng cần xóa");
             } else {
-                String maLDV = laymaLDV();
-                String MaDV = textFieldMaDichVu.getText().trim();
-                String tenDv = textFieldTenDichVu.getText().trim();
-                String donViTinh = textFieldDonViTinh.getText().trim();
-                int soLuongTon = Integer.parseInt(textFieldSLT.getText().toString());
-                double giaBan = Double.parseDouble(textFieldGiaBan.getText().toString());
+                String maLDV = getMaLoaiDichVu();
+                String MaDV = txtMaDichVu.getText().trim();
+                String tenDv = txtTenDichVu.getText().trim();
+                String donViTinh = txtDonViTinh.getText().trim();
+                int soLuongTon = Integer.parseInt(txtSoLuongTon.getText());
+                double giaBan = Double.parseDouble(txtGiaBan.getText());
 
                 Service service = new Service(MaDV, tenDv, new TypeOfService(maLDV), donViTinh, soLuongTon, giaBan);
                 int ans = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa?", "Cảnh báo",
                         JOptionPane.YES_NO_OPTION);
                 if (ans == JOptionPane.YES_OPTION) {
                     serviceDAO.delete(service.getMaDichVu());
-                    lamMoi();
-                    modelTableDV.removeRow(row);
-                    modelTableDV.getDataVector().removeAllElements();
+                    reset();
+                    modelTblDichVu.removeRow(row);
+                    modelTblDichVu.getDataVector().removeAllElements();
                     loadService();
                     JOptionPane.showMessageDialog(this,"Xóa thành công");
                 }
             }
         } else if (o.equals(btnSua)) {
-            int row = tableDV.getSelectedRow();
+            int row = tblDichVu.getSelectedRow();
             if (row > 0) {
                 if (validData()) {
-                    String tenLDV = comboBoxLDV.getSelectedItem().toString().trim();
+                    String tenLDV = cmbLoaiDichVu.getSelectedItem().toString().trim();
                     ArrayList<TypeOfService> typeOfServices = typeOfServiceDAO.getTypeOfServiceByName(tenLDV);
                     String s = "";
                     for (TypeOfService service : typeOfServices) {
                         s += service.getMaLoaiDichVu();
                     }
 
-                    String MaDV = textFieldMaDichVu.getText().trim();
-                    String tenDv = textFieldTenDichVu.getText().trim();
-                    String donViTinh = textFieldDonViTinh.getText().trim();
-                    int soLuongTon = Integer.parseInt(textFieldSLT.getText().toString());
-                    double giaBan = Double.parseDouble(textFieldGiaBan.getText().toString());
+                    String MaDV = txtMaDichVu.getText().trim();
+                    String tenDv = txtTenDichVu.getText().trim();
+                    String donViTinh = txtDonViTinh.getText().trim();
+                    int soLuongTon = Integer.parseInt(txtSoLuongTon.getText());
+                    double giaBan = Double.parseDouble(txtGiaBan.getText());
 
                     Service service = new Service(MaDV, tenDv, new TypeOfService(s), donViTinh, soLuongTon, giaBan);
 
                     if (serviceDAO.update(service)) {
                         String quantityStr = df.format(service.getSoLuongTon());
                         String priceStr = df.format(service.getGiaBan());
-                        tableDV.setValueAt(textFieldTenDichVu.getText(), row, 2);
-                        tableDV.setValueAt(comboBoxLDV.getSelectedItem(), row, 3);
-                        tableDV.setValueAt(textFieldDonViTinh.getText(), row, 4);
-                        tableDV.setValueAt(quantityStr, row, 5);
-                        tableDV.setValueAt(priceStr, row, 6);
-                        lamMoi();
+                        tblDichVu.setValueAt(txtTenDichVu.getText(), row, 2);
+                        tblDichVu.setValueAt(cmbLoaiDichVu.getSelectedItem(), row, 3);
+                        tblDichVu.setValueAt(txtDonViTinh.getText(), row, 4);
+                        tblDichVu.setValueAt(quantityStr, row, 5);
+                        tblDichVu.setValueAt(priceStr, row, 6);
+                        reset();
                         JOptionPane.showMessageDialog(this,"Sửa thành công");
                     }
                 }
@@ -403,30 +446,33 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
         }
     }
 
-    private void lamMoi(){
-        textFieldMaDichVu.setText("");
-        textFieldTenDichVu.setText("");
-        comboBoxLDV.setSelectedIndex(0);
-        textFieldDonViTinh.setText("");
-        textFieldSLT.setText("");
-        textFieldGiaBan.setText("");
-        textFieldThongBao.setText("");
+    /**
+     * làm mới các thông tin trong form
+     */
+    private void reset(){
+        txtMaDichVu.setText("");
+        txtTenDichVu.setText("");
+        cmbLoaiDichVu.setSelectedIndex(0);
+        txtDonViTinh.setText("");
+        txtSoLuongTon.setText("");
+        txtGiaBan.setText("");
+        txtThongBao.setText("");
 
     }
+
     @Override
     public void mouseClicked (MouseEvent e){
         Object o = e.getSource();
-        if (o.equals(tableDV)) {
-            int row = tableDV.getSelectedRow();
-            textFieldMaDichVu.setText(tableDV.getValueAt(row, 1).toString());
-            textFieldTenDichVu.setText(tableDV.getValueAt(row, 2).toString());
-            comboBoxLDV.setSelectedItem(tableDV.getValueAt(row, 3));
-            textFieldDonViTinh.setText(tableDV.getValueAt(row, 4).toString());
-            String quantityStr = tableDV.getValueAt(row, 5).toString().trim().replace(",", "");
-            textFieldSLT.setText(String.valueOf(Integer.parseInt(quantityStr)));
-            String priceStr = tableDV.getValueAt(row, 6).toString().trim().replace(",", "");
-            textFieldGiaBan.setText(String.valueOf(Integer.parseInt(priceStr)));
-
+        if (o.equals(tblDichVu)) {
+            int row = tblDichVu.getSelectedRow();
+            txtMaDichVu.setText(tblDichVu.getValueAt(row, 1).toString());
+            txtTenDichVu.setText(tblDichVu.getValueAt(row, 2).toString());
+            cmbLoaiDichVu.setSelectedItem(tblDichVu.getValueAt(row, 3));
+            txtDonViTinh.setText(tblDichVu.getValueAt(row, 4).toString());
+            String quantityStr = tblDichVu.getValueAt(row, 5).toString().trim().replace(",", "");
+            txtSoLuongTon.setText(String.valueOf(Integer.parseInt(quantityStr)));
+            String priceStr = tblDichVu.getValueAt(row, 6).toString().trim().replace(",", "");
+            txtGiaBan.setText(String.valueOf(Integer.parseInt(priceStr)));
         }
     }
 
