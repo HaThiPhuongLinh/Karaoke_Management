@@ -10,10 +10,7 @@ import UI.component.Dialog.DatePicker;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 
@@ -32,13 +29,25 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Sử dụng để thống kê doanh thu theo thời gian được chọn
+ * <p>
+ *     Người tham gia thiết kế: Nguyễn Quang Duy
+ * </p>
+ * ngày tạo: 12/10/2023
+ * <p>
+ *     Lần cập nhật cuối: 4/11/2023
+ * </p>
+ * Nội dung cập nhật: thêm javadoc
+ */
+
 public class Statistic_UI extends JPanel implements  ActionListener, ItemListener {
-    private JTextField textFieldTongDoanhThu;
+    private JTextField txtTongDoanhThu;
     private ChartPanel chartPanel;
     private JButton btnLamMoi, btnThongKe;
-    private JComboBox<String> comboBoxLocTheo;
+    private JComboBox<String> cmbLocTheo;
     private DatePicker pickerTuNgay,pickerDenNgay;
-    private JLabel backgroundLabel,timeLabel;
+    private JLabel lblBackGround, lblTime;
     private BillDAO billDAO;
     private static DetailOfServiceDAO detailOfServiceDAO;
     private DecimalFormat df = new DecimalFormat("#,###.##");
@@ -55,24 +64,24 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
         detailOfServiceDAO = new DetailOfServiceDAO();
         //phan viet code
 
-        JLabel headerLabel = new JLabel("THỐNG KÊ DOANH THU");
-        headerLabel.setBounds(570, 10, 1175, 40);
-        headerLabel.setFont(new Font("Arial", Font.BOLD, 25));
-        headerLabel.setForeground(Color.WHITE);
-        Component add = add(headerLabel);
+        JLabel lblThongKeDoanhThu = new JLabel("THỐNG KÊ DOANH THU");
+        lblThongKeDoanhThu.setBounds(570, 10, 1175, 40);
+        lblThongKeDoanhThu.setFont(new Font("Arial", Font.BOLD, 25));
+        lblThongKeDoanhThu.setForeground(Color.WHITE);
+        Component add = add(lblThongKeDoanhThu);
 
-        JPanel timeNow = new JPanel();
-        timeNow.setBorder(new TitledBorder(
+        JPanel pnlTimeNow = new JPanel();
+        pnlTimeNow.setBorder(new TitledBorder(
                 new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "",
                 TitledBorder.LEADING, TitledBorder.TOP));
-        timeNow.setBounds(12, 10, 300, 50);
-        timeNow.setOpaque(false);
-        add(timeNow);
+        pnlTimeNow.setBounds(12, 10, 300, 50);
+        pnlTimeNow.setOpaque(false);
+        add(pnlTimeNow);
 
-        timeLabel = new JLabel();
-        timeLabel.setFont(new Font("Arial", Font.BOLD, 33));
-        timeLabel.setForeground(Color.WHITE);
-        timeNow.add(timeLabel);
+        lblTime = new JLabel();
+        lblTime.setFont(new Font("Arial", Font.BOLD, 33));
+        lblTime.setForeground(Color.WHITE);
+        pnlTimeNow.add(lblTime);
         Timer timer = new Timer(10, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -81,21 +90,21 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
         });
         timer.start();
 
-        JPanel panel1 =  new JPanel();
-        panel1.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "THÔNG TIN THỐNG KÊ",
+        JPanel pnlThongTinThongke =  new JPanel();
+        pnlThongTinThongke.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "THÔNG TIN THỐNG KÊ",
                 TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
-        panel1.setBounds(10, 70, 1245, 670);
-        panel1.setOpaque(false);
-        add(panel1);
+        pnlThongTinThongke.setBounds(10, 70, 1245, 670);
+        pnlThongTinThongke.setOpaque(false);
+        add(pnlThongTinThongke);
 
-        panel1.setLayout(null);
+        pnlThongTinThongke.setLayout(null);
 
         //        Từ ngày
-        JLabel labelTuNgay = new JLabel("Từ ngày:");
-        labelTuNgay.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelTuNgay.setBounds(150, 100, 120, 30);
-        labelTuNgay.setForeground(Color.WHITE);
-        add(labelTuNgay);
+        JLabel lblTuNgay = new JLabel("Từ ngày:");
+        lblTuNgay.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblTuNgay.setBounds(150, 100, 120, 30);
+        lblTuNgay.setForeground(Color.WHITE);
+        add(lblTuNgay);
 
         pickerTuNgay = new DatePicker(150);
         pickerTuNgay.setOpaque(false);
@@ -114,22 +123,22 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
         add(pickerDenNgay);
 
 //      Lọc theo
-        JLabel labelLocTheo = new JLabel("Lọc theo:");
-        labelLocTheo.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelLocTheo.setBounds(750, 100, 150, 30);
-        labelLocTheo.setForeground(Color.WHITE);
-        add(labelLocTheo);
+        JLabel lblLocTheo = new JLabel("Lọc theo:");
+        lblLocTheo.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblLocTheo.setBounds(750, 100, 150, 30);
+        lblLocTheo.setForeground(Color.WHITE);
+        add(lblLocTheo);
 
-        comboBoxLocTheo = new JComboBox<String>();
-        comboBoxLocTheo.addItem("Tùy chỉnh");
-        comboBoxLocTheo.addItem("7 ngày gần nhất");
-        comboBoxLocTheo.addItem("1 tháng gần nhất");
-        comboBoxLocTheo.addItem("3 tháng gần nhất");
-        comboBoxLocTheo.addItem("6 tháng gần nhất");
-        comboBoxLocTheo.addItem("1 năm gần nhất");
-        comboBoxLocTheo.setBounds(830,100,200,30);
-        Custom.setCustomComboBox(comboBoxLocTheo);
-        add(comboBoxLocTheo);
+        cmbLocTheo = new JComboBox<String>();
+        cmbLocTheo.addItem("Tùy chỉnh");
+        cmbLocTheo.addItem("7 ngày gần nhất");
+        cmbLocTheo.addItem("1 tháng gần nhất");
+        cmbLocTheo.addItem("3 tháng gần nhất");
+        cmbLocTheo.addItem("6 tháng gần nhất");
+        cmbLocTheo.addItem("1 năm gần nhất");
+        cmbLocTheo.setBounds(830,100,200,30);
+        Custom.setCustomComboBox(cmbLocTheo);
+        add(cmbLocTheo);
 
         //        btn thống kê
         btnThongKe = new JButton("Thống kê");
@@ -146,12 +155,12 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
         add(btnLamMoi);
 
 
-        JPanel panelDoanhThu = new JPanel();
-        panelDoanhThu.setLayout(null);
-        panelDoanhThu.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DOANH THU",
+        JPanel pnlDoanhThu = new JPanel();
+        pnlDoanhThu.setLayout(null);
+        pnlDoanhThu.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DOANH THU",
                 TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
-        panelDoanhThu.setBounds(5, 130, 1235, 530);
-        panelDoanhThu.setOpaque(false);
+        pnlDoanhThu.setBounds(5, 130, 1235, 530);
+        pnlDoanhThu.setOpaque(false);
 
         JFreeChart chart = ChartFactory.createBarChart("BIỂU ĐỒ DOANH THU", "Ngày", "VND", null,
                 PlotOrientation.VERTICAL, false, false, false);
@@ -161,51 +170,51 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
         chartPanel = new ChartPanel(chart);
         chartPanel.setBounds(10, 20, 950, 500);
         chartPanel.setOpaque(false);
-        panelDoanhThu.add(chartPanel);
+        pnlDoanhThu.add(chartPanel);
 
 //        Tổng doanh thu
-        JLabel labelTongDoanhThu = new JLabel("Tổng doanh thu:");
-        labelTongDoanhThu.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelTongDoanhThu.setBounds(980, 50, 150, 30);
-        labelTongDoanhThu.setForeground(Color.WHITE);
-        panelDoanhThu.add(labelTongDoanhThu);
+        JLabel lblTongDoanhThu = new JLabel("Tổng doanh thu:");
+        lblTongDoanhThu.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblTongDoanhThu.setBounds(980, 50, 150, 30);
+        lblTongDoanhThu.setForeground(Color.WHITE);
+        pnlDoanhThu.add(lblTongDoanhThu);
 
-        textFieldTongDoanhThu = new JTextField();
-        textFieldTongDoanhThu.setBounds(980, 80, 150, 30);
-        textFieldTongDoanhThu.setColumns(3);
-        panelDoanhThu.add(textFieldTongDoanhThu);
+        txtTongDoanhThu = new JTextField();
+        txtTongDoanhThu.setBounds(980, 80, 150, 30);
+        txtTongDoanhThu.setColumns(3);
+        pnlDoanhThu.add(txtTongDoanhThu);
 
-        JLabel labelVND = new JLabel("VND");
-        labelVND.setFont(new Font("Arial", Font.PLAIN, 14));
-        labelVND.setBounds(1140, 80, 150, 30);
-        labelVND.setForeground(Color.WHITE);
-        panelDoanhThu.add(labelVND);
+        JLabel lblVND = new JLabel("VND");
+        lblVND.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblVND.setBounds(1140, 80, 150, 30);
+        lblVND.setForeground(Color.WHITE);
+        pnlDoanhThu.add(lblVND);
 
-        panel1.add(panelDoanhThu);
+        pnlThongTinThongke.add(pnlDoanhThu);
         //
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/images/background.png"));
-        backgroundLabel = new JLabel(backgroundImage);
-        backgroundLabel.setBounds(0, 0, getWidth(), getHeight());
-        add(backgroundLabel);
+        lblBackGround = new JLabel(backgroundImage);
+        lblBackGround.setBounds(0, 0, getWidth(), getHeight());
+        add(lblBackGround);
 
         btnThongKe.addActionListener(this);
         btnLamMoi.addActionListener(this);
-        comboBoxLocTheo.addItemListener(this);
+        cmbLocTheo.addItemListener(this);
     }
+    /**
+     * Gán thời gian hiện tại cho label lblTime
+     */
     private void updateTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String time = sdf.format(new Date());
-        timeLabel.setText(time);
+        lblTime.setText(time);
     }
-
-
-
 
     @Override
     public void itemStateChanged(ItemEvent e) {
         Object o = e.getSource();
-        if (o.equals(comboBoxLocTheo)) {
-            String search = comboBoxLocTheo.getSelectedItem().toString();
+        if (o.equals(cmbLocTheo)) {
+            String search = cmbLocTheo.getSelectedItem().toString();
             switch (search) {
                 case "7 ngày gần nhất":
                     pickerTuNgay.setActive(false);
@@ -271,6 +280,7 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
                     } catch (ParseException ex) {
                         ex.printStackTrace();
                     }
+                    pickerTuNgay.setDatesFromToday(Calendar.MONTH, -12);
                     break;
                 case "Tùy chỉnh":
                     pickerTuNgay.setActive(true);
@@ -299,12 +309,21 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
 
         }else if (o.equals(btnLamMoi)){
             dataset.clear();
-            comboBoxLocTheo.setSelectedIndex(0);
+            cmbLocTheo.setSelectedIndex(0);
             pickerTuNgay.setValueToDay();
             pickerDenNgay.setValueToDay();
         }
     }
 
+    /**
+     * Hiển thị biểu đồ thống kê
+     * @param fromDate       {@code Date} ngày bắt đầu
+     * @param toDate         {@code Date} ngày kết thúc
+     * @param dayOfMonth     {@code int} số ngày trong tháng
+     * @param dayOfYear      {@code int} số ngày trong năm
+     * @param format         {@code String} định dạng ngày
+     * @param totalPriceList {@code List<Object[]>} danh sách tổng tiền và ngày
+     */
     public void showStatistical(Date fromDate, Date toDate, int dayOfMonth, int dayOfYear, String format,
                                 ArrayList<Object[]> totalPriceList) {
         chartPanel.removeAll();
@@ -348,7 +367,6 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
 
         dataset = new DefaultCategoryDataset();
         int size = totalPriceList.size();
-//        System.out.printf(size+"     ");
         Double total = 0.0;
         int totalPriceListIndex = 0;
 
@@ -405,7 +423,7 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
             System.out.println("Ngày: " + fullDayStr + ", Doanh thu: " + totalPrice);
             dataset.addValue(totalPrice, "VND", timeStr);
         }
-        textFieldTongDoanhThu.setText(df.format(total));
+        txtTongDoanhThu.setText(df.format(total));
 
         JFreeChart chart = ChartFactory.createBarChart("BIỂU ĐỒ DOANH THU " + title, timeUnit, "VND", dataset,
                 PlotOrientation.VERTICAL, false, false, false);
@@ -413,12 +431,14 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
         chartPanel.setChart(chart);
     }
 
-
+    /**
+     * Lấy danh sách thông kê doanh thu theo ngày
+     * @param listBill
+     * @return
+     */
     public static ArrayList<Object[]> calculateTotalByDate(ArrayList<Bill> listBill) {
         Map<String, Double> totalByDate = new HashMap<>();
-//        java.util.List<Customer> list = customerDAO.getAllKhachHang();
         ArrayList<DetailsOfService> list1 = detailOfServiceDAO.getAllDetailsOfService();
-
 
         for (Bill b : listBill) {
             Date ngay = b.getNgayGioTra();
@@ -473,13 +493,17 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
         return resultList;
     }
 
+    /**
+     * Thống kê doanh thu
+     * @param listBill
+     * @throws ParseException
+     */
     private void statistical(ArrayList<Bill> listBill) throws ParseException {
         Date fromDate = pickerTuNgay.getFullDate();
         Date toDate = pickerDenNgay.getFullDate();
 
         int TotalBill = 0;
         TotalBill = billDAO.getTotalLineOfBillList(fromDate, toDate);
-//        txtTotalBill.setText(df.format(TotalBill));
 
         System.out.printf(TotalBill+"");
 
@@ -526,10 +550,13 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
             showStatistical(fromDate, toDate, dayOfMonth, dayOfYear, "yyyy",totalPriceList);
         }
     }
-
+    /**
+     * Lấy danh sách thông kê doanh thu theo năm
+     * @param listBill
+     * @return
+     */
     public static ArrayList<Object[]> calculateTotalByYear(ArrayList<Bill> listBill) {
         Map<String, Double> totalByDate = new HashMap<>();
-//        java.util.List<Customer> list = customerDAO.getAllKhachHang();
         ArrayList<DetailsOfService> list1 = detailOfServiceDAO.getAllDetailsOfService();
 
 
@@ -567,11 +594,11 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
             }
 
             if (totalByDate.containsKey(formattedDate)) {
-                // Nếu ngày đã tồn tại trong HashMap, cộng dồn tổng tiền
+                // Nếu năm đã tồn tại trong HashMap, cộng dồn tổng tiền
                 double existingTotal = totalByDate.get(formattedDate);
                 totalByDate.put(formattedDate, existingTotal + quantity);
             } else {
-                // Nếu ngày chưa tồn tại trong HashMap, thêm mới với tổng tiền
+                // Nếu năm chưa tồn tại trong HashMap, thêm mới với tổng tiền
                 totalByDate.put(formattedDate, quantity);
             }
         }
@@ -587,10 +614,13 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
         return resultList;
     }
 
-
+    /**
+     * Lấy danh sách thông kê doanh thu theo tháng
+     * @param listBill
+     * @return
+     */
     public static ArrayList<Object[]> calculateTotalByMonth(ArrayList<Bill> listBill) {
         Map<String, Double> totalByDate = new HashMap<>();
-//        java.util.List<Customer> list = customerDAO.getAllKhachHang();
         ArrayList<DetailsOfService> list1 = detailOfServiceDAO.getAllDetailsOfService();
 
 
@@ -627,11 +657,11 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
             }
 
             if (totalByDate.containsKey(formattedDate)) {
-                // Nếu ngày đã tồn tại trong HashMap, cộng dồn tổng tiền
+                // Nếu tháng đã tồn tại trong HashMap, cộng dồn tổng tiền
                 double existingTotal = totalByDate.get(formattedDate);
                 totalByDate.put(formattedDate, existingTotal + quantity);
             } else {
-                // Nếu ngày chưa tồn tại trong HashMap, thêm mới với tổng tiền
+                // Nếu tháng chưa tồn tại trong HashMap, thêm mới với tổng tiền
                 totalByDate.put(formattedDate, quantity);
             }
         }
