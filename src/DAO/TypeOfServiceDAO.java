@@ -6,7 +6,23 @@ import Entity.TypeOfService;
 
 import java.util.ArrayList;
 
+/**
+ * Thêm, sửa, đọc dữ liệu từ database cho lớp {@code TypeOfServiceDAO}
+ * <p>
+ * Người tham gia thiết kế: Nguyễn Quang Duy
+ * <p>
+ * Ngày tạo: 07/10/2023
+ * <p>
+ * Lần cập nhật cuối: 7/11/2023
+ * <p>
+ * Nội dung cập nhật: thêm javadoc
+ */
+
 public class TypeOfServiceDAO {
+    /**
+     * lấy danh sách thông tin tất cả loại dịch vụ
+     * @return {@code ArrayList<Service>}: danh sách dịch vụ
+     */
     public List<TypeOfService> getAllLoaiDichVu() {
         List<TypeOfService> dsLoaiDichVu = new ArrayList<TypeOfService>();
         ConnectDB.getInstance();
@@ -25,7 +41,11 @@ public class TypeOfServiceDAO {
         }
         return dsLoaiDichVu;
     }
-
+    /**
+     * lấy loại dịch vụ theo mã loại dịch vụ
+     * @param typeID mã loại dịch vụ
+     * @return dịch vụ theo mã loại dịch vụ được tìm
+     */
     public TypeOfService getServiceTypeByID(String typeID) {
         TypeOfService tr = null;
         ConnectDB.getInstance();
@@ -48,7 +68,11 @@ public class TypeOfServiceDAO {
 
         return tr;
     }
-
+    /**
+     * Lấy danh sách loại dịch vụ theo tên loại dịch vụ
+     * @param name tên loại dịch vụ
+     * @return {@code ArrayList<Service>}: danh sách theo tên loại dịch vụ
+     */
     public ArrayList<TypeOfService> getTypeOfServiceByName(String name) {
         ArrayList<TypeOfService> lst = new ArrayList<TypeOfService>();
         ConnectDB.getInstance();
@@ -56,14 +80,14 @@ public class TypeOfServiceDAO {
         PreparedStatement stmt = null;
 
         try {
-            String sql = "SELECT * FROM LoaiDichVu where tenoaiDichVu like ?";
+            String sql = "SELECT * FROM LoaiDichVu where tenLoaiDichVu like ?";
             stmt = con.prepareStatement(sql);
             stmt.setString(1, "%" + name + "%");
 
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 String maLDV = rs.getString("maLoaiDichVu");
-                String tenLDV = rs.getString("tenoaiDichVu");
+                String tenLDV = rs.getString("tenLoaiDichVu");
                 TypeOfService typeOfService = new TypeOfService(maLDV, tenLDV);
                 lst.add(typeOfService);
             }
@@ -78,14 +102,22 @@ public class TypeOfServiceDAO {
         }
         return lst;
     }
-
+    /**
+     * Thêm loại dịch vụ mới vào cơ sở dữ liệu
+     * @param s {@code Service}: loại dịch vụ cần thêm
+     * @return {@code boolean}: kết quả trả về của câu truy vấn
+     *          <ul>
+     *              <li>Nếu thêm thành công thì trả về {@code true}</li>
+     *              <li>Nếu thêm thất bại thì trả về {@code false}</li>
+     *          </ul>
+     */
     public boolean insert(TypeOfService s){
         ConnectDB.getInstance();
         Connection con = new ConnectDB().getConnection();
         PreparedStatement statement = null;
         int n=0;
         try{
-            String sql = "insert into dbo.LoaiDichVu (maLoaiDichVu,tenoaiDichVu)"+"values (?,?)";
+            String sql = "insert into dbo.LoaiDichVu (maLoaiDichVu,tenLoaiDichVu)"+"values (?,?)";
             statement = con.prepareStatement(sql);
             statement.setString(1, s.getMaLoaiDichVu());
             statement.setString(2, s.getTenLoaiDichVu());
@@ -95,12 +127,21 @@ public class TypeOfServiceDAO {
         }
         return n>0;
     }
+    /**
+     * Cập nhật thông tin loại dịch vụ vào cơ sở dữ liệu
+     * @param s {@code: Service}: loại dịch vụ cần cập nhật
+     * @return {@code: boolean}: kết quả trả về của câu truy vấn
+     *          <ul>
+     *              <li>Nếu cập nhật thành công thì trả về {@code: true}</li>
+     *              <li>Nếu cập nhật thất bại thì trả về {@code: false}</li>
+     *          </ul>
+     */
     public boolean update(TypeOfService s) {
         int n = 0;
         PreparedStatement stmt = null;
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
-        String sql = "update dbo.LoaiDichVu set tenoaiDichVu = ?" + " Where maLoaiDichVu = ?";
+        String sql = "update dbo.LoaiDichVu set tenLoaiDichVu = ?" + " Where maLoaiDichVu = ?";
         try {
             stmt = con.prepareStatement(sql);
             stmt.setString(1, s.getTenLoaiDichVu());
@@ -117,6 +158,15 @@ public class TypeOfServiceDAO {
         }
         return n > 0;
     }
+    /**
+     * Xóa thông tin loại dịch vụ trong cơ sở dữ liệu
+     * @param id {@code: Service}: mã loại dịch vụ cần cập nhật
+     * @return {@code: boolean}: kết quả trả về của câu truy vấn
+     *          <ul>
+     *              <li>Nếu xóa thành công thì trả về {@code: true}</li>
+     *              <li>Nếu xóa thất bại thì trả về {@code: false}</li>
+     *          </ul>
+     */
     public boolean delete(String id) {
         int n = 0;
         PreparedStatement stmt = null;
@@ -139,30 +189,12 @@ public class TypeOfServiceDAO {
         }
         return n > 0;
     }
-//    public TypeOfService getServiceTypeByName1(String serviceTypeName) {
-//        String query = "SELECT * FROM LoaiDichVu WHERE tenoaiDichVu = ?";
-//        Object[] params = { serviceTypeName };
-//        ResultSet rs = DataProvider.getInstance().executeQuery(query, params);
-//        TypeOfService result = null;
-//        try {
-//            while (rs.next()) {
-//                result = new TypeOfService(rs);
-//                break;
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return result;
-//    }
-
-//    public String getLastServiceTypeID() {
-//        String query = "{CALL USP_getLastServiceTypeID()}";
-//        Object obj = DataProvider.getInstance().executeScalar(query, null);
-//        String result = obj != null ? obj.toString() : "";
-//        return result;
-//    }
-
-    public String getServiceCodeByName(String serviceName) {
+    /**
+     * tìm mã loại dịch vụ theo tên loại dịch vụ
+     * @param TypeOfserviceName tên loại dịch vụ
+     * @return {@code ArrayList<Service>}: mã loại dịch vụ theo tên loại dịch vụ
+     */
+    public String getServiceCodeByName(String TypeOfserviceName) {
         Connection con = null;
         PreparedStatement statement = null;
         ResultSet rs = null;
@@ -172,9 +204,9 @@ public class TypeOfServiceDAO {
             con = ConnectDB.getConnection();  // Thiết lập kết nối đến cơ sở dữ liệu
 
             // Tạo câu lệnh truy vấn SQL để lấy mã dịch vụ từ tên dịch vụ
-            String sql = "SELECT maLoaiDichVu FROM dbo.LoaiDichVu WHERE tenoaiDichVu = ?";
+            String sql = "SELECT maLoaiDichVu FROM dbo.LoaiDichVu WHERE tenLoaiDichVu = ?";
             statement = con.prepareStatement(sql);
-            statement.setString(1, serviceName);
+            statement.setString(1, TypeOfserviceName);
 
             // Thực thi câu lệnh truy vấn
             rs = statement.executeQuery();
@@ -187,29 +219,13 @@ public class TypeOfServiceDAO {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            // Xử lý các ngoại lệ hoặc thông báo lỗi tại đây...
         }
-//        finally {
-//            // Đảm bảo đóng tất cả các kết nối, câu lệnh và tài nguyên dùng trong lúc thực hiện
-//            try {
-//                if (rs != null) {
-//                    rs.close();
-//                }
-//
-//                if (statement != null) {
-//                    statement.close();
-//                }
-//
-//                if (con != null) {
-//                    con.close();
-//                }
-//            } catch (SQLException e2) {
-//                e2.printStackTrace();
-//            }
-//        }
-
         return serviceCode;
     }
+    /**
+     * Tạo mã loại dịch vụ phát sinh tự động bằng cách lấy mã cuối cùng trong database tăng lên 1
+     * @return mã loại dịch vụ mới
+     */
     public String generateNextTypeOfServiceId() {
         Connection con = null;
         PreparedStatement statement = null;
@@ -233,24 +249,6 @@ public class TypeOfServiceDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-//        finally {
-//            try {
-//                if (rs != null) {
-//                    rs.close();
-//                }
-//
-//                if (statement != null) {
-//                    statement.close();
-//                }
-//
-//                if (con != null) {
-//                    con.close();
-//                }
-//            } catch (SQLException e2) {
-//                e2.printStackTrace();
-//            }
-//        }
-
         return nextServiceId;
     }
 }
