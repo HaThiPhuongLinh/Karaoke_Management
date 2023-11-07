@@ -21,7 +21,13 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
-
+/**
+ * Giao diện dùng để quản lý nhân viên
+ * Người thiết kế Nguyễn Đình Dương
+ * Ngày tạo:9/10/2023
+ * Lần cập nhật cuối : 15/10/2023
+ * Nội dung cập nhật : Update sự kiện mouseclicked cho bảng
+ */
 public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
     private  JTextField txtBaoLoi;
     private  JTextField txtDiaChi;
@@ -297,12 +303,21 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
             modelTableNV.addRow(rowData);
         }
     }
-    //Hiển thị thông báo lỗi
+
+    /**
+     * Hiển thị thông báo lỗi
+     * @param txt:Nơi thông báo lỗi
+     * @param message:Lỗi cần thông báo
+     */
     private void showMessage(JTextField txt, String message) {
         txt.requestFocus();
         txtBaoLoi.setText(message);
     }
-//Regex dữ liệu nhập
+
+    /**
+     * Regex dữ liệu nhập
+     * @return {@code boolean} :True or False
+     */
     private boolean validData() {
         String ten = txtTenNV.getText().trim();
         String diachi = txtDiaChi.getText().trim();
@@ -353,7 +368,11 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
         }
         return true;
     }
-    //Lấy mã nhân viên
+
+    /**
+     * Lấy mã nhân viên
+     * @return {@code String}:Mã nhân viên
+     */
     public String laymaNV(){
         String MaNV = StaffDAO.generateNextStaffId();
         return MaNV;
@@ -458,6 +477,9 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
         }
     }
 
+    /**
+     * Làm mới các ô nhập dữ liệu
+     */
     private void reFresh(){
         txtMaNV.setText("");
         txtTenNV.setText("");

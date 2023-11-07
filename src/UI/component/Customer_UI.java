@@ -23,7 +23,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 /**
- * Giao diện dùng để quản lí khách hàng
+ * Giao diện dùng để quản lý khách hàng
  * Người thiết kế Nguyễn Đình Dương
  * Ngày tạo:9/10/2023
  * Lần cập nhật cuối : 15/10/2023
@@ -225,7 +225,10 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
         lblBackground.setBounds(0, 0, getWidth(), getHeight());
         add(lblBackground);
     }
-//Thiết lập thời gian thực cho lblTime
+
+    /**
+     * Thiết lập thời gian thực cho lblTime
+     */
     private void updateTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String time = sdf.format(new Date());
@@ -260,12 +263,20 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
         }
     }
 
-//Hiển thị lỗi
+    /**
+     * Hiển thị lỗi
+     * @param txt: Nơi hiển thị
+     * @param message:Lỗi cần hiển thị
+     */
     private void showMessage(JTextField txt, String message) {
         txt.requestFocus();
         txtHienThiLoi.setText(message);
     }
-//Regex dữ liệu nhập
+
+    /**
+     * ReGex dữ liệu được nhập vào
+     * @return {@code boolean} :True or False
+     */
     private boolean validData() {
         String ten = txtTenKH.getText().trim();
         String sdt = txtSDTKH.getText().trim();
@@ -417,7 +428,10 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
             }
         }
     }
-//Làm mới
+
+    /**
+     * Làm mới dữ liệu nhập
+     */
     private void reFresh() {
         txtMaKH.setText("");
         txtTenKH.setText("");
