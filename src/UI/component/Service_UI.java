@@ -46,7 +46,7 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
     private JLabel lblBackGround, lblTime;
     private ServiceDAO serviceDAO;
     private TypeOfServiceDAO typeOfServiceDAO;
-    private DecimalFormat df = new DecimalFormat("#,###.##");
+    private DecimalFormat df = new DecimalFormat("#,###.## VND");
     public static Staff staffLogin = null;
 
     public Service_UI(Staff staff){
@@ -471,7 +471,7 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
             txtDonViTinh.setText(tblDichVu.getValueAt(row, 4).toString());
             String quantityStr = tblDichVu.getValueAt(row, 5).toString().trim().replace(",", "");
             txtSoLuongTon.setText(String.valueOf(Integer.parseInt(quantityStr)));
-            String priceStr = tblDichVu.getValueAt(row, 6).toString().trim().replace(",", "");
+            String priceStr = tblDichVu.getValueAt(row, 6).toString().trim().replace(",", "").replace(" VND", "");
             txtGiaBan.setText(String.valueOf(Integer.parseInt(priceStr)));
         }
     }

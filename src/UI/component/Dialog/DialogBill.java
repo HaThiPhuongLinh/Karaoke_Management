@@ -45,7 +45,8 @@ public class DialogBill extends JDialog implements ActionListener {
 
     private JButton btnPayment, btnBack, btnExportPdf, btnExportExcel;
     private String formatTime = "HH:mm:ss dd/MM/yyyy";
-    private DecimalFormat df = new DecimalFormat("#,###.##");
+    private DecimalFormat df = new DecimalFormat("#,###.## VND");
+    private DecimalFormat df2 = new DecimalFormat("#,###.##");
     private String path = WORKING_DIR + "/bill/";
     private Bill bill = new Bill();
     private boolean paid = false;
@@ -497,8 +498,8 @@ public class DialogBill extends JDialog implements ActionListener {
         int i = 1;
         for (DetailsOfService item : serviceOrders) {
             Service service = item.getMaDichVu();
-            String sttStr = df.format(i++);
-            String quantityStr = df.format(item.getSoLuong());
+            String sttStr = df2.format(i++);
+            String quantityStr = df2.format(item.getSoLuong());
             String priceStr = df.format(item.getGiaBan());
             String totalPriceStr = df.format(item.tinhTienDichVu());
             modelTableBillInfo.addRow(new Object[]{addSpaceToString(sttStr), addSpaceToString(service.getTenDichVu()),

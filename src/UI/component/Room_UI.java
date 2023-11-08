@@ -39,7 +39,7 @@ public class Room_UI extends JPanel implements ActionListener, MouseListener {
     private  JComboBox<String> cboLoaiPhong;
     private JTable tblPhong;
     private DefaultTableModel modelTableP;
-    private DecimalFormat df = new DecimalFormat("#,###.##");
+    private DecimalFormat df = new DecimalFormat("#,###.##/giờ");
 
 
     private JPanel pnlRoomControl, pnlRoomList, timeNow;
@@ -382,7 +382,7 @@ public class Room_UI extends JPanel implements ActionListener, MouseListener {
         txtMaPhong.setText(modelTableP.getValueAt(row, 1).toString());
         cboLoaiPhong.setSelectedItem(modelTableP.getValueAt(row, 2).toString());
         cboTinhTrang.setSelectedItem(modelTableP.getValueAt(row, 4).toString());
-        txtGiaP.setText(modelTableP.getValueAt(row, 5).toString().trim().replace(",", ""));
+        txtGiaP.setText(modelTableP.getValueAt(row, 5).toString().trim().replace(",", "").replace("/giờ",""));
         txtVitri.setText(modelTableP.getValueAt(row, 3).toString());
     }
 

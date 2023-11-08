@@ -48,7 +48,8 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
     private ArrayList<Service> serviceOrderList = new ArrayList<Service>();
     private DetailsOfService detailsOfService;
     private DetailOfServiceDAO detailOfServiceDAO;
-    private DecimalFormat df = new DecimalFormat("#,###.##");
+    private DecimalFormat df = new DecimalFormat("#,###.## VND");
+    private DecimalFormat df2 = new DecimalFormat("#,###.##");
     private JTable selectedTable;
 
     public ServiceForm_UI(Staff staff) {
@@ -207,8 +208,8 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
                 Service service = serviceList.get(selectedRow);
                 selectedServiceIndex = selectedRow;
                 txtName.setText(service.getTenDichVu());
-                txtStock.setText(df.format(service.getSoLuongTon()));
-                double price = Double.parseDouble(serviceModel.getValueAt(selectedRow, 4).toString().trim().replace(",", ""));
+                txtStock.setText(df2.format(service.getSoLuongTon()));
+                double price = Double.parseDouble(serviceModel.getValueAt(selectedRow, 4).toString().trim().replace(",", "").replace(" VND", ""));
                 txtSum.setText(df.format(1*price));
 
                 selectedTable = tblSC;
@@ -407,13 +408,13 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
                 int row = tblSC.getSelectedRow();
                 if (row != -1) {
                     int quantity = (int) txtQuantity.getValue();
-                    int soLuongTon = Integer.parseInt(serviceModel.getValueAt(row, 3).toString().replace(",", ""));
+                    int soLuongTon = Integer.parseInt(serviceModel.getValueAt(row, 3).toString().replace(",", "").replace(" VND", ""));
                     if (quantity > soLuongTon) {
                         txtQuantity.setValue(soLuongTon);
                     } else if (quantity < 1) {
                         txtQuantity.setValue(1);
                     } else {
-                        double giaBan = Double.parseDouble(serviceModel.getValueAt(row, 4).toString().replace(",", ""));
+                        double giaBan = Double.parseDouble(serviceModel.getValueAt(row, 4).toString().replace(",", "").replace(" VND", ""));
                         double sum = giaBan * quantity;
                         txtSum.setText(df.format(sum));
                     }
@@ -429,7 +430,7 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
                     } else if (quantity < 1) {
                         txtQuantity.setValue(1);
                     } else {
-                        double giaBan = Double.parseDouble(modelService.getValueAt(row, 4).toString().replace(",", ""));
+                        double giaBan = Double.parseDouble(modelService.getValueAt(row, 4).toString().replace(",", "").replace(" VND", ""));
                         double sum = giaBan * quantity;
                         txtSum.setText(df.format(sum));
                     }
@@ -846,10 +847,10 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
                     tblService.getSelectionModel().addSelectionInterval(i - 1, i - 1);
                 }
             }
-            String stt = df.format(i++);
+            String stt = df2.format(i++);
             String totalPriceStr = df.format(item.getSoLuong() * item.getGiaBan());
             String priceStr = df.format(item.getGiaBan());
-            String quantityStr = df.format(item.getSoLuong());
+            String quantityStr = df2.format(item.getSoLuong());
             modelService.addRow(new Object[]{stt, addSpaceToString(service.getTenDichVu()), addSpaceToString(service.getDonViTinh()),
                     addSpaceToString(quantityStr), addSpaceToString(priceStr), addSpaceToString(totalPriceStr)});
         }

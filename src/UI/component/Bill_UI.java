@@ -38,7 +38,7 @@ import java.sql.Timestamp;
  */
 public class Bill_UI extends JPanel implements ActionListener, MouseListener {
 
-    private  JTable tableCTDV;
+    private  JTable tblCTDV;
     private  JTable tblPDP;
     private  DefaultTableModel modelTableCTDV;
     private  JTextField txtTK, txtKH;
@@ -48,7 +48,8 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
     private JLabel backgroundLabel;
     private ReservationFormDAO reservationFormDAO;
     private RoomDAO roomDAO;
-    private DecimalFormat df = new DecimalFormat("#,###.##");
+    private DecimalFormat df = new DecimalFormat("#,###.##/giờ");
+    private DecimalFormat df2 = new DecimalFormat("#,###.## VND");
 
     private BillDAO billDAO;
 
@@ -143,16 +144,16 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
         modelTableCTDV = new DefaultTableModel(colsHD, 0) ;
         JScrollPane scrollPaneHD;
 
-        tableCTDV = new JTable(modelTableCTDV);
-        tableCTDV.setFont(new Font("Arial", Font.BOLD, 14));
-        tableCTDV.setBackground(new Color(255, 255, 255, 0));
-        tableCTDV.setForeground(new Color(255, 255, 255));
-        tableCTDV.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-        tableCTDV.getTableHeader().setForeground(Color.BLUE);
+        tblCTDV = new JTable(modelTableCTDV);
+        tblCTDV.setFont(new Font("Arial", Font.BOLD, 14));
+        tblCTDV.setBackground(new Color(255, 255, 255, 0));
+        tblCTDV.setForeground(new Color(255, 255, 255));
+        tblCTDV.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
+        tblCTDV.getTableHeader().setForeground(Color.BLUE);
 //        tableLDV.getTableHeader().setBackground(new Color(255, 255, 255));
-        Custom.getInstance().setCustomTable(tableCTDV);
+        Custom.getInstance().setCustomTable(tblCTDV);
 
-        panelDSHD.add(scrollPaneHD = new JScrollPane(tableCTDV,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
+        panelDSHD.add(scrollPaneHD = new JScrollPane(tblCTDV,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
                 BorderLayout.CENTER);
         scrollPaneHD.setBounds(10,20,1165,260);
         scrollPaneHD.setOpaque(false);
@@ -225,7 +226,7 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
 Sửa chiều rộng các cột của bảng CTDV
  */
     private void reSizeColumnTable2() {
-        TableColumnModel tcm = tableCTDV.getColumnModel();
+        TableColumnModel tcm = tblCTDV.getColumnModel();
 
         tcm.getColumn(0).setPreferredWidth(30);
         tcm.getColumn(1).setPreferredWidth(30);
@@ -275,11 +276,11 @@ Sửa chiều rộng các cột của bảng CTDV
      */
     public void loadCTDV(){
         modelTableCTDV.setRowCount(0);
-        int i = 1;
+        int i = 0;
         for (DetailsOfService ctdv : dsCTDV) {
             Double tongtien = ctdv.getGiaBan()*ctdv.getSoLuong();
             modelTableCTDV.addRow(new Object[] { i,ctdv.getMaDichVu().getMaDichVu(), ctdv.getMaDichVu().getTenDichVu(), ctdv.getSoLuong(),
-                    df.format(ctdv.getMaDichVu().getGiaBan()), df.format(tongtien) });
+                    df2.format(ctdv.getMaDichVu().getGiaBan()), df2.format(tongtien) });
             i++;
         }
     }

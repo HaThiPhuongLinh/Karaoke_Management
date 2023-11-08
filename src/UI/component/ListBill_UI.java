@@ -41,7 +41,7 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
     private DetailOfServiceDAO serviceDetailDAO = DetailOfServiceDAO.getInstance();
     private Bill bills = new Bill();
 
-    private DecimalFormat df = new DecimalFormat("#,###.##");
+    private DecimalFormat df = new DecimalFormat("#,###.## VND");
     public ListBill_UI(Staff staff) {
         this.staffLogin = staff;
         setLayout(null);
