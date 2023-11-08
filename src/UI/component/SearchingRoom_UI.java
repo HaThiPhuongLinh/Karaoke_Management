@@ -28,7 +28,7 @@ public class SearchingRoom_UI extends JPanel implements ActionListener, MouseLis
     private JPanel timeNow, pnlCusList, pnlCusControl;
     private JButton btnLammOi;
     private RoomDAO RoomDAO;
-    private DecimalFormat df = new DecimalFormat("#,###.##");
+    private DecimalFormat df = new DecimalFormat("#,###.## VND");
     public static Staff staffLogin = null;
 
     public SearchingRoom_UI(Staff staff) {
