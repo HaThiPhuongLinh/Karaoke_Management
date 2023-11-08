@@ -45,7 +45,7 @@ public class SearchingService_UI extends JPanel implements ActionListener, Mouse
     private ServiceDAO serviceDAO;
     private TypeOfServiceDAO typeOfServiceDAO;
     private DefaultTableModel modelTblDichVu;
-    private DecimalFormat df = new DecimalFormat("#,###.##");
+    private DecimalFormat df = new DecimalFormat("#,###.## VND");
     public static Staff staffLogin = null;
 
     public SearchingService_UI(Staff staff){
