@@ -215,30 +215,33 @@ public class SearchingService_UI extends JPanel implements ActionListener, Mouse
             @Override
             public void actionPerformed(ActionEvent e) {
                 txtTenDichVu.setText("");
+
                 modelTblDichVu.setRowCount(0);
                 int i=1;
                 for (Service dv : serviceDAO.getAllDichVu()) {
                     if (cmbGiaBan.getSelectedIndex()==0){
                         Object[] rowData = {i, dv.getMaDichVu(), dv.getTenDichVu(),dv.getMaLoaiDichVu().getTenLoaiDichVu(), dv.getDonViTinh(), dv.getSoLuongTon(), df.format(dv.getGiaBan())};
                         modelTblDichVu.addRow(rowData);
-
+                        i++;
                     }else if (cmbGiaBan.getSelectedIndex()==1){
                         if (dv.getGiaBan()>=10000 && dv.getGiaBan()<=50000){
                             Object[] rowData = {i, dv.getMaDichVu(), dv.getTenDichVu(),dv.getMaLoaiDichVu().getTenLoaiDichVu(), dv.getDonViTinh(), dv.getSoLuongTon(), df.format(dv.getGiaBan())};
                             modelTblDichVu.addRow(rowData);
+                            i++;
                         }
                     }else if (cmbGiaBan.getSelectedIndex()==2){
                         if (dv.getGiaBan()>=50000 && dv.getGiaBan()<=100000){
                             Object[] rowData = {i, dv.getMaDichVu(), dv.getTenDichVu(),dv.getMaLoaiDichVu().getTenLoaiDichVu(), dv.getDonViTinh(), dv.getSoLuongTon(), df.format(dv.getGiaBan())};
                             modelTblDichVu.addRow(rowData);
+                            i++;
                         }
                     }else if (cmbGiaBan.getSelectedIndex()==3){
                         if (dv.getGiaBan()>=100000 && dv.getGiaBan()<=500000){
                             Object[] rowData = {i, dv.getMaDichVu(), dv.getTenDichVu(),dv.getMaLoaiDichVu().getTenLoaiDichVu(), dv.getDonViTinh(), dv.getSoLuongTon(), df.format(dv.getGiaBan())};
                             modelTblDichVu.addRow(rowData);
+                            i++;
                         }
                     }
-                    i++;
                 }
             }
         });

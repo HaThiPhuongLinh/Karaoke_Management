@@ -105,7 +105,7 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
         pnlCusControl.add(lblMaKH);
         txtMaKH = new JTextField();
         txtMaKH.setBounds(195, 20, 350, 30);
-//        txtMaKH.setEditable(false);
+        txtMaKH.setEditable(false);
         pnlCusControl.add(txtMaKH);
 
         lblTenKH = new JLabel("Tên Khách Hàng: ");
