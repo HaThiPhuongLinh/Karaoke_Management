@@ -205,8 +205,8 @@ public class SearchingService_UI extends JPanel implements ActionListener, Mouse
                             selectedLoaiDichVu.equalsIgnoreCase(dv.getMaLoaiDichVu().getTenLoaiDichVu())) {
                         Object[] rowData = {i, dv.getMaDichVu(), dv.getTenDichVu(),dv.getMaLoaiDichVu().getTenLoaiDichVu(), dv.getDonViTinh(), dv.getSoLuongTon(), df.format(dv.getGiaBan())};
                         modelTblDichVu.addRow(rowData);
+                        i++;
                     }
-                    i++;
                 }
             }
         });

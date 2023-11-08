@@ -30,16 +30,19 @@ import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 
 /**
  * Giao diện quản lý đặt phòng
- * Author: Hà Thị Phương Linh
+ * Người tham gia thiết kế: Hà Thị Phương Linh
+ * Ngày tạo: 09/10/2023
+ * Lần cập nhật cuối: 10/11/2023
+ * Nội dung cập nhật: Sửa tính năng click dòng hiển thị thông tin lên jtextfield
  */
 public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseListener {
     public static JTextField txtCustomer;
     public static Staff staffLogin = null;
     private static KaraokeBooking_UI instance = new KaraokeBooking_UI(staffLogin);
-    private DefaultTableModel modelService;
+    private DefaultTableModel modelTblService;
     KaraokeBooking_UI main = this;
-    private JPanel pnlShowRoom, pnlRoomList, timeNow, pnlRoomControl, pnlShowCustomer, pnlShowDetails;
-    private JLabel backgroundLabel, timeLabel, roomLabel, statusLabel, customerLabel, room2Label, typeRoomLabel, locationLabel, nameLabel, startLabel, receiveLabel;
+    private JPanel pnlShowRoom, pnlRoomList, pnlTimeNow, pnlRoomControl, pnlShowCustomer, pnlShowDetails;
+    private JLabel lblBackGround, lblTime, lblRoom, lblStatus, lblCustomer, lblRoom2, lblTypeRoom, lblLocation, lblName, lblStart;
     private JTextField txtLocation, txtName, txtStart, txtTypeRoom;
     public JTextField txtRoom;
     private JScrollPane scrShowRoom, scrService;
@@ -76,16 +79,16 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
         roomDAO = new RoomDAO();
         billDAO = new BillDAO();
 
-        timeNow = new JPanel();
-        timeNow.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "", TitledBorder.LEADING, TitledBorder.TOP));
-        timeNow.setBounds(12, 10, 300, 50);
-        timeNow.setOpaque(false);
-        add(timeNow);
+        pnlTimeNow = new JPanel();
+        pnlTimeNow.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "", TitledBorder.LEADING, TitledBorder.TOP));
+        pnlTimeNow.setBounds(12, 10, 300, 50);
+        pnlTimeNow.setOpaque(false);
+        add(pnlTimeNow);
 
-        timeLabel = new JLabel();
-        timeLabel.setFont(new Font("Arial", Font.BOLD, 33));
-        timeLabel.setForeground(Color.WHITE);
-        timeNow.add(timeLabel);
+        lblTime = new JLabel();
+        lblTime.setFont(new Font("Arial", Font.BOLD, 33));
+        lblTime.setForeground(Color.WHITE);
+        pnlTimeNow.add(lblTime);
 
         Timer timer = new Timer(10, new ActionListener() {
             @Override
@@ -109,11 +112,11 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
         pnlRoomControl.setLayout(null);
         pnlRoomControl.setPreferredSize(new Dimension(330, 55));
 
-        roomLabel = new JLabel("Loại phòng: ");
-        roomLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        roomLabel.setBounds(20, 17, 85, 20);
-        roomLabel.setForeground(Color.WHITE);
-        pnlRoomControl.add(roomLabel);
+        lblRoom = new JLabel("Loại phòng: ");
+        lblRoom.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblRoom.setBounds(20, 17, 85, 20);
+        lblRoom.setForeground(Color.WHITE);
+        pnlRoomControl.add(lblRoom);
 
         cboRoomType = new JComboBox<String>();
         loadCboRoomType();
@@ -129,11 +132,11 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
         btnSwitchRoom.setBounds(260, 12, 135, 30);
         pnlRoomControl.add(btnSwitchRoom);
 
-        statusLabel = new JLabel("Trạng thái: ");
-        statusLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        statusLabel.setBounds(420, 17, 85, 20);
-        statusLabel.setForeground(Color.WHITE);
-        pnlRoomControl.add(statusLabel);
+        lblStatus = new JLabel("Trạng thái: ");
+        lblStatus.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblStatus.setBounds(420, 17, 85, 20);
+        lblStatus.setForeground(Color.WHITE);
+        pnlRoomControl.add(lblStatus);
 
         cboStatus = new JComboBox<String>();
         cboStatus.addItem("Tất cả");
@@ -168,11 +171,11 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
         pnlShowCustomer.setLayout(null);
         add(pnlShowCustomer);
 
-        customerLabel = new JLabel("Khách hàng: ");
-        customerLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        customerLabel.setBounds(20, 30, 85, 20);
-        customerLabel.setForeground(Color.WHITE);
-        pnlShowCustomer.add(customerLabel);
+        lblCustomer = new JLabel("Khách hàng: ");
+        lblCustomer.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblCustomer.setBounds(20, 30, 85, 20);
+        lblCustomer.setForeground(Color.WHITE);
+        pnlShowCustomer.add(lblCustomer);
 
         txtCustomer = new JTextField();
         txtCustomer.setBounds(120, 27, 220, 30);
@@ -211,60 +214,60 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
         pnlShowDetails.setOpaque(false);
         add(pnlShowDetails);
 
-        room2Label = new JLabel("Mã phòng: ");
-        room2Label.setFont(new Font("Arial", Font.PLAIN, 14));
-        room2Label.setBounds(40, 37, 100, 20);
-        room2Label.setForeground(Color.WHITE);
-        pnlShowDetails.add(room2Label);
+        lblRoom2 = new JLabel("Mã phòng: ");
+        lblRoom2.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblRoom2.setBounds(40, 37, 100, 20);
+        lblRoom2.setForeground(Color.WHITE);
+        pnlShowDetails.add(lblRoom2);
 
         txtRoom = new JTextField();
         txtRoom.setBounds(160, 33, 220, 26);
         pnlShowDetails.add(txtRoom);
 
-        typeRoomLabel = new JLabel("Loại phòng: ");
-        typeRoomLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        typeRoomLabel.setBounds(40, 87, 100, 20);
-        typeRoomLabel.setForeground(Color.WHITE);
-        pnlShowDetails.add(typeRoomLabel);
+        lblTypeRoom = new JLabel("Loại phòng: ");
+        lblTypeRoom.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblTypeRoom.setBounds(40, 87, 100, 20);
+        lblTypeRoom.setForeground(Color.WHITE);
+        pnlShowDetails.add(lblTypeRoom);
 
         txtTypeRoom = new JTextField();
         txtTypeRoom.setBounds(160, 83, 220, 26);
         pnlShowDetails.add(txtTypeRoom);
 
-        locationLabel = new JLabel("Vị trí: ");
-        locationLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        locationLabel.setBounds(40, 137, 100, 20);
-        locationLabel.setForeground(Color.WHITE);
-        pnlShowDetails.add(locationLabel);
+        lblLocation = new JLabel("Vị trí: ");
+        lblLocation.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblLocation.setBounds(40, 137, 100, 20);
+        lblLocation.setForeground(Color.WHITE);
+        pnlShowDetails.add(lblLocation);
 
         txtLocation = new JTextField();
         txtLocation.setBounds(160, 133, 220, 26);
         pnlShowDetails.add(txtLocation);
 
-        nameLabel = new JLabel("Tên khách hàng: ");
-        nameLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        nameLabel.setBounds(40, 187, 130, 20);
-        nameLabel.setForeground(Color.WHITE);
-        pnlShowDetails.add(nameLabel);
+        lblName = new JLabel("Tên khách hàng: ");
+        lblName.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblName.setBounds(40, 187, 130, 20);
+        lblName.setForeground(Color.WHITE);
+        pnlShowDetails.add(lblName);
 
         txtName = new JTextField();
         txtName.setBounds(160, 183, 220, 26);
         pnlShowDetails.add(txtName);
 
-        startLabel = new JLabel("Giờ vào: ");
-        startLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        startLabel.setBounds(40, 237, 100, 20);
-        startLabel.setForeground(Color.WHITE);
-        pnlShowDetails.add(startLabel);
+        lblStart = new JLabel("Giờ vào: ");
+        lblStart.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblStart.setBounds(40, 237, 100, 20);
+        lblStart.setForeground(Color.WHITE);
+        pnlShowDetails.add(lblStart);
 
         txtStart = new JTextField();
         txtStart.setBounds(160, 233, 220, 26);
         pnlShowDetails.add(txtStart);
 
         String[] colsService = {"Tên DV", "Số lượng", "Giá bán",};
-        modelService = new DefaultTableModel(colsService, 0);
+        modelTblService = new DefaultTableModel(colsService, 0);
 
-        tblService = new JTable(modelService);
+        tblService = new JTable(modelTblService);
         Custom.setCustomTable(tblService);
 
         pnlShowDetails.add(scrService = new JScrollPane(tblService, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
@@ -280,9 +283,9 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
         btnSwitchRoom.addActionListener(this);
 
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/images/background.png"));
-        backgroundLabel = new JLabel(backgroundImage);
-        backgroundLabel.setBounds(0, 0, getWidth(), getHeight());
-        add(backgroundLabel);
+        lblBackGround = new JLabel(backgroundImage);
+        lblBackGround.setBounds(0, 0, getWidth(), getHeight());
+        add(lblBackGround);
 
         ArrayList<Room> roomList = roomDAO.getRoomList();
         for (Room room : roomList) {
@@ -314,12 +317,19 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
 
     }
 
+    /**
+     * Tạo thể hiện hiện tại cho class KaraokeBooking_UI
+     * @return
+     */
     public static KaraokeBooking_UI getInstance() {
         if (instance == null)
             instance = new KaraokeBooking_UI(staffLogin);
         return instance;
     }
 
+    /**
+     * Chỉnh size của bảng tblService
+     */
     private void reSizeColumnTableService() {
         TableColumnModel tcm = tblService.getColumnModel();
 
@@ -337,6 +347,9 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
         tcm.getColumn(2).setCellRenderer(rightRenderer);
     }
 
+    /**
+     * Load dữ liệu tất cả loại phòng lên cboRoomType
+     */
     private void loadCboRoomType() {
         java.util.List<TypeOfRoom> dataList = typeOfRoomDAO.getAllLoaiPhong();
         cboRoomType.addItem("Tất cả");
@@ -346,7 +359,7 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
     }
 
     /**
-     * Load thông tin phòng lên btnRoomList
+     * Load thông tin phòng lên btnRoomList bao gồm roomID và status của Room (statusP)
      *
      * @param roomID1 {@code ArrayList<Room>}: ID phòng
      */
@@ -398,7 +411,7 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
     }
 
     /**
-     * Hiển thị danh sách phòng được truyền vào lên giao diện
+     * Hiển thị danh sách phòng được truyền vào lên giao diện thông qua btnRoomList
      *
      * @param listRoom {@code ArrayList<Room>}: danh sách phòng cần hiển thị
      */
@@ -547,7 +560,7 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
     /**
      * Hiển thị danh sách phòng dựa trên trạng thái
      *
-     * @param statusRoom {@code String}: trạng thái
+     * @param statusRoom {@code String}: trạng thái phòng
      */
     private void loadRoomListByRoomStatus(String statusRoom) {
         ArrayList<Room> dataList = new ArrayList<Room>();
@@ -561,19 +574,18 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
     }
 
     /**
-     * Gán thời gian hiện tại cho label timeLabel
+     * Gán thời gian hiện tại cho label lblTime
      */
     private void updateTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String time = sdf.format(new Date());
-        timeLabel.setText(time);
+        lblTime.setText(time);
     }
 
-    private String generateID() {
-        String formID = reservationFormDAO.generateNextFormId();
-        return formID;
-    }
-
+    /**
+     * Sinh mã hóa đơn tự động
+     * @return
+     */
     private String generateBillID() {
         String billID = billDAO.generateNextBillId();
         return billID;
@@ -721,12 +733,15 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
         }
     }
 
+    /**
+     * Hiển thị thông tin chi tiết dịch vụ của phòng khi click vào phòng đang sử dụng
+     * @param maPhong: mã phòng
+     */
     private void showBillInfo(String maPhong) {
         ArrayList<DetailsOfService> dataList = detailOfServiceDAO.getDetailsOfServiceListByRoomId(maPhong);
         int i = 1;
-        modelService.getDataVector().removeAllElements();
-        modelService.fireTableDataChanged();
-        Double totalPrice = 0.0;
+        modelTblService.getDataVector().removeAllElements();
+        modelTblService.fireTableDataChanged();
         serviceOrderList.clear();
         for (DetailsOfService item : dataList) {
             Service service = item.getMaDichVu();
@@ -739,7 +754,7 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
             }
             String priceStr = df.format(item.getGiaBan());
             String quantityStr = df.format(item.getSoLuong());
-            modelService.addRow(new Object[]{service.getTenDichVu(),
+            modelTblService.addRow(new Object[]{service.getTenDichVu(),
                    quantityStr, priceStr});
         }
     }

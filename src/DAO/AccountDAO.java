@@ -6,53 +6,17 @@ import ConnectDB.ConnectDB;
 
 import java.sql.*;
 
-public class    AccountDAO {
+public class AccountDAO {
     private static AccountDAO instance = new AccountDAO();
     public static AccountDAO getInstance() {
         return instance;
     }
 
-
-    public Account getAccountByTaiKhoan(String taiKhoan) {
-        Account account = null;
-        ConnectDB.getInstance();
-        Connection con = ConnectDB.getConnection();
-
-        String sql = "SELECT * FROM TaiKhoan WHERE taiKhoan = ?";
-        try (PreparedStatement preparedStatement = con.prepareStatement(sql)) {
-            preparedStatement.setString(1, taiKhoan);
-
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    account = new Account(resultSet);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return account;
-    }
-
-    public String getAccountByAccount(String taiKhoan) {
-        String account = null;
-        ConnectDB.getInstance();
-        Connection con = ConnectDB.getConnection();
-
-        String sql = "SELECT * FROM TaiKhoan WHERE taiKhoan = ?";
-        try (PreparedStatement preparedStatement = con.prepareStatement(sql)) {
-            preparedStatement.setString(1, taiKhoan);
-
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    account = resultSet.getString("taiKhoan");
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return account;
-    }
-
+    /**
+     * Kiểm tra đăng nhập thông qua tình trạng của tài khoản
+     * @param user: truyền vào taiKhoan và matKhau
+     * @return
+     */
     public int checkLogin(Account user) {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();

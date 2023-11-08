@@ -11,6 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReservationFormDAO {
+
+    /**
+     * Lấy ra toàn bộ phiếu đặt phòng
+     * @return  List<ReservationForm>
+     */
     public List<ReservationForm> getAllForm() {
         List<ReservationForm> listForm = new ArrayList<ReservationForm>();
         ConnectDB.getInstance();
@@ -29,6 +34,11 @@ public class ReservationFormDAO {
         return listForm;
     }
 
+    /**
+     * Thêm phiếu đặt phòng
+     * @param form: phiếu đặt phòng
+     * @return true/false
+     */
     public boolean addReservationForm(ReservationForm form) {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
@@ -62,6 +72,11 @@ public class ReservationFormDAO {
         return false;
     }
 
+    /**
+     * Xóa phiếu đặt phòng thông qua mã phiếu
+     * @param maPhieuDat: mã phiếu đặt
+     * @return true/false
+     */
     public boolean deleteReservationForm(String maPhieuDat) {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -92,7 +107,11 @@ public class ReservationFormDAO {
         return false;
     }
 
-
+    /**
+     * Lấy ra phiếu đặt phòng bằng mã phòng
+     * @param roomID
+     * @return
+     */
     public ReservationForm getReservationFormByRoomId(String roomID) {
         ReservationForm reservationForm = null;
         ConnectDB.getInstance();
