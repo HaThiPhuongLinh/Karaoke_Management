@@ -30,6 +30,10 @@ public class ConnectDB {
         con = DriverManager.getConnection(url, user, password);
     }
 
+    /**
+     * Truyền kết nối Driver
+     * @return
+     */
     public static Connection getConnection() {
         return con;
     }

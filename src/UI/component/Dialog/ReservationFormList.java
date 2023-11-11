@@ -25,6 +25,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 
+/**
+ * Giao diện hiển thị phiếu đặt phòng
+ * Người tham gia thiết kế: Hà Thị Phương Linh
+ * Ngày tạo: 25/10/2023
+ * Lần cập nhật cuối: 01/11/2023
+ * Nội dung cập nhật: Cập nhật tính năng nhận phòng
+ */
 public class ReservationFormList extends JFrame implements ActionListener, MouseListener {
     private static KaraokeBooking_UI main;
     private static ReservationFormList instance;
@@ -361,18 +368,10 @@ public class ReservationFormList extends JFrame implements ActionListener, Mouse
         }
     }
 
-    private void receiveRoom(String roomID) {
-        int maPhieuColumn = 0;
-        String reservationFormID = table.getValueAt(table.getSelectedRow(), maPhieuColumn).toString();
-        boolean deleteResult = reservationFormDAO.deleteReservationForm(reservationFormID);
-
-        roomDAO.updateRoomStatus(roomID, "Đang sử dụng");
-        ArrayList<Room> yourListOfRooms = roomDAO.getRoomList();
-        main.LoadRoomList(yourListOfRooms);
-        JOptionPane.showMessageDialog(this, "Nhận phòng thành công");
-        dispose();
-    }
-
+    /**
+     * Tự phát sinh mã hóa đơn
+     * @return String
+     */
     private String generateBillID() {
         String billID = billDAO.generateNextBillId();
         return billID;

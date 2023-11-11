@@ -7,6 +7,13 @@ import java.text.*;
 import java.sql.Date;
 import java.util.Calendar;
 
+/**
+ * Giao diện lịch
+ * Người tham gia thiết kế: Hà Thị Phương Linh, Nguyễn Đình Dương, Nguyễn Quang Duy
+ * Ngày tạo: 26/09/2023
+ * Lần cập nhật cuối: 22/10/2023
+ * Nội dung cập nhật: thêm tính năng getDatesFromToday (lấy ra ngày từ ngày hiện tại)
+ */
 public class DatePicker extends JPanel implements ActionListener {
     private JTextField txt;
     private JButton btn;
@@ -17,10 +24,6 @@ public class DatePicker extends JPanel implements ActionListener {
 
     public DatePicker() {
         setLayout(null);
-        // setSize(200, 200);
-        // setResizable(false);
-        // setLocationRelativeTo(null);
-        // setDefaultCloseOperation(EXIT_ON_CLOSE);
         createGUI();
     }
 
@@ -178,21 +181,4 @@ public class DatePicker extends JPanel implements ActionListener {
         return date;
     }
 
-    /**
-     * Trả về ngày được hiển thị dạng {@code java.sql.Date}
-     *
-     * @return {@code java.sql.Date}: trả bề ngày được hiển thị
-     */
-    public Date getValueSqlDate() {
-        String strDate = txt.getText().trim();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-        java.util.Date date = null;
-        try {
-            date = sdf.parse(strDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        Date sqlDate = new Date(date.getTime());
-        return sqlDate;
-    }
 }

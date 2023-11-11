@@ -53,7 +53,7 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
     private JTable tblService;
     private TypeOfRoomDAO typeOfRoomDAO;
     private RoomDAO roomDAO;
-    private JComboBox<String> cboRoomType, cboStatus;
+    private JComboBox<String> cmbRoomType, cmbStatus;
     private ReservationFormDAO reservationFormDAO;
     private CustomerDAO customerDAO;
     private BillDAO billDAO;
@@ -118,11 +118,11 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
         lblRoom.setForeground(Color.WHITE);
         pnlRoomControl.add(lblRoom);
 
-        cboRoomType = new JComboBox<String>();
+        cmbRoomType = new JComboBox<String>();
         loadCboRoomType();
-        cboRoomType.setBounds(106, 14, 140, 28);
-        Custom.setCustomComboBox(cboRoomType);
-        pnlRoomControl.add(cboRoomType);
+        cmbRoomType.setBounds(106, 14, 140, 28);
+        Custom.setCustomComboBox(cmbRoomType);
+        pnlRoomControl.add(cmbRoomType);
 
         btnSwitchRoom = new JButton("Đổi phòng");
         btnSwitchRoom.setFont(new Font("Arial", Font.BOLD, 14));
@@ -138,14 +138,14 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
         lblStatus.setForeground(Color.WHITE);
         pnlRoomControl.add(lblStatus);
 
-        cboStatus = new JComboBox<String>();
-        cboStatus.addItem("Tất cả");
-        cboStatus.addItem("Trống");
-        cboStatus.addItem("Đang sử dụng");
-        cboStatus.addItem("Chờ");
-        cboStatus.setBounds(500, 14, 140, 28);
-        Custom.setCustomComboBox(cboStatus);
-        pnlRoomControl.add(cboStatus);
+        cmbStatus = new JComboBox<String>();
+        cmbStatus.addItem("Tất cả");
+        cmbStatus.addItem("Trống");
+        cmbStatus.addItem("Đang sử dụng");
+        cmbStatus.addItem("Chờ");
+        cmbStatus.setBounds(500, 14, 140, 28);
+        Custom.setCustomComboBox(cmbStatus);
+        pnlRoomControl.add(cmbStatus);
 
         pnlShowRoom = new JPanel();
         pnlShowRoom.setOpaque(false);
@@ -299,18 +299,18 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
         LoadRoomList(roomList);
         reSizeColumnTableService();
 
-        cboRoomType.addActionListener(new ActionListener() {
+        cmbRoomType.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String roomTypeName = cboRoomType.getSelectedItem().toString();
+                String roomTypeName = cmbRoomType.getSelectedItem().toString();
                 loadRoomListByRoomTypeName(roomTypeName);
             }
         });
 
-        cboStatus.addActionListener(new ActionListener() {
+        cmbStatus.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String status = cboStatus.getSelectedItem().toString();
+                String status = cmbStatus.getSelectedItem().toString();
                 loadRoomListByRoomStatus(status);
             }
         });
@@ -352,9 +352,9 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
      */
     private void loadCboRoomType() {
         java.util.List<TypeOfRoom> dataList = typeOfRoomDAO.getAllLoaiPhong();
-        cboRoomType.addItem("Tất cả");
+        cmbRoomType.addItem("Tất cả");
         for (TypeOfRoom roomType : dataList) {
-            cboRoomType.addItem(roomType.getTenLoaiPhong());
+            cmbRoomType.addItem(roomType.getTenLoaiPhong());
         }
     }
 

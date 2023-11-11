@@ -12,7 +12,13 @@ import menu.Menu;
 import java.awt.*;
 import java.awt.event.*;
 
-
+/**
+ * Giao diện đăng nhập
+ * Người tham gia thiết kế: Hà Thị Phương Linh
+ * Ngày tạo: 10/09/2023
+ * Lần cập nhật cuối: 17/10/2023
+ * Nội dung cập nhật: phân quyền nhân viên khi đăng nhập
+ */
 public class LoginUI extends JFrame{
     private JTextField usernameField;
     private JPasswordField passwordField;
@@ -22,8 +28,6 @@ public class LoginUI extends JFrame{
 
     private AccountDAO logInDAO = new AccountDAO();
     private StaffDAO staffDAO = new StaffDAO();
-    private Account account;
-    private Main main;
     public static Menu menu;
 
     public LoginUI() {
@@ -61,7 +65,6 @@ public class LoginUI extends JFrame{
         usernameLabel.setBounds(70, 140, 280, 15);
         rightPanel.add(usernameLabel);
         usernameField = new JTextField();
-        usernameField.setText("maithaivu");
         usernameField.setBounds(70, 160, 280, 30);
         usernameField.setBorder(borderBottomFocus);
         rightPanel.add(usernameField);
@@ -70,7 +73,6 @@ public class LoginUI extends JFrame{
         passwordLabel.setBounds(70, 210, 280, 15);
         rightPanel.add(passwordLabel);
         passwordField = new JPasswordField();
-        passwordField.setText("1");
         passwordField.setBounds(70, 230, 280, 30);
         passwordField.setBorder(borderBottomFocus);
         rightPanel.add(passwordField);

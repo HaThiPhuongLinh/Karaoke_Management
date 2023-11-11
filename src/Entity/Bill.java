@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Entity:Hóa đơn
- * Người thiết kế :Nguyễn Đình Dương
+ * Entity: Hóa đơn
+ * Người thiết kế: Nguyễn Đình Dương
  */
 public class Bill {
     private String maHoaDon;

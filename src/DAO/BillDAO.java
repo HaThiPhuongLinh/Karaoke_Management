@@ -7,6 +7,15 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * Người tham gia thiết kế: Hà Thị Phương Linh, Nguyễn Quang Duy, Nguyễn Đình Dương
+ * <p>
+ * Ngày tạo: 23/10/2023
+ * <p>
+ * Lần cập nhật cuối: 06/11/2023
+ * <p>
+ * Nội dung cập nhật: cập nhật lịch sử code
+ */
 public class BillDAO {
     private static BillDAO instance = new BillDAO();
 

@@ -6,6 +6,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
 
+/**
+ * Entity: Loại phòng
+ * Người thiết kế: Hà Thị Phương Linh
+ */
 public class TypeOfRoom {
     private String maLoaiPhong;
     private String tenLoaiPhong;

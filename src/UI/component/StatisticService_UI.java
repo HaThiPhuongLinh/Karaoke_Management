@@ -46,7 +46,7 @@ public class StatisticService_UI extends JPanel implements ActionListener , Item
     private JLabel lblBackGround, lblTime;
     private DetailOfServiceDAO detailOfServiceDAO;
     private ServiceDAO serviceDAO;
-    private DecimalFormat df = new DecimalFormat("#,###.##");
+    private DecimalFormat df = new DecimalFormat("#,###.## VND");
     public static Staff staffLogin = null;
 
     public StatisticService_UI(Staff staff){
@@ -235,7 +235,7 @@ public class StatisticService_UI extends JPanel implements ActionListener , Item
 
         // Sắp xếp danh sách tạm thời theo thứ tự giảm dần của giá
 
-        dataToAdd.sort((o1, o2) -> Double.compare(Double.valueOf(o2[4].toString().replace(",", "")), Double.valueOf(o1[4].toString().replace(",", ""))));
+        dataToAdd.sort((o1, o2) -> Double.compare(Double.valueOf(o2[4].toString().replace(",", "").replace(" VND", "")), Double.valueOf(o1[4].toString().replace(",", "").replace(" VND", ""))));
         // Tăng stt
         for (int j = 0; j < dataToAdd.size(); j++) {
             dataToAdd.get(j)[0] = j + 1;

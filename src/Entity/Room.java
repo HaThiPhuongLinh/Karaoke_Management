@@ -83,8 +83,8 @@ public class Room {
         return "Room{" +
                 "maPhong='" + maPhong + '\'' +
                 ", loaiPhong=" + loaiPhong +
-                ", tinhTrang='" + tinhTrang + '\'' +
                 ", viTri='" + viTri + '\'' +
+                ", tinhTrang='" + tinhTrang + '\'' +
                 ", giaPhong=" + giaPhong +
                 '}';
     }

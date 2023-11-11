@@ -8,6 +8,13 @@ import java.text.*;
 import java.util.Calendar;
 import java.sql.*;
 
+/**
+ * Giao diện lịch
+ * Người tham gia thiết kế: Hà Thị Phương Linh, Nguyễn Đình Dương, Nguyễn Quang Duy
+ * Ngày tạo: 26/09/2023
+ * Lần cập nhật cuối: 17/10/2023
+ * Nội dung cập nhật: chỉnh sửa màu lịch
+ */
 public class DiaLogDatePicker extends JDialog implements ActionListener, ChangeListener {
     private int width = 450, heightPn = 210, widthPn = width - 20;
     private JButton[] button = new JButton[49];

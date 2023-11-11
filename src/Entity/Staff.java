@@ -7,8 +7,8 @@ import java.sql.SQLException;
 import java.util.Date;
 
 /**
- * Entity:Nhân Viên
- * Người thiết kế :Nguyễn Đình Dương
+ * Entity: Nhân Viên
+ * Người thiết kế: Nguyễn Đình Dương
  */
 public class Staff {
     private String maNhanVien;

@@ -42,7 +42,6 @@ public class RoomDAO {
         return rooms;
     }
 
-
     /**
      * Lầy danh sách phòng dựa trên ID phòng
      *
@@ -299,7 +298,7 @@ public class RoomDAO {
         PreparedStatement statement = null;
         int n = 0;
         try {
-            String sql = "insert into dbo.Phong (maPhong, maLoaiPhong, tinhTrang,viTri, giaPhong)" + "values (?,?,?,?,?)";
+            String sql = "insert into dbo.Phong (maPhong, maLoaiPhong, tinhTrang, viTri, giaPhong)" + "values (?,?,?,?,?)";
             statement = con.prepareStatement(sql);
             statement.setString(1, ro.getMaPhong());
             statement.setString(2, ro.getLoaiPhong().getMaLoaiPhong());

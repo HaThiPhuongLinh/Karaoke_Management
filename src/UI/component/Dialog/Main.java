@@ -13,6 +13,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Giao diện chính (main) gồm header, menu và body
+ * Người tham gia thiết kế: Hà Thị Phương Linh
+ * Ngày tạo: 10/09/2023
+ * Lần cập nhật cuối: 05/11/2023
+ * Nội dung cập nhật: thêm menu listBill_UI
+ */
 public class Main extends JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private static Main instance;
@@ -24,6 +31,10 @@ public class Main extends JFrame {
     private RoundPanel roundPanel1;
     private static Staff staffLogin = null;
 
+    /**
+     * Khởi tạo Main
+     * @param staff: thông tin nhân viên đăng nhập
+     */
     public Main(Staff staff) {
         initComponents();
         staffLogin = staff;
@@ -160,12 +171,22 @@ public class Main extends JFrame {
 //        });
     }
 
+    /**
+     * Hiển thị component lên body
+     * @param com: component
+     */
     public void showForm(Component com) {
         body.removeAll();
         body.add(com);
         body.revalidate();
         body.repaint();
     }
+
+    /**
+     * Tạo thể hiện hiện tại cho Main
+     * @param staffLogin: thông tin nhân viên đăng nhập
+     * @return
+     */
     public static Main getInstance(Staff staffLogin) {
         if (instance == null)
             instance = new Main(staffLogin);
@@ -173,6 +194,10 @@ public class Main extends JFrame {
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+
+    /**
+     * Khởi tạo các components từ header, menu và body
+     */
     private void initComponents() {
         roundPanel1 = new RoundPanel();
         header2 = new Header();

@@ -7,6 +7,15 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Người tham gia thiết kế: Nguyễn Đình Dương
+ * <p>
+ * Ngày tạo: 23/09/2023
+ * <p>
+ * Lần cập nhật cuối: 06/11/2023
+ * <p>
+ * Nội dung cập nhật: cập nhật lịch sử code
+ */
 public class CustomerDAO {
     private static CustomerDAO instance = new CustomerDAO();
 

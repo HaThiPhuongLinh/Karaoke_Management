@@ -1,8 +1,5 @@
 package Entity;
 
-/**
- * Người thiết kế:Hà Thị Phương Linh
- */
 public class DetailsOfBill {
     private Bill maHoaDon;
     private Room maPhong;

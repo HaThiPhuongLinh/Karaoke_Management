@@ -8,7 +8,7 @@ import java.util.ArrayList;
 /**
  * Thêm, sửa, đọc dữ liệu từ database cho lớp {@code ServiceDAO}
  * <p>
- * Người tham gia thiết kế: Nguyễn Quang Duy
+ * Người tham gia thiết kế: Nguyễn Quang Duy, Hà Thị Phương Linh
  * <p>
  * Ngày tạo: 07/10/2023
  * <p>
@@ -16,6 +16,7 @@ import java.util.ArrayList;
  * <p>
  * Nội dung cập nhật: thêm javadoc
  */
+
 
 public class ServiceDAO {
     /**
@@ -45,6 +46,7 @@ public class ServiceDAO {
      * @param name tên dịch vụ
      * @return {@code ArrayList<Service>}: danh sách theo tên dịch vụ
      */
+
     public ArrayList<Service> getServiceByName(String name) {
         ArrayList<Service> lst = new ArrayList<>();
         ConnectDB.getInstance();

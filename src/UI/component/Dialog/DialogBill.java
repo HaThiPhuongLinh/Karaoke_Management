@@ -25,14 +25,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-//import Event_Handlers.ConvertTime;
-//import Event_Handlers.ExportBill;
-
 /**
- * Thiết kế giao diện Hóa đơn
- * Người thiết kế :Nguyễn Đình Dương
+ * Thiết kế giao diện hóa đơn tính tiền
+ * Người tham gia thiết kế: Nguyễn Đình Dương
+ * Ngày tạo: 29/10/2023
+ * Lần cập nhật cuối: 06/11/2023
+ * Nội dung cập nhật: sửa định dạng tiền VND
  */
-
 public class DialogBill extends JDialog implements ActionListener {
     private final String WORKING_DIR = System.getProperty("user.dir");
     private Bill_UI billUI;

@@ -30,7 +30,7 @@ import java.util.Date;
  */
 public class ListBill_UI extends JPanel implements ActionListener,MouseListener,ItemListener {
     public static Staff staffLogin = null;
-    private JComboBox<String> cboLocTheo;
+    private JComboBox<String> cmbLocTheo;
     private JTable tblHD;
     private DefaultTableModel modelTblHD;
     private JButton btnThongKe, btnLamMoi;
@@ -116,16 +116,16 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
         labelLocTheo.setForeground(Color.WHITE);
         add(labelLocTheo);
 
-        cboLocTheo = new JComboBox<String>();
-        cboLocTheo.addItem("Tùy chỉnh");
-        cboLocTheo.addItem("7 ngày gần nhất");
-        cboLocTheo.addItem("1 tháng gần nhất");
-        cboLocTheo.addItem("3 tháng gần nhất");
-        cboLocTheo.addItem("6 tháng gần nhất");
-        cboLocTheo.addItem("1 năm gần nhất");
-        cboLocTheo.setBounds(830,100,200,30);
-        Custom.setCustomComboBox(cboLocTheo);
-        add(cboLocTheo);
+        cmbLocTheo = new JComboBox<String>();
+        cmbLocTheo.addItem("Tùy chỉnh");
+        cmbLocTheo.addItem("7 ngày gần nhất");
+        cmbLocTheo.addItem("1 tháng gần nhất");
+        cmbLocTheo.addItem("3 tháng gần nhất");
+        cmbLocTheo.addItem("6 tháng gần nhất");
+        cmbLocTheo.addItem("1 năm gần nhất");
+        cmbLocTheo.setBounds(830,100,200,30);
+        Custom.setCustomComboBox(cmbLocTheo);
+        add(cmbLocTheo);
 
         //        btn thống kê
         btnThongKe = new JButton("Thống kê");
@@ -179,7 +179,7 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
         btnThongKe.addActionListener(this);
         btnLamMoi.addActionListener(this);
 
-        cboLocTheo.addItemListener(this);
+        cmbLocTheo.addItemListener(this);
         loadHD();
 
         //phan viet code
@@ -231,7 +231,7 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
         } else if (o.equals(btnLamMoi)) {
             modelTblHD.getDataVector().removeAllElements();
             tblHD.removeAll();
-            cboLocTheo.setSelectedIndex(0);
+            cmbLocTheo.setSelectedIndex(0);
             dpTuNgay.setValueToDay();
             dpDenNgay.setValueToDay();
         }
@@ -354,8 +354,8 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
      */
     public void itemStateChanged(ItemEvent e) {
         Object o = e.getSource();
-        if (o.equals(cboLocTheo)) {
-            String search = cboLocTheo.getSelectedItem().toString();
+        if (o.equals(cmbLocTheo)) {
+            String search = cmbLocTheo.getSelectedItem().toString();
             switch (search) {
                 case "7 ngày gần nhất":
                     dpTuNgay.setActive(false);

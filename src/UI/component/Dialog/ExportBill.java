@@ -13,14 +13,12 @@ import UI.CustomUI.Custom;
 import Entity.*;
 /**
  * Sử dụng xuất hóa đơn dạng pdf
- * Người tham gia thiết kế: Nguyen Dinh Duong
+ * Người tham gia thiết kế: Nguyễn Đình Dương
  * Ngày tạo: 27/10/2023
  * Lần cập nhật cuối: 06/11/2023
  * Nội dung cập nhật: sửa lỗi hiển thị khi xuất file pdf
  */
 public class ExportBill {
-
-
     private URL fontPath = ExportBill.class.getResource(Custom.pathFont);
 
     private BaseFont baseFontMedium;

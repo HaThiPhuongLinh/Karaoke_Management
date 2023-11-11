@@ -7,8 +7,8 @@ import java.util.Date;
 import java.util.Objects;
 
 /**
- * Entity:Khách Hàng
- * Người thiết kế :Nguyễn Đình Dương
+ * Entity: Khách Hàng
+ * Người thiết kế: Nguyễn Đình Dương
  */
 public class Customer {
     private String maKhachHang, tenKhachHang;

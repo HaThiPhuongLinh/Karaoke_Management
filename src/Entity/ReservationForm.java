@@ -8,6 +8,10 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
 
+/**
+ * Entity: Phiếu đặt phòng
+ * Người thiết kế: Hà Thị Phương Linh
+ */
 public class ReservationForm {
     private String maPhieuDat;
     private Timestamp thoiGianDat;

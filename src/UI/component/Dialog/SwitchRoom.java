@@ -5,7 +5,6 @@ import DAO.BillDAO;
 import DAO.RoomDAO;
 import Entity.Bill;
 import Entity.Room;
-import UI.CustomUI.Custom;
 import UI.component.KaraokeBooking_UI;
 
 import javax.swing.*;
@@ -18,11 +17,18 @@ import java.awt.event.MouseListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+/**
+ * Giao diện đổi phòng
+ * Người tham gia thiết kế: Hà Thị Phương Linh
+ * Ngày tạo: 06/11/2023
+ * Lần cập nhật cuối: 06/11/2023
+ * Nội dung cập nhật: Cập nhật tính năng đổi phòng
+ */
 public class SwitchRoom extends JFrame implements ActionListener {
-    public JLabel lblTitle, lblRoomID, lblRoomID2, lblArrow, lblRoomID3, lblRoomID4, lblCName2, lblRDay, lblTDay, lblMin, lblHour;
+    public JLabel lblTitle, lblRoomID, lblRoomID2, lblArrow, lblRoomID3, lblRoomID4;
     private JTextField txtRoom;
     private JButton btnFind, btnReturn, btnRefresh, btnSwitch;
-    private JPanel topPanel;
+    private JPanel plnTop;
     private JTable tblRoom;
     private DefaultTableModel modelTblRoom;
     private RoomDAO roomDAO = new RoomDAO();
@@ -45,16 +51,16 @@ public class SwitchRoom extends JFrame implements ActionListener {
             e.printStackTrace();
         }
 
-        topPanel = new JPanel();
-        topPanel.setBackground(Color.decode("#5F009D"));
-        topPanel.setBounds(0, 0, 760, 50);
+        plnTop = new JPanel();
+        plnTop.setBackground(Color.decode("#5F009D"));
+        plnTop.setBounds(0, 0, 760, 50);
         lblTitle = new JLabel("ĐỔI PHÒNG");
         lblTitle.setFont(new Font("Dialog", Font.BOLD, 25));
         lblTitle.setForeground(Color.WHITE);
         lblTitle.setBounds(10, 10, 760, 60);
         lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
-        topPanel.add(lblTitle);
-        add(topPanel);
+        plnTop.add(lblTitle);
+        add(plnTop);
 
         lblRoomID = new JLabel("Phòng hiện tại:");
         lblRoomID.setFont(new Font("Dialog", Font.PLAIN, 15));

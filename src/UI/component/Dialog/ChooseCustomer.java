@@ -27,11 +27,18 @@ import ConnectDB.ConnectDB;
 import UI.CustomUI.Custom;
 import UI.component.KaraokeBooking_UI;
 
+/**
+ * Giao diện chọn khách hàng
+ * Người tham gia thiết kế: Hà Thị Phương Linh
+ * Ngày tạo: 11/10/2023
+ * Lần cập nhật cuối: 22/11/2023
+ * Nội dung cập nhật: Sửa tính năng tìm khách hàng (btnFind)
+ */
 public class ChooseCustomer extends JFrame implements ActionListener, MouseListener {
-    private JTable table;
+    private JTable tblCustomer;
     JButton btnFind, btnChoose, btnALL;
     JTextField txtTim;
-    private DefaultTableModel modelTable;
+    private DefaultTableModel modelTblCustomer;
     private CustomerDAO customerDAO;
     private static KaraokeBooking_UI main;
     List<Customer> lstCustomer;
@@ -52,11 +59,19 @@ public class ChooseCustomer extends JFrame implements ActionListener, MouseListe
         gui();
     }
 
+    /**
+     * Format ngày theo dạng dd-MM-yyyy
+     * @param date: ngày kiểu Date
+     * @return (@code String)
+     */
     private String formatDate(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyy");
         return sdf.format(date);
     }
 
+    /**
+     * Khởi tạo giao diện
+     */
     private void gui() {
         JPanel panel = new JPanel();
         add(panel, BorderLayout.CENTER);
@@ -90,11 +105,11 @@ public class ChooseCustomer extends JFrame implements ActionListener, MouseListe
         pnTable.setLayout(new BorderLayout(0, 0));
         String[] cols = { "Mã khách hàng", "Tên khách hàng", "Số điện thoại", "Ngày Sinh" };
 
-        modelTable = new DefaultTableModel(cols, 0);
-        table = new JTable(modelTable);
-        JScrollPane scpTable = new JScrollPane(table);
+        modelTblCustomer = new DefaultTableModel(cols, 0);
+        tblCustomer = new JTable(modelTblCustomer);
+        JScrollPane scpTable = new JScrollPane(tblCustomer);
         pnTable.add(scpTable, BorderLayout.CENTER);
-        Custom.setCustomTable(table);
+        Custom.setCustomTable(tblCustomer);
 
         btnChoose = new JButton("Chọn");
         btnChoose.setBounds(380, 470, 100, 30);
@@ -108,12 +123,12 @@ public class ChooseCustomer extends JFrame implements ActionListener, MouseListe
         btnChoose.setFont(new Font("Arial", Font.BOLD, 14));
 
         customerDAO = new CustomerDAO();
-        table.setRowHeight(30);
+        tblCustomer.setRowHeight(30);
 
         for (Customer c : customerDAO.getAllKhachHang()) {
             String date = formatDate(c.getNgaySinh());
             Object[] rowData = { c.getMaKhachHang(), c.getTenKhachHang(), c.getSoDienThoai(), date};
-            modelTable.addRow(rowData);
+            modelTblCustomer.addRow(rowData);
         }
 
         btnFind.addActionListener(this);
@@ -163,15 +178,15 @@ public class ChooseCustomer extends JFrame implements ActionListener, MouseListe
                 JOptionPane.showMessageDialog(this, "Chưa nhập tên khách hàng");
             } else {
                 String tenKH = txtTim.getText().trim();
-                modelTable.getDataVector().removeAllElements();
-                modelTable.fireTableDataChanged();
+                modelTblCustomer.getDataVector().removeAllElements();
+                modelTblCustomer.fireTableDataChanged();
                 lstCustomer = customerDAO.getListKhachHangByName(tenKH);
                 if (lstCustomer == null || lstCustomer.size() <= 0) {
-                    modelTable.getDataVector().removeAllElements();
+                    modelTblCustomer.getDataVector().removeAllElements();
                 } else {
                     for (Customer c : lstCustomer) {
                         String date = formatDate(c.getNgaySinh());
-                        modelTable.addRow(new Object[] { c.getMaKhachHang(), c.getTenKhachHang(), c.getSoDienThoai(), date});
+                        modelTblCustomer.addRow(new Object[] { c.getMaKhachHang(), c.getTenKhachHang(), c.getSoDienThoai(), date});
                     }
 
                 }
@@ -179,37 +194,26 @@ public class ChooseCustomer extends JFrame implements ActionListener, MouseListe
 
         }
         if (o.equals(btnChoose)) {
-            int row = table.getSelectedRow();
+            int row = tblCustomer.getSelectedRow();
             if (row == -1) {
                 JOptionPane.showMessageDialog(this, "Chưa chọn khách hàng");
             }
             if (row != -1) {
-                String name = table.getModel().getValueAt(row, 1).toString();
-//				String makh = modelTable.getValueAt(row, 0).toString();
-//				dp.setMaKH(maKH);
+                String name = tblCustomer.getModel().getValueAt(row, 1).toString();
                 main.txtCustomer.setText(name);
                 dispose();
             }
         }
 
         if (o.equals(btnALL)) {
-            modelTable.setRowCount(0);
-            int row = table.getSelectedRow();
+            modelTblCustomer.setRowCount(0);
+            int row = tblCustomer.getSelectedRow();
             for (Customer c : customerDAO.getAllKhachHang()) {
                 String date = formatDate(c.getNgaySinh());
                 Object[] rowData = { c.getMaKhachHang(), c.getTenKhachHang(), c.getSoDienThoai(), date};
-                modelTable.addRow(rowData);
+                modelTblCustomer.addRow(rowData);
             }
             txtTim.setText("");
         }
-    }
-
-    public int findCustomer(String name) {
-        lstCustomer = customerDAO.getAllKhachHang();
-        for (int i = 0; i < lstCustomer.size(); i++)
-            if (lstCustomer.get(i).getTenKhachHang().equalsIgnoreCase(name))
-                return i;
-
-        return -1;
     }
 }

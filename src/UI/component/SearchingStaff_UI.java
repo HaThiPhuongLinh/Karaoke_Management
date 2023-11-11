@@ -26,15 +26,12 @@ import java.util.Date;
  * Nội dung cập nhật : Sửa tính năng tìm theo SDT
  */
 public class SearchingStaff_UI extends JPanel implements ActionListener, MouseListener {
-
-    private  JButton btnLamMoi;
+    private JButton btnLamMoi;
     private JTable tblNV;
-    private DefaultTableModel modelTableNV;
+    private DefaultTableModel modelTblNV;
     private JLabel lblBackground, lblTime, lblSearchbyName, lblSearchbyNumber, lblSearchbyCCCD, lblSearchStatus;
     private JPanel timeNow, pnlStaffList, pnlStaffControl;
-    private DefaultTableModel tableModelNV;
-    private JComboBox<String> cboTinhTrang;
-
+    private JComboBox<String> cmbTinhTrang;
     private JTextField txtSearchbyName, txtSearchbyNumber, txtSearchbyCCCD;
     private JButton btnTim;
     private StaffDAO StaffDAO;
@@ -136,12 +133,12 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
         lblSearchStatus.setForeground(Color.WHITE);
         pnlStaffControl.add(lblSearchStatus);
 
-        cboTinhTrang = new JComboBox<>();
-        cboTinhTrang.addItem("Tất cả");
-        cboTinhTrang.addItem("Đang làm");
-        cboTinhTrang.addItem("Đã nghỉ");
-        cboTinhTrang.setBounds(515, 165, 280, 30);
-        pnlStaffControl.add(cboTinhTrang);
+        cmbTinhTrang = new JComboBox<>();
+        cmbTinhTrang.addItem("Tất cả");
+        cmbTinhTrang.addItem("Đang làm");
+        cmbTinhTrang.addItem("Đã nghỉ");
+        cmbTinhTrang.setBounds(515, 165, 280, 30);
+        pnlStaffControl.add(cmbTinhTrang);
 
         JPanel panelDSNV = new JPanel();
         panelDSNV.setLayout(null);
@@ -150,10 +147,10 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
         panelDSNV.setOpaque(false);
 
         String[] colsNV = {"Mã NV", "Tên NV", "SDT", "CCCD", "Giới Tính", "Ngày Sinh", "Địa Chỉ", "Chức Vụ", "Tình Trạng", "Tài Khoản"};
-        modelTableNV = new DefaultTableModel(colsNV, 0);
+        modelTblNV = new DefaultTableModel(colsNV, 0);
         JScrollPane scrollPaneNV;
 
-        tblNV = new JTable(modelTableNV);
+        tblNV = new JTable(modelTblNV);
         tblNV.setFont(new Font("Arial", Font.BOLD, 14));
         tblNV.setBackground(new Color(255, 255, 255, 0));
         tblNV.setForeground(new Color(255, 255, 255));
@@ -176,11 +173,11 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
         btnTim.addActionListener(this);
         btnLamMoi.addActionListener(this);
 
-        cboTinhTrang.addActionListener(new ActionListener() {
+        cmbTinhTrang.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String selectedNhanVien = (String) cboTinhTrang.getSelectedItem();
-                modelTableNV.setRowCount(0);
+                String selectedNhanVien = (String) cmbTinhTrang.getSelectedItem();
+                modelTblNV.setRowCount(0);
                 String gt ="";
                 for (Staff staff : StaffDAO.getAllStaff()) {
                     String date = formatDate(staff.getNgaySinh());
@@ -193,7 +190,7 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
                         Object[] rowData = { staff.getMaNhanVien(), staff.getTenNhanVien(), staff.getSoDienThoai(),
                                 staff.getCCCD(), gt, date, staff.getDiaChi(),
                                 staff.getChucVu(), staff.getTrangThai(), staff.getTaiKhoan().getTaiKhoan()};
-                        modelTableNV.addRow(rowData);
+                        modelTblNV.addRow(rowData);
                     }
                 }
             }
@@ -248,7 +245,7 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
                 gt = "Nữ";
             }
             Object[] rowData = {staff.getMaNhanVien(), staff.getTenNhanVien(), staff.getSoDienThoai(), staff.getCCCD(), gt, date ,staff.getDiaChi(), staff.getChucVu(), staff.getTrangThai(), staff.getTaiKhoan().getTaiKhoan()};
-            modelTableNV.addRow(rowData);
+            modelTblNV.addRow(rowData);
         }
     }
 
@@ -269,7 +266,7 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
             if (txtSearchbyName.getText().trim().equals("") && txtSearchbyNumber.getText().trim().equals("") && txtSearchbyCCCD.getText().trim().equals("")) {
                 JOptionPane.showMessageDialog(this, "Bạn phải nhập thông tin tìm kiếm");
             } else if (!txtSearchbyName.getText().trim().equals("")) {
-                modelTableNV.getDataVector().removeAllElements();
+                modelTblNV.getDataVector().removeAllElements();
                 int i = 1;
                 String gt ="";
                 if (cus1.size() != 0) {
@@ -280,7 +277,7 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
                         } else {
                             gt = "Nữ";
                         }
-                        modelTableNV.addRow(new Object[]{staff.getMaNhanVien(), staff.getTenNhanVien(), staff.getSoDienThoai(),
+                        modelTblNV.addRow(new Object[]{staff.getMaNhanVien(), staff.getTenNhanVien(), staff.getSoDienThoai(),
                                 staff.getCCCD(), gt, date, staff.getDiaChi(),
                                 staff.getChucVu(), staff.getTrangThai(), staff.getTaiKhoan().getTaiKhoan()});
                         i++;
@@ -291,7 +288,7 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
                     txtSearchbyName.requestFocus();
                 }
             } else if (!txtSearchbyNumber.getText().trim().equals("")) {
-                modelTableNV.getDataVector().removeAllElements();
+                modelTblNV.getDataVector().removeAllElements();
                 int i = 1;
                 String gt ="";
                 if (cus2.size() != 0) {
@@ -302,7 +299,7 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
                         } else {
                             gt = "Nữ";
                         }
-                        modelTableNV.addRow(new Object[]{staff.getMaNhanVien(), staff.getTenNhanVien(), staff.getSoDienThoai(),
+                        modelTblNV.addRow(new Object[]{staff.getMaNhanVien(), staff.getTenNhanVien(), staff.getSoDienThoai(),
                                 staff.getCCCD(), gt, date, staff.getDiaChi(),
                                 staff.getChucVu(), staff.getTrangThai(), staff.getTaiKhoan().getTaiKhoan()});
                         i++;
@@ -313,7 +310,7 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
                     txtSearchbyNumber.requestFocus();
                 }
             } else if (!txtSearchbyCCCD.getText().trim().equals("")) {
-                modelTableNV.getDataVector().removeAllElements();
+                modelTblNV.getDataVector().removeAllElements();
                 int i = 1;
                 String gt ="";
                 if (cus3.size() != 0) {
@@ -324,7 +321,7 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
                         } else {
                             gt = "Nữ";
                         }
-                        modelTableNV.addRow(new Object[]{staff.getMaNhanVien(), staff.getTenNhanVien(), staff.getSoDienThoai(),
+                        modelTblNV.addRow(new Object[]{staff.getMaNhanVien(), staff.getTenNhanVien(), staff.getSoDienThoai(),
                                 staff.getCCCD(), gt, date, staff.getDiaChi(),
                                 staff.getChucVu(), staff.getTrangThai(), staff.getTaiKhoan().getTaiKhoan()});
                         i++;
@@ -340,7 +337,7 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
             txtSearchbyName.setText("");
             txtSearchbyNumber.setText("");
             txtSearchbyCCCD.setText("");
-            modelTableNV.setRowCount(0);
+            modelTblNV.setRowCount(0);
             loadNV();
         }
     }

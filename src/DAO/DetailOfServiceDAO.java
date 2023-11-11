@@ -12,7 +12,7 @@ import java.util.Date;
 /**
  * Lấy dữ liệu từ database cho lớp {@code DetailOfServiceDAO}
  * <p>
- * Người tham gia thiết kế: Nguyễn Quang Duy
+ * Người tham gia thiết kế: Hà Thị Phương Linh, Nguyễn Quang Duy, Nguyễn Đình Dương
  * <p>
  * Ngày tạo: 07/10/2023
  * <p>

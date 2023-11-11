@@ -18,6 +18,13 @@ import java.awt.event.MouseListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Giao diện quản lý phòng
+ * Người tham gia thiết kế: Hà Thị Phương Linh, Nguyễn Đình Dương
+ * Ngày tạo: 12/10/2023
+ * Lần cập nhật cuối: 01/11/2023
+ * Nội dung cập nhật: phân quyền nhân viên được phép truy cập
+ */
 public class TypeOfRoom_UI extends JPanel implements ActionListener, MouseListener {
     private  JTextField txtBaoLoi;
     private  JTextField txtTenLoaiPhong;
@@ -25,10 +32,9 @@ public class TypeOfRoom_UI extends JPanel implements ActionListener, MouseListen
     private  JButton btnlamMoi;
     private  JButton btnXoa;
     private  JButton btnThem,btnSua;
-    private  JTable tableLP;
-
-    private  DefaultTableModel modelTableLP;
-    private JLabel backgroundLabel, timeLabel ;
+    private  JTable tblLoaiPhong;
+    private  DefaultTableModel modelTblLoaiPhong;
+    private JLabel lblBackGround, lblTime;
     private JPanel timeNow, pnlTPList, pnlTPControl;
 
     private TypeOfRoomDAO TypeOfRoomDAO;
@@ -49,7 +55,6 @@ public class TypeOfRoom_UI extends JPanel implements ActionListener, MouseListen
         headerLabel.setBounds(520, 10, 1175, 40);
         headerLabel.setFont(new Font("Arial", Font.BOLD, 25));
         headerLabel.setForeground(Color.WHITE);
-        Component add = add(headerLabel);
 
         timeNow = new JPanel();
         timeNow.setBorder(new TitledBorder(
@@ -59,10 +64,10 @@ public class TypeOfRoom_UI extends JPanel implements ActionListener, MouseListen
         timeNow.setOpaque(false);
         add(timeNow);
 
-        timeLabel = new JLabel();
-        timeLabel.setFont(new Font("Arial", Font.BOLD, 33));
-        timeLabel.setForeground(Color.WHITE);
-        timeNow.add(timeLabel);
+        lblTime = new JLabel();
+        lblTime.setFont(new Font("Arial", Font.BOLD, 33));
+        lblTime.setForeground(Color.WHITE);
+        timeNow.add(lblTime);
         Timer timer = new Timer(10, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -121,20 +126,12 @@ public class TypeOfRoom_UI extends JPanel implements ActionListener, MouseListen
         txtSucChua.setColumns(10);
         pnlTPControl.add(txtSucChua);
 
-
-
-
         txtBaoLoi = new JTextField();
         txtBaoLoi.setFont(new Font("Arial",Font.BOLD,13));
         txtBaoLoi.setForeground(Color.RED);
         txtBaoLoi.setBounds(380, 160, 446, 30);
         txtBaoLoi.setColumns(10);
         pnlTPControl.add(txtBaoLoi);
-
-
-
-
-
 
         //        btn thêm
         btnThem = new JButton("Thêm");
@@ -156,14 +153,12 @@ public class TypeOfRoom_UI extends JPanel implements ActionListener, MouseListen
         Custom.setCustomBtn(btnSua);
         btnSua.setBounds(610, 210, 100, 30);
         pnlTPControl.add(btnSua);
-
         //        btn làm mới
         btnlamMoi = new JButton("Làm mới");
         btnlamMoi.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnlamMoi);
         btnlamMoi.setBounds(720, 210, 100, 30);
         pnlTPControl.add(btnlamMoi);
-
 
         JPanel panelDSLP = new JPanel();
         panelDSLP.setLayout(null);
@@ -173,19 +168,19 @@ public class TypeOfRoom_UI extends JPanel implements ActionListener, MouseListen
         panelDSLP.setOpaque(false);
 
         String[] colsLP = {"STT", "Mã Loại Phòng", "Tên Loại Phòng", "Sức Chứa"};
-        modelTableLP = new DefaultTableModel(colsLP, 0);
+        modelTblLoaiPhong = new DefaultTableModel(colsLP, 0);
         JScrollPane scrollPaneNV;
 
-        tableLP = new JTable(modelTableLP);
-        tableLP.setFont(new Font("Arial", Font.BOLD, 14));
-        tableLP.setBackground(new Color(255, 255, 255, 0));
-        tableLP.setForeground(new Color(255, 255, 255));
-        tableLP.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-        tableLP.getTableHeader().setForeground(Color.BLUE);
+        tblLoaiPhong = new JTable(modelTblLoaiPhong);
+        tblLoaiPhong.setFont(new Font("Arial", Font.BOLD, 14));
+        tblLoaiPhong.setBackground(new Color(255, 255, 255, 0));
+        tblLoaiPhong.setForeground(new Color(255, 255, 255));
+        tblLoaiPhong.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
+        tblLoaiPhong.getTableHeader().setForeground(Color.BLUE);
 
-        Custom.getInstance().setCustomTable(tableLP);
+        Custom.getInstance().setCustomTable(tblLoaiPhong);
 
-        panelDSLP.add(scrollPaneNV = new JScrollPane(tableLP, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
+        panelDSLP.add(scrollPaneNV = new JScrollPane(tblLoaiPhong, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
                 BorderLayout.CENTER);
         scrollPaneNV.setBounds(10, 20, 1210, 380);
         scrollPaneNV.setOpaque(false);
@@ -197,25 +192,31 @@ public class TypeOfRoom_UI extends JPanel implements ActionListener, MouseListen
         btnlamMoi.addActionListener(this);
         btnSua.addActionListener(this);
         btnXoa.addActionListener(this);
-        tableLP.addMouseListener(this);
+        tblLoaiPhong.addMouseListener(this);
 
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/images/background.png"));
-        backgroundLabel = new JLabel(backgroundImage);
-        backgroundLabel.setBounds(0, 0, getWidth(), getHeight());
-        add(backgroundLabel);
+        lblBackGround = new JLabel(backgroundImage);
+        lblBackGround.setBounds(0, 0, getWidth(), getHeight());
+        add(lblBackGround);
     }
 
+    /**
+     * Cập nhật thời gian thực cho lblTime
+     */
     private void updateTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String time = sdf.format(new Date());
-        timeLabel.setText(time);
+        lblTime.setText(time);
     }
 
+    /**
+     * Load danh sách loại phòng lên bảng
+     */
     public void loadLP(){
         int i=1;
         for (TypeOfRoom room : TypeOfRoomDAO.getAllLoaiPhong()) {
             Object[] rowData = { i,room.getMaLoaiPhong(),room.getTenLoaiPhong(),room.getSucChua()};
-            modelTableLP.addRow(rowData);
+            modelTblLoaiPhong.addRow(rowData);
             i++;
         }
     }
@@ -234,13 +235,13 @@ public class TypeOfRoom_UI extends JPanel implements ActionListener, MouseListen
 
                 TypeOfRoom type = new TypeOfRoom(malp,tenlp,succhua);
                 if (TypeOfRoomDAO.insert(type)) {
-                    modelTableLP.getDataVector().removeAllElements();
+                    modelTblLoaiPhong.getDataVector().removeAllElements();
                     loadLP();
                     JOptionPane.showMessageDialog(this,"Thêm loại phòng thành công");
                 }
             }
         }else if(o.equals(btnXoa)){
-            int row = tableLP.getSelectedRow();
+            int row = tblLoaiPhong.getSelectedRow();
             if (row == -1) {
                 JOptionPane.showMessageDialog(this, "Bạn phải chọn dòng cần xóa");
             } else {
@@ -255,14 +256,14 @@ public class TypeOfRoom_UI extends JPanel implements ActionListener, MouseListen
                     txtMaLoaiPhong.setText("");
                     txtTenLoaiPhong.setText("");
                     txtBaoLoi.setText("");
-                    modelTableLP.removeRow(row);
+                    modelTblLoaiPhong.removeRow(row);
                     JOptionPane.showMessageDialog(this,"Xóa thành công");
-                    modelTableLP.getDataVector().removeAllElements();
+                    modelTblLoaiPhong.getDataVector().removeAllElements();
                     loadLP();
                 }
             }
         }else if (o.equals(btnSua)){
-            int row = tableLP.getSelectedRow();
+            int row = tblLoaiPhong.getSelectedRow();
             if (row >= 0) {
                 if (validData()) {
                     String MaLP = txtMaLoaiPhong.getText().trim();
@@ -270,8 +271,8 @@ public class TypeOfRoom_UI extends JPanel implements ActionListener, MouseListen
                     int succhua =Integer.parseInt(txtSucChua.getText().trim());
                     TypeOfRoom type = new TypeOfRoom(MaLP,tenLp,succhua);
                     if (TypeOfRoomDAO.update(type)) {
-                        tableLP.setValueAt(txtTenLoaiPhong.getText(), row, 2);
-                        tableLP.setValueAt(txtSucChua.getText(), row, 3);
+                        tblLoaiPhong.setValueAt(txtTenLoaiPhong.getText(), row, 2);
+                        tblLoaiPhong.setValueAt(txtSucChua.getText(), row, 3);
                         JOptionPane.showMessageDialog(this,"Sửa thành công");
                     }
                 }
@@ -283,7 +284,7 @@ public class TypeOfRoom_UI extends JPanel implements ActionListener, MouseListen
             txtTenLoaiPhong.setText("");
             txtBaoLoi.setText("");
             txtSucChua.setText("");
-            modelTableLP.getDataVector().removeAllElements();
+            modelTblLoaiPhong.getDataVector().removeAllElements();
             loadLP();
         }
     }
@@ -291,11 +292,11 @@ public class TypeOfRoom_UI extends JPanel implements ActionListener, MouseListen
     @Override
     public void mouseClicked(MouseEvent e) {
         Object o = e.getSource();
-        if (o.equals(tableLP)) {
-            int row = tableLP.getSelectedRow();
-            txtMaLoaiPhong.setText(modelTableLP.getValueAt(row,1).toString());
-            txtTenLoaiPhong.setText(modelTableLP.getValueAt(row,2).toString());
-            txtSucChua.setText(modelTableLP.getValueAt(row,3).toString());
+        if (o.equals(tblLoaiPhong)) {
+            int row = tblLoaiPhong.getSelectedRow();
+            txtMaLoaiPhong.setText(modelTblLoaiPhong.getValueAt(row,1).toString());
+            txtTenLoaiPhong.setText(modelTblLoaiPhong.getValueAt(row,2).toString());
+            txtSucChua.setText(modelTblLoaiPhong.getValueAt(row,3).toString());
 
         }
 
@@ -321,11 +322,20 @@ public class TypeOfRoom_UI extends JPanel implements ActionListener, MouseListen
 
     }
 
+    /**
+     * Hiển thị lỗi
+     * @param txt: JTextField lỗi
+     * @param message: thông báo lỗi
+     */
     private void showMessage(JTextField txt, String message) {
         txt.requestFocus();
         txtBaoLoi.setText(message);
     }
 
+    /**
+     * Kiểm tra dữ liệu hợp lệ
+     * @return (@Code boolean): true/false
+     */
     private boolean validData() {
         String ten = txtTenLoaiPhong.getText().trim();
         String succhua= txtSucChua.getText().trim();

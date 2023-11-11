@@ -2,15 +2,22 @@ package UI.component.Dialog;
 
 import javax.swing.*;
 
+/**
+ * Giao diện hiển thị background chính
+ * Người tham gia thiết kế: Hà Thị Phương Linh
+ * Ngày tạo: 01/11/2023
+ * Lần cập nhật cuối: 01/11/2023
+ * Nội dung cập nhật: Thêm hp2.jpg
+ */
 public class Home extends JPanel {
-    private JLabel backgroundLabel;
+    private JLabel lblBackGround;
     public Home(){
         setLayout(null);
         setBounds(0, 0, 1475, 770);
 
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/images/hp2.jpg"));
-        backgroundLabel = new JLabel(backgroundImage);
-        backgroundLabel.setBounds(0, 0, 1475, 770);
-        add(backgroundLabel);
+        lblBackGround = new JLabel(backgroundImage);
+        lblBackGround.setBounds(0, 0, 1475, 770);
+        add(lblBackGround);
     }
 }

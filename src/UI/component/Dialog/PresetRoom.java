@@ -23,20 +23,26 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
+/**
+ * Giao diện cho thuê phòng
+ * Người tham gia thiết kế: Hà Thị Phương Linh
+ * Ngày tạo: 24/10/2023
+ * Lần cập nhật cuối: 01/11/2023
+ * Nội dung cập nhật: Sửa tính năng check số điện thoại khách
+ */
 public class PresetRoom extends JFrame implements ActionListener, MouseListener {
     private static PresetRoom instance = new PresetRoom();
     public JLabel lblTitle, lblRoomID, lblRoomID2, lblPhone, lblCName, lblCName2, lblRDay, lblTDay, lblMin, lblHour;
     public JTextField txtPhone;
     public LocalDateTime selectedDateTime;
-    private JPanel mainPanel, topPanel;
+    private JPanel pnlTop;
     private JButton btnCheck, btnCancel, btnBook;
     private JRadioButton radToday, radTomorrow;
     private ButtonGroup bgTime;
-    private JComboBox<String> cboHour, cboMin;
+    private JComboBox<String> cmbHour, cmbMin;
     private CustomerDAO customerDAO;
     private KaraokeBooking_UI main;
     private Main m;
-    private boolean reservationSuccess = false;
     private Staff staffLogin = null;
     private ReservationFormDAO reservationFormDAO;
     private RoomDAO roomDAO;
@@ -58,16 +64,16 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
         reservationFormDAO = new ReservationFormDAO();
         roomDAO = new RoomDAO();
 
-        topPanel = new JPanel();
-        topPanel.setBackground(Color.decode("#5F009D"));
-        topPanel.setBounds(0, 0, 500, 50);
+        pnlTop = new JPanel();
+        pnlTop.setBackground(Color.decode("#5F009D"));
+        pnlTop.setBounds(0, 0, 500, 50);
         lblTitle = new JLabel("ĐẶT PHÒNG CHỜ");
         lblTitle.setFont(new Font("Dialog", Font.BOLD, 25));
         lblTitle.setForeground(Color.WHITE);
         lblTitle.setBounds(10, 10, 480, 60);
         lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
-        topPanel.add(lblTitle);
-        add(topPanel);
+        pnlTop.add(lblTitle);
+        add(pnlTop);
 
         lblRoomID = new JLabel("Phòng số:");
         lblRoomID.setFont(new Font("Dialog", Font.BOLD, 14));
@@ -107,15 +113,15 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
         lblTDay = new JLabel("Giờ nhận phòng:");
         lblTDay.setFont(new Font("Dialog", Font.BOLD, 14));
         lblTDay.setBounds(10, 220, 120, 20);
-        cboHour = new JComboBox<>(new String[]{"8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21"});
-        cboHour.setBounds(150, 220, 60, 25);
-        cboHour.setFont(new Font("Dialog", Font.BOLD, 15));
+        cmbHour = new JComboBox<>(new String[]{"8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21"});
+        cmbHour.setBounds(150, 220, 60, 25);
+        cmbHour.setFont(new Font("Dialog", Font.BOLD, 15));
         lblHour = new JLabel("giờ");
         lblHour.setFont(new Font("Dialog", Font.BOLD, 14));
         lblHour.setBounds(210, 220, 40, 20);
-        cboMin = new JComboBox<>(new String[]{"00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"});
-        cboMin.setBounds(260, 220, 60, 25);
-        cboMin.setFont(new Font("Dialog", Font.BOLD, 15));
+        cmbMin = new JComboBox<>(new String[]{"00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"});
+        cmbMin.setBounds(260, 220, 60, 25);
+        cmbMin.setFont(new Font("Dialog", Font.BOLD, 15));
         lblMin = new JLabel("phút");
         lblMin.setFont(new Font("Dialog", Font.BOLD, 14));
         lblMin.setBounds(330, 220, 40, 20);
@@ -141,9 +147,9 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
         add(radToday);
         add(radTomorrow);
         add(lblTDay);
-        add(cboHour);
+        add(cmbHour);
         add(lblHour);
-        add(cboMin);
+        add(cmbMin);
         add(lblMin);
         add(btnCancel);
         add(btnBook);
@@ -213,8 +219,8 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
                     JOptionPane.showMessageDialog(this, "Chưa chọn ngày nhận phòng");
                     return;
                 }
-                String selectedHour = (String) cboHour.getSelectedItem();
-                String selectedMinute = (String) cboMin.getSelectedItem();
+                String selectedHour = (String) cmbHour.getSelectedItem();
+                String selectedMinute = (String) cmbMin.getSelectedItem();
 
                 if (lblCName2.getText().equalsIgnoreCase("")) {
                     JOptionPane.showMessageDialog(this, "Chưa điền tên khách hàng");
@@ -273,11 +279,18 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
 
     }
 
+    /**
+     * Tự phát sinh mã phiếu đặt phòng
+     * @return String
+     */
     private String generateID() {
         String formID = reservationFormDAO.generateNextFormId();
         return formID;
     }
 
+    /**
+     * Tạo phiếu đặt phòng
+     */
     private void createReservationForm() {
         String formID = generateID();
         Timestamp startTime = Timestamp.valueOf(selectedDateTime);
@@ -312,6 +325,10 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
         dispose();
     }
 
+    /**
+     * Gán mã phiếu đặt xong cho label
+     * @param roomID
+     */
     public void setRoomID(String roomID) {
         lblRoomID2.setText(roomID);
     }

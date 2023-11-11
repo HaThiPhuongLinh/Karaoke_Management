@@ -7,6 +7,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import Entity.DetailsOfBill;
+/**
+ * Người tham gia thiết kế: Nguyễn Đình Dương
+ * <p>
+ * Ngày tạo: 01/11/2023
+ * <p>
+ * Lần cập nhật cuối: 06/11/2023
+ * <p>
+ * Nội dung cập nhật: cập nhật lịch sử code
+ */
 public class DetailOfBillDAO {
     /**
      * Thêm chi tiết hóa đơn

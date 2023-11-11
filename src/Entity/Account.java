@@ -3,6 +3,10 @@ package Entity;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Entity: Tài khoản
+ * Người thiết kế: Hà Thị Phương Linh
+ */
 public class Account {
     private String taiKhoan;
     private String matKhau;

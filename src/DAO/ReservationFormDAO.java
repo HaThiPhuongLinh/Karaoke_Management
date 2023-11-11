@@ -10,6 +10,15 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Người tham gia thiết kế: Hà Thị Phương Linh
+ * <p>
+ * Ngày tạo: 24/09/2023
+ * <p>
+ * Lần cập nhật cuối: 11/11/2023
+ * <p>
+ * Nội dung cập nhật: cập nhật lịch sử code
+ */
 public class ReservationFormDAO {
 
     /**
@@ -75,7 +84,7 @@ public class ReservationFormDAO {
     /**
      * Xóa phiếu đặt phòng thông qua mã phiếu
      * @param maPhieuDat: mã phiếu đặt
-     * @return true/false
+     * @return {@code boolean}: true/false
      */
     public boolean deleteReservationForm(String maPhieuDat) {
         Connection conn = null;
@@ -109,8 +118,8 @@ public class ReservationFormDAO {
 
     /**
      * Lấy ra phiếu đặt phòng bằng mã phòng
-     * @param roomID
-     * @return
+     * @param roomID: mã phòng
+     * @return {@code ReservationForm}: phiếu đặt phòng
      */
     public ReservationForm getReservationFormByRoomId(String roomID) {
         ReservationForm reservationForm = null;
@@ -152,6 +161,11 @@ public class ReservationFormDAO {
         return reservationForm;
     }
 
+    /**
+     * Lấy ra phiếu đặt phòng bằng mã phiếu đặt
+     * @param formID: mã phiếu đặt
+     * @return {@code ReservationForm}: phiếu đặt phòng
+     */
     public ReservationForm getReservationFormByFormId(String formID) {
         ReservationForm reservationForm = null;
         ConnectDB.getInstance();
@@ -192,7 +206,10 @@ public class ReservationFormDAO {
         return reservationForm;
     }
 
-
+    /**
+     * Phát sinh mã phiếu đặt phòng ngẫu nhiên PDP+xxxx (x++)
+     * @return String
+     */
     public String generateNextFormId() {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
@@ -218,6 +235,11 @@ public class ReservationFormDAO {
         return nextId;
     }
 
+    /**
+     * Lấy ra phiếu đặt phòng theo thời gian gần nhất dựa trên mã phòng
+     * @param roomID: mã phòng
+     * @return {@code ReservationForm}: phiếu đặt phòng
+     */
     public ReservationForm getFormByRoomID(String roomID) {
         ReservationForm reservationForm = null;
         ConnectDB.getInstance();
@@ -258,6 +280,11 @@ public class ReservationFormDAO {
         return reservationForm;
     }
 
+    /**
+     * Lấy ra danh sách phiếu đặt phòng theo thời gian tăng dần dựa trên mã phòng
+     * @param roomID: mã phòng
+     * @return {@code ArrayList<Bill>}: danh sách phiếu đặt phòng
+     */
     public ArrayList<ReservationForm> getReservationsByRoomID(String roomID) {
         ArrayList<ReservationForm> reservations = new ArrayList<>();
         Connection con = null;
