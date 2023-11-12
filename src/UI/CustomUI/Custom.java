@@ -17,7 +17,7 @@ public class Custom {
     private Font fontNormal = new Font("Dialog", Font.PLAIN, 14);
     public static String pathFont = "/fonts/";
     public static String PATH_EXPORT_BILL = System.getProperty("user.dir") +
-            "/../bill/";
+            "/bill/";
     public static Custom getInstance() {
         if (instance == null)
             instance = new Custom();

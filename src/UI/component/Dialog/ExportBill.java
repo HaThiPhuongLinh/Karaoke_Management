@@ -322,7 +322,7 @@ public class ExportBill {
 
         Double totalPriceService = bill.tinhTongTienDichVu();
         Double totalPriceRoom = bill.tinhTienPhong();
-        double vat = 0;
+        double km = 0;
         Date ngayHienTai = new Date();
 
         // Chuyển ngày hiện tại và ngày sinh của khách hàng thành lớp Calendar
@@ -340,14 +340,16 @@ public class ExportBill {
         int ngaySinhKhachHangValue = calendarNgaySinhKhachHang.get(Calendar.DAY_OF_MONTH);
         int thangSinhKhachHangValue = calendarNgaySinhKhachHang.get(Calendar.MONTH);
         if (ngayHienTaiValue == ngaySinhKhachHangValue && thangHienTaiValue == thangSinhKhachHangValue) {
-            vat = 0.0;
+
+            km = (totalPriceService + totalPriceRoom) * 0.1;
 
         } else {
-            vat = (totalPriceService + totalPriceRoom) * 0.08;
+            km = 0.0;
         }
-        Double totalPriceBill = bill.getTongTienHD() +vat;
-        String labels[] = { "Tổng tiền dịch vụ:", "Tổng tiền phòng:", "VAT(8%):", "Tổng cộng:" };
-        String values[] = { df.format(totalPriceService), df.format(totalPriceRoom), df.format(vat),
+        Double vat =(totalPriceService + totalPriceRoom) * 0.08;
+        Double totalPriceBill = bill.getTongTienHD() +vat -km;
+        String labels[] = { "Tổng tiền dịch vụ:", "Tổng tiền phòng:", "VAT(8%):","Khuyến mãi:", "Tổng cộng:" };
+        String values[] = { df.format(totalPriceService), df.format(totalPriceRoom), df.format(vat),df.format(km),
                 df.format(totalPriceBill) };
         try {
             // skip

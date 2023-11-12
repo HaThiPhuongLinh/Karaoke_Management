@@ -38,6 +38,7 @@ import java.util.List;
  */
 public class DialogBill extends JDialog implements ActionListener {
     private final String WORKING_DIR = System.getProperty("user.dir");
+    private  JTextField txtKM;
     private JTextField txtBillId, txtStaffName, txtCustomerName, txtRoomId, txtRoomTypeName, txtRoomPrice, txtStartTime,
             txtEndTime, txtUsedTime, txtTotalPriceService, txtTotalPriceRoom, txtVAT, txtTotalPriceBill;
     private JTable tblTableBillInfo;
@@ -193,10 +194,21 @@ public class DialogBill extends JDialog implements ActionListener {
         txtVAT.setHorizontalAlignment(SwingConstants.RIGHT);
         pnMain.add(txtVAT);
 
+        JLabel lblKM = new JLabel("Khuyến mãi:");
+        Custom.getInstance().setCustomLabelBill(lblKM);
+        lblKM.setBounds(40, 635, 140, 25);
+        pnMain.add(lblKM);
+
+        txtKM = new JTextField("");
+        Custom.getInstance().setCustomTextFieldBill2(txtKM);
+        txtKM.setBounds(555, 635, 200, 25);
+        txtKM.setHorizontalAlignment(SwingConstants.RIGHT);
+        pnMain.add(txtKM);
+
         JLabel lblTotalPriceBill = new JLabel("Tổng cộng:");
         lblTotalPriceBill.setForeground(Color.WHITE);
         lblTotalPriceBill.setFont(new Font("Dialog", Font.BOLD, 16));
-        lblTotalPriceBill.setBounds(40, 635, 140, 25);
+        lblTotalPriceBill.setBounds(40, 660, 140, 25);
         pnMain.add(lblTotalPriceBill);
 
         txtTotalPriceBill = new JTextField("");
@@ -204,7 +216,7 @@ public class DialogBill extends JDialog implements ActionListener {
         txtTotalPriceBill.setFont(new Font("Dialog", Font.BOLD, 16));
         txtTotalPriceBill.setColumns(10);
         txtTotalPriceBill.setHorizontalAlignment(SwingConstants.RIGHT);
-        txtTotalPriceBill.setBounds(555, 635, 200, 25);
+        txtTotalPriceBill.setBounds(555, 660, 200, 25);
         pnMain.add(txtTotalPriceBill);
         txtTotalPriceBill.setEditable(false);
 
@@ -498,7 +510,7 @@ public class DialogBill extends JDialog implements ActionListener {
         txtTotalPriceService.setText(df.format(totalPriceService));
         double totalPriceRoom = bill.tinhTienPhong();
         txtTotalPriceRoom.setText(df.format(totalPriceRoom));
-        double vat = 0;
+        double km = 0;
         Date ngayHienTai = new Date();
 
         // Chuyển ngày hiện tại và ngày sinh của khách hàng thành lớp Calendar
@@ -515,14 +527,17 @@ public class DialogBill extends JDialog implements ActionListener {
         // Lấy ngày và tháng từ ngày sinh của khách hàng
         int ngaySinhKhachHangValue = calendarNgaySinhKhachHang.get(Calendar.DAY_OF_MONTH);
         int thangSinhKhachHangValue = calendarNgaySinhKhachHang.get(Calendar.MONTH);
+        double vat = (totalPriceService + totalPriceRoom) * 0.08;
         if (ngayHienTaiValue == ngaySinhKhachHangValue && thangHienTaiValue == thangSinhKhachHangValue) {
-            vat = 0.0;
+            km = (totalPriceService + totalPriceRoom + vat) * 0.15;
             boolean b = billDAO.updateKM(bill.getMaHoaDon());
         } else {
-            vat = (totalPriceService + totalPriceRoom) * 0.08;
+            km = 0.0;
         }
+        txtKM.setText(df.format(km));
+
         txtVAT.setText(df.format(vat));
-        double totalPrice = bill.getTongTienHD() + vat;
+        double totalPrice = bill.getTongTienHD() + vat - km;
         txtTotalPriceBill.setText(df.format(totalPrice));
     }
 
