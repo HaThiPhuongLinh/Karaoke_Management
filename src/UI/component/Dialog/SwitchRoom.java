@@ -26,8 +26,8 @@ import java.util.Comparator;
  * Giao diện đổi phòng
  * Người tham gia thiết kế: Hà Thị Phương Linh
  * Ngày tạo: 06/11/2023
- * Lần cập nhật cuối: 06/11/2023
- * Nội dung cập nhật: Cập nhật tính năng đổi phòng
+ * Lần cập nhật cuối: 12/11/2023
+ * Nội dung cập nhật: cập nhật trạng thái phòng khi đổi phòng
  */
 public class SwitchRoom extends JFrame implements ActionListener {
     public JLabel lblTitle, lblRoomID, lblRoomID2, lblArrow, lblRoomID3, lblRoomID4;

@@ -1,5 +1,6 @@
 package UI.component.Dialog;
 
+import java.awt.*;
 import java.io.*;
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -8,15 +9,22 @@ import java.util.Date;
 import java.util.List;
 import com.itextpdf.text.*;
 import com.itextpdf.text.Font;
+import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.*;
 import UI.CustomUI.Custom;
 import Entity.*;
+
+import javax.print.*;
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.PrintRequestAttributeSet;
+import javax.print.attribute.standard.Copies;
+
 /**
  * Sử dụng xuất hóa đơn dạng pdf
- * Người tham gia thiết kế: Nguyễn Đình Dương
+ * Người tham gia thiết kế: Nguyễn Đình Dương, Hà Thị Phương Linh
  * Ngày tạo: 27/10/2023
  * Lần cập nhật cuối: 06/11/2023
- * Nội dung cập nhật: sửa lỗi hiển thị khi xuất file pdf
+ * Nội dung cập nhật: cập nhật mở tệp pdf sau khi thanh toán
  */
 public class ExportBill {
     private URL fontPath = ExportBill.class.getResource(Custom.pathFont);
@@ -411,7 +419,6 @@ public class ExportBill {
             baseFontLight = BaseFont.createFont(pdfFontLight, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
             baseFontLightItalic = BaseFont.createFont(pdfFontLightItalic, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
 
-
             PdfWriter.getInstance(document, new FileOutputStream(filePath));
             document.open();
             showHeaderPdf(document);
@@ -420,9 +427,29 @@ public class ExportBill {
             showTotalPricePdf(bill, document);
             showFooterPdf(document);
             document.close();
+
+            openPdfFile(filePath);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
         return true;
+    }
+
+    /**
+     * Mở tệp PDF ngay sau khi xuất.
+     * @param filePath Đường dẫn đến tệp PDF.
+     */
+    private void openPdfFile(String filePath) {
+        try {
+            File file = new File(filePath);
+            if (Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().open(file);
+            } else {
+                System.out.println("Desktop is not supported on this platform");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

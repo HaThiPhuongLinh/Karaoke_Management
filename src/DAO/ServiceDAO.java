@@ -16,8 +16,6 @@ import java.util.ArrayList;
  * <p>
  * Nội dung cập nhật: thêm javadoc
  */
-
-
 public class ServiceDAO {
     /**
      * lấy danh sách thông tin tất cả dịch vụ

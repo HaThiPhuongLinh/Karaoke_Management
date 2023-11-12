@@ -32,8 +32,8 @@ import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
  * Giao diện quản lý đặt phòng
  * Người tham gia thiết kế: Hà Thị Phương Linh
  * Ngày tạo: 09/10/2023
- * Lần cập nhật cuối: 10/11/2023
- * Nội dung cập nhật: Sửa tính năng click dòng hiển thị thông tin lên jtextfield
+ * Lần cập nhật cuối: 12/11/2023
+ * Nội dung cập nhật: sửa định dạng VND
  */
 public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseListener {
     public static JTextField txtCustomer;
@@ -60,7 +60,7 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
     private DetailOfServiceDAO detailOfServiceDAO = new DetailOfServiceDAO();
     private ArrayList<Service> serviceOrderList = new ArrayList<Service>();
     private int selectedServiceOrderIndex = -1;
-    private DecimalFormat df = new DecimalFormat("#,###.##");
+    private DecimalFormat df = new DecimalFormat("#,###.## VND");
 
     public KaraokeBooking_UI(Staff staff) {
         this.staffLogin = staff;
@@ -752,7 +752,7 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
                 }
             }
             String priceStr = df.format(item.getGiaBan());
-            String quantityStr = df.format(item.getSoLuong());
+            String quantityStr = String.valueOf(item.getSoLuong());
             modelTblService.addRow(new Object[]{service.getTenDichVu(),
                    quantityStr, priceStr});
         }

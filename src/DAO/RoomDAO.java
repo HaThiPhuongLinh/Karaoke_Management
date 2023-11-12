@@ -11,6 +11,15 @@ import Entity.Staff;
 
 import java.util.ArrayList;
 
+/**
+ * Người tham gia thiết kế: Nguyễn Đình Dương, Hà Thị Phương Linh
+ * <p>
+ * Ngày tạo: 23/09/2023
+ * <p>
+ * Lần cập nhật cuối: 12/11/2023
+ * <p>
+ * Nội dung cập nhật: cập nhật hàm switchRoom (đổi trạng thái)
+ */
 public class RoomDAO {
 
     public ArrayList<Room> getRoomList() {

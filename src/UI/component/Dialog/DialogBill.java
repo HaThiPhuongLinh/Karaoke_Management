@@ -16,7 +16,10 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
@@ -28,10 +31,10 @@ import java.util.List;
 
 /**
  * Thiết kế giao diện hóa đơn tính tiền
- * Người tham gia thiết kế: Nguyễn Đình Dương
+ * Người tham gia thiết kế: Nguyễn Đình Dương, Hà Thị Phương Linh
  * Ngày tạo: 29/10/2023
  * Lần cập nhật cuối: 06/11/2023
- * Nội dung cập nhật: sửa định dạng tiền VND
+ * Nội dung cập nhật: cập nhật khi click thanh toán thì hiển thị file pdf
  */
 public class DialogBill extends JDialog implements ActionListener {
     private final String WORKING_DIR = System.getProperty("user.dir");
@@ -207,19 +210,19 @@ public class DialogBill extends JDialog implements ActionListener {
 
         btnBack = new JButton("Quay lại");
         btnBack.setFont(new Font("Dialog", Font.BOLD, 15));
-        btnBack.setBounds(40, 670, 130, 35);
+        btnBack.setBounds(240, 670, 130, 35);
         pnMain.add(btnBack);
 
         btnPayment = new JButton("Thanh toán");
         btnPayment.setFont(new Font("Dialog", Font.BOLD, 15));
-        btnPayment.setBounds(320, 670, 130, 35);
+        btnPayment.setBounds(420, 670, 130, 35);
         pnMain.add(btnPayment);
 
-        btnExportPdf = new JButton("Xuất PDF");
-        btnExportPdf.setFont(new Font("Dialog", Font.BOLD, 15));
-        btnExportPdf.setBounds(620, 670, 130, 35);
-
-        pnMain.add(btnExportPdf);
+//        btnExportPdf = new JButton("Xuất PDF");
+//        btnExportPdf.setFont(new Font("Dialog", Font.BOLD, 15));
+//        btnExportPdf.setBounds(620, 670, 130, 35);
+//
+//        pnMain.add(btnExportPdf);
         JLabel txtPhoneNumber = new JLabel("0999.999.999");
         txtPhoneNumber.setBackground(Color.WHITE);
         txtPhoneNumber.setFont(new Font("Dialog", Font.PLAIN, 16));
@@ -336,7 +339,7 @@ public class DialogBill extends JDialog implements ActionListener {
         txtUsedTime.setEditable(false);
         Custom.getInstance().setCustomTextFieldBill(txtUsedTime);
 
-        btnExportPdf.addActionListener(this);
+        //btnExportPdf.addActionListener(this);
         btnPayment.addActionListener(this);
         btnBack.addActionListener(this);
 
@@ -347,31 +350,31 @@ public class DialogBill extends JDialog implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
-        if (o.equals(btnExportPdf)) {
-            Boolean result = null;
-            try {
-                result = ExportBill.getInstance().exportBillToPdf(bill, path);
-            } catch (DocumentException ex) {
-                throw new RuntimeException(ex);
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-            String message = "";
-            int type = JOptionPane.INFORMATION_MESSAGE;
-            if (result) {
-                message = "Xuất file pdf thành công";
-                type = JOptionPane.INFORMATION_MESSAGE;
-            } else {
-                message = "Xuất file pdf thất bại";
-                type = JOptionPane.ERROR_MESSAGE;
-            }
-            JOptionPane.showMessageDialog(null, message, "Thông báo", type);
-        } else if (o.equals(btnPayment)) {
+//        if (o.equals(btnExportPdf)) {
+//            Boolean result = null;
+//            try {
+//                result = ExportBill.getInstance().exportBillToPdf(bill, path);
+//            } catch (DocumentException ex) {
+//                throw new RuntimeException(ex);
+//            } catch (IOException ex) {
+//                throw new RuntimeException(ex);
+//            }
+//            String message = "";
+//            int type = JOptionPane.INFORMATION_MESSAGE;
+//            if (result) {
+//                message = "Xuất file pdf thành công";
+//                type = JOptionPane.INFORMATION_MESSAGE;
+//            } else {
+//                message = "Xuất file pdf thất bại";
+//                type = JOptionPane.ERROR_MESSAGE;
+//            }
+//            JOptionPane.showMessageDialog(null, message, "Thông báo", type);
+//        } else
+        if (o.equals(btnPayment)) {
             boolean isPaid = billDAO.paymentBill(bill.getMaHoaDon(), bill.getNgayGioTra());
             if (isPaid) {
                 paid = isPaid;
-
-                btnExportPdf.setEnabled(true);
+                //btnExportPdf.setEnabled(true);
                 btnPayment.setEnabled(false);
                 JOptionPane.showMessageDialog(null, "Thanh toán hóa đơn thành công", "Thông báo",
                         JOptionPane.INFORMATION_MESSAGE);
@@ -388,6 +391,15 @@ public class DialogBill extends JDialog implements ActionListener {
                     throw new RuntimeException(ex);
                 }
 
+                String pdfFilePath = path + "bill_" + bill.getMaHoaDon() + ".pdf";
+                try {
+                    ExportBill.getInstance().exportBillToPdf(bill, pdfFilePath);
+                } catch (DocumentException ex) {
+                    throw new RuntimeException(ex);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+
             } else {
                 JOptionPane.showMessageDialog(null, "Lỗi khi thanh toán vui lòng thử lại!!!", "Thông báo",
                         JOptionPane.ERROR_MESSAGE);
@@ -401,11 +413,6 @@ public class DialogBill extends JDialog implements ActionListener {
 
     public void setBillUI(Bill_UI main) {
         this.main = main;
-    }
-
-    private String formatDate(Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyy");
-        return sdf.format(date);
     }
 
     /**
