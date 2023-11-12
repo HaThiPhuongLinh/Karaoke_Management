@@ -46,7 +46,7 @@ public class DialogBill extends JDialog implements ActionListener {
     private String formatTime = "HH:mm:ss dd/MM/yyyy";
     private DecimalFormat df = new DecimalFormat("#,###.## VND");
     private DecimalFormat df2 = new DecimalFormat("#,###.##");
-    private String path = WORKING_DIR + "/bill/";
+    private String path = WORKING_DIR + "/KRManagement/bill/";
     private Bill bill = new Bill();
     private boolean paid = false;
     private BillDAO billDAO = BillDAO.getInstance();
@@ -391,7 +391,7 @@ public class DialogBill extends JDialog implements ActionListener {
                     throw new RuntimeException(ex);
                 }
 
-                String pdfFilePath = path + "bill_" + bill.getMaHoaDon() + ".pdf";
+                String pdfFilePath = path;
                 try {
                     ExportBill.getInstance().exportBillToPdf(bill, pdfFilePath);
                 } catch (DocumentException ex) {
