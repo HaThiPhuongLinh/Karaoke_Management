@@ -37,7 +37,6 @@ import java.sql.Timestamp;
  * Nội dung cập nhật : Sửa tính năng lập hóa đơn
  */
 public class Bill_UI extends JPanel implements ActionListener, MouseListener {
-
     private  JTable tblCTDV;
     private  JTable tblPDP;
     private  DefaultTableModel modelTableCTDV;

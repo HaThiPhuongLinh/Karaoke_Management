@@ -36,12 +36,12 @@ import UI.component.KaraokeBooking_UI;
  */
 public class ChooseCustomer extends JFrame implements ActionListener, MouseListener {
     private JTable tblCustomer;
-    JButton btnFind, btnChoose, btnALL;
-    JTextField txtTim;
+    private JButton btnFind, btnChoose, btnALL;
+    private JTextField txtTim;
     private DefaultTableModel modelTblCustomer;
     private CustomerDAO customerDAO;
     private static KaraokeBooking_UI main;
-    List<Customer> lstCustomer;
+    private List<Customer> lstCustomer;
 
     public ChooseCustomer(KaraokeBooking_UI main) {
         setSize(900, 550);

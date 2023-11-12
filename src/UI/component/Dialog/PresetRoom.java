@@ -13,10 +13,7 @@ import UI.component.KaraokeBooking_UI;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -160,6 +157,15 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
         btnBook.addMouseListener(this);
         btnCheck.addActionListener(this);
         btnCheck.addMouseListener(this);
+
+        txtPhone.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    btnCheck.doClick();
+                }
+            }
+        });
     }
 
     public static PresetRoom getInstance() {

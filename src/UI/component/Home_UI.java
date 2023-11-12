@@ -1,4 +1,4 @@
-package UI.component.Dialog;
+package UI.component;
 
 import javax.swing.*;
 
@@ -9,9 +9,9 @@ import javax.swing.*;
  * Lần cập nhật cuối: 01/11/2023
  * Nội dung cập nhật: Thêm hp2.jpg
  */
-public class Home extends JPanel {
+public class Home_UI extends JPanel {
     private JLabel lblBackGround;
-    public Home(){
+    public Home_UI(){
         setLayout(null);
         setBounds(0, 0, 1475, 770);
 

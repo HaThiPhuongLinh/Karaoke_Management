@@ -20,9 +20,9 @@ import java.awt.event.*;
  * Nội dung cập nhật: phân quyền nhân viên khi đăng nhập
  */
 public class LoginUI extends JFrame{
-    private JTextField usernameField;
-    private JPasswordField passwordField;
-    private JLabel errorMessageLabel;
+    private JTextField txtUserName;
+    private JPasswordField txtPassWord;
+    private JLabel lblErrorMessage;
     private final Border borderBottomFocus = BorderFactory.createMatteBorder(0, 0, 1, 0, Color.decode("#b775d5"));
     private final Border borderBottomFocusDark = BorderFactory.createMatteBorder(0, 0, 1, 0, Color.decode("#321a3d"));
 
@@ -64,23 +64,25 @@ public class LoginUI extends JFrame{
         JLabel usernameLabel = new JLabel("Username");
         usernameLabel.setBounds(70, 140, 280, 15);
         rightPanel.add(usernameLabel);
-        usernameField = new JTextField();
-        usernameField.setBounds(70, 160, 280, 30);
-        usernameField.setBorder(borderBottomFocus);
-        rightPanel.add(usernameField);
+        txtUserName = new JTextField();
+        txtUserName.setText("maithaivu");
+        txtUserName.setBounds(70, 160, 280, 30);
+        txtUserName.setBorder(borderBottomFocus);
+        rightPanel.add(txtUserName);
 
         JLabel passwordLabel = new JLabel("Password");
         passwordLabel.setBounds(70, 210, 280, 15);
         rightPanel.add(passwordLabel);
-        passwordField = new JPasswordField();
-        passwordField.setBounds(70, 230, 280, 30);
-        passwordField.setBorder(borderBottomFocus);
-        rightPanel.add(passwordField);
+        txtPassWord = new JPasswordField();
+        txtPassWord.setText("1");
+        txtPassWord.setBounds(70, 230, 280, 30);
+        txtPassWord.setBorder(borderBottomFocus);
+        rightPanel.add(txtPassWord);
 
-        errorMessageLabel = new JLabel("");
-        errorMessageLabel.setForeground(Color.RED);
-        errorMessageLabel.setBounds(70, 270, 280, 15);
-        rightPanel.add(errorMessageLabel);
+        lblErrorMessage = new JLabel("");
+        lblErrorMessage.setForeground(Color.RED);
+        lblErrorMessage.setBounds(70, 270, 280, 15);
+        rightPanel.add(lblErrorMessage);
 
         JButton loginButton = new JButton("LOGIN");
         loginButton.setBackground(Color.decode("#6d4b7c"));
@@ -95,19 +97,19 @@ public class LoginUI extends JFrame{
         add(leftPanel, BorderLayout.WEST);
         add(rightPanel, BorderLayout.CENTER);
 
-        usernameField.addFocusListener(new FocusAdapter() {
+        txtUserName.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
-                usernameField.setBorder(borderBottomFocusDark);
+                txtUserName.setBorder(borderBottomFocusDark);
             }
 
             @Override
             public void focusLost(FocusEvent e) {
-                usernameField.setBorder(borderBottomFocus);
+                txtUserName.setBorder(borderBottomFocus);
             }
         });
 
-        usernameField.addKeyListener(new KeyAdapter() {
+        txtUserName.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -115,26 +117,26 @@ public class LoginUI extends JFrame{
                 }
             }
         });
-        passwordField.addFocusListener(new FocusAdapter() {
+        txtPassWord.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
-                passwordField.setBorder(borderBottomFocusDark);
+                txtPassWord.setBorder(borderBottomFocusDark);
             }
 
             @Override
             public void focusLost(FocusEvent e) {
-                passwordField.setBorder(borderBottomFocus);
+                txtPassWord.setBorder(borderBottomFocus);
             }
         });
 
-        passwordField.addKeyListener(new KeyAdapter() {
+        txtPassWord.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                     loginButton.doClick();
                 }
                 if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
-                    passwordField.setText("");
+                    txtPassWord.setText("");
                 }
             }
         });
@@ -142,8 +144,8 @@ public class LoginUI extends JFrame{
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String enteredUsername = usernameField.getText();
-                String enteredPassword = new String(passwordField.getPassword());
+                String enteredUsername = txtUserName.getText();
+                String enteredPassword = new String(txtPassWord.getPassword());
                 Account user = new Account(enteredUsername,enteredPassword,null);
 
                 int tinhTrang = logInDAO.checkLogin(user);
@@ -170,14 +172,14 @@ public class LoginUI extends JFrame{
                         new Main(staff).setVisible(true);
                     });
                 } else if (tinhTrang == 0) {
-                    errorMessageLabel.setForeground(Color.RED);
-                    errorMessageLabel.setText("Tài khoản đã bị vô hiệu hóa.");
+                    lblErrorMessage.setForeground(Color.RED);
+                    lblErrorMessage.setText("Tài khoản đã bị vô hiệu hóa.");
                 } else if (enteredUsername.isEmpty() || enteredPassword.isEmpty()) {
-                    errorMessageLabel.setForeground(Color.RED);
-                    errorMessageLabel.setText("Nhập đủ tài khoản và mật khẩu.");
+                    lblErrorMessage.setForeground(Color.RED);
+                    lblErrorMessage.setText("Nhập đủ tài khoản và mật khẩu.");
                 } else {
-                    errorMessageLabel.setForeground(Color.RED);
-                    errorMessageLabel.setText("Mật khẩu hoặc tài khoản không đúng.");
+                    lblErrorMessage.setForeground(Color.RED);
+                    lblErrorMessage.setText("Mật khẩu hoặc tài khoản không đúng.");
                 }
             }
         });

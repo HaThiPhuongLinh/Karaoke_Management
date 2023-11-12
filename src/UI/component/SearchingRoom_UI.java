@@ -78,7 +78,6 @@ public class SearchingRoom_UI extends JPanel implements ActionListener, MouseLis
         add(pnlCusList);
         pnlCusList.setLayout(new BorderLayout(0, 0));
 
-
         pnlCusControl = new JPanel();
         pnlCusControl.setOpaque(false);
         pnlCusControl.setBackground(Color.WHITE);
@@ -205,13 +204,19 @@ public class SearchingRoom_UI extends JPanel implements ActionListener, MouseLis
             }
         });
     }
-    //Cap nhat thoi gian thuc
+
+    /**
+     * Cập nhật thời gian thực cho lblTime
+     */
     private void updateTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String time = sdf.format(new Date());
         timeLabel.setText(time);
     }
-    //Load danh sach phong len bang
+
+    /**
+     * Load danh sách phòng lên bảng
+     */
     public void loadP(){
         int i=1;
         for (Room room : RoomDAO.getRoomList()) {
@@ -221,10 +226,11 @@ public class SearchingRoom_UI extends JPanel implements ActionListener, MouseLis
 
         }
     }
-    //Load danh sach loai phong len combobox
+    /**
+     * Load danh sách loại phòng lên cboTimTheoTen
+     */
     private void loadCboLoaiPhong() {
         java.util.List<TypeOfRoom> dataList = TypeOfRoomDAO.getAllLoaiPhong();
-
         for (TypeOfRoom typeOfRoom : dataList) {
             cboTimTheoTen.addItem(typeOfRoom.getTenLoaiPhong());
         }

@@ -2,8 +2,10 @@ package UI.component.Dialog;
 
 import ConnectDB.ConnectDB;
 import DAO.BillDAO;
+import DAO.ReservationFormDAO;
 import DAO.RoomDAO;
 import Entity.Bill;
+import Entity.ReservationForm;
 import Entity.Room;
 import UI.component.KaraokeBooking_UI;
 
@@ -14,8 +16,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.sql.Timestamp;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  * Giao diện đổi phòng
@@ -33,6 +38,7 @@ public class SwitchRoom extends JFrame implements ActionListener {
     private DefaultTableModel modelTblRoom;
     private RoomDAO roomDAO = new RoomDAO();
     private BillDAO billDAO = new BillDAO();
+    private ReservationFormDAO reservationFormDAO = new ReservationFormDAO();
     private DecimalFormat df = new DecimalFormat("#,###.##");
     private KaraokeBooking_UI main;
     private String roomIdOld = ""; // Giá trị ban đầu của lblRoomID2
@@ -226,36 +232,93 @@ public class SwitchRoom extends JFrame implements ActionListener {
             int roomIDColumn = 0;
             roomIdOld = main.txtRoom.getText();
             roomIdNew = tblRoom.getValueAt(row, roomIDColumn).toString();
-            String message = String.format("Bạn có chắc chắn muốn chuyển từ phòng %s qua phòng %s", roomIdOld, roomIdNew);
-            int select = JOptionPane.showConfirmDialog(this, message, "Xác nhận chuyển phòng",
-                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
-            if (select == JOptionPane.OK_OPTION) {
-                Bill bill = billDAO.getBillByRoomID(roomIdOld);
-                String billID = bill.getMaHoaDon();
-                if (billID.equals("")) {
-                    JOptionPane.showConfirmDialog(this, message, "Phòng này chưa được cho thuê nên không thể chuyển",
-                            JOptionPane.OK_CANCEL_OPTION, JOptionPane.ERROR_MESSAGE);
-                } else {
-                    String billId = bill.getMaHoaDon();
-                    boolean result = roomDAO.switchRoom(billId, roomIdOld, roomIdNew);
-                    if (result) {
-                        ArrayList<Room> yourListOfRooms = roomDAO.getRoomList();
-                        for (Room room : roomDAO.getRoomList()) {
-                            if (room.getTinhTrang().equals("Trong")) {
-                                roomDAO.updateRoomStatus(room.getMaPhong(), "Trống");
-                            }
-                            if (room.getTinhTrang().equals("Cho")) {
-                                roomDAO.updateRoomStatus(room.getMaPhong(), "Chờ");
-                            }
-                            if (room.getTinhTrang().equals("Dang su dung")) {
-                                roomDAO.updateRoomStatus(room.getMaPhong(), "Đang sử dụng");
+            Room r = roomDAO.getRoomByRoomId(roomIdNew);
+            ArrayList<ReservationForm> reservations = reservationFormDAO.getReservationsByRoomID(roomIdNew);
+            reservations.sort(Comparator.comparing(ReservationForm::getThoiGianDat));
+
+            if (r.getTinhTrang().trim().equalsIgnoreCase("Chờ")) {
+                if (!reservations.isEmpty()) {
+                    // Lấy phiếu đặt sớm nhất
+                    ReservationForm earliestReservation = reservations.get(0);
+                    long reservationTimeMillis = earliestReservation.getThoiGianDat().getTime();
+                    long thirtyMinutesMillis = 30 * 60 * 1000; // 30 phút trong mili giây
+                    long timeToReturnMillis = reservationTimeMillis - thirtyMinutesMillis;
+                    Timestamp timeToReturn = new Timestamp(timeToReturnMillis);
+                    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+                    int choice = JOptionPane.showConfirmDialog(
+                            this,
+                            "Phải trả phòng trước " + sdf.format(timeToReturn) + ". Bạn có muốn đổi qua phòng này không?",
+                            "Xác nhận",
+                            JOptionPane.YES_NO_OPTION
+                    );
+                    if(choice == JOptionPane.YES_OPTION){
+                        String message = String.format("Bạn có chắc chắn muốn chuyển từ phòng %s qua phòng %s", roomIdOld, roomIdNew);
+                        int select = JOptionPane.showConfirmDialog(this, message, "Xác nhận chuyển phòng",
+                                JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                        if (select == JOptionPane.OK_OPTION) {
+                            Bill bill = billDAO.getBillByRoomID(roomIdOld);
+                            String billID = bill.getMaHoaDon();
+                            if (billID.equals("")) {
+                                JOptionPane.showConfirmDialog(this, message, "Phòng này chưa được cho thuê nên không thể chuyển",
+                                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.ERROR_MESSAGE);
+                            } else {
+                                String billId = bill.getMaHoaDon();
+                                boolean result = roomDAO.switchRoom(billId, roomIdOld, roomIdNew);
+                                if (result) {
+                                    ArrayList<Room> yourListOfRooms = roomDAO.getRoomList();
+                                    for (Room room : roomDAO.getRoomList()) {
+                                        if (room.getTinhTrang().equals("Trong")) {
+                                            roomDAO.updateRoomStatus(room.getMaPhong(), "Trống");
+                                        }
+                                        if (room.getTinhTrang().equals("Cho")) {
+                                            roomDAO.updateRoomStatus(room.getMaPhong(), "Chờ");
+                                        }
+                                        if (room.getTinhTrang().equals("Dang su dung")) {
+                                            roomDAO.updateRoomStatus(room.getMaPhong(), "Đang sử dụng");
+                                        }
+                                    }
+                                    main.LoadRoomList(yourListOfRooms);
+                                    JOptionPane.showMessageDialog(this, "Chuyển phòng thành công");
+                                    dispose();
+                                } else {
+                                    JOptionPane.showMessageDialog(this, "Chuyển phòng thất bại");
+                                }
                             }
                         }
-                        main.LoadRoomList(yourListOfRooms);
-                        JOptionPane.showMessageDialog(this, "Chuyển phòng thành công");
-                        dispose();
+                    }
+                }
+            } else {
+                String message = String.format("Bạn có chắc chắn muốn chuyển từ phòng %s qua phòng %s", roomIdOld, roomIdNew);
+                int select = JOptionPane.showConfirmDialog(this, message, "Xác nhận chuyển phòng",
+                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                if (select == JOptionPane.OK_OPTION) {
+                    Bill bill = billDAO.getBillByRoomID(roomIdOld);
+                    String billID = bill.getMaHoaDon();
+                    if (billID.equals("")) {
+                        JOptionPane.showConfirmDialog(this, message, "Phòng này chưa được cho thuê nên không thể chuyển",
+                                JOptionPane.OK_CANCEL_OPTION, JOptionPane.ERROR_MESSAGE);
                     } else {
-                        JOptionPane.showMessageDialog(this, "Chuyển phòng thất bại");
+                        String billId = bill.getMaHoaDon();
+                        boolean result = roomDAO.switchRoom(billId, roomIdOld, roomIdNew);
+                        if (result) {
+                            ArrayList<Room> yourListOfRooms = roomDAO.getRoomList();
+                            for (Room room : roomDAO.getRoomList()) {
+                                if (room.getTinhTrang().equals("Trong")) {
+                                    roomDAO.updateRoomStatus(room.getMaPhong(), "Trống");
+                                }
+                                if (room.getTinhTrang().equals("Cho")) {
+                                    roomDAO.updateRoomStatus(room.getMaPhong(), "Chờ");
+                                }
+                                if (room.getTinhTrang().equals("Dang su dung")) {
+                                    roomDAO.updateRoomStatus(room.getMaPhong(), "Đang sử dụng");
+                                }
+                            }
+                            main.LoadRoomList(yourListOfRooms);
+                            JOptionPane.showMessageDialog(this, "Chuyển phòng thành công");
+                            dispose();
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Chuyển phòng thất bại");
+                        }
                     }
                 }
             }

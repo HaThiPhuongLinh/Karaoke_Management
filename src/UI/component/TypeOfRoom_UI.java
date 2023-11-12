@@ -36,7 +36,6 @@ public class TypeOfRoom_UI extends JPanel implements ActionListener, MouseListen
     private  DefaultTableModel modelTblLoaiPhong;
     private JLabel lblBackGround, lblTime;
     private JPanel timeNow, pnlTPList, pnlTPControl;
-
     private TypeOfRoomDAO TypeOfRoomDAO;
     public static Staff staffLogin = null;
 

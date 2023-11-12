@@ -35,9 +35,9 @@ import java.util.Date;
 public class ReservationFormList extends JFrame implements ActionListener, MouseListener {
     private static KaraokeBooking_UI main;
     private static ReservationFormList instance;
-    JButton btnFind, btnReceive, btnALL, btnCancel;
-    JTextField txtTim;
-    ArrayList<ReservationForm> lstForms;
+    private JButton btnFind, btnReceive, btnALL, btnCancel;
+    private JTextField txtTim;
+    private ArrayList<ReservationForm> lstForms;
     private JTable table;
     private DefaultTableModel modelTable;
     private CustomerDAO customerDAO;
@@ -336,7 +336,7 @@ public class ReservationFormList extends JFrame implements ActionListener, Mouse
                     JOptionPane.showMessageDialog(this, "Hủy đặt phòng thành công");
                     ArrayList<ReservationForm> reservations = reservationFormDAO.getReservationsByRoomID(roomID);
 
-                    if (reservations.isEmpty()) {
+                    if (reservations.isEmpty() && room.getTinhTrang().equalsIgnoreCase("Chờ")) {
                         roomDAO.updateRoomStatus(roomID, "Trống");
                     }
                     modelTable.setRowCount(0);

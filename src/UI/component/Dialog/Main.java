@@ -24,11 +24,11 @@ public class Main extends JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private static Main instance;
     public static JPanel body;
-    private JButton minimizeButton;
-    private JButton exitButton;
+    private JButton btnMinimize;
+    private JButton btnExit;
     private Header header2;
-    private Menu menu21;
-    private RoundPanel roundPanel1;
+    private Menu menu;
+    private RoundPanel plnRound;
     private static Staff staffLogin = null;
 
     /**
@@ -40,11 +40,11 @@ public class Main extends JFrame {
         staffLogin = staff;
 
         if (staffLogin != null) {
-            menu21.setHeader(staffLogin.getTenNhanVien());
+            menu.setHeader(staffLogin.getTenNhanVien());
         }
         PresetRoom presetRoom = PresetRoom.getInstance();
         presetRoom.setM(this);
-        menu21.setLogoutAction(new ActionListener() {
+        menu.setLogoutAction(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                dispose();
@@ -54,7 +54,7 @@ public class Main extends JFrame {
         });
 
         setBackground(new Color(0, 0, 0, 0));
-        menu21.addMenuEvent((int index, int subIndex, MenuAction action) -> {
+        menu.addMenuEvent((int index, int subIndex, MenuAction action) -> {
             if (index == 0) {
                 if (subIndex == 1) {
                     showForm(new SearchingCustomer_UI(staffLogin));
@@ -138,7 +138,7 @@ public class Main extends JFrame {
                 action.cancel();
             }
         });
-        showForm(new Home());
+        showForm(new Home_UI());
     }
 
     public static void main(String[] args) {
@@ -199,9 +199,9 @@ public class Main extends JFrame {
      * Khởi tạo các components từ header, menu và body
      */
     private void initComponents() {
-        roundPanel1 = new RoundPanel();
+        plnRound = new RoundPanel();
         header2 = new Header();
-        menu21 = new Menu();
+        menu = new Menu();
         body = new JPanel();
         body.setBackground(Color.WHITE);
 
@@ -209,74 +209,74 @@ public class Main extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
 
-        roundPanel1.setBackground(new Color(25, 25, 25));
+        plnRound.setBackground(new Color(25, 25, 25));
 
         body.setOpaque(false);
         body.setLayout(new BorderLayout());
 
-        minimizeButton = new JButton("–");
-        minimizeButton.setFont(new Font("Arial", Font.PLAIN, 15));
-        minimizeButton.setBounds(1440, 12, 50, 30);
-        minimizeButton.setFocusPainted(false);
-        minimizeButton.setBorderPainted(false);
-        minimizeButton.setContentAreaFilled(false);
-        minimizeButton.setOpaque(false);
-        minimizeButton.addActionListener(new ActionListener() {
+        btnMinimize = new JButton("–");
+        btnMinimize.setFont(new Font("Arial", Font.PLAIN, 15));
+        btnMinimize.setBounds(1440, 12, 50, 30);
+        btnMinimize.setFocusPainted(false);
+        btnMinimize.setBorderPainted(false);
+        btnMinimize.setContentAreaFilled(false);
+        btnMinimize.setOpaque(false);
+        btnMinimize.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 setExtendedState(JFrame.ICONIFIED);
             }
         });
-        minimizeButton.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnMinimize.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                minimizeButton.setForeground(Color.WHITE);
-                minimizeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                btnMinimize.setForeground(Color.WHITE);
+                btnMinimize.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             }
 
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                minimizeButton.setForeground(Color.BLACK);
-                minimizeButton.setCursor(Cursor.getDefaultCursor());
+                btnMinimize.setForeground(Color.BLACK);
+                btnMinimize.setCursor(Cursor.getDefaultCursor());
             }
         });
 
-        header2.add(minimizeButton);
+        header2.add(btnMinimize);
 
-        exitButton = new JButton("X");
-        exitButton.setFont(new Font("Arial", Font.PLAIN, 15));
-        exitButton.setBounds(1480, 12, 50, 30);
-        exitButton.setFocusPainted(false);
-        exitButton.setBorderPainted(false);
-        exitButton.setContentAreaFilled(false);
-        exitButton.setOpaque(false);
+        btnExit = new JButton("X");
+        btnExit.setFont(new Font("Arial", Font.PLAIN, 15));
+        btnExit.setBounds(1480, 12, 50, 30);
+        btnExit.setFocusPainted(false);
+        btnExit.setBorderPainted(false);
+        btnExit.setContentAreaFilled(false);
+        btnExit.setOpaque(false);
 
-        exitButton.addActionListener(new ActionListener() {
+        btnExit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
             }
         });
 
-        exitButton.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnExit.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                exitButton.setForeground(Color.WHITE);
-                exitButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                btnExit.setForeground(Color.WHITE);
+                btnExit.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             }
 
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                exitButton.setForeground(Color.BLACK);
-                exitButton.setCursor(Cursor.getDefaultCursor());
+                btnExit.setForeground(Color.BLACK);
+                btnExit.setCursor(Cursor.getDefaultCursor());
             }
         });
-        header2.add(exitButton);
-        GroupLayout roundPanel1Layout = new GroupLayout(roundPanel1);
-        roundPanel1.setLayout(roundPanel1Layout);
-        roundPanel1Layout.setHorizontalGroup(roundPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(header2, GroupLayout.DEFAULT_SIZE, 1534, Short.MAX_VALUE).addGroup(roundPanel1Layout.createSequentialGroup().addGap(10, 10, 10).addComponent(menu21, GroupLayout.PREFERRED_SIZE, 240, GroupLayout.PREFERRED_SIZE).addGap(10, 10, 10).addComponent(body, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addGap(10, 10, 10)));
-        roundPanel1Layout.setVerticalGroup(roundPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(roundPanel1Layout.createSequentialGroup().addComponent(header2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addGap(10, 10, 10).addGroup(roundPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(menu21, GroupLayout.DEFAULT_SIZE, 748, Short.MAX_VALUE).addComponent(body, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)).addGap(10, 10, 10)));
+        header2.add(btnExit);
+        GroupLayout roundPanel1Layout = new GroupLayout(plnRound);
+        plnRound.setLayout(roundPanel1Layout);
+        roundPanel1Layout.setHorizontalGroup(roundPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(header2, GroupLayout.DEFAULT_SIZE, 1534, Short.MAX_VALUE).addGroup(roundPanel1Layout.createSequentialGroup().addGap(10, 10, 10).addComponent(menu, GroupLayout.PREFERRED_SIZE, 240, GroupLayout.PREFERRED_SIZE).addGap(10, 10, 10).addComponent(body, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addGap(10, 10, 10)));
+        roundPanel1Layout.setVerticalGroup(roundPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(roundPanel1Layout.createSequentialGroup().addComponent(header2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addGap(10, 10, 10).addGroup(roundPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(menu, GroupLayout.DEFAULT_SIZE, 748, Short.MAX_VALUE).addComponent(body, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)).addGap(10, 10, 10)));
 
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(roundPanel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
-        layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(roundPanel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
+        layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(plnRound, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
+        layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(plnRound, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
 
         pack();
         setLocationRelativeTo(null);

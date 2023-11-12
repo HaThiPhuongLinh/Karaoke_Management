@@ -21,22 +21,38 @@ import Entity.*;
 public class ExportBill {
     private URL fontPath = ExportBill.class.getResource(Custom.pathFont);
 
+    private String pdfFontLight = fontPath + "Roboto-300.ttf";
+    private String pdfFontLightItalic = fontPath + "Roboto-300_Italic.ttf";
+    private String pdfFontMedium = fontPath + "Roboto-500.ttf";
+
     private BaseFont baseFontMedium;
     private BaseFont baseFontLight;
     private BaseFont baseFontLightItalic;
     private int pdfAlignLeft = Element.ALIGN_LEFT;
     private int pdfAlignCenter = Element.ALIGN_CENTER;
     private int pdfAlignRight = Element.ALIGN_RIGHT;
-
     private DecimalFormat df = new DecimalFormat("#,###.##");
     private String formatTime = "HH:mm:ss dd/MM/yyyy";
     private String karaokeName = "ROSIE KARAOKE";
-    private String address = "12 Nguyen Van Bao, Phuong 4, Go Vap, Thanh pho Ho Chi Minh";
-    private String phoneNumber = "0828012868";
+    private String address = "12 Nguyễn Văn Bảo, Phường 4, Gò Vấp, Thành phố Hồ Chí Minh";
+    private String phoneNumber = "0999.999.999";
 
-    private static ExportBill instance = new ExportBill();
+    private static ExportBill instance;
 
-    public static ExportBill getInstance() {
+    static {
+        try {
+            instance = new ExportBill();
+        } catch (DocumentException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public ExportBill() throws DocumentException, IOException {
+    }
+
+    public static ExportBill getInstance() throws DocumentException, IOException {
         if (instance == null)
             instance = new ExportBill();
         return instance;
@@ -53,14 +69,11 @@ public class ExportBill {
         int hoursInt = (int) hours;
         String minutesStr = minutes < 10 ? "0" + minutes : minutes + "";
         String hoursStr = hoursInt < 10 ? "0" + hoursInt : hoursInt + "";
-        String time = String.format("%s gio %s phút", hoursStr, minutesStr);
+        String time = String.format("%s giờ %s phút", hoursStr, minutesStr);
         return time;
     }
-
-
-
     /**
-     * tạo khoản trắng trên file pdf
+     * tạo khoảnG trắng trên file pdf
      *
      * @return {@code Paragraph}: dòng khoản trắng
      */
@@ -163,7 +176,7 @@ public class ExportBill {
 
             // bill name
             Font fontBillName = new Font(baseFontMedium, 20);
-            Chunk chunkBillName = new Chunk("HOA DON TINH TIEN", fontBillName);
+            Chunk chunkBillName = new Chunk("HÓA ĐƠN TÍNH TIỀN", fontBillName);
             Paragraph pBillName = new Paragraph(chunkBillName);
             pBillName.setAlignment(pdfAlignCenter);
             doc.add(pBillName);
@@ -172,46 +185,46 @@ public class ExportBill {
             doc.add(pSkip);
 
             // bill id
-            Paragraph pBillId = createRowBillInfoPdf("Ma hoa don: ", bill.getMaHoaDon(), 5);
+            Paragraph pBillId = createRowBillInfoPdf("Mã hóa đơn: ", bill.getMaHoaDon(), 5);
             doc.add(pBillId);
 
             // staff Name
             Staff staff = bill.getMaNhanVien();
-            Paragraph pStaffName = createRowBillInfoPdf("Thu ngan: ", staff.getTenNhanVien(), 6);
+            Paragraph pStaffName = createRowBillInfoPdf("Thu ngân: ", staff.getTenNhanVien(), 6);
             doc.add(pStaffName);
 
             // customer Name
             Customer customer = bill.getMaKH();
-            Paragraph pCustomerName = createRowBillInfoPdf("Ten khach hang: ", customer.getTenKhachHang(), 4);
+            Paragraph pCustomerName = createRowBillInfoPdf("Tên khách hàng: ", customer.getTenKhachHang(), 4);
             doc.add(pCustomerName);
 
             // room id
-            Paragraph pRoomId = createRowBillInfoPdf("So phong: ", bill.getMaPhong().getMaPhong(), 6);
+            Paragraph pRoomId = createRowBillInfoPdf("Số phòng: ", bill.getMaPhong().getMaPhong(), 6);
             doc.add(pRoomId);
 
             // room type name
             TypeOfRoom roomType = bill.getMaPhong().getLoaiPhong();
-            Paragraph pRoomTypeName = createRowBillInfoPdf("Loai phong: ", roomType.getTenLoaiPhong(), 5);
+            Paragraph pRoomTypeName = createRowBillInfoPdf("Loại phòng: ", roomType.getTenLoaiPhong(), 5);
             doc.add(pRoomTypeName);
 
             // room type price
-            String roomTypePrice = df.format(bill.getMaPhong().getGiaPhong()) + "d/gio";
-            Paragraph pRoomTypePrice = createRowBillInfoPdf("Gia phong: ", roomTypePrice, 5);
+            String roomTypePrice = df.format(bill.getMaPhong().getGiaPhong()) + " VND/giờ";
+            Paragraph pRoomTypePrice = createRowBillInfoPdf("Giá phòng: ", roomTypePrice, 5);
             doc.add(pRoomTypePrice);
 
             // start Time
             String startTime = ConvertTime.getInstance().convertTimeToString(bill.getNgayGioDat(), formatTime);
-            Paragraph pStartTime = createRowBillInfoPdf("Gio bat dau: ", startTime, 5);
+            Paragraph pStartTime = createRowBillInfoPdf("Giờ bắt đầu: ", startTime, 5);
             doc.add(pStartTime);
 
             // end Time
             String endTime = ConvertTime.getInstance().convertTimeToString(bill.getNgayGioTra(), formatTime);
-            Paragraph pEndTime = createRowBillInfoPdf("Gio ket thuc: ", endTime, 5);
+            Paragraph pEndTime = createRowBillInfoPdf("Giờ kết thúc: ", endTime, 5);
             doc.add(pEndTime);
 
             // used Time
             String usedTime = convertRentalTime(bill.tinhGioThue());
-            Paragraph pUsedTime = createRowBillInfoPdf("Thoi gian su dung: ", usedTime, 4);
+            Paragraph pUsedTime = createRowBillInfoPdf("Thời gian sử dụng: ", usedTime, 4);
             doc.add(pUsedTime);
 
             // skip
@@ -224,7 +237,6 @@ public class ExportBill {
     /**
      * Hiển thị thông tin các dịch vụ đã đặt
      *
-
      * @param doc  {@code Document}: document xử lý thông tin hóa đơn
      */
     private void showServiceOrderPdf(List<DetailsOfService> serviceOrders, Document doc) {
@@ -242,20 +254,20 @@ public class ExportBill {
             // table Service Order
             PdfPTable table = new PdfPTable(4);
             table.setLockedWidth(false);
-            float[] columnWidth = { 290f, 60f, 125f, 125f };
+            float[] columnWidth = { 240f, 80f, 140f, 140f };
             table.setWidthPercentage(columnWidth, PageSize.A4);
 
-            PdfPCell cell1 = createCellServiceOrder("Ten", borderWidthHeader, paddingBottom, fontHeader, pdfAlignLeft);
+            PdfPCell cell1 = createCellServiceOrder("Tên dịch vụ", borderWidthHeader, paddingBottom, fontHeader, pdfAlignLeft);
             table.addCell(cell1);
 
-            PdfPCell cell2 = createCellServiceOrder("SL", borderWidthHeader, paddingBottom, fontHeader, pdfAlignRight);
+            PdfPCell cell2 = createCellServiceOrder("Số lượng", borderWidthHeader, paddingBottom, fontHeader, pdfAlignRight);
             table.addCell(cell2);
 
-            PdfPCell cell3 = createCellServiceOrder("Don Gia", borderWidthHeader, paddingBottom, fontHeader,
+            PdfPCell cell3 = createCellServiceOrder("Đơn giá", borderWidthHeader, paddingBottom, fontHeader,
                     pdfAlignRight);
             table.addCell(cell3);
 
-            PdfPCell cell4 = createCellServiceOrder("T.Tien", borderWidthHeader, paddingBottom, fontHeader,
+            PdfPCell cell4 = createCellServiceOrder("T.Tiền", borderWidthHeader, paddingBottom, fontHeader,
                     pdfAlignRight);
             table.addCell(cell4);
 
@@ -292,7 +304,6 @@ public class ExportBill {
 
     /**
      * Hiển thị thông tin thanh toán hóa đơn
-     *
      * @param bill {@code HoaDon}: hóa đơn cần hiển thị thông tin thanh toán
      * @param doc  {@code Document}: document xử lý thông tin hóa đơn
      */
@@ -306,18 +317,18 @@ public class ExportBill {
         double vat = 0;
         Date ngayHienTai = new Date();
 
-// Chuyển ngày hiện tại và ngày sinh của khách hàng thành lớp Calendar
+        // Chuyển ngày hiện tại và ngày sinh của khách hàng thành lớp Calendar
         Calendar calendarHienTai = Calendar.getInstance();
         calendarHienTai.setTime(ngayHienTai);
 
         Calendar calendarNgaySinhKhachHang = Calendar.getInstance();
         calendarNgaySinhKhachHang.setTime(bill.getMaKH().getNgaySinh());
 
-// Lấy ngày và tháng của ngày hiện tại
+        // Lấy ngày và tháng của ngày hiện tại
         int ngayHienTaiValue = calendarHienTai.get(Calendar.DAY_OF_MONTH);
         int thangHienTaiValue = calendarHienTai.get(Calendar.MONTH);
 
-// Lấy ngày và tháng từ ngày sinh của khách hàng
+        // Lấy ngày và tháng từ ngày sinh của khách hàng
         int ngaySinhKhachHangValue = calendarNgaySinhKhachHang.get(Calendar.DAY_OF_MONTH);
         int thangSinhKhachHangValue = calendarNgaySinhKhachHang.get(Calendar.MONTH);
         if (ngayHienTaiValue == ngaySinhKhachHangValue && thangHienTaiValue == thangSinhKhachHangValue) {
@@ -327,14 +338,13 @@ public class ExportBill {
             vat = (totalPriceService + totalPriceRoom) * 0.08;
         }
         Double totalPriceBill = bill.getTongTienHD() +vat;
-        String labels[] = { "Tong tien dich vu:", "Tong tien phong:", "VAT(8%):", "Tong cong:" };
+        String labels[] = { "Tổng tiền dịch vụ:", "Tổng tiền phòng:", "VAT(8%):", "Tổng cộng:" };
         String values[] = { df.format(totalPriceService), df.format(totalPriceRoom), df.format(vat),
                 df.format(totalPriceBill) };
         try {
             // skip
             Paragraph pSkip = skipRowPdf();
             doc.add(pSkip);
-
             // bill id
             PdfPTable table = new PdfPTable(2);
             table.setLockedWidth(false);
@@ -362,14 +372,13 @@ public class ExportBill {
 
     /**
      * Tạo chân trang hóa đơn
-     *
      * @param doc {@code Document}: document xử lý chân trang hóa đơn
      */
     private void showFooterPdf(Document doc) {
         Font font = new Font(baseFontLightItalic, 15);
         // skip
-        String message = "Quy khach vui lòng kiem tra lai hoa don truoc khi thanh toan. "
-                + "\nXin cam on va hen gap lai quy khach";
+        String message = "Quy khách vui lòng kiểm tra lại hóa đơn trước khi thanh toán. "
+                + "\nXin cảm ơn và hẹn gặp lại quý khách.";
         try {
             Paragraph pSkip = skipRowPdf();
             doc.add(pSkip);
@@ -385,8 +394,6 @@ public class ExportBill {
 
     /**
      * Xuất file pdf hóa đơn dựa trong mã hóa đơn và đường dẫn đến nơi xuất file
-     *
-
      * @param path   {@code String}: đường dẫn đến file pdf
      */
     public boolean exportBillToPdf(Bill bill, String path) {
@@ -397,10 +404,12 @@ public class ExportBill {
         if (!path.matches("^.+[\\\\/]$")) {
             path += "/";
         }
-
         String filePath = path + fileName;
         Document document = new Document(PageSize.A4, 50, 50, 50, 50);
         try {
+            baseFontMedium = BaseFont.createFont(pdfFontMedium, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+            baseFontLight = BaseFont.createFont(pdfFontLight, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+            baseFontLightItalic = BaseFont.createFont(pdfFontLightItalic, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
 
 
             PdfWriter.getInstance(document, new FileOutputStream(filePath));

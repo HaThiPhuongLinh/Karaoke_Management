@@ -4,7 +4,7 @@ import DAO.*;
 import Entity.*;
 import UI.CustomUI.Custom;
 import UI.component.Bill_UI;
-import UI.component.KaraokeBooking_UI;
+import com.itextpdf.text.DocumentException;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -16,6 +16,7 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
@@ -34,15 +35,11 @@ import java.util.List;
  */
 public class DialogBill extends JDialog implements ActionListener {
     private final String WORKING_DIR = System.getProperty("user.dir");
-    private Bill_UI billUI;
     private JTextField txtBillId, txtStaffName, txtCustomerName, txtRoomId, txtRoomTypeName, txtRoomPrice, txtStartTime,
             txtEndTime, txtUsedTime, txtTotalPriceService, txtTotalPriceRoom, txtVAT, txtTotalPriceBill;
     private JTable tblTableBillInfo;
     private DefaultTableModel modelTableBillInfo;
-    private GradientPaint gra = new GradientPaint(0, 0, new Color(255, 255, 255), getWidth(), 0,
-            Color.decode("#FAFFD1"));
-
-    private JButton btnPayment, btnBack, btnExportPdf, btnExportExcel;
+    private JButton btnPayment, btnBack, btnExportPdf;
     private String formatTime = "HH:mm:ss dd/MM/yyyy";
     private DecimalFormat df = new DecimalFormat("#,###.## VND");
     private DecimalFormat df2 = new DecimalFormat("#,###.##");
@@ -52,7 +49,7 @@ public class DialogBill extends JDialog implements ActionListener {
     private BillDAO billDAO = BillDAO.getInstance();
     private StaffDAO staffDAO = StaffDAO.getInstance();
     private CustomerDAO customerDAO = CustomerDAO.getInstance();
-    private  DetailOfBillDAO detailOfBillDAO;
+    private DetailOfBillDAO detailOfBillDAO;
     private DetailOfServiceDAO serviceDetailDAO = DetailOfServiceDAO.getInstance();
     private Bill_UI main;
 
@@ -63,7 +60,7 @@ public class DialogBill extends JDialog implements ActionListener {
      */
     public DialogBill(Bill bill) {
         this.bill = bill;
-        detailOfBillDAO =new DetailOfBillDAO();
+        detailOfBillDAO = new DetailOfBillDAO();
         Staff staff = null;
         Customer customer = null;
         List<DetailsOfService> serviceOrders = new ArrayList<>();
@@ -136,48 +133,24 @@ public class DialogBill extends JDialog implements ActionListener {
 
         pnMain.add(pnInfoService);
 
-        JPanel pnTable = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                Graphics2D g2 = (Graphics2D) g;
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(Color.decode("#ffffff"));
-                g2.drawRect(0, 0, 759, getHeight() - 1);
-
-                g2.drawLine(0, 24, 759, 24);
-                setFont(new Font("Dialog", Font.BOLD, 16));
-
-            }
-        };
+        JPanel pnTable = new JPanel();
         pnTable.setLayout(null);
         pnTable.setOpaque(false);
         pnTable.setBounds(10, 25, 760, 200);
         pnInfoService.add(pnTable);
 
-        String[] colsBillInfo = {"STT", "Tên dịch vụ ", "SL", "Đơn giá", "Thành tiền"};
-        modelTableBillInfo = new DefaultTableModel(colsBillInfo, 0) {
-            @Override
-            public boolean isCellEditable(int i, int i1) {
-                return false;
-            }
-        };
-        tblTableBillInfo = new JTable(modelTableBillInfo) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                setFont(new Font("Dialog", Font.PLAIN, 14));
-            }
-        };
-//        Custom.getInstance().setCustomTable(tblTableBillInfo);
-        tblTableBillInfo.getTableHeader().setFont(new Font("Dialog", Font.BOLD, 16));
-        tblTableBillInfo.getTableHeader().setBackground(new Color(255, 255, 255, 0));
-        tblTableBillInfo.getTableHeader().setForeground(Color.WHITE);
-        tblTableBillInfo.setOpaque(false);
-        tblTableBillInfo.setShowGrid(false);
-        tblTableBillInfo.setRowHeight(25);
+        String[] colsBillInfo = {"STT", "Tên dịch vụ ", "Số lượng", "Đơn giá", "Thành tiền"};
+        modelTableBillInfo = new DefaultTableModel(colsBillInfo, 0);
+
+        tblTableBillInfo = new JTable(modelTableBillInfo);
+        tblTableBillInfo.setBackground(new Color(255, 255, 255, 0));
+        tblTableBillInfo.setForeground(new Color(255, 255, 255));
+        Custom.getInstance().setCustomTableBill(tblTableBillInfo);
         JScrollPane scrTableBillInfo = new JScrollPane(tblTableBillInfo);
         scrTableBillInfo.setBounds(1, 1, 777, 199);
+        scrTableBillInfo.setOpaque(false);
+        scrTableBillInfo.getViewport().setOpaque(false);
+        scrTableBillInfo.getViewport().setBackground(Color.WHITE);
         pnTable.add(scrTableBillInfo);
 
         JLabel lblTotalPriceService = new JLabel("Tổng tiền dịch vụ:");
@@ -187,6 +160,7 @@ public class DialogBill extends JDialog implements ActionListener {
 
         txtTotalPriceService = new JTextField("");
         txtTotalPriceService.setEditable(false);
+        Custom.getInstance().setCustomTextFieldBill2(txtTotalPriceService);
         txtTotalPriceService.setBounds(555, 560, 200, 25);
         txtTotalPriceService.setHorizontalAlignment(SwingConstants.RIGHT);
         pnMain.add(txtTotalPriceService);
@@ -200,7 +174,7 @@ public class DialogBill extends JDialog implements ActionListener {
         txtTotalPriceRoom.setEditable(false);
         txtTotalPriceRoom.setBorder(new EmptyBorder(0, 0, 0, 0));
         txtTotalPriceRoom.setOpaque(false);
-//       Custom.getInstance().setCustomTextFieldBill(txtTotalPriceRoom);
+        Custom.getInstance().setCustomTextFieldBill2(txtTotalPriceRoom);
         txtTotalPriceRoom.setBounds(555, 585, 200, 25);
         txtTotalPriceRoom.setHorizontalAlignment(SwingConstants.RIGHT);
         pnMain.add(txtTotalPriceRoom);
@@ -211,7 +185,7 @@ public class DialogBill extends JDialog implements ActionListener {
         pnMain.add(lblVAT);
 
         txtVAT = new JTextField("");
-//        Custom.getInstance().setCustomTextFieldBill(txtVAT);
+        Custom.getInstance().setCustomTextFieldBill2(txtVAT);
         txtVAT.setBounds(555, 610, 200, 25);
         txtVAT.setHorizontalAlignment(SwingConstants.RIGHT);
         pnMain.add(txtVAT);
@@ -223,7 +197,7 @@ public class DialogBill extends JDialog implements ActionListener {
         pnMain.add(lblTotalPriceBill);
 
         txtTotalPriceBill = new JTextField("");
-//        Custom.getInstance().setCustomTextFieldBill(txtTotalPriceBill);
+        Custom.getInstance().setCustomTextFieldBill2(txtTotalPriceBill);
         txtTotalPriceBill.setFont(new Font("Dialog", Font.BOLD, 16));
         txtTotalPriceBill.setColumns(10);
         txtTotalPriceBill.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -246,10 +220,7 @@ public class DialogBill extends JDialog implements ActionListener {
         btnExportPdf.setBounds(620, 670, 130, 35);
 
         pnMain.add(btnExportPdf);
-
-
-
-        JLabel txtPhoneNumber = new JLabel("0828012868");
+        JLabel txtPhoneNumber = new JLabel("0999.999.999");
         txtPhoneNumber.setBackground(Color.WHITE);
         txtPhoneNumber.setFont(new Font("Dialog", Font.PLAIN, 16));
         txtPhoneNumber.setForeground(Color.WHITE);
@@ -313,7 +284,7 @@ public class DialogBill extends JDialog implements ActionListener {
 
         txtBillId = new JTextField("");
         txtBillId.setBounds(160, 23, 220, 25);
-//       Custom.getInstance().setCustomTextFieldBill(txtBillId);
+        Custom.getInstance().setCustomTextFieldBill(txtBillId);
         panel.add(txtBillId);
         txtBillId.setEditable(false);
 
@@ -321,50 +292,49 @@ public class DialogBill extends JDialog implements ActionListener {
         txtStaffName.setBounds(160, 48, 220, 25);
         panel.add(txtStaffName);
         txtStaffName.setEditable(false);
-//      Custom.getInstance().setCustomTextFieldBill(txtStaffName);
+        Custom.getInstance().setCustomTextFieldBill(txtStaffName);
 
         txtCustomerName = new JTextField("");
         txtCustomerName.setBounds(160, 73, 220, 25);
         panel.add(txtCustomerName);
         txtCustomerName.setEditable(false);
-//       Custom.getInstance().setCustomTextFieldBill(txtCustomerName);
+        Custom.getInstance().setCustomTextFieldBill(txtCustomerName);
 
         txtRoomId = new JTextField("");
         txtRoomId.setBounds(160, 98, 220, 25);
         txtRoomId.setEditable(false);
         panel.add(txtRoomId);
-//        Custom.getInstance().setCustomTextFieldBill(txtRoomId);
+        Custom.getInstance().setCustomTextFieldBill(txtRoomId);
 
         txtRoomTypeName = new JTextField("");
         txtRoomTypeName.setBounds(160, 123, 220, 25);
         txtRoomTypeName.setEditable(false);
         panel.add(txtRoomTypeName);
-//        Custom.getInstance().setCustomTextFieldBill(txtRoomTypeName);
+        Custom.getInstance().setCustomTextFieldBill(txtRoomTypeName);
 
         txtRoomPrice = new JTextField("");
         txtRoomPrice.setBounds(588, 23, 150, 25);
         txtRoomPrice.setEditable(false);
         panel.add(txtRoomPrice);
-//       Custom.getInstance().setCustomTextFieldBill(txtRoomPrice);
+        Custom.getInstance().setCustomTextFieldBill(txtRoomPrice);
 
         txtStartTime = new JTextField("");
         txtStartTime.setBounds(588, 48, 150, 25);
         panel.add(txtStartTime);
         txtStartTime.setEditable(false);
-//        Custom.getInstance().setCustomTextFieldBill(txtStartTime);
+        Custom.getInstance().setCustomTextFieldBill(txtStartTime);
 
         txtEndTime = new JTextField("");
         txtEndTime.setBounds(588, 73, 150, 25);
         panel.add(txtEndTime);
         txtEndTime.setEditable(false);
-//        Custom.getInstance().setCustomTextFieldBill(txtEndTime);
+        Custom.getInstance().setCustomTextFieldBill(txtEndTime);
 
         txtUsedTime = new JTextField("");
         txtUsedTime.setBounds(588, 98, 150, 25);
         panel.add(txtUsedTime);
         txtUsedTime.setEditable(false);
-//       Custom.getInstance().setCustomTextFieldBill(txtUsedTime);
-
+        Custom.getInstance().setCustomTextFieldBill(txtUsedTime);
 
         btnExportPdf.addActionListener(this);
         btnPayment.addActionListener(this);
@@ -377,8 +347,15 @@ public class DialogBill extends JDialog implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
-         if (o.equals(btnExportPdf)) {
-            Boolean result = ExportBill.getInstance().exportBillToPdf(bill, path);
+        if (o.equals(btnExportPdf)) {
+            Boolean result = null;
+            try {
+                result = ExportBill.getInstance().exportBillToPdf(bill, path);
+            } catch (DocumentException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
             String message = "";
             int type = JOptionPane.INFORMATION_MESSAGE;
             if (result) {
@@ -401,10 +378,10 @@ public class DialogBill extends JDialog implements ActionListener {
                 ArrayList<Bill> bills = billDAO.getAllBill();
                 main.loadHD2(bills);
                 String maHD = bill.getMaHoaDon();
-                String maPhong =bill.getMaPhong().getMaPhong();
+                String maPhong = bill.getMaPhong().getMaPhong();
                 String soGio = bill.tinhThoiGianSuDung();
-                double giaPhong =bill.getMaPhong().getGiaPhong();
-                DetailsOfBill dtbill =new DetailsOfBill(new Bill(maHD),new Room(maPhong),soGio,giaPhong);
+                double giaPhong = bill.getMaPhong().getGiaPhong();
+                DetailsOfBill dtbill = new DetailsOfBill(new Bill(maHD), new Room(maPhong), soGio, giaPhong);
                 try {
                     detailOfBillDAO.insert(dtbill);
                 } catch (SQLException ex) {
@@ -517,18 +494,18 @@ public class DialogBill extends JDialog implements ActionListener {
         double vat = 0;
         Date ngayHienTai = new Date();
 
-// Chuyển ngày hiện tại và ngày sinh của khách hàng thành lớp Calendar
+        // Chuyển ngày hiện tại và ngày sinh của khách hàng thành lớp Calendar
         Calendar calendarHienTai = Calendar.getInstance();
         calendarHienTai.setTime(ngayHienTai);
 
         Calendar calendarNgaySinhKhachHang = Calendar.getInstance();
         calendarNgaySinhKhachHang.setTime(bill.getMaKH().getNgaySinh());
 
-// Lấy ngày và tháng của ngày hiện tại
+        // Lấy ngày và tháng của ngày hiện tại
         int ngayHienTaiValue = calendarHienTai.get(Calendar.DAY_OF_MONTH);
         int thangHienTaiValue = calendarHienTai.get(Calendar.MONTH);
 
-// Lấy ngày và tháng từ ngày sinh của khách hàng
+        // Lấy ngày và tháng từ ngày sinh của khách hàng
         int ngaySinhKhachHangValue = calendarNgaySinhKhachHang.get(Calendar.DAY_OF_MONTH);
         int thangSinhKhachHangValue = calendarNgaySinhKhachHang.get(Calendar.MONTH);
         if (ngayHienTaiValue == ngaySinhKhachHangValue && thangHienTaiValue == thangSinhKhachHangValue) {
@@ -538,7 +515,7 @@ public class DialogBill extends JDialog implements ActionListener {
             vat = (totalPriceService + totalPriceRoom) * 0.08;
         }
         txtVAT.setText(df.format(vat));
-        double totalPrice = bill.getTongTienHD() +vat;
+        double totalPrice = bill.getTongTienHD() + vat;
         txtTotalPriceBill.setText(df.format(totalPrice));
     }
 
@@ -549,10 +526,10 @@ public class DialogBill extends JDialog implements ActionListener {
         tblTableBillInfo.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         TableColumnModel columnModelTableBillInfo = tblTableBillInfo.getColumnModel();
         columnModelTableBillInfo.getColumn(0).setPreferredWidth(59);
-        columnModelTableBillInfo.getColumn(1).setPreferredWidth(320);
-        columnModelTableBillInfo.getColumn(2).setPreferredWidth(70);
-        columnModelTableBillInfo.getColumn(3).setPreferredWidth(150);
-        columnModelTableBillInfo.getColumn(4).setPreferredWidth(160);
+        columnModelTableBillInfo.getColumn(1).setPreferredWidth(280);
+        columnModelTableBillInfo.getColumn(2).setPreferredWidth(90);
+        columnModelTableBillInfo.getColumn(3).setPreferredWidth(160);
+        columnModelTableBillInfo.getColumn(4).setPreferredWidth(170);
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();

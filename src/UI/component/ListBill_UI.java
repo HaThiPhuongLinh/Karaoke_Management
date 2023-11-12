@@ -188,9 +188,6 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
-
     }
 
     /**
@@ -256,18 +253,18 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
                 double vat = 0;
                 Date ngayHienTai = new Date();
 
-// Chuyển ngày hiện tại và ngày sinh của khách hàng thành lớp Calendar
+                // Chuyển ngày hiện tại và ngày sinh của khách hàng thành lớp Calendar
                 Calendar calendarHienTai = Calendar.getInstance();
                 calendarHienTai.setTime(ngayHienTai);
 
                 Calendar calendarNgaySinhKhachHang = Calendar.getInstance();
                 calendarNgaySinhKhachHang.setTime(bill.getMaKH().getNgaySinh());
 
-// Lấy ngày và tháng của ngày hiện tại
+                // Lấy ngày và tháng của ngày hiện tại
                 int ngayHienTaiValue = calendarHienTai.get(Calendar.DAY_OF_MONTH);
                 int thangHienTaiValue = calendarHienTai.get(Calendar.MONTH);
 
-// Lấy ngày và tháng từ ngày sinh của khách hàng
+                // Lấy ngày và tháng từ ngày sinh của khách hàng
                 int ngaySinhKhachHangValue = calendarNgaySinhKhachHang.get(Calendar.DAY_OF_MONTH);
                 int thangSinhKhachHangValue = calendarNgaySinhKhachHang.get(Calendar.MONTH);
                 if (ngayHienTaiValue == ngaySinhKhachHangValue && thangHienTaiValue == thangSinhKhachHangValue) {
@@ -280,8 +277,6 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
                 double totalPrice = bill.getTongTienHD() +vat;
                 Object[] rowData = {bill.getMaHoaDon(),bill.getMaNhanVien().getTenNhanVien(),bill.getMaKH().getTenKhachHang(), bill.getMaPhong().getMaPhong(), df.format(totalPriceRoom),df.format(totalPriceService),df.format(totalPrice)};
                 modelTblHD.addRow(rowData);
-
-
             }
         }
     }
@@ -290,9 +285,7 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
      *
      */
     public void loadHD() {
-
         for (Bill bill :billDAO.getAllBill2()) {
-
             if(bill.getTinhTrangHD()==1) {
                 java.util.List<DetailsOfService> serviceOrders = new ArrayList<>();
                 serviceOrders = serviceDetailDAO.getDetailsOfServiceForBill(bill.getMaHoaDon());
@@ -305,18 +298,18 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
                 double vat = 0;
                 Date ngayHienTai = new Date();
 
-// Chuyển ngày hiện tại và ngày sinh của khách hàng thành lớp Calendar
+                // Chuyển ngày hiện tại và ngày sinh của khách hàng thành lớp Calendar
                 Calendar calendarHienTai = Calendar.getInstance();
                 calendarHienTai.setTime(ngayHienTai);
 
                 Calendar calendarNgaySinhKhachHang = Calendar.getInstance();
                 calendarNgaySinhKhachHang.setTime(bill.getMaKH().getNgaySinh());
 
-// Lấy ngày và tháng của ngày hiện tại
+                 // Lấy ngày và tháng của ngày hiện tại
                 int ngayHienTaiValue = calendarHienTai.get(Calendar.DAY_OF_MONTH);
                 int thangHienTaiValue = calendarHienTai.get(Calendar.MONTH);
 
-// Lấy ngày và tháng từ ngày sinh của khách hàng
+                // Lấy ngày và tháng từ ngày sinh của khách hàng
                 int ngaySinhKhachHangValue = calendarNgaySinhKhachHang.get(Calendar.DAY_OF_MONTH);
                 int thangSinhKhachHangValue = calendarNgaySinhKhachHang.get(Calendar.MONTH);
                 if (ngayHienTaiValue == ngaySinhKhachHangValue && thangHienTaiValue == thangSinhKhachHangValue) {

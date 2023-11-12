@@ -46,10 +46,8 @@ public class Room_UI extends JPanel implements ActionListener, MouseListener {
     private JTable tblPhong;
     private DefaultTableModel modelTblPhong;
     private DecimalFormat df = new DecimalFormat("#,###.##/giờ");
-
-
     private JPanel pnlRoomControl, pnlRoomList, timeNow;
-    private JLabel backgroundLabel, timeLabel;
+    private JLabel lblBackGround, lblTime;
     private RoomDAO RoomDAO;
     private TypeOfRoomDAO typeOfRoomDAO;
     public static Staff staffLogin = null;
@@ -80,10 +78,10 @@ public class Room_UI extends JPanel implements ActionListener, MouseListener {
         timeNow.setOpaque(false);
         add(timeNow);
 
-        timeLabel = new JLabel();
-        timeLabel.setFont(new Font("Arial", Font.BOLD, 33));
-        timeLabel.setForeground(Color.WHITE);
-        timeNow.add(timeLabel);
+        lblTime = new JLabel();
+        lblTime.setFont(new Font("Arial", Font.BOLD, 33));
+        lblTime.setForeground(Color.WHITE);
+        timeNow.add(lblTime);
         Timer timer = new Timer(10, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -237,9 +235,9 @@ public class Room_UI extends JPanel implements ActionListener, MouseListener {
         pnlRoomControl.add(btnlamMoiP);
 
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/images/background.png"));
-        backgroundLabel = new JLabel(backgroundImage);
-        backgroundLabel.setBounds(0, 0, getWidth(), getHeight());
-        add(backgroundLabel);
+        lblBackGround = new JLabel(backgroundImage);
+        lblBackGround.setBounds(0, 0, getWidth(), getHeight());
+        add(lblBackGround);
         btnSuaP.addActionListener(this);
         btnlamMoiP.addActionListener(this);
         btnThem.addActionListener(this);
@@ -254,7 +252,7 @@ public class Room_UI extends JPanel implements ActionListener, MouseListener {
     private void updateTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String time = sdf.format(new Date());
-        timeLabel.setText(time);
+        lblTime.setText(time);
     }
 
     /**

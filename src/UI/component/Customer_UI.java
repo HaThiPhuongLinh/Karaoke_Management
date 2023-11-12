@@ -38,7 +38,6 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
     private JComboBox cboGioiTinh;
     private JPanel timeNow, pnlCusList, pnlCusControl;
     private DatePicker dpNgaySinh;
-
     private JButton btnThem,  btnSua, btnLamMoi;
     private CustomerDAO CustomerDAO;
 
@@ -89,7 +88,6 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
         pnlCusList.setOpaque(false);
         add(pnlCusList);
         pnlCusList.setLayout(new BorderLayout(0, 0));
-
 
         pnlCusControl = new JPanel();
         pnlCusControl.setOpaque(false);
@@ -185,7 +183,6 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
         btnSua.setFont(new Font("Arial", Font.BOLD, 15));
         btnSua.setBounds(840, 170, 100, 30);
         pnlCusControl.add(btnSua);
-
 
         JPanel panelDSKH = new JPanel();
         panelDSKH.setLayout(null);

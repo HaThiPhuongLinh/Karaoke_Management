@@ -455,7 +455,6 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
                     btnRoomList[selection].setBorder(lineRed);
                     txtRoom.setText(roomID);
                     txtLocation.setText(location2);
-
                     showBillInfo(roomID);
 
                     Room roomActiveE = roomDAO.getRoomByRoomId(roomID);

@@ -29,7 +29,6 @@ public class SearchingCustomer_UI extends JPanel implements ActionListener {
     private JLabel lblBackground, lblTime, lblSearchbyName, lblSearchbyNumber, lblSearchbyCCCD;
     private JTextField txtSearchbyName, txtSearchbyNumber, txtSearchbyCCCD;
     private JPanel timeNow, pnlCusList, pnlCusControl;
-
     private JButton btnTim;
     private CustomerDAO CustomerDAO;
     public static Staff staffLogin = null;
