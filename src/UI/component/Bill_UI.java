@@ -361,6 +361,9 @@ Sửa chiều rộng các cột của bảng CTDV
 
         }else if(o.equals(btnLap)){
             int row = tblPDP.getSelectedRow();
+            if (row == -1) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn hóa đơn cần lập", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            } else {
             String maPhong = modelTablePDP.getValueAt(row,1).toString();
 
             Bill bill = billDAO.getBillByRoomID(maPhong);
@@ -387,7 +390,7 @@ Sửa chiều rộng các cột của bảng CTDV
                 } else {
                     bill.setNgayGioTra(null);
                 }
-            }
+            }}
         }else if(o.equals(btnLamMoi)){
             txtTK.setText("");
             txtKH.setText("");
@@ -408,9 +411,7 @@ Sửa chiều rộng các cột của bảng CTDV
             String maPhong = modelTablePDP.getValueAt(row,1).toString();
             dsCTDV = ctdv_dao.getDetailsOfServiceListByRoomId(maPhong);
             loadCTDV();
-
         }
-
     }
 
     @Override

@@ -462,7 +462,7 @@ public class DialogBill extends JDialog implements ActionListener {
         txtCustomerName.setText(bill.getMaKH().getTenKhachHang());
         txtRoomId.setText(bill.getMaPhong().getMaPhong());
         txtRoomTypeName.setText(roomType.getTenLoaiPhong());
-        txtRoomPrice.setText(df.format(bill.getMaPhong().getGiaPhong()) + " đ/giờ");
+        txtRoomPrice.setText(df.format(bill.getMaPhong().getGiaPhong()) + "/giờ");
         Timestamp startTime = bill.getNgayGioDat();
         String startTimeStr = ConvertTime.getInstance().convertTimeToString(startTime, formatTime);
         txtStartTime.setText(startTimeStr);

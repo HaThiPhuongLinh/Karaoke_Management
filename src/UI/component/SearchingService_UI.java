@@ -292,6 +292,9 @@ public class SearchingService_UI extends JPanel implements ActionListener, Mouse
         Object o = e.getSource();
         if (o.equals(btnTimKiem)) {
             String txtTenDV = txtTenDichVu.getText();
+            if(txtTenDV.equalsIgnoreCase("")){
+                JOptionPane.showMessageDialog(this,"Chưa nhập tên dịch vụ cần tìm");
+            }
             ArrayList<Service> services2 = serviceDAO.getServiceByName(txtTenDV);
                 if (!txtTenDichVu.getText().trim().equals("")) {
                     modelTblDichVu.getDataVector().removeAllElements();
