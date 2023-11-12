@@ -22,8 +22,8 @@ import java.util.Date;
  * Giao diện dùng để tìm kiếm nhân viên
  * Người thiết kế Nguyễn Đình Dương
  * Ngày tạo:7/10/2023
- * Lần cập nhật cuối : 18/10/2023
- * Nội dung cập nhật : Sửa tính năng tìm theo SDT
+ * Lần cập nhật cuối : 12/11/2023
+ * Nội dung cập nhật : cập nhật định dạng combobox
  */
 public class SearchingStaff_UI extends JPanel implements ActionListener, MouseListener {
     private JButton btnLamMoi;
@@ -138,6 +138,7 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
         cmbTinhTrang.addItem("Đang làm");
         cmbTinhTrang.addItem("Đã nghỉ");
         cmbTinhTrang.setBounds(515, 165, 280, 30);
+        Custom.setCustomComboBox(cmbTinhTrang);
         pnlStaffControl.add(cmbTinhTrang);
 
         JPanel panelDSNV = new JPanel();
@@ -337,6 +338,7 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
             txtSearchbyName.setText("");
             txtSearchbyNumber.setText("");
             txtSearchbyCCCD.setText("");
+            cmbTinhTrang.setSelectedIndex(0);
             modelTblNV.setRowCount(0);
             loadNV();
         }

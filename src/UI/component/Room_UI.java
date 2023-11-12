@@ -29,8 +29,8 @@ import java.sql.SQLException ;
  * Giao diện quản lý phòng
  * Người tham gia thiết kế: Hà Thị Phương Linh, Nguyễn Đình Dương
  * Ngày tạo: 17/09/2023
- * Lần cập nhật cuối: 08/11/2023
- * Nội dung cập nhật: cập nhật định dạng tiền VND
+ * Lần cập nhật cuối: 12/11/2023
+ * Nội dung cập nhật: cập nhật giá trị combobox loại phòng
  */
 public class Room_UI extends JPanel implements ActionListener, MouseListener {
     private  JTextField txtBaoLoi;
@@ -167,7 +167,7 @@ public class Room_UI extends JPanel implements ActionListener, MouseListener {
         pnlRoomControl.add(labelLoaiPhong);
 
         cmbLoaiPhong = new JComboBox<String>();
-        cmbLoaiPhong.addItem("Tất cả");
+        cmbLoaiPhong.addItem("");
         cmbLoaiPhong.setBounds(195, 120, 311, 30);
         Custom.setCustomComboBox(cmbLoaiPhong);
         pnlRoomControl.add(cmbLoaiPhong);

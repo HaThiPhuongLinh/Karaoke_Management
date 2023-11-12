@@ -305,7 +305,7 @@ public class SearchingService_UI extends JPanel implements ActionListener, Mouse
                             i++;
                         }
                     } else {
-                        JOptionPane.showMessageDialog(this, "KHÔNG TÌM THẤY!!!");
+                        JOptionPane.showMessageDialog(this, "Không tìm thấy dịch vụ");
                         txtTenDichVu.selectAll();
                         txtTenDichVu.requestFocus();
                     }

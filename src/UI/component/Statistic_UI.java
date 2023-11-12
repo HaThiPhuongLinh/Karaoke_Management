@@ -182,11 +182,12 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
         txtTongDoanhThu = new JTextField();
         txtTongDoanhThu.setBounds(980, 80, 150, 30);
         txtTongDoanhThu.setColumns(3);
+        txtTongDoanhThu.setFont(new Font("Dialog",Font.PLAIN,20));
         pnlDoanhThu.add(txtTongDoanhThu);
 
         JLabel lblVND = new JLabel("VND");
-        lblVND.setFont(new Font("Arial", Font.PLAIN, 14));
-        lblVND.setBounds(1140, 80, 150, 30);
+        lblVND.setFont(new Font("Arial", Font.PLAIN, 20));
+        lblVND.setBounds(1140, 80, 150, 29);
         lblVND.setForeground(Color.WHITE);
         pnlDoanhThu.add(lblVND);
 
@@ -301,7 +302,6 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
                 tuNgay = pickerTuNgay.getFullDate();
                 Date denNgay = pickerDenNgay.addOneDay();
                 ArrayList<Bill> listBill = billDAO.getListBillByDate(tuNgay, denNgay);
-                System.out.printf(String.valueOf(listBill.size())+"ádasdasd");
                 statistical(listBill);
             } catch (ParseException ex) {
                 ex.printStackTrace();
@@ -415,7 +415,6 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
                     break;
                 }
             }
-
 
             if (totalPrice < 0.0 || totalPrice == null) {
                 totalPrice = 0.0;

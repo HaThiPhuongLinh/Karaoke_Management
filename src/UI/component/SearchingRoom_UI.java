@@ -17,16 +17,22 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * Giao diện tìm kiếm phòng
+ * Người tham gia thiết kế: Hà Thị Phương Linh, Nguyễn Đình Dương
+ * Ngày tạo: 12/10/2023
+ * Lần cập nhật cuối: 12/11/2023
+ * Nội dung cập nhật: cập nhật định dạng combobox
+ */
 public class SearchingRoom_UI extends JPanel implements ActionListener, MouseListener {
-    private  JTable tableP;
-    private  DefaultTableModel modelTableP;
-    private JLabel backgroundLabel, timeLabel, search1Label, search2Label;
-    private JComboBox cboTimTheoTen, cboTimTheoGia;
+    private  JTable tblRoom;
+    private  DefaultTableModel modelTblRoom;
+    private JLabel lblBackGround, lblTime, lblSearch1, lblSearch2;
+    private JComboBox cmbFindName, cmbFindPrice;
     private JPanel timeNow, pnlCusList, pnlCusControl;
-    private JButton btnLammOi;
+    private JButton btnRefresh;
     private RoomDAO RoomDAO;
     private DecimalFormat df = new DecimalFormat("#,###.##/giờ");
     public static Staff staffLogin = null;
@@ -57,10 +63,10 @@ public class SearchingRoom_UI extends JPanel implements ActionListener, MouseLis
         timeNow.setOpaque(false);
         add(timeNow);
 
-        timeLabel = new JLabel();
-        timeLabel.setFont(new Font("Arial", Font.BOLD, 33));
-        timeLabel.setForeground(Color.WHITE);
-        timeNow.add(timeLabel);
+        lblTime = new JLabel();
+        lblTime.setFont(new Font("Arial", Font.BOLD, 33));
+        lblTime.setForeground(Color.WHITE);
+        timeNow.add(lblTime);
         Timer timer = new Timer(10, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -85,37 +91,39 @@ public class SearchingRoom_UI extends JPanel implements ActionListener, MouseLis
         pnlCusControl.setLayout(null);
         pnlCusControl.setPreferredSize(new Dimension(1100, 100));
 
-        search1Label = new JLabel("Tìm Theo Tên Loại Phòng: ");
+        lblSearch1 = new JLabel("Tìm Theo Tên Loại Phòng: ");
 
-        search1Label.setFont(new Font("Arial", Font.PLAIN, 14));
-        search1Label.setBounds(80, 25, 200, 30);
-        search1Label.setForeground(Color.WHITE);
-        pnlCusControl.add(search1Label);
+        lblSearch1.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblSearch1.setBounds(80, 25, 200, 30);
+        lblSearch1.setForeground(Color.WHITE);
+        pnlCusControl.add(lblSearch1);
 
-        cboTimTheoTen = new JComboBox();
-        cboTimTheoTen.setBounds(265, 25, 280, 30);
-        cboTimTheoTen.addItem("Tất Cả");
-        pnlCusControl.add(cboTimTheoTen);
+        cmbFindName = new JComboBox();
+        cmbFindName.setBounds(265, 25, 280, 30);
+        cmbFindName.addItem("Tất Cả");
+        Custom.setCustomComboBox(cmbFindName);
+        pnlCusControl.add(cmbFindName);
 
-        btnLammOi = new JButton("Làm mới");
-        btnLammOi.setBounds(1030, 25, 100, 30);
-        Custom.setCustomBtn(btnLammOi);
-        btnLammOi.setFont(new Font("Arial", Font.BOLD, 14));
-        pnlCusControl.add(btnLammOi);
+        btnRefresh = new JButton("Làm mới");
+        btnRefresh.setBounds(1030, 25, 100, 30);
+        Custom.setCustomBtn(btnRefresh);
+        btnRefresh.setFont(new Font("Arial", Font.BOLD, 14));
+        pnlCusControl.add(btnRefresh);
 
-        search2Label = new JLabel("Tìm Theo Giá: ");
-        search2Label.setFont(new Font("Arial", Font.PLAIN, 14));
-        search2Label.setBounds(590, 25, 120, 30);
-        search2Label.setForeground(Color.WHITE);
-        pnlCusControl.add(search2Label);
+        lblSearch2 = new JLabel("Tìm Theo Giá: ");
+        lblSearch2.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblSearch2.setBounds(590, 25, 120, 30);
+        lblSearch2.setForeground(Color.WHITE);
+        pnlCusControl.add(lblSearch2);
 
-        cboTimTheoGia = new JComboBox();
-        cboTimTheoGia.addItem("Tất cả");
-        cboTimTheoGia.addItem("150.000 - 200.000");
-        cboTimTheoGia.addItem("200.000 - 300.000");
-        cboTimTheoGia.addItem("300.000 - 400.000");
-        cboTimTheoGia.setBounds(695, 25, 280, 30);
-        pnlCusControl.add(cboTimTheoGia);
+        cmbFindPrice = new JComboBox();
+        cmbFindPrice.addItem("Tất cả");
+        cmbFindPrice.addItem("150.000 - 200.000");
+        cmbFindPrice.addItem("200.000 - 300.000");
+        cmbFindPrice.addItem("300.000 - 400.000");
+        cmbFindPrice.setBounds(695, 25, 280, 30);
+        Custom.setCustomComboBox(cmbFindPrice);
+        pnlCusControl.add(cmbFindPrice);
 
         JPanel panelDSKH = new JPanel();
         panelDSKH.setLayout(null);
@@ -124,19 +132,19 @@ public class SearchingRoom_UI extends JPanel implements ActionListener, MouseLis
         panelDSKH.setBounds(30, 20, 1220, 520);
         panelDSKH.setOpaque(false);
 
-        String[] colsKH = {"STT", "Mã Phòng", "Loại Phòng", "Tình Trạng", "Vị Trí","Giá Tiền"};
-        modelTableP = new DefaultTableModel(colsKH, 0);
+        String[] colsKH = {"STT", "Mã Phòng", "Loại Phòng", "Vị Trí", "Tình Trạng", "Giá Tiền"};
+        modelTblRoom = new DefaultTableModel(colsKH, 0);
         JScrollPane scrollPaneP;
 
-        tableP = new JTable(modelTableP);
-        tableP.setFont(new Font("Arial", Font.BOLD, 14));
-        tableP.setBackground(new Color(255, 255, 255, 0));
-        tableP.setForeground(new Color(255, 255, 255));
-        tableP.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-        tableP.getTableHeader().setForeground(Color.BLUE);
-        Custom.getInstance().setCustomTable(tableP);
+        tblRoom = new JTable(modelTblRoom);
+        tblRoom.setFont(new Font("Arial", Font.BOLD, 14));
+        tblRoom.setBackground(new Color(255, 255, 255, 0));
+        tblRoom.setForeground(new Color(255, 255, 255));
+        tblRoom.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
+        tblRoom.getTableHeader().setForeground(Color.BLUE);
+        Custom.getInstance().setCustomTable(tblRoom);
 
-        panelDSKH.add(scrollPaneP = new JScrollPane(tableP, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
+        panelDSKH.add(scrollPaneP = new JScrollPane(tblRoom, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
                 BorderLayout.CENTER);
         scrollPaneP.setBounds(10, 20, 1210, 520);
         scrollPaneP.setOpaque(false);
@@ -145,25 +153,25 @@ public class SearchingRoom_UI extends JPanel implements ActionListener, MouseLis
         pnlCusList.add(panelDSKH);
         loadP();
         loadCboLoaiPhong();
-        btnLammOi.addActionListener(this);
+        btnRefresh.addActionListener(this);
 
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/images/background.png"));
-        backgroundLabel = new JLabel(backgroundImage);
-        backgroundLabel.setBounds(0, 0, getWidth(), getHeight());
-        add(backgroundLabel);
+        lblBackGround = new JLabel(backgroundImage);
+        lblBackGround.setBounds(0, 0, getWidth(), getHeight());
+        add(lblBackGround);
 
-        cboTimTheoTen.addActionListener(new ActionListener() {
+        cmbFindName.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String selectedLoaiPhong = (String) cboTimTheoTen.getSelectedItem();;
-                cboTimTheoGia.setSelectedIndex(0);
-                modelTableP.setRowCount(0);
+                String selectedLoaiPhong = (String) cmbFindName.getSelectedItem();;
+                cmbFindPrice.setSelectedIndex(0);
+                modelTblRoom.setRowCount(0);
                 int i=1;
                 for (Room room : RoomDAO.getRoomList()) {
                     if (selectedLoaiPhong.equalsIgnoreCase("Tất cả") ||
                             selectedLoaiPhong.equalsIgnoreCase(room.getLoaiPhong().getTenLoaiPhong())) {
                         Object[] rowData = {i,room.getMaPhong(),room.getLoaiPhong().getTenLoaiPhong(),room.getViTri(),room.getTinhTrang(),df.format(room.getGiaPhong())};
-                        modelTableP.addRow(rowData);
+                        modelTblRoom.addRow(rowData);
                         i++;
                     }
                 }
@@ -171,32 +179,32 @@ public class SearchingRoom_UI extends JPanel implements ActionListener, MouseLis
         });
 
 
-        cboTimTheoGia.addActionListener(new ActionListener() {
+        cmbFindPrice.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                modelTableP.setRowCount(0);
+                modelTblRoom.setRowCount(0);
                 int i=1;
                 for (Room room : RoomDAO.getRoomList()) {
-                    if (cboTimTheoGia.getSelectedIndex()==0){
+                    if (cmbFindPrice.getSelectedIndex()==0){
                         Object[] rowData = {i,room.getMaPhong(),room.getLoaiPhong().getTenLoaiPhong(),room.getViTri(),room.getTinhTrang(),df.format(room.getGiaPhong())};
-                        modelTableP.addRow(rowData);
+                        modelTblRoom.addRow(rowData);
                         i++;
-                    }else if (cboTimTheoGia.getSelectedIndex()==1){
+                    }else if (cmbFindPrice.getSelectedIndex()==1){
                         if (room.getGiaPhong()>=150000 && room.getGiaPhong()<=200000){
                             Object[] rowData = {i,room.getMaPhong(),room.getLoaiPhong().getTenLoaiPhong(),room.getViTri(),room.getTinhTrang(),df.format(room.getGiaPhong())};
-                            modelTableP.addRow(rowData);
+                            modelTblRoom.addRow(rowData);
                             i++;
                         }
-                    }else if (cboTimTheoGia.getSelectedIndex()==2){
+                    }else if (cmbFindPrice.getSelectedIndex()==2){
                         if (room.getGiaPhong()>200000 && room.getGiaPhong()<=300000){
                             Object[] rowData = {i,room.getMaPhong(),room.getLoaiPhong().getTenLoaiPhong(),room.getViTri(),room.getTinhTrang(),df.format(room.getGiaPhong())};
-                            modelTableP.addRow(rowData);
+                            modelTblRoom.addRow(rowData);
                             i++;
                         }
-                    }else if (cboTimTheoGia.getSelectedIndex()==3){
+                    }else if (cmbFindPrice.getSelectedIndex()==3){
                         if (room.getGiaPhong()>300000 && room.getGiaPhong()<=400000){
                             Object[] rowData = {i,room.getMaPhong(),room.getLoaiPhong().getTenLoaiPhong(),room.getViTri(),room.getTinhTrang(),df.format(room.getGiaPhong())};
-                            modelTableP.addRow(rowData);
+                            modelTblRoom.addRow(rowData);
                             i++;
                         }
                     }
@@ -211,7 +219,7 @@ public class SearchingRoom_UI extends JPanel implements ActionListener, MouseLis
     private void updateTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String time = sdf.format(new Date());
-        timeLabel.setText(time);
+        lblTime.setText(time);
     }
 
     /**
@@ -221,7 +229,7 @@ public class SearchingRoom_UI extends JPanel implements ActionListener, MouseLis
         int i=1;
         for (Room room : RoomDAO.getRoomList()) {
             Object[] rowData = { i,room.getMaPhong(),room.getLoaiPhong().getTenLoaiPhong(),room.getViTri(),room.getTinhTrang(),df.format(room.getGiaPhong())};
-            modelTableP.addRow(rowData);
+            modelTblRoom.addRow(rowData);
             i++;
 
         }
@@ -232,7 +240,7 @@ public class SearchingRoom_UI extends JPanel implements ActionListener, MouseLis
     private void loadCboLoaiPhong() {
         java.util.List<TypeOfRoom> dataList = TypeOfRoomDAO.getAllLoaiPhong();
         for (TypeOfRoom typeOfRoom : dataList) {
-            cboTimTheoTen.addItem(typeOfRoom.getTenLoaiPhong());
+            cmbFindName.addItem(typeOfRoom.getTenLoaiPhong());
         }
     }
 
@@ -240,10 +248,10 @@ public class SearchingRoom_UI extends JPanel implements ActionListener, MouseLis
     @Override
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
-        if(o.equals(btnLammOi)){
-            cboTimTheoTen.setSelectedIndex(0);
-            cboTimTheoGia.setSelectedIndex(0);
-            modelTableP.getDataVector().removeAllElements();
+        if(o.equals(btnRefresh)){
+            cmbFindName.setSelectedIndex(0);
+            cmbFindPrice.setSelectedIndex(0);
+            modelTblRoom.getDataVector().removeAllElements();
             loadP();
         }
 
