@@ -154,7 +154,7 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
 
         panelDSHD.add(scrollPaneHD = new JScrollPane(tblCTDV,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
                 BorderLayout.CENTER);
-        scrollPaneHD.setBounds(10,20,1165,260);
+        scrollPaneHD.setBounds(10,20,1165,270);
         scrollPaneHD.setOpaque(false);
         scrollPaneHD.getViewport().setOpaque(false);
         scrollPaneHD.getViewport().setBackground(Color.WHITE);

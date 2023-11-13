@@ -32,13 +32,13 @@ import java.util.concurrent.TimeUnit;
 /**
  * Sử dụng để thống kê doanh thu theo thời gian được chọn
  * <p>
- *     Người tham gia thiết kế: Nguyễn Quang Duy
+ * Người tham gia thiết kế: Nguyễn Quang Duy
  * </p>
  * ngày tạo: 12/10/2023
  * <p>
- *     Lần cập nhật cuối: 4/11/2023
+ * Lần cập nhật cuối: 13/11/2023
  * </p>
- * Nội dung cập nhật: thêm javadoc
+ * Nội dung cập nhật: cập nhật cách tính tổng tiền (tt= tt - ((tt+vat))*15%))
  */
 
 public class Statistic_UI extends JPanel implements  ActionListener, ItemListener {
@@ -309,6 +309,7 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
 
         }else if (o.equals(btnLamMoi)){
             dataset.clear();
+            txtTongDoanhThu.setText("");
             cmbLocTheo.setSelectedIndex(0);
             pickerTuNgay.setValueToDay();
             pickerDenNgay.setValueToDay();
@@ -368,7 +369,6 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
         dataset = new DefaultCategoryDataset();
         int size = totalPriceList.size();
         Double total = 0.0;
-        int totalPriceListIndex = 0;
 
         calendar.setTime(fromDate);
         int oldMonth = calendar.get(Calendar.MONTH) + 1;
@@ -411,7 +411,6 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
                         totalPrice = 0.0;
                     }
                     total += totalPrice;
-                    totalPriceListIndex++;
                     break;
                 }
             }
@@ -466,7 +465,8 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
 
 
             if (b.getKhuyenMai().trim().equalsIgnoreCase("KM")){
-                quantity += 0;
+                double totalBillWithVAT = quantity * 1.08; // Tính tổng bill kèm VAT
+                quantity = totalBillWithVAT - (totalBillWithVAT * 0.15);
             }else{
                 quantity += quantity*8/100;
             }
@@ -587,7 +587,8 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
 
 
             if (b.getKhuyenMai().trim().equalsIgnoreCase("KM")){
-                quantity += 0;
+                double totalBillWithVAT = quantity * 1.08; // Tính tổng bill kèm VAT
+                quantity = totalBillWithVAT - (totalBillWithVAT * 0.15);
             }else{
                 quantity += quantity*8/100;
             }
@@ -648,9 +649,9 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
             }
             double quantity = b.getMaPhong().getGiaPhong() * b.tinhGioThue() + gia;
 
-
             if (b.getKhuyenMai().trim().equalsIgnoreCase("KM")){
-                quantity += 0;
+                double totalBillWithVAT = quantity * 1.08; // Tính tổng bill kèm VAT
+                quantity = totalBillWithVAT - (totalBillWithVAT * 0.15);
             }else{
                 quantity += quantity*8/100;
             }

@@ -151,7 +151,7 @@ public class DialogBill extends JDialog implements ActionListener {
         tblTableBillInfo.setForeground(new Color(255, 255, 255));
         Custom.getInstance().setCustomTableBill(tblTableBillInfo);
         JScrollPane scrTableBillInfo = new JScrollPane(tblTableBillInfo);
-        scrTableBillInfo.setBounds(1, 1, 777, 199);
+        scrTableBillInfo.setBounds(1, 1, 797, 199);
         scrTableBillInfo.setOpaque(false);
         scrTableBillInfo.getViewport().setOpaque(false);
         scrTableBillInfo.getViewport().setBackground(Color.WHITE);
@@ -535,7 +535,6 @@ public class DialogBill extends JDialog implements ActionListener {
             km = 0.0;
         }
         txtKM.setText(df.format(km));
-
         txtVAT.setText(df.format(vat));
         double totalPrice = bill.getTongTienHD() + vat - km;
         txtTotalPriceBill.setText(df.format(totalPrice));

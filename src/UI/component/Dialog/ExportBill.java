@@ -339,16 +339,15 @@ public class ExportBill {
         // Lấy ngày và tháng từ ngày sinh của khách hàng
         int ngaySinhKhachHangValue = calendarNgaySinhKhachHang.get(Calendar.DAY_OF_MONTH);
         int thangSinhKhachHangValue = calendarNgaySinhKhachHang.get(Calendar.MONTH);
+
+        Double vat = (totalPriceService + totalPriceRoom) * 0.08;
         if (ngayHienTaiValue == ngaySinhKhachHangValue && thangHienTaiValue == thangSinhKhachHangValue) {
-
-            km = (totalPriceService + totalPriceRoom) * 0.1;
-
+            km = (totalPriceService + totalPriceRoom + vat) * 0.15;
         } else {
             km = 0.0;
         }
-        Double vat =(totalPriceService + totalPriceRoom) * 0.08;
-        Double totalPriceBill = bill.getTongTienHD() +vat -km;
-        String labels[] = { "Tổng tiền dịch vụ:", "Tổng tiền phòng:", "VAT(8%):","Khuyến mãi:", "Tổng cộng:" };
+        Double totalPriceBill = bill.getTongTienHD() + vat -km;
+        String labels[] = {"Tổng tiền dịch vụ:", "Tổng tiền phòng:", "VAT(8%):","Khuyến mãi:", "Tổng cộng:" };
         String values[] = { df.format(totalPriceService), df.format(totalPriceRoom), df.format(vat),df.format(km),
                 df.format(totalPriceBill) };
         try {

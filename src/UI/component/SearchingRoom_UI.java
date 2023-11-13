@@ -228,6 +228,12 @@ public class SearchingRoom_UI extends JPanel implements ActionListener, MouseLis
     public void loadP(){
         int i=1;
         for (Room room : RoomDAO.getRoomList()) {
+            if (room.getTinhTrang().equals("Trong")) {
+                RoomDAO.updateRoomStatus(room.getMaPhong(), "Trống");
+            }
+            if (room.getTinhTrang().equals("Cho")) {
+                RoomDAO.updateRoomStatus(room.getMaPhong(), "Chờ");
+            }
             Object[] rowData = { i,room.getMaPhong(),room.getLoaiPhong().getTenLoaiPhong(),room.getViTri(),room.getTinhTrang(),df.format(room.getGiaPhong())};
             modelTblRoom.addRow(rowData);
             i++;

@@ -1,7 +1,5 @@
 package UI.component;
 
-import javax.swing.*;
-
 import ConnectDB.ConnectDB;
 import DAO.RoomDAO;
 import DAO.TypeOfRoomDAO;
@@ -10,6 +8,7 @@ import Entity.Staff;
 import Entity.TypeOfRoom;
 import UI.CustomUI.Custom;
 
+import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
@@ -18,12 +17,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import javax.swing.ImageIcon;
 import java.util.ArrayList;
-import java.sql.SQLException ;
+import java.util.Date;
 
 /**
  * Giao diện quản lý phòng
@@ -33,16 +31,17 @@ import java.sql.SQLException ;
  * Nội dung cập nhật: cập nhật giá trị combobox loại phòng
  */
 public class Room_UI extends JPanel implements ActionListener, MouseListener {
-    private  JTextField txtBaoLoi;
-    private  JButton btnThem;
-    private  JButton btnXoaP;
-    private  JButton btnSuaP;
-    private  JTextField txtMaPhong;
+    public static Staff staffLogin = null;
+    private JTextField txtBaoLoi;
+    private JButton btnThem;
+    private JButton btnXoaP;
+    private JButton btnSuaP;
+    private JTextField txtMaPhong;
     private JTextField txtVitri;
-    private  JTextField txtGiaP;
-    private  JButton btnlamMoiP;
-    private  JComboBox<String> cmbTinhTrang;
-    private  JComboBox<String> cmbLoaiPhong;
+    private JTextField txtGiaP;
+    private JButton btnlamMoiP;
+    private JComboBox<String> cmbTinhTrang;
+    private JComboBox<String> cmbLoaiPhong;
     private JTable tblPhong;
     private DefaultTableModel modelTblPhong;
     private DecimalFormat df = new DecimalFormat("#,###.##/giờ");
@@ -50,7 +49,6 @@ public class Room_UI extends JPanel implements ActionListener, MouseListener {
     private JLabel lblBackGround, lblTime;
     private RoomDAO RoomDAO;
     private TypeOfRoomDAO typeOfRoomDAO;
-    public static Staff staffLogin = null;
 
     public Room_UI(Staff staff) {
         this.staffLogin = staff;
@@ -135,7 +133,6 @@ public class Room_UI extends JPanel implements ActionListener, MouseListener {
         scrollPaneP.getViewport().setBackground(Color.WHITE);
         pnlRoomList.add(panelDSP);
 
-        //        Mã phòng
         JLabel labelMaPhong = new JLabel("Mã Phòng:");
         labelMaPhong.setFont(new Font("Arial", Font.PLAIN, 14));
         labelMaPhong.setBounds(80, 20, 120, 30);
@@ -147,7 +144,6 @@ public class Room_UI extends JPanel implements ActionListener, MouseListener {
         txtMaPhong.setColumns(10);
         pnlRoomControl.add(txtMaPhong);
 
-//      Vị trí
         JLabel labelViTri = new JLabel("Vị Trí:");
         labelViTri.setFont(new Font("Arial", Font.PLAIN, 14));
         labelViTri.setBounds(80, 70, 120, 30);
@@ -159,7 +155,6 @@ public class Room_UI extends JPanel implements ActionListener, MouseListener {
         txtVitri.setColumns(10);
         pnlRoomControl.add(txtVitri);
 
-        //      Loại phòng
         JLabel labelLoaiPhong = new JLabel("Loại phòng:");
         labelLoaiPhong.setFont(new Font("Arial", Font.PLAIN, 14));
         labelLoaiPhong.setBounds(80, 120, 120, 30);
@@ -172,7 +167,6 @@ public class Room_UI extends JPanel implements ActionListener, MouseListener {
         Custom.setCustomComboBox(cmbLoaiPhong);
         pnlRoomControl.add(cmbLoaiPhong);
 
-        //tinh trang
         JLabel labelTinhTrang = new JLabel("Tình Trạng:");
         labelTinhTrang.setFont(new Font("Arial", Font.PLAIN, 14));
         labelTinhTrang.setBounds(80, 170, 120, 30);
@@ -187,7 +181,6 @@ public class Room_UI extends JPanel implements ActionListener, MouseListener {
         Custom.setCustomComboBox(cmbTinhTrang);
         pnlRoomControl.add(cmbTinhTrang);
 
-
         JLabel labelGiaP = new JLabel("Giá Phòng:");
         labelGiaP.setFont(new Font("Arial", Font.PLAIN, 14));
         labelGiaP.setBounds(600, 20, 150, 30);
@@ -200,34 +193,30 @@ public class Room_UI extends JPanel implements ActionListener, MouseListener {
         pnlRoomControl.add(txtGiaP);
 
         txtBaoLoi = new JTextField();
-        txtBaoLoi.setFont(new Font("Arial",Font.BOLD,13));
+        txtBaoLoi.setFont(new Font("Arial", Font.BOLD, 13));
         txtBaoLoi.setForeground(Color.RED);
         txtBaoLoi.setBounds(600, 120, 426, 30);
         txtBaoLoi.setColumns(6);
         pnlRoomControl.add(txtBaoLoi);
 
-        //        btn thêm
         btnThem = new JButton("Thêm");
         btnThem.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnThem);
         btnThem.setBounds(600, 170, 100, 30);
         pnlRoomControl.add(btnThem);
 
-        //        btn Xóa
         btnXoaP = new JButton("Xóa");
         btnXoaP.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnXoaP);
         btnXoaP.setBounds(740, 170, 100, 30);
         pnlRoomControl.add(btnXoaP);
 
-        //        btn sửa
         btnSuaP = new JButton("Sửa");
         btnSuaP.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnSuaP);
         btnSuaP.setBounds(880, 170, 100, 30);
         pnlRoomControl.add(btnSuaP);
 
-        //        btn làm mới
         btnlamMoiP = new JButton("Làm mới");
         btnlamMoiP.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnlamMoiP);
@@ -242,6 +231,8 @@ public class Room_UI extends JPanel implements ActionListener, MouseListener {
         btnlamMoiP.addActionListener(this);
         btnThem.addActionListener(this);
         btnXoaP.addActionListener(this);
+        ArrayList<Room> roomList = RoomDAO.getRoomList();
+
         loadP();
         loadCboLoaiPhong();
     }
@@ -261,6 +252,12 @@ public class Room_UI extends JPanel implements ActionListener, MouseListener {
     public void loadP() {
         int i = 1;
         for (Room room : RoomDAO.getRoomList()) {
+            if (room.getTinhTrang().equals("Trong")) {
+                RoomDAO.updateRoomStatus(room.getMaPhong(), "Trống");
+            }
+            if (room.getTinhTrang().equals("Cho")) {
+                RoomDAO.updateRoomStatus(room.getMaPhong(), "Chờ");
+            }
             Object[] rowData = {i, room.getMaPhong(), room.getLoaiPhong().getTenLoaiPhong(), room.getViTri(), room.getTinhTrang(), df.format(room.getGiaPhong())};
             modelTblPhong.addRow(rowData);
             i++;
@@ -279,9 +276,10 @@ public class Room_UI extends JPanel implements ActionListener, MouseListener {
 
     /**
      * Phát sinh mã phòng tự động
+     *
      * @return String
      */
-    public String laymaP(){
+    public String laymaP() {
         String MaP = RoomDAO.generateNextRoomId();
         return MaP;
     }
@@ -290,7 +288,7 @@ public class Room_UI extends JPanel implements ActionListener, MouseListener {
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         if (o.equals(btnThem)) {
-            if (txtVitri.getText().equals("") || txtGiaP.getText().equals("") ||   cmbLoaiPhong.getSelectedIndex() == 0) {
+            if (txtVitri.getText().equals("") || txtGiaP.getText().equals("") || cmbLoaiPhong.getSelectedIndex() == 0) {
                 JOptionPane.showMessageDialog(this, "Bạn phải nhập thông tin phòng");
             } else if (validData()) {
                 String ma = laymaP();
@@ -316,7 +314,7 @@ public class Room_UI extends JPanel implements ActionListener, MouseListener {
                 }
             }
         } else if (o.equals(btnlamMoiP)) {
-           reFresh();
+            reFresh();
             modelTblPhong.getDataVector().removeAllElements();
             loadP();
         } else if (o.equals(btnXoaP)) {
@@ -336,7 +334,7 @@ public class Room_UI extends JPanel implements ActionListener, MouseListener {
                     double gia = Double.parseDouble(txtGiaP.getText().toString());
                     String tinhtrang = cmbTinhTrang.getSelectedItem().toString().trim();
 
-                    Room room = new Room(map, new TypeOfRoom(s),tinhtrang,vitri,gia);
+                    Room room = new Room(map, new TypeOfRoom(s), tinhtrang, vitri, gia);
 
                     int ans = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa?", "Cảnh báo",
                             JOptionPane.YES_NO_OPTION);
@@ -366,7 +364,7 @@ public class Room_UI extends JPanel implements ActionListener, MouseListener {
                     String vitri = txtVitri.getText().trim();
                     double gia = Double.parseDouble(txtGiaP.getText().toString());
                     String tinhtrang = cmbTinhTrang.getSelectedItem().toString().trim();
-                    Room room = new Room(map, new TypeOfRoom(s), tinhtrang,vitri,  gia);
+                    Room room = new Room(map, new TypeOfRoom(s), tinhtrang, vitri, gia);
 
                     boolean result = RoomDAO.update(room);
                     if (result == true) {
@@ -385,7 +383,7 @@ public class Room_UI extends JPanel implements ActionListener, MouseListener {
         }
     }
 
-    private void reFresh(){
+    private void reFresh() {
         txtMaPhong.setText("");
         cmbLoaiPhong.setSelectedIndex(0);
         txtGiaP.setText("");
@@ -400,7 +398,7 @@ public class Room_UI extends JPanel implements ActionListener, MouseListener {
         txtMaPhong.setText(modelTblPhong.getValueAt(row, 1).toString());
         cmbLoaiPhong.setSelectedItem(modelTblPhong.getValueAt(row, 2).toString());
         cmbTinhTrang.setSelectedItem(modelTblPhong.getValueAt(row, 4).toString());
-        txtGiaP.setText(modelTblPhong.getValueAt(row, 5).toString().trim().replace(",", "").replace("/giờ",""));
+        txtGiaP.setText(modelTblPhong.getValueAt(row, 5).toString().trim().replace(",", "").replace("/giờ", ""));
         txtVitri.setText(modelTblPhong.getValueAt(row, 3).toString());
     }
 
@@ -426,7 +424,8 @@ public class Room_UI extends JPanel implements ActionListener, MouseListener {
 
     /**
      * Hiển thị lỗi
-     * @param txt: JTextField lỗi
+     *
+     * @param txt:     JTextField lỗi
      * @param message: thông báo lỗi
      */
     private void showMessage(JTextField txt, String message) {
@@ -436,17 +435,18 @@ public class Room_UI extends JPanel implements ActionListener, MouseListener {
 
     /**
      * Kiểm tra dữ liệu hợp lệ
-     * @return (@Code boolean): true/false
+     *
+     * @return (@ Code boolean): true/false
      */
     private boolean validData() {
         String vitri = txtVitri.getText().trim();
         String giaBan = txtGiaP.getText().trim();
         if (!((vitri.length()) > 0 && vitri.matches("^[A-Za-zÀ-ỹ0-9 ]+"))) {
-            showMessage(txtVitri,"Vị trí không được chứa số và kí tự đặc biệt");
+            showMessage(txtVitri, "Vị trí không được chứa kí tự đặc biệt");
             return false;
         }
         if (!((giaBan.length()) > 0 && giaBan.matches("^[1-9]\\d*"))) {
-            showMessage(txtGiaP,"Giá phải lớn hơn 0");
+            showMessage(txtGiaP, "Giá phải lớn hơn 0");
             return false;
         }
         return true;

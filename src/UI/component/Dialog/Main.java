@@ -1,5 +1,7 @@
 package UI.component.Dialog;
 
+import DAO.RoomDAO;
+import Entity.Room;
 import Entity.Staff;
 import UI.LoginUI;
 import UI.component.*;
@@ -30,6 +32,7 @@ public class Main extends JFrame {
     private Menu menu;
     private RoundPanel plnRound;
     private static Staff staffLogin = null;
+    private RoomDAO roomDAO = new RoomDAO();
 
     /**
      * Khởi tạo Main
@@ -267,6 +270,15 @@ public class Main extends JFrame {
                 btnExit.setCursor(Cursor.getDefaultCursor());
             }
         });
+
+        for (Room room : roomDAO.getRoomList()) {
+            if (room.getTinhTrang().equals("Trong")) {
+                roomDAO.updateRoomStatus(room.getMaPhong(), "Trống");
+            }
+            if (room.getTinhTrang().equals("Cho")) {
+                roomDAO.updateRoomStatus(room.getMaPhong(), "Chờ");
+            }
+        }
         header2.add(btnExit);
         GroupLayout roundPanel1Layout = new GroupLayout(plnRound);
         plnRound.setLayout(roundPanel1Layout);

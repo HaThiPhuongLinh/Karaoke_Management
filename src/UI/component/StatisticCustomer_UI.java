@@ -28,13 +28,13 @@ import java.util.HashMap;
 /**
  * Sử dụng để thống kê khách hàng
  * <p>
- *     Người tham gia thiết kế: Nguyễn Quang Duy
+ * Người tham gia thiết kế: Nguyễn Quang Duy
  * </p>
  * ngày tạo: 12/10/2023
  * <p>
- *     Lần cập nhật cuối: 06/11/2023
+ * Lần cập nhật cuối: 13/11/2023
  * </p>
- * Nội dung cập nhật: thêm javadoc
+ * Nội dung cập nhật: cập nhật cách tính tổng tiền (tt= tt - ((tt+vat))*15%))
  */
 
 public class StatisticCustomer_UI extends JPanel implements ActionListener, ItemListener {
@@ -261,7 +261,7 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
             double totalQuantity;
             if (bill.getKhuyenMai().trim().equalsIgnoreCase("KM")) {
                 // Nếu hóa đơn có mã khuyến mãi "KM", không tính VAT
-                totalQuantity = roomPrice + totalServicePrice;
+                totalQuantity = ((roomPrice + totalServicePrice) * 1.08) - (((roomPrice + totalServicePrice) * 1.08) * 0.15);
             } else {
                 // Nếu hóa đơn không có mã khuyến mãi hoặc khuyến mãi khác "", tính VAT 8%
                 totalQuantity = (roomPrice + totalServicePrice) * 1.08;

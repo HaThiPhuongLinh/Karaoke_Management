@@ -208,7 +208,6 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
                 Date tuNgay = dpTuNgay.getFullDate();
                 Date denNgay = dpDenNgay.addOneDay();
                 ArrayList<Bill> listBill = billDAO.getListBillByDate(tuNgay, denNgay);
-                System.out.printf(String.valueOf(listBill.size()) + "ádasdasd");
                 if (validData()) {
                     if (tuNgay.before(denNgay)) {
                         if (listBill == null || listBill.isEmpty() || listBill.size() <= 0) {
@@ -250,31 +249,29 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
 
                 double totalPriceRoom = bill.tinhTienPhong();
 
-                double vat = 0;
-                Date ngayHienTai = new Date();
-
-                // Chuyển ngày hiện tại và ngày sinh của khách hàng thành lớp Calendar
-                Calendar calendarHienTai = Calendar.getInstance();
-                calendarHienTai.setTime(ngayHienTai);
+                double km = 0;
 
                 Calendar calendarNgaySinhKhachHang = Calendar.getInstance();
                 calendarNgaySinhKhachHang.setTime(bill.getMaKH().getNgaySinh());
 
-                // Lấy ngày và tháng của ngày hiện tại
-                int ngayHienTaiValue = calendarHienTai.get(Calendar.DAY_OF_MONTH);
-                int thangHienTaiValue = calendarHienTai.get(Calendar.MONTH);
+                Calendar calendarNgayDat = Calendar.getInstance();
+                calendarNgayDat.setTime(bill.getNgayGioDat());
 
-                // Lấy ngày và tháng từ ngày sinh của khách hàng
                 int ngaySinhKhachHangValue = calendarNgaySinhKhachHang.get(Calendar.DAY_OF_MONTH);
-                int thangSinhKhachHangValue = calendarNgaySinhKhachHang.get(Calendar.MONTH);
-                if (ngayHienTaiValue == ngaySinhKhachHangValue && thangHienTaiValue == thangSinhKhachHangValue) {
-                    vat = 0.0;
+                int thangSinhKhachHangValue = calendarNgaySinhKhachHang.get(Calendar.MONTH) + 1;
+
+                int ngayDatValue = calendarNgayDat.get(Calendar.DAY_OF_MONTH);
+                int thangDatValue = calendarNgayDat.get(Calendar.MONTH) + 1;
+
+                double vat = (totalPriceService + totalPriceRoom) * 0.08;
+                if (ngayDatValue == ngaySinhKhachHangValue && thangDatValue == thangSinhKhachHangValue) {
+                    km = (totalPriceService + totalPriceRoom + vat) * 0.15;
                     boolean b = billDAO.updateKM(bill.getMaHoaDon());
                 } else {
-                    vat = (totalPriceService + totalPriceRoom) * 0.08;
+                    km = 0;
                 }
 
-                double totalPrice = bill.getTongTienHD() +vat;
+                double totalPrice = bill.getTongTienHD() + vat - km;
                 Object[] rowData = {bill.getMaHoaDon(),bill.getMaNhanVien().getTenNhanVien(),bill.getMaKH().getTenKhachHang(), bill.getMaPhong().getMaPhong(), df.format(totalPriceRoom),df.format(totalPriceService),df.format(totalPrice)};
                 modelTblHD.addRow(rowData);
             }
@@ -295,31 +292,28 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
 
                 double totalPriceRoom = bill.tinhTienPhong();
 
-                double vat = 0;
-                Date ngayHienTai = new Date();
-
-                // Chuyển ngày hiện tại và ngày sinh của khách hàng thành lớp Calendar
-                Calendar calendarHienTai = Calendar.getInstance();
-                calendarHienTai.setTime(ngayHienTai);
+                double km = 0;
 
                 Calendar calendarNgaySinhKhachHang = Calendar.getInstance();
                 calendarNgaySinhKhachHang.setTime(bill.getMaKH().getNgaySinh());
 
-                 // Lấy ngày và tháng của ngày hiện tại
-                int ngayHienTaiValue = calendarHienTai.get(Calendar.DAY_OF_MONTH);
-                int thangHienTaiValue = calendarHienTai.get(Calendar.MONTH);
+                Calendar calendarNgayDat = Calendar.getInstance();
+                calendarNgayDat.setTime(bill.getNgayGioDat());
 
-                // Lấy ngày và tháng từ ngày sinh của khách hàng
                 int ngaySinhKhachHangValue = calendarNgaySinhKhachHang.get(Calendar.DAY_OF_MONTH);
-                int thangSinhKhachHangValue = calendarNgaySinhKhachHang.get(Calendar.MONTH);
-                if (ngayHienTaiValue == ngaySinhKhachHangValue && thangHienTaiValue == thangSinhKhachHangValue) {
-                    vat = 0.0;
+                int thangSinhKhachHangValue = calendarNgaySinhKhachHang.get(Calendar.MONTH) + 1;
+
+                int ngayDatValue = calendarNgayDat.get(Calendar.DAY_OF_MONTH);
+                int thangDatValue = calendarNgayDat.get(Calendar.MONTH) + 1;
+
+                double vat = (totalPriceService + totalPriceRoom) * 0.08;
+                if (ngayDatValue == ngaySinhKhachHangValue && thangDatValue == thangSinhKhachHangValue) {
+                    km = (totalPriceService + totalPriceRoom + vat) * 0.15;
                     boolean b = billDAO.updateKM(bill.getMaHoaDon());
                 } else {
-                    vat = (totalPriceService + totalPriceRoom) * 0.08;
+                    km = 0.0;
                 }
-
-                double totalPrice = bill.getTongTienHD() +vat;
+                double totalPrice = bill.getTongTienHD() + vat - km;
                 Object[] rowData = {bill.getMaHoaDon(),bill.getMaNhanVien().getTenNhanVien(),bill.getMaKH().getTenKhachHang(), bill.getMaPhong().getMaPhong(), df.format(totalPriceRoom),df.format(totalPriceService),df.format(totalPrice)};
                 modelTblHD.addRow(rowData);
 

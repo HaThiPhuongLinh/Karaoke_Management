@@ -314,8 +314,6 @@ public class ReservationFormList extends JFrame implements ActionListener, Mouse
                 }
             }
         }
-
-
         if (o.equals(btnCancel)) {
             int row = table.getSelectedRow();
             if (row == -1) {
