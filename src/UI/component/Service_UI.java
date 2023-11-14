@@ -401,12 +401,17 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
                 int ans = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa?", "Cảnh báo",
                         JOptionPane.YES_NO_OPTION);
                 if (ans == JOptionPane.YES_OPTION) {
-                    serviceDAO.delete(service.getMaDichVu());
+//                    serviceDAO.delete(service.getMaDichVu());
+                    if(serviceDAO.delete(service.getMaDichVu())==true){
+                        JOptionPane.showMessageDialog(this,"Xóa thành công");
+                        modelTblDichVu.removeRow(row);
+                        modelTblDichVu.getDataVector().removeAllElements();
+                    }else{
+                        JOptionPane.showMessageDialog(this,"Xóa không thành công! \nDịch vụ đang được sử dụng!");
+                    }
                     reset();
-                    modelTblDichVu.removeRow(row);
-                    modelTblDichVu.getDataVector().removeAllElements();
                     loadService();
-                    JOptionPane.showMessageDialog(this,"Xóa thành công");
+
                 }
             }
         } else if (o.equals(btnSua)) {
