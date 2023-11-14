@@ -20,8 +20,9 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneId;
+
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 /**
@@ -269,25 +270,45 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
                     if (room.getTinhTrang().equalsIgnoreCase("Đang sử dụng")) {
                         LocalDateTime minValidTime = currentDateTime.plusHours(2);
 
-                        ReservationForm existingForm = reservationFormDAO.getFormByRoomID(roomID);
-                        if (existingForm != null) {
-                            LocalDateTime previousBookingTime = existingForm.getThoiGianDat().toLocalDateTime();
-                            minValidTime = previousBookingTime.plusHours(4);
-                        }
+                        ArrayList<ReservationForm> reservations = reservationFormDAO.getReservationsByRoomID(roomID);
+                        for (ReservationForm reservation : reservations) {
+                            LocalDateTime reservationTime = reservation.getThoiGianDat().toLocalDateTime();
 
+                            // Kiểm tra xem có cách nhau ít nhất 4 giờ không
+                            if (Math.abs(ChronoUnit.HOURS.between(selectedDateTime, reservationTime)) < 4) {
+                                Collections.sort(reservations, new Comparator<ReservationForm>() {
+                                    @Override
+                                    public int compare(ReservationForm r1, ReservationForm r2) {
+                                        return r1.getThoiGianDat().compareTo(r2.getThoiGianDat());
+                                    }
+                                });
+
+                                String message = "Phòng đã được đặt vào các thời điểm sau:\n";
+                                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
+
+                                for (int i = 0; i < reservations.size(); i++) {
+                                    reservation = reservations.get(i);
+                                    Timestamp reservationTime2 = reservation.getThoiGianDat();
+                                    String timeDiffMessage = sdf.format(reservationTime2);
+                                    message += "- " + timeDiffMessage + "\n";
+                                }
+
+                                JOptionPane.showMessageDialog(this, message + "Vui lòng đặt cách 4 tiếng so với thời gian trên!");
+                                return;
+                            }
+                        }
+                        // Tiếp tục kiểm tra thời gian đặt phòng được chọn
                         if (selectedDateTime.isBefore(minValidTime)) {
-                            JOptionPane.showMessageDialog(this, "Phòng đang sử dụng hoặc đã có phiếu đặt. Vui lòng đặt sau giờ hợp lệ.");
+                            JOptionPane.showMessageDialog(this, "Phòng đang sử dụng. Vui lòng đặt sau 2 tiếng.");
                             return;
                         }
                     } else {
-                        ReservationForm existingForm = reservationFormDAO.getFormByRoomID(roomID);
-                        if (existingForm != null) {
-                            LocalDateTime previousBookingTime = existingForm.getThoiGianDat().toLocalDateTime();
-                            LocalDateTime minValidTime = previousBookingTime.plusHours(4);
+                        ArrayList<ReservationForm> reservations = reservationFormDAO.getReservationsByRoomID(roomID);
+                        for (ReservationForm reservation : reservations) {
+                            LocalDateTime reservationTime = reservation.getThoiGianDat().toLocalDateTime();
 
-                            if (selectedDateTime.isBefore(minValidTime)) {
-                                ArrayList<ReservationForm> reservations = reservationFormDAO.getReservationsByRoomID(roomID);
-
+                            // Kiểm tra xem có cách nhau ít nhất 4 giờ không
+                            if (Math.abs(ChronoUnit.HOURS.between(selectedDateTime, reservationTime)) < 4) {
                                 // Sắp xếp phiếu đặt theo thời gian đặt
                                 Collections.sort(reservations, new Comparator<ReservationForm>() {
                                     @Override
@@ -301,11 +322,10 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
                                 SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
 
                                 for (int i = 0; i < reservations.size(); i++) {
-                                    ReservationForm reservation = reservations.get(i);
-                                    Timestamp reservationTime = reservation.getThoiGianDat();
-
-                                    String timeDiffMessage = sdf.format(reservationTime);
-                                    message += "- " + timeDiffMessage + "\n" ;
+                                    reservation = reservations.get(i);
+                                    Timestamp reservationTime2 = reservation.getThoiGianDat();
+                                    String timeDiffMessage = sdf.format(reservationTime2);
+                                    message += "- " + timeDiffMessage + "\n";
                                 }
 
                                 JOptionPane.showMessageDialog(this, message + "Vui lòng đặt cách 4 tiếng so với thời gian trên!");
@@ -313,8 +333,8 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
                             }
                         }
                     }
+                    createReservationForm();
                 }
-                createReservationForm();
             }
         }
     }

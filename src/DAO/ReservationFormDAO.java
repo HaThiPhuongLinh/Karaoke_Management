@@ -236,52 +236,7 @@ public class ReservationFormDAO {
     }
 
     /**
-     * Lấy ra phiếu đặt phòng theo thời gian gần nhất dựa trên mã phòng
-     * @param roomID: mã phòng
-     * @return {@code ReservationForm}: phiếu đặt phòng
-     */
-    public ReservationForm getFormByRoomID(String roomID) {
-        ReservationForm reservationForm = null;
-        ConnectDB.getInstance();
-        Connection con = ConnectDB.getConnection();
-        PreparedStatement statement = null;
-        ResultSet rs = null;
-
-        try {
-            String sql = "SELECT TOP 1 * FROM PhieuDatPhong WHERE maPhong = ? ORDER BY thoiGianDat DESC";
-            statement = con.prepareStatement(sql);
-            statement.setString(1, roomID);
-            rs = statement.executeQuery();
-
-            if (rs.next()) {
-                reservationForm = new ReservationForm(
-                        rs.getString("maPhieuDat"),
-                        rs.getTimestamp("thoiGianDat"),
-                        new Staff(rs.getString("maNhanVien")),
-                        new Customer(rs.getString("maKhachHang")),
-                        new Room(rs.getString("maPhong"))
-                );
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return reservationForm;
-    }
-
-    /**
-     * Lấy ra danh sách phiếu đặt phòng theo thời gian tăng dần dựa trên mã phòng
+     * Lấy ra danh sách phiếu đặt phòng
      * @param roomID: mã phòng
      * @return {@code ArrayList<Bill>}: danh sách phiếu đặt phòng
      */
@@ -293,7 +248,7 @@ public class ReservationFormDAO {
 
         try {
             con = ConnectDB.getInstance().getConnection();
-            String query = "SELECT * FROM PhieuDatPhong WHERE maPhong = ? ORDER BY thoiGianDat ASC;";
+            String query = "SELECT * FROM PhieuDatPhong WHERE maPhong = ?;";
             stmt = con.prepareStatement(query);
             stmt.setString(1, roomID);
 
@@ -320,8 +275,6 @@ public class ReservationFormDAO {
                 e.printStackTrace();
             }
         }
-
         return reservations;
     }
-
 }
