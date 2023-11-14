@@ -328,12 +328,12 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
             showMessage(txtDonViTinh,"Đơn vị tính không được chứa số và kí tự đặc biệt");
             return false;
         }
-        if (!((soLuongTon.length()) > 0 && soLuongTon.matches("^[1-9]\\d*"))) {
-            showMessage(txtSoLuongTon,"Số lượng tồn phải là số và lớn hơn 0");
+        if (!((soLuongTon.length()) > 0 && soLuongTon.matches("^[0-9]\\d*"))) {
+            showMessage(txtSoLuongTon,"Số lượng tồn phải là số và lớn hơn hoặc bằng 0");
             return false;
         }
         if (!((giaBan.length()) > 0 && giaBan.matches("^[1-9]\\d*"))) {
-            showMessage(txtGiaBan,"Giá bán phải là số và lớn hơn 0");
+            showMessage(txtGiaBan,"Giá bán phải lớn hơn 0");
             return false;
         }
         return true;

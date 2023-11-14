@@ -8,6 +8,7 @@ import Entity.Customer;
 import Entity.ReservationForm;
 import Entity.Room;
 import Entity.Staff;
+import UI.CustomUI.Custom;
 import UI.component.Customer_UI;
 import UI.component.KaraokeBooking_UI;
 
@@ -15,10 +16,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 /**
  * Giao diện cho thuê phòng
@@ -34,9 +38,7 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
     public LocalDateTime selectedDateTime;
     private JPanel pnlTop;
     private JButton btnCheck, btnCancel, btnBook;
-    private JRadioButton radToday, radTomorrow;
-    private ButtonGroup bgTime;
-    private JComboBox<String> cmbHour, cmbMin;
+    private JComboBox<String> cmbHour, cmbMin, cmbDate;
     private CustomerDAO customerDAO;
     private KaraokeBooking_UI main;
     private Main m;
@@ -97,15 +99,10 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
         lblRDay = new JLabel("Ngày nhận phòng:");
         lblRDay.setFont(new Font("Dialog", Font.BOLD, 14));
         lblRDay.setBounds(10, 180, 130, 20);
-        radToday = new JRadioButton("Hôm nay");
-        radToday.setFont(new Font("Dialog", Font.BOLD, 14));
-        radToday.setBounds(160, 180, 110, 20);
-        radTomorrow = new JRadioButton("Ngày mai");
-        radTomorrow.setFont(new Font("Dialog", Font.BOLD, 14));
-        radTomorrow.setBounds(280, 180, 140, 20);
-        bgTime = new ButtonGroup();
-        bgTime.add(radToday);
-        bgTime.add(radTomorrow);
+        cmbDate = new JComboBox<>();
+        cmbDate.setBounds(170, 180, 195, 25);
+        Custom.setCustomComboBox(cmbDate);
+        add(cmbDate);
 
         lblTDay = new JLabel("Giờ nhận phòng:");
         lblTDay.setFont(new Font("Dialog", Font.BOLD, 14));
@@ -141,8 +138,6 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
         add(lblCName);
         add(lblCName2);
         add(lblRDay);
-        add(radToday);
-        add(radTomorrow);
         add(lblTDay);
         add(cmbHour);
         add(lblHour);
@@ -166,6 +161,24 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
                 }
             }
         });
+
+        updateDateComboBox();
+    }
+
+    private void updateDateComboBox() {
+        LocalDate currentDate = LocalDate.now();
+        ArrayList<String> dateList = new ArrayList<>();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, dd/MM/yyyy", new Locale("vi"));
+
+        // Thêm các ngày từ ngày hiện tại đến ngày hiện tại + 1 tuần
+        for (int i = 0; i < 7; i++) {
+            String formattedDate = currentDate.plusDays(i).format(formatter);
+            dateList.add(formattedDate);
+        }
+
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(dateList.toArray(new String[0]));
+        cmbDate.setModel(model);
     }
 
     public static PresetRoom getInstance() {
@@ -218,13 +231,12 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
             if (txtPhone.getText().equalsIgnoreCase("")) {
                 JOptionPane.showMessageDialog(this, "Chưa nhập số điện thoại khách hàng");
             } else {
-                boolean isRadTodaySelected = radToday.isSelected();
-                boolean isRadTomorrowSelected = radTomorrow.isSelected();
-
-                if (!isRadTodaySelected && !isRadTomorrowSelected) {
+                String selectedDateString = (String) cmbDate.getSelectedItem();
+                if (selectedDateString == null) {
                     JOptionPane.showMessageDialog(this, "Chưa chọn ngày nhận phòng");
                     return;
                 }
+
                 String selectedHour = (String) cmbHour.getSelectedItem();
                 String selectedMinute = (String) cmbMin.getSelectedItem();
 
@@ -240,8 +252,9 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
                 int hour = Integer.parseInt(selectedHour);
                 int minute = Integer.parseInt(selectedMinute);
 
+                LocalDate selectedDate = LocalDate.parse(selectedDateString, DateTimeFormatter.ofPattern("EEEE, dd/MM/yyyy", new Locale("vi")));
+
                 LocalDateTime currentDateTime = LocalDateTime.now();
-                LocalDate selectedDate = isRadTodaySelected ? LocalDate.now() : LocalDate.now().plusDays(1);
                 LocalTime selectedTime = LocalTime.of(hour, minute);
                 selectedDateTime = LocalDateTime.of(selectedDate, selectedTime);
 
@@ -271,18 +284,39 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
                         if (existingForm != null) {
                             LocalDateTime previousBookingTime = existingForm.getThoiGianDat().toLocalDateTime();
                             LocalDateTime minValidTime = previousBookingTime.plusHours(4);
+
                             if (selectedDateTime.isBefore(minValidTime)) {
-                                JOptionPane.showMessageDialog(this, "Phòng đã có phiếu đặt. Vui lòng đặt sau 4 tiếng kể từ thời gian đặt trước đó.");
+                                ArrayList<ReservationForm> reservations = reservationFormDAO.getReservationsByRoomID(roomID);
+
+                                // Sắp xếp phiếu đặt theo thời gian đặt
+                                Collections.sort(reservations, new Comparator<ReservationForm>() {
+                                    @Override
+                                    public int compare(ReservationForm r1, ReservationForm r2) {
+                                        return r1.getThoiGianDat().compareTo(r2.getThoiGianDat());
+                                    }
+                                });
+
+                                // Hiển thị tất cả các thông tin đặt phòng trước đó
+                                String message = "Phòng đã được đặt vào các thời điểm sau:\n";
+                                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
+
+                                for (int i = 0; i < reservations.size(); i++) {
+                                    ReservationForm reservation = reservations.get(i);
+                                    Timestamp reservationTime = reservation.getThoiGianDat();
+
+                                    String timeDiffMessage = sdf.format(reservationTime);
+                                    message += "- " + timeDiffMessage + "\n" ;
+                                }
+
+                                JOptionPane.showMessageDialog(this, message + "Vui lòng đặt cách 4 tiếng so với thời gian trên!");
                                 return;
                             }
                         }
                     }
                 }
-
                 createReservationForm();
             }
         }
-
     }
 
     /**

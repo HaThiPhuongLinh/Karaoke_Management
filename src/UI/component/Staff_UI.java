@@ -351,7 +351,7 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
             showMessage(txtTenNV,"Tên nhân viên không được chứa kí tự đặc biệt và số");
             return false;
         }
-        if (!((diachi.length()) > 0 && diachi.matches("^[A-Za-zÀ-ỹ0-9 ]+"))) {
+        if (!((diachi.length()) > 0 && diachi.matches("^[A-Za-zÀ-ỹ ]+"))) {
             showMessage(txtDiaChi,"Địa chỉ không được chứa số và kí tự đặc biệt");
             return false;
         }
