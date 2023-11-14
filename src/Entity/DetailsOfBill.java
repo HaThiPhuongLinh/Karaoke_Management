@@ -1,5 +1,9 @@
 package Entity;
 
+/**
+ * Entity: Chi tiết hóa đơn
+ * Người thiết kế: Nguyễn Đình Dương
+ */
 public class DetailsOfBill {
     private Bill maHoaDon;
     private Room maPhong;

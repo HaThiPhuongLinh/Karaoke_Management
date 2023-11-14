@@ -8,15 +8,8 @@ import java.sql.SQLException;
 import java.util.Objects;
 
 /**
- * Lớp dịch vụ
- * <p>
- * Người tham gia thiết kế: Nguyễn Quang Duy
- * <p>
- * Ngày tạo: 07/10/2023
- * <p>
- * Lần cập nhật cuối: 06/11/2023
- * <p>
- * Nội dung cập nhật: thêm javadoc
+ * Entity: Dịch vụ
+ * Người thiết kế: Nguyễn Quang Duy
  */
 
 public class Service {

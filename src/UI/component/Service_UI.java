@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 /**
- * Sử dụng để quản lí dịch vụ
+ * Sử dụng để quản lý dịch vụ
  * <p>
  *     Người tham gia thiết kế: Nguyễn Quang Duy
  * </p>

@@ -379,6 +379,11 @@ public class StaffDAO {
         return nextStaffId;
     }
 
+    /**
+     * Lấy ra nhân viên dựa trên mã hóa đơn
+     * @param maHoaDon: mã hóa đơn
+     * @return {@code Staff}:  Nhân viên
+     */
     public Staff getStaffByBillId(String maHoaDon) {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();

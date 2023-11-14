@@ -19,11 +19,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Giao diện quản lý phòng
+ * Giao diện quản lý loại phòng
  * Người tham gia thiết kế: Hà Thị Phương Linh, Nguyễn Đình Dương
  * Ngày tạo: 12/10/2023
- * Lần cập nhật cuối: 01/11/2023
- * Nội dung cập nhật: phân quyền nhân viên được phép truy cập
+ * Lần cập nhật cuối: 14/11/2023
+ * Nội dung cập nhật: fix chức năng xóa loại phòng
  */
 public class TypeOfRoom_UI extends JPanel implements ActionListener, MouseListener {
     private  JTextField txtBaoLoi;
@@ -36,14 +36,14 @@ public class TypeOfRoom_UI extends JPanel implements ActionListener, MouseListen
     private  DefaultTableModel modelTblLoaiPhong;
     private JLabel lblBackGround, lblTime;
     private JPanel timeNow, pnlTPList, pnlTPControl;
-    private TypeOfRoomDAO TypeOfRoomDAO;
+    private TypeOfRoomDAO typeOfRoomDAO;
     public static Staff staffLogin = null;
 
     public TypeOfRoom_UI(Staff staff) {
         this.staffLogin = staff;
         setLayout(null);
         setBounds(0, 0, 1475, 770);
-        TypeOfRoomDAO = new TypeOfRoomDAO();
+        typeOfRoomDAO = new TypeOfRoomDAO();
         try {
             ConnectDB.getInstance().connect();
         } catch (Exception e) {
@@ -213,7 +213,7 @@ public class TypeOfRoom_UI extends JPanel implements ActionListener, MouseListen
      */
     public void loadLP(){
         int i=1;
-        for (TypeOfRoom room : TypeOfRoomDAO.getAllLoaiPhong()) {
+        for (TypeOfRoom room : typeOfRoomDAO.getAllLoaiPhong()) {
             Object[] rowData = { i,room.getMaLoaiPhong(),room.getTenLoaiPhong(),room.getSucChua()};
             modelTblLoaiPhong.addRow(rowData);
             i++;
@@ -233,7 +233,7 @@ public class TypeOfRoom_UI extends JPanel implements ActionListener, MouseListen
                 int succhua =Integer.parseInt(txtSucChua.getText());
 
                 TypeOfRoom type = new TypeOfRoom(malp,tenlp,succhua);
-                if (TypeOfRoomDAO.insert(type)) {
+                if (typeOfRoomDAO.insert(type)) {
                     modelTblLoaiPhong.getDataVector().removeAllElements();
                     loadLP();
                     JOptionPane.showMessageDialog(this,"Thêm loại phòng thành công");
@@ -251,14 +251,21 @@ public class TypeOfRoom_UI extends JPanel implements ActionListener, MouseListen
                 int ans = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa?", "Cảnh báo",
                         JOptionPane.YES_NO_OPTION);
                 if (ans == JOptionPane.YES_OPTION) {
-                    TypeOfRoomDAO.delete(type.getMaLoaiPhong());
-                    txtMaLoaiPhong.setText("");
-                    txtTenLoaiPhong.setText("");
-                    txtBaoLoi.setText("");
-                    modelTblLoaiPhong.removeRow(row);
-                    JOptionPane.showMessageDialog(this,"Xóa thành công");
-                    modelTblLoaiPhong.getDataVector().removeAllElements();
-                    loadLP();
+                    if (typeOfRoomDAO.checkIfTypeOfRoomIsReferenced(type.getMaLoaiPhong())) {
+                        JOptionPane.showMessageDialog(this, "Loại phòng đang được sử dụng! Không được phép xóa");
+                    } else {
+                        if (typeOfRoomDAO.delete(type.getMaLoaiPhong())) {
+                            txtMaLoaiPhong.setText("");
+                            txtTenLoaiPhong.setText("");
+                            txtBaoLoi.setText("");
+                            modelTblLoaiPhong.removeRow(row);
+                            JOptionPane.showMessageDialog(this, "Xóa thành công");
+                            modelTblLoaiPhong.getDataVector().removeAllElements();
+                            loadLP();
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Đã xảy ra lỗi khi xóa. Vui lòng thử lại sau.");
+                        }
+                    }
                 }
             }
         }else if (o.equals(btnSua)){
@@ -267,15 +274,18 @@ public class TypeOfRoom_UI extends JPanel implements ActionListener, MouseListen
                 if (validData()) {
                     String MaLP = txtMaLoaiPhong.getText().trim();
                     String tenLp = txtTenLoaiPhong.getText().trim();
-                    int succhua =Integer.parseInt(txtSucChua.getText().trim());
+                    int succhua = Integer.parseInt(txtSucChua.getText().trim());
                     TypeOfRoom type = new TypeOfRoom(MaLP,tenLp,succhua);
-                    if (TypeOfRoomDAO.update(type)) {
+
+                    if (typeOfRoomDAO.update(type)) {
                         tblLoaiPhong.setValueAt(txtTenLoaiPhong.getText(), row, 2);
                         tblLoaiPhong.setValueAt(txtSucChua.getText(), row, 3);
                         JOptionPane.showMessageDialog(this,"Sửa thành công");
+                    } else {
+                        JOptionPane.showMessageDialog(this,"Không được phép sửa mã");
                     }
                 }
-            }else {
+            } else {
                 JOptionPane.showMessageDialog(this, "Bạn phải chọn dòng cần sửa");
             }
         }else if(o.equals(btnlamMoi)){

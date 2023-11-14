@@ -219,10 +219,6 @@ public class Bill {
             return tongTienDV;
         }
     }
-
-
-
-
     /**
      * Tính tiền thuê phòng
      *

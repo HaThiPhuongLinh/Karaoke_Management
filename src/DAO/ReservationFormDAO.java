@@ -15,9 +15,9 @@ import java.util.List;
  * <p>
  * Ngày tạo: 24/09/2023
  * <p>
- * Lần cập nhật cuối: 11/11/2023
+ * Lần cập nhật cuối: 14/11/2023
  * <p>
- * Nội dung cập nhật: cập nhật lịch sử code
+ * Nội dung cập nhật: cập nhật chức năng hàm getReservationsByRoomID
  */
 public class ReservationFormDAO {
 

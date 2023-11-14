@@ -22,6 +22,10 @@ import java.util.ArrayList;
  */
 public class RoomDAO {
 
+    /**
+     * lấy danh sách thông tin tất cả phòng
+     * @return {@code ArrayList<Room>}: danh sách phòng
+     */
     public ArrayList<Room> getRoomList() {
         ArrayList<Room> rooms = new ArrayList<>();
         ConnectDB.getInstance();
@@ -90,40 +94,12 @@ public class RoomDAO {
         return room;
     }
 
-
     /**
-     * Lầy trạng thái phòng dựa trên ID phòng
+     * Lầy danh sách phòng dựa trên trạng thái phòng
      *
-     * @param roomID: ID phòng
-     * @return {@code String}: trạng thái phòng
+     * @param status: trạng thái phòng
+     * @return {@code Room}: phòng
      */
-    public String getSatusRoomByID(String roomID) {
-        String status = "";
-        ConnectDB.getInstance();
-        PreparedStatement stmt = null;
-        try {
-            Connection con = ConnectDB.getConnection();
-            String sql = "SELECT tinhTrang FROM Phong where maPhong = ?";
-            stmt = con.prepareStatement(sql);
-            stmt.setString(1, roomID);
-
-            ResultSet rs = stmt.executeQuery();
-            if (!rs.next())
-                return null;
-            status = rs.getString(1);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                stmt.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return status;
-
-    }
-
     public ArrayList<Room> getRoomsByStatus(String status) {
         ArrayList<Room> rooms = new ArrayList<>();
         ConnectDB.getInstance();
@@ -152,6 +128,12 @@ public class RoomDAO {
         return rooms;
     }
 
+    /**
+     * Lầy danh sách phòng dựa trên tên loại phòng
+     *
+     * @param roomType: tên loại phòng
+     * @return {@code Room}: phòng
+     */
     public ArrayList<Room> getRoomsByType(String roomType) {
         ArrayList<Room> rooms = new ArrayList<>();
         ConnectDB.getInstance();
@@ -180,7 +162,11 @@ public class RoomDAO {
         return rooms;
     }
 
-
+    /**
+     * Lầy danh sách phòng trống
+     *
+     * @return {@code ArrayList<Room>}: danh sách phòng trống
+     */
     public ArrayList<Room> getListAvailableRoom() {
         ArrayList<Room> rooms = new ArrayList<>();
         ConnectDB.getInstance();
@@ -211,6 +197,12 @@ public class RoomDAO {
         return rooms;
     }
 
+    /**
+     * Lầy danh sách phòng trống dựa trên tên loại phòng
+     *
+     * @param roomTypeName: tên loại phòng
+     * @return {@code ArrayList<Room>}: danh sách phòng trống
+     */
     public ArrayList<Room> getListAvailableRoomByRoomTypeName(String roomTypeName) {
         ArrayList<Room> rooms = new ArrayList<>();
         ConnectDB.getInstance();
@@ -240,37 +232,15 @@ public class RoomDAO {
 
         return rooms;
     }
-    public ArrayList<Room> getPhongTheoGia(int giaBan) {
-        ArrayList<Room> dsdv = new ArrayList<Room>();
-        PreparedStatement statement = null;
-        ConnectDB.getInstance();
-        Connection con = ConnectDB.getConnection();
-        try {
-            String sql = "SELECT * FROM dbo.Phong where giaPhong like ?";
-            statement = con.prepareStatement(sql);
-            statement.setInt(1, giaBan);
-            // Thực thi câu lệnh SQL trả về đối tượng ResultSet.
-            ResultSet rs = statement.executeQuery();
-            // Duyệt kết quả trả về
-            while (rs.next()) {
-                dsdv.add(
-                        new Room(rs));
 
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                statement.close();
-            } catch (SQLException e2) {
-                e2.printStackTrace();
-            }
-        }
-
-        return dsdv;
-
-    }
-
+    /**
+     * Cập nhật trạng thái phòng dựa trên mã phòng
+     *
+     * @param roomId: mã phòng
+     * @param status: trạng thái phòng
+     *
+     * @return {@code boolean}: true/false
+     */
     public boolean updateRoomStatus(String roomId, String status) {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
@@ -300,7 +270,13 @@ public class RoomDAO {
         return false;
     }
 
-
+    /**
+     * Thêm phòng
+     *
+     * @param ro: phòng
+     *
+     * @return {@code boolean}: true/false
+     */
     public boolean insert(Room ro) throws SQLException{
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
@@ -329,6 +305,13 @@ public class RoomDAO {
         return n > 0;
     }
 
+    /**
+     * Sửa phòng
+     *
+     * @param ro: phòng
+     *
+     * @return {@code boolean}: true/false
+     */
     public boolean update(Room ro) {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
@@ -356,6 +339,13 @@ public class RoomDAO {
         return n > 0;
     }
 
+    /**
+     * Xóa phòng
+     *
+     * @param ro: phòng
+     *
+     * @return {@code boolean}: true/false
+     */
     public boolean delete(Room ro) {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
@@ -371,6 +361,15 @@ public class RoomDAO {
         }
         return n > 0;
     }
+
+    /**
+     * Lấy danh sách phòng dựa trên mã phòng và tình trạng
+     *
+     * @param roomID: mã phòng
+     * @param status: tình trạng phòng
+     *
+     * @return {@code ArrayList<Room>}: danh sách phòng
+     */
     public ArrayList<Room> getRoomsByRoomIdAndStatus(String roomID, String status) {
         ArrayList<Room> rooms = new ArrayList<>();
         ConnectDB.getInstance();
@@ -403,6 +402,11 @@ public class RoomDAO {
         return rooms;
     }
 
+    /**
+     * Phát sinh mã phòng tự động (P1ii, i++)
+     *
+     * @return {@code String}
+     */
     public String generateNextRoomId() {
         Connection con = null;
         PreparedStatement statement = null;
@@ -430,6 +434,15 @@ public class RoomDAO {
         return nextRoomId;
     }
 
+    /**
+     * Đổi phòng dựa trên mã hóa đơn
+     *
+     * @param billId: mã hóa đơn
+     * @param oldRoomId: mã phòng cũ
+     * @param newRoomId: mã phòng mới
+     *
+     * @return {@code boolean}: true/false
+     */
     public boolean switchRoom(String billId, String oldRoomId, String newRoomId) {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
@@ -486,6 +499,4 @@ public class RoomDAO {
             }
         }
     }
-
-
 }

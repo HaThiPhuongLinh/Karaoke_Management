@@ -13,9 +13,9 @@ import java.util.List;
  * <p>
  * Ngày tạo: 23/09/2023
  * <p>
- * Lần cập nhật cuối: 11/11/2023
+ * Lần cập nhật cuối: 14/11/2023
  * <p>
- * Nội dung cập nhật: cập nhật lịch sử code
+ * Nội dung cập nhật: thêm hàm kiểm tra tham chiếu checkIfTypeOfRoomIsReferenced
  */
 public class TypeOfRoomDAO {
 
@@ -221,5 +221,40 @@ public class TypeOfRoomDAO {
         return n > 0;
     }
 
+    /**
+     * Kiểm tra có tham chiếu từ phòng và loại phòng hay không
+     * @param maLoaiPhong: mã loại phòng
+     * @return (@boolean): true/false
+     */
+    public static boolean checkIfTypeOfRoomIsReferenced(String maLoaiPhong) {
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        PreparedStatement statement = null;
+        ResultSet rs = null;
 
+        try {
+            String sql = "SELECT TOP 1 * FROM Phong WHERE maLoaiPhong = ?";
+            statement = con.prepareStatement(sql);
+            statement.setString(1, maLoaiPhong);
+            rs = statement.executeQuery();
+
+            return rs.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // Đóng tài nguyên
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return false;
+    }
 }

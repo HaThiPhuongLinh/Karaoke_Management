@@ -333,18 +333,22 @@ public class Room_UI extends JPanel implements ActionListener, MouseListener {
                     String vitri = txtVitri.getText().trim();
                     double gia = Double.parseDouble(txtGiaP.getText().toString());
                     String tinhtrang = cmbTinhTrang.getSelectedItem().toString().trim();
+                    if(tinhtrang.equalsIgnoreCase("Đang sử dụng") || tinhtrang.equalsIgnoreCase("Chờ") ){
+                        JOptionPane.showMessageDialog(this, "Phòng đang được sử dụng. Không được phép xóa");
+                    } else {
 
-                    Room room = new Room(map, new TypeOfRoom(s), tinhtrang, vitri, gia);
+                        Room room = new Room(map, new TypeOfRoom(s), tinhtrang, vitri, gia);
 
-                    int ans = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa?", "Cảnh báo",
-                            JOptionPane.YES_NO_OPTION);
-                    if (ans == JOptionPane.YES_OPTION) {
-                        RoomDAO.delete(room);
-                        modelTblPhong.removeRow(row);
-                        modelTblPhong.getDataVector().removeAllElements();
-                        loadP();
-                        JOptionPane.showMessageDialog(this, "Xóa thành công");
-                        reFresh();
+                        int ans = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa?", "Cảnh báo",
+                                JOptionPane.YES_NO_OPTION);
+                        if (ans == JOptionPane.YES_OPTION) {
+                            RoomDAO.delete(room);
+                            modelTblPhong.removeRow(row);
+                            modelTblPhong.getDataVector().removeAllElements();
+                            loadP();
+                            JOptionPane.showMessageDialog(this, "Xóa thành công");
+                            reFresh();
+                        }
                     }
                 }
             } catch (Exception e3) {

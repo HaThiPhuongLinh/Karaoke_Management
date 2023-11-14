@@ -9,13 +9,13 @@ import java.util.ArrayList;
 /**
  * Thêm, sửa, đọc dữ liệu từ database cho lớp {@code TypeOfServiceDAO}
  * <p>
- * Người tham gia thiết kế: Nguyễn Quang Duy
+ * Người tham gia thiết kế: Nguyễn Quang Duy, Hà Thị Phương Linh
  * <p>
  * Ngày tạo: 07/10/2023
  * <p>
- * Lần cập nhật cuối: 7/11/2023
+ * Lần cập nhật cuối: 14/11/2023
  * <p>
- * Nội dung cập nhật: thêm javadoc
+ * Nội dung cập nhật: thêm hàm kiểm tra tham chiếu checkIfTypeOfServiceIsReferenced
  */
 
 public class TypeOfServiceDAO {
@@ -250,5 +250,42 @@ public class TypeOfServiceDAO {
             e.printStackTrace();
         }
         return nextServiceId;
+    }
+
+    /**
+     * Kiểm tra có tham chiếu từ dịch vụ và loại dịch vụ hay không
+     * @param maLoaiDichVu: mã loại dịch vụ
+     * @return (@boolean): true/false
+     */
+    public static boolean checkIfTypeOfServiceIsReferenced(String maLoaiDichVu) {
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+
+        try {
+            String sql = "SELECT TOP 1 * FROM DichVu WHERE maLoaiDichVu = ?";
+            statement = con.prepareStatement(sql);
+            statement.setString(1, maLoaiDichVu);
+            rs = statement.executeQuery();
+
+            return rs.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // Đóng tài nguyên
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return false;
     }
 }

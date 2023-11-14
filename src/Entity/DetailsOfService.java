@@ -4,15 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Lớp chi tiết dịch vụ
- * <p>
- * Người tham gia thiết kế: Nguyễn Quang Duy
- * <p>
- * Ngày tạo: 07/10/2023
- * <p>
- * Lần cập nhật cuối: 07/11/2023
- * <p>
- * Nội dung cập nhật: thêm javadoc
+ * Entity: Chi tiết dịch vụ
+ * Người thiết kế: Nguyễn Quang Duy
  */
 
 public class DetailsOfService {
