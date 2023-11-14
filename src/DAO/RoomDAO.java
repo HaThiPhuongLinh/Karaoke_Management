@@ -456,14 +456,24 @@ public class RoomDAO {
             statement.executeUpdate();
 
             // Kiểm tra xem phòng cũ có phiếu đặt phòng không
-            String checkReservationSql = "SELECT TOP 1 1 FROM dbo.PhieuDatPhong WHERE maPhong = ?";
+            String checkReservationSql = "SELECT trangThai FROM dbo.PhieuDatPhong WHERE maPhong = ?;";
             statement = con.prepareStatement(checkReservationSql);
             statement.setString(1, oldRoomId);
             ResultSet rsReservation = statement.executeQuery();
-            boolean hasReservation = rsReservation.next();
 
-            // Cập nhật tình trạng phòng cũ thành 'Cho' nếu có phiếu đặt phòng, 'Trống' nếu không
-            String updateOldRoomStatusSql = hasReservation ?
+            boolean hasWaitStatusReservation = false;
+
+            while (rsReservation.next()) {
+                int trangThaiPhieu = rsReservation.getInt("trangThai");
+
+                if (trangThaiPhieu == 2) {
+                    hasWaitStatusReservation = true;
+                    break;
+                }
+            }
+
+            // Cập nhật tình trạng phòng cũ
+            String updateOldRoomStatusSql = hasWaitStatusReservation ?
                     "UPDATE dbo.Phong SET tinhTrang = 'Cho' WHERE maPhong = ?" :
                     "UPDATE dbo.Phong SET tinhTrang = 'Trong' WHERE maPhong = ?";
             statement = con.prepareStatement(updateOldRoomStatusSql);

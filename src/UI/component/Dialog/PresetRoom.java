@@ -354,6 +354,7 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
     private void createReservationForm() {
         String formID = generateID();
         Timestamp startTime = Timestamp.valueOf(selectedDateTime);
+        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
         Staff staffLogin = KaraokeBooking_UI.getInstance().staffLogin;
 
         String customerName = lblCName2.getText().trim();
@@ -369,7 +370,7 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
             room = new Room();
         }
 
-        ReservationForm form = new ReservationForm(formID, startTime, staffLogin, c, room);
+        ReservationForm form = new ReservationForm(formID, currentTime, startTime, staffLogin, c, room, 2);
         boolean resultForm = reservationFormDAO.addReservationForm(form);
 
         if (resultForm) {

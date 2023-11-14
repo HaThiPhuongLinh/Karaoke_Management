@@ -336,9 +336,9 @@ public class BillDAO {
 
     /**
      * Hàm thanh toán hóa đơn
-     * @param billId:mã hóa đơn
-     * @param ngayGioTra:Ngày giờ thanh toán
-     * @return {@code boolean} :True or false
+     * @param billId: mã hóa đơn
+     * @param ngayGioTra: Ngày giờ thanh toán
+     * @return {@code boolean}: True hoặc False
      */
     public boolean paymentBill(String billId, Timestamp ngayGioTra) {
         ConnectDB.getInstance();
@@ -367,39 +367,30 @@ public class BillDAO {
                     String maPhong = rs.getString("maPhong");
 
                     // Kiểm tra xem có phiếu đặt phòng nào dựa trên mã phòng không
-                    String sql3 = "SELECT maPhieuDat FROM dbo.PhieuDatPhong WHERE maPhong = ?;";
+                    String sql3 = "SELECT trangThai FROM dbo.PhieuDatPhong WHERE maPhong = ?;";
                     statement = con.prepareStatement(sql3);
                     statement.setString(1, maPhong);
 
                     ResultSet rs2 = statement.executeQuery();
+                    boolean hasWaitStatusReservation = false;
 
-                    if (rs2.next()) {
-                        // Có phiếu đặt phòng, cập nhật tình trạng phòng thành 'Chờ'
-                        String updateRoomSql = "UPDATE dbo.Phong SET tinhTrang = 'Cho' WHERE maPhong = ?;";
-                        statement = con.prepareStatement(updateRoomSql);
-                        statement.setString(1, maPhong);
+                    while (rs2.next()) {
+                        int trangThaiPhieu = rs2.getInt("trangThai");
 
-                        int rowsAffected2 = statement.executeUpdate();
-
-                        if (rowsAffected2 > 0) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    } else {
-                        // Không có phiếu đặt phòng, cập nhật tình trạng phòng thành 'Trống'
-                        String updateRoomSql = "UPDATE dbo.Phong SET tinhTrang = 'Trong' WHERE maPhong = ?;";
-                        statement = con.prepareStatement(updateRoomSql);
-                        statement.setString(1, maPhong);
-
-                        int rowsAffected2 = statement.executeUpdate();
-
-                        if (rowsAffected2 > 0) {
-                            return true;
-                        } else {
-                            return false;
+                        if (trangThaiPhieu == 2) {
+                            hasWaitStatusReservation = true;
+                            break;
                         }
                     }
+
+                    // Cập nhật tình trạng phòng
+                    if (hasWaitStatusReservation) {
+                        updateRoomStatus(con, maPhong, "Cho");
+                    } else {
+                        updateRoomStatus(con, maPhong, "Trong");
+                    }
+
+                    return true;
                 } else {
                     return false;
                 }
@@ -419,6 +410,28 @@ public class BillDAO {
             }
         }
     }
+
+    /**
+     * Cập nhật tình trạng phòng dựa trên phiếu đặt
+     * @param con: kết nối driver
+     * @param maPhong: mã phòng cần cập nhật
+     * @param tinhTrang: tình trạng cần cập nhật
+     * @throws SQLException
+     */
+    private void updateRoomStatus(Connection con, String maPhong, String tinhTrang) throws SQLException {
+        String updateRoomSql = "UPDATE dbo.Phong SET tinhTrang = ? WHERE maPhong = ?;";
+        try (PreparedStatement statement = con.prepareStatement(updateRoomSql)) {
+            statement.setString(1, tinhTrang);
+            statement.setString(2, maPhong);
+
+            int rowsAffected = statement.executeUpdate();
+
+            if (rowsAffected <= 0) {
+                throw new SQLException("Không thể cập nhật tình trạng phòng");
+            }
+        }
+    }
+
 
     /**
      * Update thuộc tính Khuyến Mãi của hóa đơn

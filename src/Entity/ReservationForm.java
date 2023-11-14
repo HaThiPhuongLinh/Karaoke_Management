@@ -14,24 +14,32 @@ import java.sql.Timestamp;
  */
 public class ReservationForm {
     private String maPhieuDat;
+    private Timestamp thoiGianGoi;
     private Timestamp thoiGianDat;
     private Staff maNhanVien;
     private Customer maKhachHang;
     private Room maPhong;
-
-    public ReservationForm(ResultSet rs) throws SQLException {
-        this(rs.getString(1), rs.getTimestamp(2), new Staff(rs), new Customer(rs), new Room(rs));
-    }
+    private int trangThai;
 
     public ReservationForm() {
     }
+//
+//    public ReservationForm(String maPhieuDat, Timestamp thoiGianDat, Staff maNhanVien, Customer maKhachHang, Room maPhong) {
+//        this.maPhieuDat = maPhieuDat;
+//        this.thoiGianDat = thoiGianDat;
+//        this.maNhanVien = maNhanVien;
+//        this.maKhachHang = maKhachHang;
+//        this.maPhong = maPhong;
+//    }
 
-    public ReservationForm(String maPhieuDat, Timestamp thoiGianDat, Staff maNhanVien, Customer maKhachHang, Room maPhong) {
+    public ReservationForm(String maPhieuDat, Timestamp thoiGianGoi, Timestamp thoiGianDat, Staff maNhanVien, Customer maKhachHang, Room maPhong,  int trangThai) {
         this.maPhieuDat = maPhieuDat;
+        this.thoiGianGoi = thoiGianGoi;
         this.thoiGianDat = thoiGianDat;
         this.maNhanVien = maNhanVien;
         this.maKhachHang = maKhachHang;
         this.maPhong = maPhong;
+        this.trangThai = trangThai;
     }
 
     public ReservationForm(String maPhieuDat) {
@@ -42,6 +50,24 @@ public class ReservationForm {
         this.maNhanVien = r.getMaNhanVien();
         this.maKhachHang = r.getMaKhachHang();
         this.maPhong = r.getMaPhong();
+        this.thoiGianGoi = r.getThoiGianGoi();
+        this.trangThai = r.getTrangThai();
+    }
+
+    public Timestamp getThoiGianGoi() {
+        return thoiGianGoi;
+    }
+
+    public void setThoiGianGoi(Timestamp thoiGianGoi) {
+        this.thoiGianGoi = thoiGianGoi;
+    }
+
+    public Integer getTrangThai() {
+        return trangThai;
+    }
+
+    public void setTrangThai(Integer trangThai) {
+        this.trangThai = trangThai;
     }
 
     public String getMaPhieuDat() {
@@ -89,10 +115,12 @@ public class ReservationForm {
     public String toString() {
         return "ReservationForm{" +
                 "maPhieuDat='" + maPhieuDat + '\'' +
+                ", thoiGianGoi=" + thoiGianGoi +
                 ", thoiGianDat=" + thoiGianDat +
                 ", maNhanVien=" + maNhanVien +
                 ", maKhachHang=" + maKhachHang +
                 ", maPhong=" + maPhong +
+                ", trangThai=" + trangThai +
                 '}';
     }
 }
