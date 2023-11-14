@@ -248,7 +248,6 @@ public class TypeOfService_UI extends JPanel  implements ActionListener, MouseLi
             if (row == -1) {
                 JOptionPane.showMessageDialog(this, "Bạn phải chọn dòng cần xóa");
             } else {
-
                 String MaDV = txtMaLoaiDichVu.getText().trim();
                 String tenDv = txtTenLoaiDichVu.getText().trim();
 
@@ -257,14 +256,17 @@ public class TypeOfService_UI extends JPanel  implements ActionListener, MouseLi
                 int ans = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa?", "Cảnh báo",
                         JOptionPane.YES_NO_OPTION);
                 if (ans == JOptionPane.YES_OPTION) {
-                    typeOfServiceDAO.delete(type.getMaLoaiDichVu());
-                    txtMaLoaiDichVu.setText("");
-                    txtTenLoaiDichVu.setText("");
-                    txtThongBao.setText("");
-
-                    modelTblDichVu.removeRow(row);
-                    modelTblDichVu.getDataVector().removeAllElements();
-                    loadTypeOfService();
+                    if (typeOfServiceDAO.delete(type.getMaLoaiDichVu())==true){
+                        JOptionPane.showMessageDialog(this,"Xóa thành công");
+                        modelTblDichVu.removeRow(row);
+                        modelTblDichVu.getDataVector().removeAllElements();
+                        loadTypeOfService();
+                        txtMaLoaiDichVu.setText("");
+                        txtTenLoaiDichVu.setText("");
+                        txtThongBao.setText("");
+                    }else{
+                        JOptionPane.showMessageDialog(this,"Xóa không thành công! \nLoại dịch vụ đang được sử dụng!");
+                    }
                 }
             }
         }else if (o.equals(btnSua)){
