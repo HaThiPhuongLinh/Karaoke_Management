@@ -26,8 +26,8 @@ import java.util.Date;
  * Giao diện dùng để quản lý khách hàng
  * Người thiết kế Nguyễn Đình Dương
  * Ngày tạo:9/10/2023
- * Lần cập nhật cuối : 15/10/2023
- * Nội dung cập nhật : Update sự kiện mouseclicked cho bảng
+ * Lần cập nhật cuối : 15/11/2023
+ * Nội dung cập nhật : cập nhật regex cho CCCD của khách hàng
  */
 
 public class Customer_UI extends JPanel implements ActionListener, MouseListener {
@@ -310,7 +310,7 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
             return false;
         }
         if (!((cccd.length()) > 0 && cccd.matches("^0[0-9]{11}$"))) {
-            showMessage(txtCMNDKH, "CCCD phải gồm 12 số");
+            showMessage(txtCMNDKH, "CCCD phải gồm 12 số và bắt đầu bằng 0");
             return false;
         }
         return true;

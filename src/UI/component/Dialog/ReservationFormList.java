@@ -12,7 +12,6 @@ import UI.component.KaraokeBooking_UI;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
@@ -20,26 +19,26 @@ import java.awt.event.*;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 
 /**
  * Giao diện hiển thị phiếu đặt phòng
  * Người tham gia thiết kế: Hà Thị Phương Linh
  * Ngày tạo: 25/10/2023
- * Lần cập nhật cuối: 01/11/2023
- * Nội dung cập nhật: Cập nhật tính năng nhận phòng
+ * Lần cập nhật cuối: 15/11/2023
+ * Nội dung cập nhật: thêm trường trạng thái phiếu đặt, thêm chức năng tìm theo cmbStatus
  */
 public class ReservationFormList extends JFrame implements ActionListener, MouseListener {
     private static KaraokeBooking_UI main;
     private static ReservationFormList instance;
+    private JComboBox<String> cmbStatus;
     private JButton btnFind, btnReceive, btnALL, btnCancel;
     private JTextField txtTim;
     private ArrayList<ReservationForm> lstForms;
     private JTable tblReservations;
     private DefaultTableModel modelTblReservations;
     private CustomerDAO customerDAO;
+    private ArrayList<ReservationForm> formList = new ArrayList<ReservationForm>();
     private ReservationFormDAO reservationFormDAO;
     private BillDAO billDAO;
     private RoomDAO roomDAO = new RoomDAO();
@@ -87,7 +86,7 @@ public class ReservationFormList extends JFrame implements ActionListener, Mouse
         panel.setLayout(null);
 
         JPanel searchPanel = new JPanel();
-        searchPanel.setBounds(110, 20, 775, 70);
+        searchPanel.setBounds(110, 20, 615, 70);
         searchPanel.setLayout(null);
         JLabel nhapten = new JLabel("Tên khách hàng: ");
         nhapten.setBounds(80, 32, 180, 20);
@@ -99,7 +98,6 @@ public class ReservationFormList extends JFrame implements ActionListener, Mouse
         btnFind.setBounds(450, 26, 55, 30);
         searchPanel.add(btnFind);
 
-
         btnALL = new JButton("Refresh");
         btnALL.setBounds(510, 26, 75, 30);
         searchPanel.add(btnALL);
@@ -108,6 +106,15 @@ public class ReservationFormList extends JFrame implements ActionListener, Mouse
                 "Tìm khách hàng", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
         panel.add(searchPanel);
         Custom.setCustomBtn(btnALL);
+
+        cmbStatus = new JComboBox<String>();
+        cmbStatus.addItem("Đang chờ");
+        cmbStatus.addItem("Đã nhận");
+        cmbStatus.addItem("Đã hủy");
+        cmbStatus.setBounds(760, 46, 130, 30);
+        Custom.setCustomComboBox(cmbStatus);
+        panel.add(cmbStatus);
+
         JPanel pnTable = new JPanel();
         pnTable.setBounds(20, 120, 995, 340);
         panel.add(pnTable);
@@ -141,14 +148,24 @@ public class ReservationFormList extends JFrame implements ActionListener, Mouse
 
         customerDAO = new CustomerDAO();
         tblReservations.setRowHeight(30);
+        String selectedStatus = (String) cmbStatus.getSelectedItem();
 
         for (ReservationForm r : reservationFormDAO.getAllForm()) {
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             String date = sdf.format(r.getThoiGianDat());
             String date2 = sdf.format(r.getThoiGianGoi());
             String trangThaiLabel = getTrangThaiLabel(r.getTrangThai());
-            Object[] rowData = {r.getMaPhieuDat(), r.getMaKhachHang().getTenKhachHang(), date2, date, r.getMaPhong().getMaPhong(), r.getMaPhong().getLoaiPhong().getTenLoaiPhong(), trangThaiLabel};
-            modelTblReservations.addRow(rowData);
+
+            if (selectedStatus.equals("Đang chờ") && r.getTrangThai() == 2) {
+                Object[] rowData = {r.getMaPhieuDat(), r.getMaKhachHang().getTenKhachHang(), date2, date, r.getMaPhong().getMaPhong(), r.getMaPhong().getLoaiPhong().getTenLoaiPhong(), trangThaiLabel};
+                modelTblReservations.addRow(rowData);
+            } else if (!selectedStatus.equals("Đang chờ")) {
+                // Hiển thị theo giá trị của cmbStatus
+                if (selectedStatus.equalsIgnoreCase(trangThaiLabel)) {
+                    Object[] rowData = {r.getMaPhieuDat(), r.getMaKhachHang().getTenKhachHang(), date2, date, r.getMaPhong().getMaPhong(), r.getMaPhong().getLoaiPhong().getTenLoaiPhong(), trangThaiLabel};
+                    modelTblReservations.addRow(rowData);
+                }
+            }
         }
 
         tblReservations.addMouseListener(new MouseAdapter() {
@@ -171,6 +188,15 @@ public class ReservationFormList extends JFrame implements ActionListener, Mouse
             }
         });
 
+        cmbStatus.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String formName = txtTim.getText().trim();
+                int isRefresh = formName.isEmpty() ? 1 : 0;
+                searchForm(isRefresh);
+            }
+        });
+
 
         btnFind.addActionListener(this);
         btnReceive.addActionListener(this);
@@ -180,6 +206,38 @@ public class ReservationFormList extends JFrame implements ActionListener, Mouse
         reSizeColumnTable();
     }
 
+    /**
+     * update dữ liệu load lên bảng theo trạng thái phiếu đặt
+     */
+    private void updateTableBasedOnStatus() {
+        modelTblReservations.setRowCount(0);
+
+        // Lấy giá trị được chọn từ cmbStatus
+        String selectedStatus = (String) cmbStatus.getSelectedItem();
+
+        for (ReservationForm r : reservationFormDAO.getAllForm()) {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            String date = sdf.format(r.getThoiGianDat());
+            String date2 = sdf.format(r.getThoiGianGoi());
+            String trangThaiLabel = getTrangThaiLabel(r.getTrangThai());
+
+            // Kiểm tra giá trị của cmbStatus
+            if (selectedStatus.equals("Đang chờ") && r.getTrangThai() == 2) {
+                Object[] rowData = {r.getMaPhieuDat(), r.getMaKhachHang().getTenKhachHang(), date2, date, r.getMaPhong().getMaPhong(), r.getMaPhong().getLoaiPhong().getTenLoaiPhong(), trangThaiLabel};
+                modelTblReservations.addRow(rowData);
+            } else if (!selectedStatus.equals("Đang chờ")) {
+                // Hiển thị theo giá trị của cmbStatus
+                if (selectedStatus.equalsIgnoreCase(trangThaiLabel)) {
+                    Object[] rowData = {r.getMaPhieuDat(), r.getMaKhachHang().getTenKhachHang(), date2, date, r.getMaPhong().getMaPhong(), r.getMaPhong().getLoaiPhong().getTenLoaiPhong(), trangThaiLabel};
+                    modelTblReservations.addRow(rowData);
+                }
+            }
+        }
+    }
+
+    /**
+     * Resize bảng phiếu đặt phòng
+     */
     private void reSizeColumnTable() {
         TableColumnModel tcm = tblReservations.getColumnModel();
 
@@ -237,27 +295,9 @@ public class ReservationFormList extends JFrame implements ActionListener, Mouse
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         if (o.equals(btnFind)) {
-            if (txtTim.getText().equals("")) {
-                JOptionPane.showMessageDialog(this, "Chưa nhập tên khách hàng");
-            } else {
-                String tenKH = txtTim.getText().trim();
-                modelTblReservations.getDataVector().removeAllElements();
-                modelTblReservations.fireTableDataChanged();
-                lstForms = customerDAO.findReservationFormsByCustomerName(tenKH);
-                if (lstForms == null || lstForms.size() <= 0) {
-                    modelTblReservations.getDataVector().removeAllElements();
-                } else {
-                    for (ReservationForm r : lstForms) {
-                        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-                        String date = sdf.format(r.getThoiGianDat());
-                        String date2 = sdf.format(r.getThoiGianGoi());
-                        String trangThaiLabel = getTrangThaiLabel(r.getTrangThai());
-                        Object[] rowData = {r.getMaPhieuDat(), r.getMaKhachHang().getTenKhachHang(), date2, date, r.getMaPhong().getMaPhong(), r.getMaPhong().getLoaiPhong().getTenLoaiPhong(), trangThaiLabel};
-                        modelTblReservations.addRow(rowData);
-                    }
-
-                }
-            }
+            String formName = txtTim.getText().trim();
+            int isRefresh = formName.isEmpty() ? 1 : 0;
+            searchForm(isRefresh);
         }
         if (o.equals(btnReceive)) {
             int row = tblReservations.getSelectedRow();
@@ -380,14 +420,23 @@ public class ReservationFormList extends JFrame implements ActionListener, Mouse
                         roomDAO.updateRoomStatus(roomID, "Trống");
                     }
                     modelTblReservations.setRowCount(0);
-
+                    String selectedStatus = (String) cmbStatus.getSelectedItem();
                     for (ReservationForm r : reservationFormDAO.getAllForm()) {
                         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                         String date = sdf.format(r.getThoiGianDat());
                         String date2 = sdf.format(r.getThoiGianGoi());
                         String trangThaiLabel = getTrangThaiLabel(r.getTrangThai());
-                        Object[] rowData = {r.getMaPhieuDat(), r.getMaKhachHang().getTenKhachHang(), date2, date, r.getMaPhong().getMaPhong(), r.getMaPhong().getLoaiPhong().getTenLoaiPhong(), trangThaiLabel};
-                        modelTblReservations.addRow(rowData);
+
+                        if (selectedStatus.equals("Đang chờ") && r.getTrangThai() == 2) {
+                            Object[] rowData = {r.getMaPhieuDat(), r.getMaKhachHang().getTenKhachHang(), date2, date, r.getMaPhong().getMaPhong(), r.getMaPhong().getLoaiPhong().getTenLoaiPhong(), trangThaiLabel};
+                            modelTblReservations.addRow(rowData);
+                        } else if (!selectedStatus.equals("Đang chờ")) {
+                            // Hiển thị theo giá trị của cmbStatus
+                            if (selectedStatus.equalsIgnoreCase(trangThaiLabel)) {
+                                Object[] rowData = {r.getMaPhieuDat(), r.getMaKhachHang().getTenKhachHang(), date2, date, r.getMaPhong().getMaPhong(), r.getMaPhong().getLoaiPhong().getTenLoaiPhong(), trangThaiLabel};
+                                modelTblReservations.addRow(rowData);
+                            }
+                        }
                     }
 
                     ArrayList<Room> yourListOfRooms = roomDAO.getRoomList();
@@ -401,14 +450,23 @@ public class ReservationFormList extends JFrame implements ActionListener, Mouse
 
         if (o.equals(btnALL)) {
             modelTblReservations.setRowCount(0);
-            int row = tblReservations.getSelectedRow();
+            String selectedStatus = (String) cmbStatus.getSelectedItem();
             for (ReservationForm r : reservationFormDAO.getAllForm()) {
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                 String date = sdf.format(r.getThoiGianDat());
                 String date2 = sdf.format(r.getThoiGianGoi());
                 String trangThaiLabel = getTrangThaiLabel(r.getTrangThai());
-                Object[] rowData = {r.getMaPhieuDat(), r.getMaKhachHang().getTenKhachHang(), date2, date, r.getMaPhong().getMaPhong(), r.getMaPhong().getLoaiPhong().getTenLoaiPhong(), trangThaiLabel};
-                modelTblReservations.addRow(rowData);
+
+                if (selectedStatus.equals("Đang chờ") && r.getTrangThai() == 2) {
+                    Object[] rowData = {r.getMaPhieuDat(), r.getMaKhachHang().getTenKhachHang(), date2, date, r.getMaPhong().getMaPhong(), r.getMaPhong().getLoaiPhong().getTenLoaiPhong(), trangThaiLabel};
+                    modelTblReservations.addRow(rowData);
+                } else if (!selectedStatus.equals("Đang chờ")) {
+                    // Hiển thị theo giá trị của cmbStatus
+                    if (selectedStatus.equalsIgnoreCase(trangThaiLabel)) {
+                        Object[] rowData = {r.getMaPhieuDat(), r.getMaKhachHang().getTenKhachHang(), date2, date, r.getMaPhong().getMaPhong(), r.getMaPhong().getLoaiPhong().getTenLoaiPhong(), trangThaiLabel};
+                        modelTblReservations.addRow(rowData);
+                    }
+                }
             }
             txtTim.setText("");
         }
@@ -429,6 +487,79 @@ public class ReservationFormList extends JFrame implements ActionListener, Mouse
                 return "Đang chờ";
             default:
                 return "";
+        }
+    }
+
+
+    /**
+     * Tìm phiếu đặt theo tên và cmbStatus
+     * @param isRefresh: có nhập tên vào hay chưa
+     */
+    private void searchForm(int isRefresh) {
+        String formName = txtTim.getText().trim();
+        int cmbStatusIndex = cmbStatus.getSelectedIndex();
+
+        // Chuyển đổi giá trị của cmbStatus để phản ánh giá trị trong cơ sở dữ liệu
+        int status = convertCmbStatusToDatabaseValue(cmbStatusIndex);
+
+        if (formName.equalsIgnoreCase("")) {
+            formList = reservationFormDAO.findReservationFormsByStatus(status);
+        } else {
+            if (isRefresh == 1) {
+                formList = reservationFormDAO.findReservationFormsByStatus(status);
+            } else {
+                // Đối với trạng thái "Đang chờ", "Đã nhận", "Đã hủy"
+                formList = customerDAO.searchReservationForms(formName, status);
+            }
+        }
+        loadFormList(formList);
+    }
+
+    /**
+     * Chuyển đổi giá trị của cmbStatus để phản ánh giá trị trong cơ sở dữ liệu
+     * @param cmbStatusIndex: Index của cmbStatus
+     * @return int: Giá trị tương ứng trong cơ sở dữ liệu
+     */
+    private int convertCmbStatusToDatabaseValue(int cmbStatusIndex) {
+        // Chuyển đổi index của cmbStatus để phản ánh giá trị trong cơ sở dữ liệu
+        switch (cmbStatusIndex) {
+            case 0:
+                return 2; // Đang chờ
+            case 1:
+                return 1; // Đã nhận
+            case 2:
+                return 0; // Đã hủy
+            default:
+                return -1; // Giá trị không hợp lệ
+        }
+    }
+
+
+    /**
+     * Load danh sách phiếu đặt lên bảng
+     * @param dataList: danh sách phiếu đặt
+     */
+    private void loadFormList(ArrayList<ReservationForm> dataList) {
+        modelTblReservations.getDataVector().removeAllElements();
+        modelTblReservations.fireTableDataChanged();
+
+        String selectedStatus = (String) cmbStatus.getSelectedItem();
+        for (ReservationForm r : dataList) {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            String date = sdf.format(r.getThoiGianDat());
+            String date2 = sdf.format(r.getThoiGianGoi());
+            String trangThaiLabel = getTrangThaiLabel(r.getTrangThai());
+
+            if (selectedStatus.equals("Đang chờ") && r.getTrangThai() == 2) {
+                Object[] rowData = {r.getMaPhieuDat(), r.getMaKhachHang().getTenKhachHang(), date2, date, r.getMaPhong().getMaPhong(), r.getMaPhong().getLoaiPhong().getTenLoaiPhong(), trangThaiLabel};
+                modelTblReservations.addRow(rowData);
+            } else if (!selectedStatus.equals("Đang chờ")) {
+                // Hiển thị theo giá trị của cmbStatus
+                if (selectedStatus.equalsIgnoreCase(trangThaiLabel)) {
+                    Object[] rowData = {r.getMaPhieuDat(), r.getMaKhachHang().getTenKhachHang(), date2, date, r.getMaPhong().getMaPhong(), r.getMaPhong().getLoaiPhong().getTenLoaiPhong(), trangThaiLabel};
+                    modelTblReservations.addRow(rowData);
+                }
+            }
         }
     }
 

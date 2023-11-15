@@ -1,10 +1,7 @@
 package DAO;
 
 import ConnectDB.ConnectDB;
-import Entity.Customer;
-import Entity.ReservationForm;
-import Entity.Room;
-import Entity.Staff;
+import Entity.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -15,9 +12,9 @@ import java.util.List;
  * <p>
  * Ngày tạo: 24/09/2023
  * <p>
- * Lần cập nhật cuối: 14/11/2023
+ * Lần cập nhật cuối: 15/11/2023
  * <p>
- * Nội dung cập nhật: cập nhật chức năng hàm getReservationsByRoomID
+ * Nội dung cập nhật: thêm chức năng tìm theo combobox trạng thái phiếu đặt
  */
 public class ReservationFormDAO {
 
@@ -400,6 +397,66 @@ public class ReservationFormDAO {
             }
         }
         return activeReservations;
+    }
+
+    /**
+     * Tìm phiếu đặt phòng dựa trên trạng thái
+     * @param status: Trạng thái cần tìm kiếm (0 - Đã hủy, 1 - Đã nhận, 2 - Đang chờ)
+     * @return {@code ArrayList<ReservationForm> }:Danh sách phiếu đặt phòng
+     */
+    public ArrayList<ReservationForm> findReservationFormsByStatus(int status) {
+        ArrayList<ReservationForm> result = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = ConnectDB.getInstance().getConnection();
+            String query = "SELECT pdp.*, kh.tenKhachHang, p.maPhong, lp.tenLoaiPhong " +
+                    "FROM PhieuDatPhong pdp " +
+                    "INNER JOIN KhachHang kh ON pdp.maKhachHang = kh.maKhachHang " +
+                    "INNER JOIN Phong p ON pdp.maPhong = p.maPhong " +
+                    "INNER JOIN LoaiPhong lp ON p.maLoaiPhong = lp.maLoaiPhong " +
+                    "WHERE pdp.trangThai = ?";
+            stmt = conn.prepareStatement(query);
+            stmt.setInt(1, status);
+
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                ReservationForm reservationForm = new ReservationForm();
+                reservationForm.setMaPhieuDat(rs.getString("maPhieuDat"));
+                reservationForm.setThoiGianDat(rs.getTimestamp("thoiGianDat"));
+                reservationForm.setThoiGianGoi(rs.getTimestamp("thoiGianGoi"));
+                reservationForm.setTrangThai(rs.getInt("trangThai"));
+
+                Customer customer = new Customer();
+                customer.setTenKhachHang(rs.getString("tenKhachHang"));
+                reservationForm.setMaKhachHang(customer);
+
+                Room room = new Room();
+                room.setMaPhong(rs.getString("maPhong"));
+                reservationForm.setMaPhong(room);
+
+                TypeOfRoom roomType = new TypeOfRoom();
+                roomType.setTenLoaiPhong(rs.getString("tenLoaiPhong"));
+                room.setLoaiPhong(roomType);
+
+                result.add(reservationForm);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return result;
     }
 
 }

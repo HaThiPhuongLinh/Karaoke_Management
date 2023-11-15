@@ -12,9 +12,9 @@ import java.util.List;
  * <p>
  * Ngày tạo: 23/09/2023
  * <p>
- * Lần cập nhật cuối: 06/11/2023
+ * Lần cập nhật cuối: 15/11/2023
  * <p>
- * Nội dung cập nhật: cập nhật lịch sử code
+ * Nội dung cập nhật:  thêm chức năng tìm phiếu đặt phòng dựa trên tên khách hàng và trạng thái
  */
 public class CustomerDAO {
     private static CustomerDAO instance = new CustomerDAO();
@@ -297,7 +297,9 @@ public class CustomerDAO {
             while (rs.next()) {
                 ReservationForm reservationForm = new ReservationForm();
                 reservationForm.setMaPhieuDat(rs.getString("maPhieuDat"));
+                reservationForm.setThoiGianGoi(rs.getTimestamp("thoiGianGoi"));
                 reservationForm.setThoiGianDat(rs.getTimestamp("thoiGianDat"));
+                reservationForm.setTrangThai(rs.getInt("trangThai"));
 
                 Customer customer = new Customer();
                 customer.setTenKhachHang(rs.getString("tenKhachHang"));
@@ -327,6 +329,69 @@ public class CustomerDAO {
 
         return result;
     }
+
+    /**
+     * Tìm phiếu đặt phòng dựa trên tên khách hàng và trạng thái
+     *
+     * @param customerName: Tên khách hàng cần tìm phiếu đặt phòng
+     * @param status: Trạng thái cần tìm (0 - Đã hủy, 1 - Đã nhận, 2 - Đang chờ)
+     */
+    public ArrayList<ReservationForm>  searchReservationForms(String customerName, int status) {
+        ArrayList<ReservationForm> result = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = ConnectDB.getInstance().getConnection();
+            String query = "SELECT pdp.*, kh.tenKhachHang, p.maPhong, lp.tenLoaiPhong " +
+                    ", pdp.thoiGianGoi " +
+                    "FROM PhieuDatPhong pdp " +
+                    "INNER JOIN KhachHang kh ON pdp.maKhachHang = kh.maKhachHang " +
+                    "INNER JOIN Phong p ON pdp.maPhong = p.maPhong " +
+                    "INNER JOIN LoaiPhong lp ON p.maLoaiPhong = lp.maLoaiPhong " +
+                    "WHERE kh.tenKhachHang LIKE ? AND pdp.trangThai = ?";
+            stmt = conn.prepareStatement(query);
+            stmt.setString(1, "%" + customerName + "%");
+            stmt.setInt(2, status);
+
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                ReservationForm reservationForm = new ReservationForm();
+                reservationForm.setMaPhieuDat(rs.getString("maPhieuDat"));
+                reservationForm.setThoiGianDat(rs.getTimestamp("thoiGianDat"));
+                reservationForm.setThoiGianGoi(rs.getTimestamp("thoiGianGoi"));
+                reservationForm.setTrangThai(rs.getInt("trangThai"));
+
+                Customer customer = new Customer();
+                customer.setTenKhachHang(rs.getString("tenKhachHang"));
+                reservationForm.setMaKhachHang(customer);
+
+                Room room = new Room();
+                room.setMaPhong(rs.getString("maPhong"));
+                reservationForm.setMaPhong(room);
+
+                TypeOfRoom roomType = new TypeOfRoom();
+                roomType.setTenLoaiPhong(rs.getString("tenLoaiPhong"));
+                room.setLoaiPhong(roomType);
+
+                result.add(reservationForm);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+
 
     /**
      * Lấy ra khách hàng dựa trên mã Hóa đơn
