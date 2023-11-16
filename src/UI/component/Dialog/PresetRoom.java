@@ -173,7 +173,7 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, dd/MM/yyyy", new Locale("vi"));
 
         // Thêm các ngày từ ngày hiện tại đến ngày hiện tại + 1 tuần
-        for (int i = 0; i < 7; i++) {
+        for (int i = 1; i < 7; i++) {
             String formattedDate = currentDate.plusDays(i).format(formatter);
             dateList.add(formattedDate);
         }
@@ -268,7 +268,7 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
                 Room room = roomDAO.getRoomByRoomId(roomID);
                 if (room != null) {
                     if (room.getTinhTrang().equalsIgnoreCase("Đang sử dụng")) {
-                        LocalDateTime minValidTime = currentDateTime.plusHours(2);
+                        LocalDateTime minValidTime = currentDateTime.plusHours(4);
 
                         ArrayList<ReservationForm> reservations = reservationFormDAO.getReservationsByRoomID(roomID);
                         for (ReservationForm reservation : reservations) {
@@ -299,7 +299,7 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
                         }
                         // Tiếp tục kiểm tra thời gian đặt phòng được chọn
                         if (selectedDateTime.isBefore(minValidTime)) {
-                            JOptionPane.showMessageDialog(this, "Phòng đang sử dụng. Vui lòng đặt sau 2 tiếng.");
+                            JOptionPane.showMessageDialog(this, "Phòng đang sử dụng. Vui lòng đặt sau 4 tiếng nữa.");
                             return;
                         }
                     } else {

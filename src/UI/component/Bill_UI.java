@@ -299,6 +299,10 @@ Sửa chiều rộng các cột của bảng CTDV
         }
     }
 
+    /**
+     * Tải dữ liệu các hóa đơn chưa thanh toán lên bảng
+     * @param lst (danh sách hóa đơn chưa thanh toán)
+     */
     public void loadHD2(ArrayList<Bill> lst) {
         modelTablePDP.setRowCount(0);
         int i = 1;

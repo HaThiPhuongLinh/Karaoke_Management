@@ -611,91 +611,95 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
                 if (room == null) {
                     room = new Room();
                 }
+                if(room.getTinhTrang().equalsIgnoreCase("Đang sử dụng")){
+                    JOptionPane.showMessageDialog(this,"Phòng đang sử dụng. Không được đặt.");
+                } else {
 
-                // Lấy danh sách các phiếu đặt phòng cho phòng hiện tại và sắp xếp chúng theo thời gian đặt
-                ArrayList<ReservationForm> reservations = reservationFormDAO.getReservationsByRoomID(roomID);
-                reservations.sort(Comparator.comparing(ReservationForm::getThoiGianDat));
+                    // Lấy danh sách các phiếu đặt phòng cho phòng hiện tại và sắp xếp chúng theo thời gian đặt
+                    ArrayList<ReservationForm> reservations = reservationFormDAO.getReservationsByRoomID(roomID);
+                    reservations.sort(Comparator.comparing(ReservationForm::getThoiGianDat));
 
-                if (!reservations.isEmpty()) {
-                    // Lấy phiếu đặt sớm nhất
-                    ReservationForm earliestReservation = reservations.get(0);
+                    if (!reservations.isEmpty()) {
+                        // Lấy phiếu đặt sớm nhất
+                        ReservationForm earliestReservation = reservations.get(0);
 
-                    long currentTimeMillis = System.currentTimeMillis();
-                    long reservationTimeMillis = earliestReservation.getThoiGianDat().getTime();
-                    long timeDifferenceHours = (reservationTimeMillis - currentTimeMillis) / (60 * 60 * 1000);
+                        long currentTimeMillis = System.currentTimeMillis();
+                        long reservationTimeMillis = earliestReservation.getThoiGianDat().getTime();
+                        long timeDifferenceHours = (reservationTimeMillis - currentTimeMillis) / (60 * 60 * 1000);
 
-                    if (timeDifferenceHours > 3) {
-                        int choice = JOptionPane.showConfirmDialog(
-                                this,
-                                "Phòng đã có phiếu đặt vào lúc " + sdf.format(earliestReservation.getThoiGianDat() )+ ". Bạn có muốn sử dụng ngay không?",
-                                "Xác nhận",
-                                JOptionPane.YES_NO_OPTION
-                        );
+                        if (timeDifferenceHours > 3) {
+                            int choice = JOptionPane.showConfirmDialog(
+                                    this,
+                                    "Phòng đã có phiếu đặt vào lúc " + sdf.format(earliestReservation.getThoiGianDat()) + ". Bạn có muốn sử dụng ngay không?",
+                                    "Xác nhận",
+                                    JOptionPane.YES_NO_OPTION
+                            );
 
-                        if (choice == JOptionPane.YES_OPTION) {
-                            String customerName = txtCustomer.getText().trim();
-                            String customerID = customerDAO.getIdByTenKhachHang(customerName);
-                            Customer c = customerDAO.getKhachHangById(customerID);
-                            if (c == null) {
-                                c = new Customer();
+                            if (choice == JOptionPane.YES_OPTION) {
+                                String customerName = txtCustomer.getText().trim();
+                                String customerID = customerDAO.getIdByTenKhachHang(customerName);
+                                Customer c = customerDAO.getKhachHangById(customerID);
+                                if (c == null) {
+                                    c = new Customer();
+                                }
+                                Timestamp startTime = new Timestamp(currentTimeMillis);
+                                Timestamp receiveTime = null;
+                                int tinhTrang = 0;
+                                String khuyenMai = "";
+
+                                String billID = generateBillID();
+                                Bill bill = new Bill(billID, staffLogin, c, room, startTime, receiveTime, tinhTrang, khuyenMai);
+                                boolean resultBill = billDAO.addBill(bill);
+
+                                if (resultBill) {
+                                    long thirtyMinutesMillis = 30 * 60 * 1000; // 30 phút trong mili giây
+                                    long timeToReturnMillis = reservationTimeMillis - thirtyMinutesMillis;
+
+                                    Timestamp timeToReturn = new Timestamp(timeToReturnMillis);
+                                    JOptionPane.showMessageDialog(
+                                            this,
+                                            "Cho thuê phòng thành công. Vui lòng trả phòng trước " + sdf.format(timeToReturn),
+                                            "Thông báo",
+                                            JOptionPane.INFORMATION_MESSAGE
+                                    );
+                                    roomDAO.updateRoomStatus(roomID, "Đang sử dụng");
+                                    ArrayList<Room> roomList = roomDAO.getRoomList();
+                                    LoadRoomList(roomList);
+                                    txtCustomer.setText("");
+                                } else {
+                                    JOptionPane.showMessageDialog(this, "Cho thuê phòng thất bại");
+                                }
                             }
-                            Timestamp startTime = new Timestamp(currentTimeMillis);
-                            Timestamp receiveTime = null;
-                            int tinhTrang = 0;
-                            String khuyenMai = "";
-
-                            String billID = generateBillID();
-                            Bill bill = new Bill(billID, staffLogin, c, room, startTime, receiveTime, tinhTrang, khuyenMai);
-                            boolean resultBill = billDAO.addBill(bill);
-
-                            if (resultBill) {
-                                long thirtyMinutesMillis = 30 * 60 * 1000; // 30 phút trong mili giây
-                                long timeToReturnMillis = reservationTimeMillis - thirtyMinutesMillis;
-
-                                Timestamp timeToReturn = new Timestamp(timeToReturnMillis);
-                                JOptionPane.showMessageDialog(
-                                        this,
-                                        "Cho thuê phòng thành công. Vui lòng trả phòng trước " +  sdf.format(timeToReturn),
-                                        "Thông báo",
-                                        JOptionPane.INFORMATION_MESSAGE
-                                );
-                                roomDAO.updateRoomStatus(roomID, "Đang sử dụng");
-                                ArrayList<Room> roomList = roomDAO.getRoomList();
-                                LoadRoomList(roomList);
-                                txtCustomer.setText("");
-                            } else {
-                                JOptionPane.showMessageDialog(this, "Cho thuê phòng thất bại");
-                            }
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Không thể đặt phòng vì đã có phiếu đặt vào lúc " + sdf.format(earliestReservation.getThoiGianDat()));
                         }
                     } else {
-                        JOptionPane.showMessageDialog(this, "Không thể đặt phòng vì đã có phiếu đặt vào lúc " + sdf.format(earliestReservation.getThoiGianDat()));
-                    }
-                } else {
-                    // Không có phiếu đặt nào, cho phép đặt phòng
-                    String customerName = txtCustomer.getText().trim();
-                    String customerID = customerDAO.getIdByTenKhachHang(customerName);
-                    Customer c = customerDAO.getKhachHangById(customerID);
-                    if (c == null) {
-                        c = new Customer();
-                    }
-                    long millis = System.currentTimeMillis();
-                    Timestamp startTime = new Timestamp(millis);
-                    Timestamp receiveTime = null;
-                    int tinhTrang = 0;
-                    String khuyenMai = "";
+                        // Không có phiếu đặt nào, cho phép đặt phòng
+                        String customerName = txtCustomer.getText().trim();
+                        String customerID = customerDAO.getIdByTenKhachHang(customerName);
+                        Customer c = customerDAO.getKhachHangById(customerID);
+                        if (c == null) {
+                            c = new Customer();
+                        }
+                        long millis = System.currentTimeMillis();
+                        Timestamp startTime = new Timestamp(millis);
+                        Timestamp receiveTime = null;
+                        int tinhTrang = 0;
+                        String khuyenMai = "";
 
-                    String billID = generateBillID();
-                    Bill bill = new Bill(billID, staffLogin, c, room, startTime, receiveTime, tinhTrang, khuyenMai);
-                    boolean resultBill = billDAO.addBill(bill);
+                        String billID = generateBillID();
+                        Bill bill = new Bill(billID, staffLogin, c, room, startTime, receiveTime, tinhTrang, khuyenMai);
+                        boolean resultBill = billDAO.addBill(bill);
 
-                    if (resultBill) {
-                        JOptionPane.showMessageDialog(this, "Cho thuê phòng thành công");
-                        roomDAO.updateRoomStatus(roomID, "Đang sử dụng");
-                        ArrayList<Room> roomList = roomDAO.getRoomList();
-                        LoadRoomList(roomList);
-                        txtCustomer.setText("");
-                    } else {
-                        JOptionPane.showMessageDialog(this, "Cho thuê phòng thất bại");
+                        if (resultBill) {
+                            JOptionPane.showMessageDialog(this, "Cho thuê phòng thành công");
+                            roomDAO.updateRoomStatus(roomID, "Đang sử dụng");
+                            ArrayList<Room> roomList = roomDAO.getRoomList();
+                            LoadRoomList(roomList);
+                            txtCustomer.setText("");
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Cho thuê phòng thất bại");
+                        }
                     }
                 }
             }

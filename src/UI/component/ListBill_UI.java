@@ -150,7 +150,7 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
         panelDSDV.setBounds(5, 130, 1235, 530);
         panelDSDV.setOpaque(false);
 
-        String[] colsDV = { "Mã HD", "Tên Nhân Viên", "Tên Hhách Hàng","Mã Phòng","Tiền Phòng","Tiền Dich Vụ","Tổng Tiền" };
+        String[] colsDV = { "Mã HD", "Tên Nhân Viên", "Tên Khách Hàng","Mã Phòng","Tiền Phòng","Tiền Dich Vụ","Tổng Tiền" };
         modelTblHD = new DefaultTableModel(colsDV, 0) ;
         JScrollPane scrollPaneDV;
 
