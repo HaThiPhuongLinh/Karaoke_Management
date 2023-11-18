@@ -627,7 +627,6 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
                         long reservationTimeMillis = earliestReservation.getThoiGianDat().getTime();
                         long timeDifferenceHours = (reservationTimeMillis - currentTimeMillis) / (60 * 60 * 1000);
 
-                        if (timeDifferenceHours > 3) {
                             int choice = JOptionPane.showConfirmDialog(
                                     this,
                                     "Phòng đã có phiếu đặt vào lúc " + sdf.format(earliestReservation.getThoiGianDat()) + ". Bạn có muốn sử dụng ngay không?",
@@ -670,9 +669,6 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
                                     JOptionPane.showMessageDialog(this, "Cho thuê phòng thất bại");
                                 }
                             }
-                        } else {
-                            JOptionPane.showMessageDialog(this, "Không thể đặt phòng vì đã có phiếu đặt vào lúc " + sdf.format(earliestReservation.getThoiGianDat()));
-                        }
                     } else {
                         // Không có phiếu đặt nào, cho phép đặt phòng
                         String customerName = txtCustomer.getText().trim();

@@ -12,9 +12,9 @@ import java.util.List;
  * <p>
  * Ngày tạo: 24/09/2023
  * <p>
- * Lần cập nhật cuối: 15/11/2023
+ * Lần cập nhật cuối: 18/11/2023
  * <p>
- * Nội dung cập nhật: thêm chức năng tìm theo combobox trạng thái phiếu đặt
+ * Nội dung cập nhật: cập nhật chức năng tìm phiếu đang chờ (getReservationsByRoomID)
  */
 public class ReservationFormDAO {
 
@@ -251,7 +251,7 @@ public class ReservationFormDAO {
 
         try {
             con = ConnectDB.getInstance().getConnection();
-            String query = "SELECT * FROM PhieuDatPhong WHERE maPhong = ?;";
+            String query = "SELECT * FROM PhieuDatPhong WHERE maPhong = ? AND trangThai = 2;";
             stmt = con.prepareStatement(query);
             stmt.setString(1, roomID);
 
