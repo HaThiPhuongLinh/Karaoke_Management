@@ -365,16 +365,6 @@ public class DetailOfServiceDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-//        finally {
-//            try {
-//                if (stmt != null) {
-//                    stmt.close();
-//                }
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//        }
-
         return lst;
     }
 }
