@@ -2,8 +2,10 @@ package DAO;
 
 import ConnectDB.ConnectDB;
 import Entity.*;
+import jdk.jshell.execution.LoaderDelegate;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -455,8 +457,14 @@ public class BillDAO {
         return n > 0;
     }
 
-
-    public ArrayList<Bill> getBillByCustomerID(String CustomerID) {
+    /**
+     * Lấy ra hóa đơn dựa trên mã khách hàng và khoảng thời gian
+     * @param customerID: Mã khách hàng
+     * @param fromDate: Ngày bắt đầu
+     * @param toDate: Ngày kết thúc
+     * @return {@code ArrayList<Bill>}: Danh sách hóa đơn
+     */
+    public ArrayList<Bill> getBillByCustomerIDAndDateRange(String customerID, Date fromDate, Date toDate) {
         ArrayList<Bill> lst = new ArrayList<>();
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -464,9 +472,11 @@ public class BillDAO {
 
         try {
             conn = ConnectDB.getInstance().getConnection();
-            String query = "SELECT * FROM HoaDon WHERE maKhachHang like ?";
+            String query = "SELECT * FROM HoaDon WHERE maKhachHang = ? AND ngayGioTra >= ? AND ngayGioTra <= ?";
             stmt = conn.prepareStatement(query);
-            stmt.setString(1, CustomerID);
+            stmt.setString(1, customerID);
+            stmt.setDate(2, (java.sql.Date) fromDate);
+            stmt.setDate(3, (java.sql.Date) toDate);
 
             rs = stmt.executeQuery();
 
@@ -479,21 +489,13 @@ public class BillDAO {
                 int tinhTrang = rs.getInt("tinhTrangHD");
                 String khuyenMai = rs.getString("khuyenMai");
 
-                lst.add(new Bill(maHoaDon, maNhanVien, new Customer(CustomerID),maPhong, ngayGioDat, ngayGioTra, tinhTrang, khuyenMai));
+                lst.add(new Bill(maHoaDon, maNhanVien, new Customer(customerID), maPhong, ngayGioDat, ngayGioTra, tinhTrang, khuyenMai));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-//        finally {
-//            try {
-//                if (stmt != null) {
-//                    stmt.close();
-//                }
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//        }
 
         return lst;
     }
+
 }

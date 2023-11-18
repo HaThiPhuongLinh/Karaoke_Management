@@ -19,6 +19,7 @@ import java.awt.event.*;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -27,15 +28,14 @@ import java.util.HashMap;
 /**
  * Sử dụng để thống kê dịch vụ có doanh thu nhiều nhất
  * <p>
- *     Người tham gia thiết kế: Nguyễn Quang Duy
+ * Người tham gia thiết kế: Nguyễn Quang Duy, Hà Thị Phương Linh
  * </p>
  * ngày tạo: 12/10/2023
  * <p>
- *     Lần cập nhật cuối: 6/11/2023
+ * Lần cập nhật cuối: 18/11/2023
  * </p>
- * Nội dung cập nhật: thêm javadoc
+ * Nội dung cập nhật: cập nhật chức năng hiển thị danh sách hóa đơn chứa dịch vụ theo khoảng thời gian (displayNewPanel)
  */
-
 public class StatisticService_UI extends JPanel implements ActionListener , ItemListener {
     private JComboBox<String> cmbLocTheo;
     private JButton btnLamMoi,btnThongKe;
@@ -195,7 +195,14 @@ public class StatisticService_UI extends JPanel implements ActionListener , Item
                 int selectedRow = tblDichVu.rowAtPoint(e.getPoint());
                 // Kiểm tra nếu chọn dòng hợp lệ
                 if (selectedRow >= 0) {
-                    displayNewPanel(selectedRow);
+                    try {
+                        Date tuNgay = pickerTuNgay.getFullDate();
+                        Date denNgay = pickerDenNgay.addOneDay();
+
+                        displayNewPanel(selectedRow, cmbLocTheo.getSelectedItem().toString(), tuNgay, denNgay);
+                    } catch (ParseException ex) {
+                        ex.printStackTrace();
+                    }
                 }
             }
         });
@@ -379,17 +386,20 @@ public class StatisticService_UI extends JPanel implements ActionListener , Item
         }
     }
 
-    private void displayNewPanel(int selectedRow) {
-        // Tạo panel mới
+    /**
+     * Hiển thị panel mới (chứa hóa đơn của dòng được click)
+     * @param selectedRow: dòng được chọn
+     * @param selectedOption: giá trị được chọn trong combobox
+     * @param fromDate: ngày bắt đầu
+     * @param toDate: ngày kết thúc
+     */
+    private void displayNewPanel(int selectedRow, String selectedOption, Date fromDate, Date toDate) {
         JPanel panel = new JPanel();
         panel.setPreferredSize(new Dimension(1300, 500));
         panel.setLayout(null);
         panel.setBorder(new TitledBorder(
                 new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DANH SÁCH HÓA ĐƠN",
                 TitledBorder.LEADING, TitledBorder.TOP));
-//        panel.setBounds(12, 10, 300, 50);
-        // Tùy chỉnh panel theo nhu cầu của bạn
-        // Ví dụ: Thêm các thành phần và đặt thuộc tính
 
         String[] colsDV = { "STT","Mã HĐ" ,"Mã DV", "Tên DV","Ngày lập","Số lượng","Giá dịch vụ" ,"Tổng tiền"};
         DefaultTableModel modelTblDichVu1 = new DefaultTableModel(colsDV, 0) ;
@@ -419,7 +429,27 @@ public class StatisticService_UI extends JPanel implements ActionListener , Item
         String madv = modelTblDichVu.getValueAt(selectedRow,1)+"";
 
         ArrayList<Bill> listBill = billDAO.getAllBill();
-        ArrayList<DetailsOfService> listDetail = detailOfServiceDAO.getBillByServiceID(madv);
+
+        ArrayList<DetailsOfService> listDetail;
+        if ("7 ngày".equals(selectedOption)) {
+            listDetail = detailOfServiceDAO.getBillByServiceIDAndDateRange(madv,
+                    Date.from(fromDate.toInstant().minus(7, ChronoUnit.DAYS)), toDate);
+        } else if ("1 tháng".equals(selectedOption)) {
+            listDetail = detailOfServiceDAO.getBillByServiceIDAndDateRange(madv,
+                    Date.from(fromDate.toInstant().minus(1, ChronoUnit.MONTHS)), toDate);
+        } else if ("3 tháng".equals(selectedOption)) {
+            listDetail = detailOfServiceDAO.getBillByServiceIDAndDateRange(madv,
+                    Date.from(fromDate.toInstant().minus(3, ChronoUnit.MONTHS)), toDate);
+        } else if ("6 tháng".equals(selectedOption)) {
+            listDetail = detailOfServiceDAO.getBillByServiceIDAndDateRange(madv,
+                    Date.from(fromDate.toInstant().minus(6, ChronoUnit.MONTHS)), toDate);
+        } else if ("1 năm".equals(selectedOption)) {
+            listDetail = detailOfServiceDAO.getBillByServiceIDAndDateRange(madv,
+                    Date.from(fromDate.toInstant().minus(1, ChronoUnit.YEARS)), toDate);
+        } else {
+            listDetail = detailOfServiceDAO.getBillByServiceIDAndDateRange(madv, fromDate, toDate);
+        }
+
         System.out.printf(listDetail.size()+"");
 
         int i=1;
@@ -444,6 +474,7 @@ public class StatisticService_UI extends JPanel implements ActionListener , Item
             }
             gia+=details.getSoLuong()*details.getGiaBan();
             modelTblDichVu1.addRow(new Object[]{i,details.getMaHoaDon().getMaHoaDon(),details.getMaDichVu().getMaDichVu(),details.getMaDichVu().getTenDichVu(),ngayThangDinhDang,details.getSoLuong(),df.format(details.getGiaBan()),df.format(details.getSoLuong()*details.getGiaBan())});
+            modelTblDichVu1.addRow(new Object[]{});
             i++;
         }
         modelTblDichVu1.addRow(new Object[]{"","","","","","","Tổng tiền:",df.format(gia)});

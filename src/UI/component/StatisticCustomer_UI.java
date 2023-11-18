@@ -18,6 +18,9 @@ import java.awt.event.*;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -26,15 +29,14 @@ import java.util.HashMap;
 /**
  * Sử dụng để thống kê khách hàng
  * <p>
- * Người tham gia thiết kế: Nguyễn Quang Duy
+ * Người tham gia thiết kế: Nguyễn Quang Duy, Hà Thị Phương Linh
  * </p>
  * ngày tạo: 12/10/2023
  * <p>
- * Lần cập nhật cuối: 13/11/2023
+ * Lần cập nhật cuối: 18/11/2023
  * </p>
- * Nội dung cập nhật: cập nhật cách tính tổng tiền (tt= tt - ((tt+vat))*15%))
+ * Nội dung cập nhật: cập nhật chức năng hiển thị danh sách hóa đơn của khách hàng theo khoảng thời gian (displayNewPanel)
  */
-
 public class StatisticCustomer_UI extends JPanel implements ActionListener, ItemListener {
     private JComboBox<String> cmbLocTheo;
     private JTable tblDichVu;
@@ -190,18 +192,6 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
 
         cmbLocTheo.addItemListener(this);
 
-
-//        tblDichVu.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-//            @Override
-//            public void valueChanged(ListSelectionEvent e) {
-//                // Xử lý sự kiện khi dòng đang được chọn thay đổi
-//                if (!e.getValueIsAdjusting()) {
-//                    int selectedRow = tblDichVu.getSelectedRow();
-//                    // Hiển thị panel mới dựa trên dòng đã chọn
-//                    displayNewPanel(selectedRow);
-//                }
-//            }
-//        });
         tblDichVu.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -209,10 +199,18 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
                 int selectedRow = tblDichVu.rowAtPoint(e.getPoint());
                 // Kiểm tra nếu chọn dòng hợp lệ
                 if (selectedRow >= 0) {
-                    displayNewPanel(selectedRow);
+                    try {
+                        Date tuNgay = pickerTuNgay.getFullDate();
+                        Date denNgay = pickerDenNgay.addOneDay();
+
+                        displayNewPanel(selectedRow, cmbLocTheo.getSelectedItem().toString(), tuNgay, denNgay);
+                    } catch (ParseException ex) {
+                        ex.printStackTrace();
+                    }
                 }
             }
         });
+
     }
     /**
      * Gán thời gian hiện tại cho label lblTime
@@ -410,17 +408,20 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
         }
     }
 
-    private void displayNewPanel(int selectedRow) {
-        // Tạo panel mới
+    /**
+     * Hiển thị panel mới (chứa hóa đơn của dòng được click)
+     * @param selectedRow: dòng được chọn
+     * @param selectedOption: giá trị được chọn trong combobox
+     * @param fromDate: ngày bắt đầu
+     * @param toDate: ngày kết thúc
+     */
+    private void displayNewPanel(int selectedRow, String selectedOption, Date fromDate, Date toDate) {
         JPanel panel = new JPanel();
         panel.setPreferredSize(new Dimension(1300, 500));
         panel.setLayout(null);
         panel.setBorder(new TitledBorder(
                 new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DANH SÁCH HÓA ĐƠN",
                 TitledBorder.LEADING, TitledBorder.TOP));
-//        panel.setBounds(12, 10, 300, 50);
-        // Tùy chỉnh panel theo nhu cầu của bạn
-        // Ví dụ: Thêm các thành phần và đặt thuộc tính
 
         String[] colsDV = { "STT","Mã HĐ" ,"Mã KH/Mã DV", "Tên KH/Tên DV","Ngày lập","Giờ vào","Giờ ra","Số giờ/Số lượng","Giá phòng(Giờ)/Giá dịch vụ" ,"Tổng tiền"};
         DefaultTableModel modelTblDichVu1 = new DefaultTableModel(colsDV, 0) ;
@@ -447,18 +448,30 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
 
         panel.add(scrKhachHang = new JScrollPane(tblDichVu1,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
                 BorderLayout.CENTER);
-        scrKhachHang.setBounds(10,20,1280,480);
-//        scrKhachHang.setOpaque(false);
-//        scrKhachHang.getViewport().setOpaque(false);
-//        scrKhachHang.getViewport().setBackground(Color.WHITE);
-//        pnlThongTinThongKe.add(panel);
-
-//        JLabel label = new JLabel("Dòng đã chọn: " + selectedRow);
-//        panel.add(label);
+        scrKhachHang.setBounds(10,20,1280,470);
 
         String makh = modelTblDichVu.getValueAt(selectedRow,1)+"";
 
-        ArrayList<Bill> listBill = billDAO.getBillByCustomerID(makh);
+        ArrayList<Bill> listBill;
+        if ("7 ngày".equals(selectedOption)) {
+            listBill = billDAO.getBillByCustomerIDAndDateRange(makh,
+                    Date.from(fromDate.toInstant().minus(7, ChronoUnit.DAYS)), toDate);
+        } else if ("1 tháng".equals(selectedOption)) {
+            listBill = billDAO.getBillByCustomerIDAndDateRange(makh,
+                    Date.from(fromDate.toInstant().minus(1, ChronoUnit.MONTHS)), toDate);
+        } else if ("3 tháng".equals(selectedOption)) {
+            listBill = billDAO.getBillByCustomerIDAndDateRange(makh,
+                    Date.from(fromDate.toInstant().minus(3, ChronoUnit.MONTHS)), toDate);
+        } else if ("6 tháng".equals(selectedOption)) {
+            listBill = billDAO.getBillByCustomerIDAndDateRange(makh,
+                    Date.from(fromDate.toInstant().minus(6, ChronoUnit.MONTHS)), toDate);
+        } else if ("1 năm".equals(selectedOption)) {
+            listBill = billDAO.getBillByCustomerIDAndDateRange(makh,
+                    Date.from(fromDate.toInstant().minus(1, ChronoUnit.YEARS)), toDate);
+        } else {
+            listBill = billDAO.getBillByCustomerIDAndDateRange(makh, fromDate, toDate);
+        }
+
         System.out.printf(listBill.size()+"");
 
         int i=1;
@@ -478,7 +491,7 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
 
             SimpleDateFormat sdfOutput2 = new SimpleDateFormat("HH:mm:ss");
             String gioPhutGiayTra = sdfOutput2.format(date);
-//==============================
+            //==============================
             String gioDat = String.valueOf(bill.getNgayGioDat());
             SimpleDateFormat sdfInput1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
             Date date1 = null;
@@ -506,6 +519,7 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
                 quantity += quantity*8/100;
             }
             modelTblDichVu1.addRow(new Object[]{"","","","","","","","","Tổng tiền (VAT 8%):",df.format(quantity)});
+            modelTblDichVu1.addRow(new Object[]{});
 
             i++;
         }

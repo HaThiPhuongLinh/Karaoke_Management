@@ -14,9 +14,9 @@ import java.util.Date;
  * <p>
  * Ngày tạo: 07/10/2023
  * <p>
- * Lần cập nhật cuối: 7/11/2023
+ * Lần cập nhật cuối: 18/11/2023
  * <p>
- * Nội dung cập nhật: thêm javadoc
+ * Nội dung cập nhật: thêm hàm getBillByServiceIDAndDateRange
  */
 public class DetailOfServiceDAO {
     private static DetailOfServiceDAO instance = new DetailOfServiceDAO();
@@ -335,8 +335,15 @@ public class DetailOfServiceDAO {
         return false;
     }
 
-
-    public ArrayList<DetailsOfService> getBillByServiceID(String ServiceID) {
+    /**
+     * Lấy danh sách các đối tượng DetailsOfService cho một ID dịch vụ cụ thể trong khoảng thời gian xác định.
+     *
+     * @param serviceID ID của dịch vụ.
+     * @param fromDate  Ngày bắt đầu của khoảng thời gian.
+     * @param toDate    Ngày kết thúc của khoảng thời gian.
+     * @return ArrayList chứa các đối tượng DetailsOfService.
+     */
+    public ArrayList<DetailsOfService> getBillByServiceIDAndDateRange(String serviceID, Date fromDate, Date toDate) {
         ArrayList<DetailsOfService> lst = new ArrayList<>();
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -344,9 +351,13 @@ public class DetailOfServiceDAO {
 
         try {
             conn = ConnectDB.getInstance().getConnection();
-            String query = "SELECT * FROM ChiTietDichVu WHERE maDichVu like ?";
+            String query = "SELECT * FROM ChiTietDichVu ct " +
+                    "JOIN HoaDon hd ON ct.maHoaDon = hd.maHoaDon " +
+                    "WHERE ct.maDichVu LIKE ? AND hd.ngayGioTra >= ? AND hd.ngayGioTra <= ?";
             stmt = conn.prepareStatement(query);
-            stmt.setString(1, ServiceID);
+            stmt.setString(1, serviceID);
+            stmt.setDate(2, new java.sql.Date(fromDate.getTime()));
+            stmt.setDate(3, new java.sql.Date(toDate.getTime()));
 
             rs = stmt.executeQuery();
 
@@ -367,4 +378,5 @@ public class DetailOfServiceDAO {
         }
         return lst;
     }
+
 }
