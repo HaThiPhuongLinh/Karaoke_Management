@@ -455,4 +455,45 @@ public class BillDAO {
         return n > 0;
     }
 
+
+    public ArrayList<Bill> getBillByCustomerID(String CustomerID) {
+        ArrayList<Bill> lst = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = ConnectDB.getInstance().getConnection();
+            String query = "SELECT * FROM HoaDon WHERE maKhachHang like ?";
+            stmt = conn.prepareStatement(query);
+            stmt.setString(1, CustomerID);
+
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                String maHoaDon = rs.getString("maHoaDon");
+                Staff maNhanVien = new Staff(rs.getString("maNhanVien"));
+                Room maPhong = new Room(rs.getString("maPhong"));
+                Timestamp ngayGioDat = rs.getTimestamp("ngayGioDat");
+                Timestamp ngayGioTra = rs.getTimestamp("ngayGioTra");
+                int tinhTrang = rs.getInt("tinhTrangHD");
+                String khuyenMai = rs.getString("khuyenMai");
+
+                lst.add(new Bill(maHoaDon, maNhanVien, new Customer(CustomerID),maPhong, ngayGioDat, ngayGioTra, tinhTrang, khuyenMai));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+//        finally {
+//            try {
+//                if (stmt != null) {
+//                    stmt.close();
+//                }
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//        }
+
+        return lst;
+    }
 }

@@ -12,11 +12,9 @@ import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.event.*;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -191,6 +189,30 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
         btnLamMoi.addActionListener(this);
 
         cmbLocTheo.addItemListener(this);
+
+
+//        tblDichVu.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+//            @Override
+//            public void valueChanged(ListSelectionEvent e) {
+//                // Xử lý sự kiện khi dòng đang được chọn thay đổi
+//                if (!e.getValueIsAdjusting()) {
+//                    int selectedRow = tblDichVu.getSelectedRow();
+//                    // Hiển thị panel mới dựa trên dòng đã chọn
+//                    displayNewPanel(selectedRow);
+//                }
+//            }
+//        });
+        tblDichVu.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // Xử lý sự kiện khi click chuột trên dòng
+                int selectedRow = tblDichVu.rowAtPoint(e.getPoint());
+                // Kiểm tra nếu chọn dòng hợp lệ
+                if (selectedRow >= 0) {
+                    displayNewPanel(selectedRow);
+                }
+            }
+        });
     }
     /**
      * Gán thời gian hiện tại cho label lblTime
@@ -386,5 +408,114 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
                     break;
             }
         }
+    }
+
+    private void displayNewPanel(int selectedRow) {
+        // Tạo panel mới
+        JPanel panel = new JPanel();
+        panel.setPreferredSize(new Dimension(1300, 500));
+        panel.setLayout(null);
+        panel.setBorder(new TitledBorder(
+                new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DANH SÁCH HÓA ĐƠN",
+                TitledBorder.LEADING, TitledBorder.TOP));
+//        panel.setBounds(12, 10, 300, 50);
+        // Tùy chỉnh panel theo nhu cầu của bạn
+        // Ví dụ: Thêm các thành phần và đặt thuộc tính
+
+        String[] colsDV = { "STT","Mã HĐ" ,"Mã KH/Mã DV", "Tên KH/Tên DV","Ngày lập","Giờ vào","Giờ ra","Số giờ/Số lượng","Giá phòng(Giờ)/Giá dịch vụ" ,"Tổng tiền"};
+        DefaultTableModel modelTblDichVu1 = new DefaultTableModel(colsDV, 0) ;
+        JScrollPane scrKhachHang;
+
+        JTable tblDichVu1 = new JTable(modelTblDichVu1);
+        tblDichVu1.setFont(new Font("Arial", Font.BOLD, 14));
+        tblDichVu1.setBackground(new Color(255, 255, 255, 0));
+        tblDichVu1.setForeground(new Color(255, 255, 255));
+        tblDichVu1.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
+        tblDichVu1.getTableHeader().setForeground(Color.BLUE);
+        Custom.getInstance().setCustomTable(tblDichVu1);
+
+        tblDichVu1.getColumnModel().getColumn(0).setPreferredWidth(10);
+        tblDichVu1.getColumnModel().getColumn(1).setPreferredWidth(30);
+        tblDichVu1.getColumnModel().getColumn(2).setPreferredWidth(30);
+        tblDichVu1.getColumnModel().getColumn(3).setPreferredWidth(100);
+        tblDichVu1.getColumnModel().getColumn(4).setPreferredWidth(30);
+        tblDichVu1.getColumnModel().getColumn(5).setPreferredWidth(10);
+        tblDichVu1.getColumnModel().getColumn(6).setPreferredWidth(10);
+        tblDichVu1.getColumnModel().getColumn(7).setPreferredWidth(50);
+        tblDichVu1.getColumnModel().getColumn(8).setPreferredWidth(150);
+        tblDichVu1.getColumnModel().getColumn(9).setPreferredWidth(40);
+
+        panel.add(scrKhachHang = new JScrollPane(tblDichVu1,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
+                BorderLayout.CENTER);
+        scrKhachHang.setBounds(10,20,1280,480);
+//        scrKhachHang.setOpaque(false);
+//        scrKhachHang.getViewport().setOpaque(false);
+//        scrKhachHang.getViewport().setBackground(Color.WHITE);
+//        pnlThongTinThongKe.add(panel);
+
+//        JLabel label = new JLabel("Dòng đã chọn: " + selectedRow);
+//        panel.add(label);
+
+        String makh = modelTblDichVu.getValueAt(selectedRow,1)+"";
+
+        ArrayList<Bill> listBill = billDAO.getBillByCustomerID(makh);
+        System.out.printf(listBill.size()+"");
+
+        int i=1;
+        for (Bill bill: listBill){
+            String ngayThang = String.valueOf(bill.getNgayGioTra());
+            SimpleDateFormat sdfInput = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+            Date date = null;
+            try {
+                date = sdfInput.parse(ngayThang);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            // Định dạng lại đối tượng Date thành chuỗi mới
+            SimpleDateFormat sdfOutput = new SimpleDateFormat("dd-MM-yyyy");
+            String ngayThangDinhDang = sdfOutput.format(date);
+
+            SimpleDateFormat sdfOutput2 = new SimpleDateFormat("HH:mm:ss");
+            String gioPhutGiayTra = sdfOutput2.format(date);
+//==============================
+            String gioDat = String.valueOf(bill.getNgayGioDat());
+            SimpleDateFormat sdfInput1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+            Date date1 = null;
+            try {
+                date1 = sdfInput1.parse(gioDat);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            SimpleDateFormat sdfOutput1 = new SimpleDateFormat("HH:mm:ss");
+            String gioPhutGiayDat = sdfOutput1.format(date1);
+
+            modelTblDichVu1.addRow(new Object[]{i,bill.getMaHoaDon(),bill.getMaKH().getMaKhachHang(),bill.getMaKH().getTenKhachHang(),ngayThangDinhDang,gioPhutGiayDat,gioPhutGiayTra,bill.tinhGioThue(),df.format(bill.getMaPhong().getGiaPhong()),df.format(bill.tinhTienPhong())});
+            ArrayList<DetailsOfService> details = detailOfServiceDAO.getDetailsOfServiceForBill(bill.getMaHoaDon());
+            double gia=0;
+            for (DetailsOfService detailsOfService:details){
+                modelTblDichVu1.addRow(new Object[]{"","",detailsOfService.getMaDichVu().getMaDichVu(),detailsOfService.getMaDichVu().getTenDichVu(),ngayThangDinhDang,gioPhutGiayDat,gioPhutGiayTra,detailsOfService.getSoLuong(),df.format(detailsOfService.getGiaBan()),df.format((detailsOfService.getGiaBan()*detailsOfService.getSoLuong()))});
+                gia += detailsOfService.getGiaBan()*detailsOfService.getSoLuong();
+            }
+            double quantity = bill.getMaPhong().getGiaPhong() * bill.tinhGioThue() + gia;
+            if (bill.getKhuyenMai().trim().equalsIgnoreCase("KM")){
+                double totalBillWithVAT = quantity * 1.08; // Tính tổng bill kèm VAT
+                quantity = totalBillWithVAT - (totalBillWithVAT * 0.15);
+            }else{
+                quantity += quantity*8/100;
+            }
+            modelTblDichVu1.addRow(new Object[]{"","","","","","","","","Tổng tiền (VAT 8%):",df.format(quantity)});
+
+            i++;
+        }
+
+        // Hiển thị panel mới
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.getContentPane().add(panel);
+        frame.pack();
+        frame.setVisible(true);
+        frame.setLocationRelativeTo(null);
     }
 }
