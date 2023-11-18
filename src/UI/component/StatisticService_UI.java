@@ -1,7 +1,9 @@
 package UI.component;
 
+import DAO.BillDAO;
 import DAO.DetailOfServiceDAO;
 import DAO.ServiceDAO;
+import Entity.Bill;
 import Entity.DetailsOfService;
 import Entity.Service;
 import Entity.Staff;
@@ -13,10 +15,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.event.*;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -46,6 +45,7 @@ public class StatisticService_UI extends JPanel implements ActionListener , Item
     private JLabel lblBackGround, lblTime;
     private DetailOfServiceDAO detailOfServiceDAO;
     private ServiceDAO serviceDAO;
+    private BillDAO billDAO;
     private DecimalFormat df = new DecimalFormat("#,###.## VND");
     public static Staff staffLogin = null;
 
@@ -56,6 +56,7 @@ public class StatisticService_UI extends JPanel implements ActionListener , Item
 
         detailOfServiceDAO = new DetailOfServiceDAO();
         serviceDAO = new ServiceDAO();
+        billDAO = new BillDAO();
 
         //phan viet code
         JLabel lblThongKeDichVu = new JLabel("THỐNG KÊ DỊCH VỤ");
@@ -186,6 +187,18 @@ public class StatisticService_UI extends JPanel implements ActionListener , Item
         btnLamMoi.addActionListener(this);
 
         cmbLocTheo.addItemListener(this);
+
+        tblDichVu.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // Xử lý sự kiện khi click chuột trên dòng
+                int selectedRow = tblDichVu.rowAtPoint(e.getPoint());
+                // Kiểm tra nếu chọn dòng hợp lệ
+                if (selectedRow >= 0) {
+                    displayNewPanel(selectedRow);
+                }
+            }
+        });
     }
     /**
      * Gán thời gian hiện tại cho label lblTime
@@ -364,5 +377,83 @@ public class StatisticService_UI extends JPanel implements ActionListener , Item
                     break;
             }
         }
+    }
+
+    private void displayNewPanel(int selectedRow) {
+        // Tạo panel mới
+        JPanel panel = new JPanel();
+        panel.setPreferredSize(new Dimension(1300, 500));
+        panel.setLayout(null);
+        panel.setBorder(new TitledBorder(
+                new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DANH SÁCH HÓA ĐƠN",
+                TitledBorder.LEADING, TitledBorder.TOP));
+//        panel.setBounds(12, 10, 300, 50);
+        // Tùy chỉnh panel theo nhu cầu của bạn
+        // Ví dụ: Thêm các thành phần và đặt thuộc tính
+
+        String[] colsDV = { "STT","Mã HĐ" ,"Mã DV", "Tên DV","Ngày lập","Số lượng","Giá dịch vụ" ,"Tổng tiền"};
+        DefaultTableModel modelTblDichVu1 = new DefaultTableModel(colsDV, 0) ;
+        JScrollPane scrKhachHang;
+
+        JTable tblDichVu1 = new JTable(modelTblDichVu1);
+        tblDichVu1.setFont(new Font("Arial", Font.BOLD, 14));
+        tblDichVu1.setBackground(new Color(255, 255, 255, 0));
+        tblDichVu1.setForeground(new Color(255, 255, 255));
+        tblDichVu1.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
+        tblDichVu1.getTableHeader().setForeground(Color.BLUE);
+        Custom.getInstance().setCustomTable(tblDichVu1);
+
+        tblDichVu1.getColumnModel().getColumn(0).setPreferredWidth(10);
+        tblDichVu1.getColumnModel().getColumn(1).setPreferredWidth(30);
+        tblDichVu1.getColumnModel().getColumn(2).setPreferredWidth(30);
+        tblDichVu1.getColumnModel().getColumn(3).setPreferredWidth(100);
+        tblDichVu1.getColumnModel().getColumn(4).setPreferredWidth(30);
+        tblDichVu1.getColumnModel().getColumn(5).setPreferredWidth(10);
+        tblDichVu1.getColumnModel().getColumn(6).setPreferredWidth(100);
+        tblDichVu1.getColumnModel().getColumn(7).setPreferredWidth(100);
+
+        panel.add(scrKhachHang = new JScrollPane(tblDichVu1,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
+                BorderLayout.CENTER);
+        scrKhachHang.setBounds(10,20,1280,480);
+
+        String madv = modelTblDichVu.getValueAt(selectedRow,1)+"";
+
+        ArrayList<Bill> listBill = billDAO.getAllBill();
+        ArrayList<DetailsOfService> listDetail = detailOfServiceDAO.getBillByServiceID(madv);
+        System.out.printf(listDetail.size()+"");
+
+        int i=1;
+        double gia=0;
+        for (DetailsOfService details: listDetail){
+            String ngayThangDinhDang="";
+            for (Bill bill:listBill){
+                if (details.getMaHoaDon().getMaHoaDon().trim().equalsIgnoreCase(bill.getMaHoaDon())){
+                    String ngayThang = String.valueOf(bill.getNgayGioTra());
+                    SimpleDateFormat sdfInput = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+                    Date date = null;
+                    try {
+                        date = sdfInput.parse(ngayThang);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                    // Định dạng lại đối tượng Date thành chuỗi mới
+                    SimpleDateFormat sdfOutput = new SimpleDateFormat("dd-MM-yyyy");
+                    ngayThangDinhDang = sdfOutput.format(date);
+                }
+            }
+            gia+=details.getSoLuong()*details.getGiaBan();
+            modelTblDichVu1.addRow(new Object[]{i,details.getMaHoaDon().getMaHoaDon(),details.getMaDichVu().getMaDichVu(),details.getMaDichVu().getTenDichVu(),ngayThangDinhDang,details.getSoLuong(),df.format(details.getGiaBan()),df.format(details.getSoLuong()*details.getGiaBan())});
+            i++;
+        }
+        modelTblDichVu1.addRow(new Object[]{"","","","","","","Tổng tiền:",df.format(gia)});
+
+        // Hiển thị panel mới
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.getContentPane().add(panel);
+        frame.pack();
+        frame.setVisible(true);
+        frame.setLocationRelativeTo(null);
     }
 }
