@@ -1,9 +1,7 @@
 package DAO;
 
 import ConnectDB.ConnectDB;
-import Entity.Bill;
-import Entity.DetailsOfService;
-import Entity.Service;
+import Entity.*;
 
 import java.sql.*;
 //import java.sql.Date;
@@ -337,4 +335,46 @@ public class DetailOfServiceDAO {
         return false;
     }
 
+
+    public ArrayList<DetailsOfService> getBillByServiceID(String ServiceID) {
+        ArrayList<DetailsOfService> lst = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = ConnectDB.getInstance().getConnection();
+            String query = "SELECT * FROM ChiTietDichVu WHERE maDichVu like ?";
+            stmt = conn.prepareStatement(query);
+            stmt.setString(1, ServiceID);
+
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                String maHoaDon = rs.getString("maHoaDon");
+                String maDichVu = rs.getString("maDichVu");
+                int soLuong = rs.getInt("soLuong");
+                double donGia = rs.getDouble("giaBan");
+
+                Bill bill = new Bill(maHoaDon);
+                Service service = new Service(maDichVu);
+                DetailsOfService dos = new DetailsOfService(bill, service, soLuong, donGia);
+
+                lst.add(dos);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+//        finally {
+//            try {
+//                if (stmt != null) {
+//                    stmt.close();
+//                }
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//        }
+
+        return lst;
+    }
 }
