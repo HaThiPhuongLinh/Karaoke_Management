@@ -224,6 +224,46 @@ public class BillDAO {
 
         return bill;
     }
+    public Bill getBillByBillID(String billID) {
+        Bill bill = null;
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = ConnectDB.getInstance().getConnection();
+            String query = "SELECT * FROM HoaDon WHERE maHoaDon = ? ";
+            stmt = conn.prepareStatement(query);
+            stmt.setString(1, billID);
+
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+
+                Staff maNhanVien = new Staff(rs.getString("maNhanVien"));
+                Customer maKhachHang = new Customer(rs.getString("maKhachHang"));
+                Room maPhong = new Room(rs.getString("maPhong"));
+                Timestamp ngayGioDat = rs.getTimestamp("ngayGioDat");
+                Timestamp ngayGioTra = rs.getTimestamp("ngayGioTra");
+                int tinhTrang = rs.getInt("tinhTrangHD");
+                String khuyenMai = rs.getString("khuyenMai");
+
+                bill = new Bill(billID, maNhanVien, maKhachHang, maPhong, ngayGioDat, ngayGioTra, tinhTrang, khuyenMai);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return bill;
+    }
 
     /**
      * Lấy hóa đơn dựa trên tên khách hàng

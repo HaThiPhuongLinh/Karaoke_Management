@@ -2,11 +2,13 @@ package UI.component;
 
 import ConnectDB.ConnectDB;
 import DAO.*;
+import Entity.Room;
 import Entity.Staff;
 import Entity.Bill;
 import Entity.DetailsOfService;
 import UI.CustomUI.Custom;
 import UI.component.Dialog.DatePicker;
+import UI.component.Dialog.InfoBill;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -14,6 +16,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -40,6 +43,8 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
     private BillDAO billDAO;
     private DetailOfServiceDAO serviceDetailDAO = DetailOfServiceDAO.getInstance();
     private Bill bills = new Bill();
+    private RoomDAO roomDAO;
+    private  DetailOfServiceDAO ctdv_dao;
 
     private DecimalFormat df = new DecimalFormat("#,###.## VND");
     public ListBill_UI(Staff staff) {
@@ -50,6 +55,9 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
         java.util.List<DetailsOfService> serviceOrders = new ArrayList<>();
         serviceOrders = serviceDetailDAO.getDetailsOfServiceForBill(bills.getMaHoaDon());
         bills.setLstDetails(serviceOrders);
+        roomDAO =new RoomDAO();
+        ctdv_dao = new DetailOfServiceDAO();
+
         //phan viet code
         JLabel headerLabel = new JLabel("THỐNG KÊ HOÁ ĐƠN");
         headerLabel.setBounds(570, 10, 1175, 40);
@@ -181,6 +189,7 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
 
         cmbLocTheo.addItemListener(this);
         loadHD();
+        tblHD.addMouseListener(this);
 
         //phan viet code
         try {
@@ -410,8 +419,37 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        Object o = e.getSource();
+        if(o.equals(tblHD)) {
+            int row = tblHD.getSelectedRow();
+            System.out.println("Đã nhấp chuột");
+            if (row != -1) {
+                String maHoaDon = modelTblHD.getValueAt(row, 0).toString();
+                System.out.println("MaHoaDon được chọn: " + maHoaDon);
+                Bill bill = billDAO.getBillByBillID(maHoaDon);
+                String maPhong = modelTblHD.getValueAt(row, 3).toString();
+//                Room room = roomDAO.getRoomByRoomId(maPhong);
+//                if (room == null)
+//                    room = new Room();
+//                bill.setMaPhong(room);
+                String billId = bill.getMaHoaDon();
+                ArrayList<DetailsOfService> billInfoList = ctdv_dao.getDetailsOfServiceForBill(billId);
+                bill.setLstDetails(billInfoList);
+                long millis = System.currentTimeMillis();
+               Timestamp ngayTra =bill.getNgayGioTra();
+                bill.setNgayGioTra(ngayTra);
+                Double totalPriceBill = bill.getTongTienHD();
 
-    }
+                InfoBill winPayment = new InfoBill(bill);
+                winPayment.setModal(true);
+                winPayment.setVisible(true);
+                System.out.println("Dialog InfoBill được hiển thị");
+            }
+        }
+
+        }
+
+
 
     @Override
     public void mousePressed(MouseEvent e) {
