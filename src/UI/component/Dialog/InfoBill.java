@@ -24,7 +24,7 @@ import java.util.List;
 
 /**
  * Thiết kế giao diện hóa đơn tính tiền
- * Người tham gia thiết kế: Nguyễn Đình Dương, Hà Thị Phương Linh
+ * Người tham gia thiết kế: Nguyễn Đình Dương
  * Ngày tạo: 29/10/2023
  * Lần cập nhật cuối: 06/11/2023
  * Nội dung cập nhật: cập nhật khi click thanh toán thì hiển thị file pdf

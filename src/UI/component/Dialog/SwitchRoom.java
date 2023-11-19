@@ -41,8 +41,8 @@ public class SwitchRoom extends JFrame implements ActionListener {
     private ReservationFormDAO reservationFormDAO = new ReservationFormDAO();
     private DecimalFormat df = new DecimalFormat("#,###.##");
     private KaraokeBooking_UI main;
-    private String roomIdOld = ""; // Giá trị ban đầu của lblRoomID2
-    private String roomIdNew = ""; // Giá trị ban đầu của lblRoomID2
+    private String roomIdOld = "";
+    private String roomIdNew = "";
 
     public SwitchRoom() {
         setSize(740, 460);

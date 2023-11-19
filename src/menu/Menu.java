@@ -2,8 +2,6 @@ package menu;
 
 import Entity.Account;
 import Entity.Staff;
-import UI.LoginUI;
-import UI.component.Dialog.Main;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import menu.mode.LightDarkMode;
 

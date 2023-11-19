@@ -22,25 +22,25 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+
 /**
  * Giao diện dùng để quản lý khách hàng
- * Người thiết kế Nguyễn Đình Dương
+ * Người thiết kế: Nguyễn Đình Dương
  * Ngày tạo:9/10/2023
  * Lần cập nhật cuối : 15/11/2023
  * Nội dung cập nhật : cập nhật regex cho CCCD của khách hàng
  */
 public class Customer_UI extends JPanel implements ActionListener, MouseListener {
+    public static Staff staffLogin = null;
     private JTable tblKH;
     private DefaultTableModel modelTableKH;
     private JLabel lblBackground, lblTime, lblMaKH, lblTenKH, lblGioitinhKH, lblSdtKH, lblNgaySinh, lblCmnd;
     private JTextField txtMaKH, txtTenKH, txtSDTKH, txtCMNDKH, txtHienThiLoi;
-    private JComboBox cboGioiTinh;
+    private JComboBox cmbGioiTinh;
     private JPanel timeNow, pnlCusList, pnlCusControl;
     private DatePicker dpNgaySinh;
-    private JButton btnThem,  btnSua, btnLamMoi;
+    private JButton btnThem, btnSua, btnLamMoi;
     private CustomerDAO CustomerDAO;
-
-    public static Staff staffLogin = null;
 
     public Customer_UI(Staff staff) {
         this.staffLogin = staff;
@@ -140,12 +140,12 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
         lblGioitinhKH.setForeground(Color.WHITE);
         pnlCusControl.add(lblGioitinhKH);
 
-        cboGioiTinh = new JComboBox<String>();
-        cboGioiTinh.addItem("Nam");
-        cboGioiTinh.addItem("Nữ");
-        cboGioiTinh.setBounds(815, 120, 165, 30);
-        Custom.setCustomComboBox(cboGioiTinh);
-        pnlCusControl.add(cboGioiTinh);
+        cmbGioiTinh = new JComboBox<String>();
+        cmbGioiTinh.addItem("Nam");
+        cmbGioiTinh.addItem("Nữ");
+        cmbGioiTinh.setBounds(815, 120, 165, 30);
+        Custom.setCustomComboBox(cmbGioiTinh);
+        pnlCusControl.add(cmbGioiTinh);
 
         lblCmnd = new JLabel("CCCD: ");
         lblCmnd.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -230,8 +230,10 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
         String time = sdf.format(new Date());
         lblTime.setText(time);
     }
+
     /**
      * hàm sử dụng định dạng "HH:mm:ss" để biểu diễn thời gian (giờ, phút và giây) của đối tượng date
+     *
      * @param date : ngày cần định dạng
      * @return {@code String}: ngày cần định dạng
      */
@@ -261,7 +263,8 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
 
     /**
      * Hiển thị lỗi
-     * @param txt: Nơi hiển thị
+     *
+     * @param txt:        Nơi hiển thị
      * @param message:Lỗi cần hiển thị
      */
     private void showMessage(JTextField txt, String message) {
@@ -271,6 +274,7 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
 
     /**
      * ReGex dữ liệu được nhập vào
+     *
      * @return {@code boolean} :True or False
      */
     private boolean validData() {
@@ -341,7 +345,7 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
                 }
                 String tenKH = txtTenKH.getText().trim();
                 String sdt = txtSDTKH.getText().trim();
-                String gioiTinh = cboGioiTinh.getSelectedItem().toString();
+                String gioiTinh = cmbGioiTinh.getSelectedItem().toString();
                 boolean gt = true;
                 String cccd = txtCMNDKH.getText().trim();
                 if (gioiTinh == "Nam") {
@@ -372,7 +376,6 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
                     JOptionPane.showMessageDialog(this, "Thêm khách hàng thất bại");
                 }
             }
-
         } else if (o.equals(btnSua)) {
             if (txtTenKH.getText().equals("") || txtSDTKH.getText().equals("")
                     || txtCMNDKH.getText().equals("")
@@ -382,7 +385,7 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
                 String maKH = txtMaKH.getText().trim();
                 String tenKH = txtTenKH.getText().trim();
                 String sdt = txtSDTKH.getText().trim();
-                String gioiTinh = cboGioiTinh.getSelectedItem().toString();
+                String gioiTinh = cmbGioiTinh.getSelectedItem().toString();
                 boolean gt = true;
                 String cccd = txtCMNDKH.getText().trim();
                 if (gioiTinh == "Nam") {
@@ -431,7 +434,7 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
     private void reFresh() {
         txtMaKH.setText("");
         txtTenKH.setText("");
-        cboGioiTinh.setSelectedIndex(0);
+        cmbGioiTinh.setSelectedIndex(0);
         txtCMNDKH.setText("");
         dpNgaySinh.setValueToDay();
         txtHienThiLoi.setText("");
@@ -445,7 +448,7 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
         txtTenKH.setText(modelTableKH.getValueAt(row, 2).toString());
         txtSDTKH.setText(modelTableKH.getValueAt(row, 3).toString());
         txtCMNDKH.setText(modelTableKH.getValueAt(row, 4).toString());
-        cboGioiTinh.setSelectedItem(modelTableKH.getValueAt(row, 5).toString());
+        cmbGioiTinh.setSelectedItem(modelTableKH.getValueAt(row, 5).toString());
         try {
             dpNgaySinh.setValue(modelTableKH.getValueAt(row, 6).toString());
         } catch (ParseException e1) {

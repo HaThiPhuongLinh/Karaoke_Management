@@ -28,11 +28,9 @@ import javax.print.attribute.standard.Copies;
  */
 public class ExportBill {
     private URL fontPath = ExportBill.class.getResource(Custom.pathFont);
-
     private String pdfFontLight = fontPath + "Roboto-300.ttf";
     private String pdfFontLightItalic = fontPath + "Roboto-300_Italic.ttf";
     private String pdfFontMedium = fontPath + "Roboto-500.ttf";
-
     private BaseFont baseFontMedium;
     private BaseFont baseFontLight;
     private BaseFont baseFontLightItalic;
@@ -44,7 +42,6 @@ public class ExportBill {
     private String karaokeName = "ROSIE KARAOKE";
     private String address = "12 Nguyễn Văn Bảo, Phường 4, Gò Vấp, Thành phố Hồ Chí Minh";
     private String phoneNumber = "0999.999.999";
-
     private static ExportBill instance;
 
     static {
@@ -81,7 +78,7 @@ public class ExportBill {
         return time;
     }
     /**
-     * tạo khoảnG trắng trên file pdf
+     * tạo khoảng trắng trên file pdf
      *
      * @return {@code Paragraph}: dòng khoản trắng
      */

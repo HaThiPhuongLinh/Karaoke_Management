@@ -1,7 +1,6 @@
 package UI;
+
 import ConnectDB.ConnectDB;
-import javax.swing.*;
-import javax.swing.border.Border;
 import DAO.AccountDAO;
 import DAO.StaffDAO;
 import Entity.Account;
@@ -9,6 +8,8 @@ import Entity.Staff;
 import UI.component.Dialog.Main;
 import menu.Menu;
 
+import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -19,18 +20,17 @@ import java.awt.event.*;
  * Lần cập nhật cuối: 17/10/2023
  * Nội dung cập nhật: phân quyền nhân viên khi đăng nhập
  */
-public class LoginUI extends JFrame{
+public class Login_UI extends JFrame {
+    public static Menu menu;
+    private final Border borderBottomFocus = BorderFactory.createMatteBorder(0, 0, 1, 0, Color.decode("#b775d5"));
+    private final Border borderBottomFocusDark = BorderFactory.createMatteBorder(0, 0, 1, 0, Color.decode("#321a3d"));
     private JTextField txtUserName;
     private JPasswordField txtPassWord;
     private JLabel lblErrorMessage;
-    private final Border borderBottomFocus = BorderFactory.createMatteBorder(0, 0, 1, 0, Color.decode("#b775d5"));
-    private final Border borderBottomFocusDark = BorderFactory.createMatteBorder(0, 0, 1, 0, Color.decode("#321a3d"));
-
     private AccountDAO logInDAO = new AccountDAO();
     private StaffDAO staffDAO = new StaffDAO();
-    public static Menu menu;
 
-    public LoginUI() {
+    public Login_UI() {
         setTitle("Login Form");
         setSize(800, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -146,7 +146,7 @@ public class LoginUI extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 String enteredUsername = txtUserName.getText();
                 String enteredPassword = new String(txtPassWord.getPassword());
-                Account user = new Account(enteredUsername,enteredPassword,null);
+                Account user = new Account(enteredUsername, enteredPassword, null);
 
                 int tinhTrang = logInDAO.checkLogin(user);
                 if (tinhTrang == 1) {
@@ -168,7 +168,7 @@ public class LoginUI extends JFrame{
                         java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
                     }
                     dispose();
-                    SwingUtilities.invokeLater( () -> {
+                    SwingUtilities.invokeLater(() -> {
                         new Main(staff).setVisible(true);
                     });
                 } else if (tinhTrang == 0) {
@@ -184,8 +184,6 @@ public class LoginUI extends JFrame{
             }
         });
 
-
-
         loginButton.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent evt) {
                 loginButton.setBackground(Color.BLACK);
@@ -200,7 +198,8 @@ public class LoginUI extends JFrame{
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> { new LoginUI().setVisible(true);
+        SwingUtilities.invokeLater(() -> {
+            new Login_UI().setVisible(true);
         });
     }
 }

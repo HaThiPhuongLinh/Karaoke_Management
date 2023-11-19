@@ -1,14 +1,12 @@
 package DAO;
 
-import Entity.Customer;
-import Entity.ReservationForm;
+import ConnectDB.ConnectDB;
 import Entity.Room;
 
-import java.sql.*;
-
-import ConnectDB.ConnectDB;
-import Entity.Staff;
-
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -24,6 +22,7 @@ public class RoomDAO {
 
     /**
      * lấy danh sách thông tin tất cả phòng
+     *
      * @return {@code ArrayList<Room>}: danh sách phòng
      */
     public ArrayList<Room> getRoomList() {
@@ -238,7 +237,6 @@ public class RoomDAO {
      *
      * @param roomId: mã phòng
      * @param status: trạng thái phòng
-     *
      * @return {@code boolean}: true/false
      */
     public boolean updateRoomStatus(String roomId, String status) {
@@ -274,10 +272,9 @@ public class RoomDAO {
      * Thêm phòng
      *
      * @param ro: phòng
-     *
      * @return {@code boolean}: true/false
      */
-    public boolean insert(Room ro) throws SQLException{
+    public boolean insert(Room ro) throws SQLException {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
         PreparedStatement statement = null;
@@ -289,12 +286,12 @@ public class RoomDAO {
             statement.setString(2, ro.getLoaiPhong().getMaLoaiPhong());
             statement.setString(3, ro.getTinhTrang());
             statement.setString(4, ro.getViTri());
-            statement.setDouble(5,ro.getGiaPhong());
+            statement.setDouble(5, ro.getGiaPhong());
 
             n = statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             try {
                 statement.close();
             } catch (SQLException e2) {
@@ -309,7 +306,6 @@ public class RoomDAO {
      * Sửa phòng
      *
      * @param ro: phòng
-     *
      * @return {@code boolean}: true/false
      */
     public boolean update(Room ro) {
@@ -325,11 +321,11 @@ public class RoomDAO {
             statement.setString(1, ro.getLoaiPhong().getMaLoaiPhong());
             statement.setString(2, ro.getTinhTrang());
             statement.setString(3, ro.getViTri());
-            statement.setDouble(4,ro.getGiaPhong());
+            statement.setDouble(4, ro.getGiaPhong());
             n = statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             try {
                 statement.close();
             } catch (Exception e) {
@@ -343,7 +339,6 @@ public class RoomDAO {
      * Xóa phòng
      *
      * @param ro: phòng
-     *
      * @return {@code boolean}: true/false
      */
     public boolean delete(Room ro) {
@@ -367,7 +362,6 @@ public class RoomDAO {
      *
      * @param roomID: mã phòng
      * @param status: tình trạng phòng
-     *
      * @return {@code ArrayList<Room>}: danh sách phòng
      */
     public ArrayList<Room> getRoomsByRoomIdAndStatus(String roomID, String status) {
@@ -437,10 +431,9 @@ public class RoomDAO {
     /**
      * Đổi phòng dựa trên mã hóa đơn
      *
-     * @param billId: mã hóa đơn
+     * @param billId:    mã hóa đơn
      * @param oldRoomId: mã phòng cũ
      * @param newRoomId: mã phòng mới
-     *
      * @return {@code boolean}: true/false
      */
     public boolean switchRoom(String billId, String oldRoomId, String newRoomId) {

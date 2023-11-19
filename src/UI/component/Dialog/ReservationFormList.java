@@ -34,11 +34,10 @@ public class ReservationFormList extends JFrame implements ActionListener, Mouse
     private JComboBox<String> cmbStatus;
     private JButton btnFind, btnReceive, btnALL, btnCancel;
     private JTextField txtTim;
-    private ArrayList<ReservationForm> lstForms;
     private JTable tblReservations;
     private DefaultTableModel modelTblReservations;
     private CustomerDAO customerDAO;
-    private ArrayList<ReservationForm> formList = new ArrayList<ReservationForm>();
+    private ArrayList<ReservationForm> lstForm = new ArrayList<ReservationForm>();
     private ReservationFormDAO reservationFormDAO;
     private BillDAO billDAO;
     private RoomDAO roomDAO = new RoomDAO();
@@ -505,16 +504,16 @@ public class ReservationFormList extends JFrame implements ActionListener, Mouse
         int status = convertCmbStatusToDatabaseValue(cmbStatusIndex);
 
         if (formName.equalsIgnoreCase("")) {
-            formList = reservationFormDAO.findReservationFormsByStatus(status);
+            lstForm = reservationFormDAO.findReservationFormsByStatus(status);
         } else {
             if (isRefresh == 1) {
-                formList = reservationFormDAO.findReservationFormsByStatus(status);
+                lstForm = reservationFormDAO.findReservationFormsByStatus(status);
             } else {
                 // Đối với trạng thái "Đang chờ", "Đã nhận", "Đã hủy"
-                formList = customerDAO.searchReservationForms(formName, status);
+                lstForm = customerDAO.searchReservationForms(formName, status);
             }
         }
-        loadFormList(formList);
+        loadFormList(lstForm);
     }
 
     /**

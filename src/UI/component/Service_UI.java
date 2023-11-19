@@ -26,20 +26,20 @@ import java.util.Date;
 /**
  * Sử dụng để quản lý dịch vụ
  * <p>
- *     Người tham gia thiết kế: Nguyễn Quang Duy
+ * Người tham gia thiết kế: Nguyễn Quang Duy
  * </p>
  * ngày tạo: 12/10/2023
  * <p>
- *     Lần cập nhật cuối: 6/11/2023
+ * Lần cập nhật cuối: 6/11/2023
  * </p>
  * Nội dung cập nhật: thêm javadoc
  */
-
-public class Service_UI extends JPanel implements ActionListener, MouseListener{
+public class Service_UI extends JPanel implements ActionListener, MouseListener {
+    public static Staff staffLogin = null;
     private JTable tblDichVu;
     private JComboBox<String> cmbLoaiDichVu;
     private JTextField txtDonViTinh;
-    private JButton btnThem,btnXoa,btnSua, btnLamMoi;
+    private JButton btnThem, btnXoa, btnSua, btnLamMoi;
     private JTextField txtMaDichVu, txtTenDichVu, txtThongBao;
     private JTextField txtGiaBan, txtSoLuongTon;
     private DefaultTableModel modelTblDichVu;
@@ -47,9 +47,8 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
     private ServiceDAO serviceDAO;
     private TypeOfServiceDAO typeOfServiceDAO;
     private DecimalFormat df = new DecimalFormat("#,###.## VND");
-    public static Staff staffLogin = null;
 
-    public Service_UI(Staff staff){
+    public Service_UI(Staff staff) {
         this.staffLogin = staff;
         setLayout(null);
         setBounds(0, 0, 1475, 770);
@@ -90,7 +89,7 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
         });
         timer.start();
 
-        JPanel pnlDichVu =  new JPanel();
+        JPanel pnlDichVu = new JPanel();
         pnlDichVu.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DỊCH VỤ",
                 TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
         pnlDichVu.setBounds(10, 70, 1245, 670);
@@ -99,7 +98,6 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
 
         pnlDichVu.setLayout(null);
 
-        //        Mã dịch vụ
         JLabel lblMaDichVu = new JLabel("Mã dịch vụ:");
         lblMaDichVu.setFont(new Font("Arial", Font.PLAIN, 14));
         lblMaDichVu.setBounds(90, 50, 150, 30);
@@ -111,7 +109,6 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
         txtMaDichVu.setColumns(10);
         pnlDichVu.add(txtMaDichVu);
 
-//      Tên dịch vụ
         JLabel lblTenDichVu = new JLabel("Tên dịch vụ:");
         lblTenDichVu.setFont(new Font("Arial", Font.PLAIN, 14));
         lblTenDichVu.setBounds(90, 100, 150, 30);
@@ -122,7 +119,7 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
         txtTenDichVu.setBounds(190, 100, 170, 30);
         txtTenDichVu.setColumns(10);
         pnlDichVu.add(txtTenDichVu);
-        //      Loại dịch vụ
+
         JLabel lblLoaiDichVu = new JLabel("Loại dịch vụ:");
         lblLoaiDichVu.setFont(new Font("Arial", Font.PLAIN, 14));
         lblLoaiDichVu.setBounds(450, 50, 150, 30);
@@ -135,7 +132,6 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
         Custom.setCustomComboBox(cmbLoaiDichVu);
         pnlDichVu.add(cmbLoaiDichVu);
 
-        //      Đơn vị tính
         JLabel lblDonViTinh = new JLabel("Đơn vị tính:");
         lblDonViTinh.setFont(new Font("Arial", Font.PLAIN, 14));
         lblDonViTinh.setBounds(450, 100, 150, 30);
@@ -147,7 +143,6 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
         txtDonViTinh.setColumns(10);
         pnlDichVu.add(txtDonViTinh);
 
-        //      Số lượng tồn
         JLabel lblSoLuongTon = new JLabel("Số lượng tồn:");
         lblSoLuongTon.setFont(new Font("Arial", Font.PLAIN, 14));
         lblSoLuongTon.setBounds(830, 50, 150, 30);
@@ -155,57 +150,50 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
         pnlDichVu.add(lblSoLuongTon);
 
         txtSoLuongTon = new JTextField();
-        txtSoLuongTon.setBounds(950,50,170,30);
+        txtSoLuongTon.setBounds(950, 50, 170, 30);
         pnlDichVu.add(txtSoLuongTon);
 
-        //      Giá bán
         JLabel lblGiaBan = new JLabel("Giá bán:");
         lblGiaBan.setFont(new Font("Arial", Font.PLAIN, 14));
-        lblGiaBan.setBounds(830, 100, 150 , 30);
+        lblGiaBan.setBounds(830, 100, 150, 30);
         lblGiaBan.setForeground(Color.WHITE);
         pnlDichVu.add(lblGiaBan);
 
         txtGiaBan = new JTextField();
-        txtGiaBan.setBounds(950,100,170,30);
+        txtGiaBan.setBounds(950, 100, 170, 30);
         pnlDichVu.add(txtGiaBan);
 
-        //Thông báo
         txtThongBao = new JTextField();
-        txtThongBao.setFont(new Font("Arial",Font.BOLD,13));
+        txtThongBao.setFont(new Font("Arial", Font.BOLD, 13));
         txtThongBao.setForeground(Color.RED);
-        txtThongBao.setBounds(30, 160, 450 , 30);
+        txtThongBao.setBounds(30, 160, 450, 30);
         txtThongBao.setColumns(10);
         pnlDichVu.add(txtThongBao);
 
-//        btn thêm
         btnThem = new JButton("Thêm");
         btnThem.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnThem);
         btnThem.setBounds(550, 160, 100, 30);
         pnlDichVu.add(btnThem);
 
-        //        btn Xóa
         btnXoa = new JButton("Xóa");
         btnXoa.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnXoa);
         btnXoa.setBounds(700, 160, 100, 30);
         pnlDichVu.add(btnXoa);
 
-        //        btn sửa
         btnSua = new JButton("Sửa");
         btnSua.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnSua);
         btnSua.setBounds(850, 160, 100, 30);
         pnlDichVu.add(btnSua);
 
-        //        btn làm mới
         btnLamMoi = new JButton("Làm mới");
         btnLamMoi.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnLamMoi);
         btnLamMoi.setBounds(1000, 160, 100, 30);
         pnlDichVu.add(btnLamMoi);
 
-//      danh sách dịch vụ
         JPanel pnlDSDV = new JPanel();
         pnlDSDV.setLayout(null);
         pnlDSDV.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DANH SÁCH DỊCH VỤ",
@@ -213,8 +201,8 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
         pnlDSDV.setBounds(5, 210, 1235, 455);
         pnlDSDV.setOpaque(false);
 
-        String[] colsDV = { "STT", "Mã dịch vụ", "Tên dịch vụ","Tên loại dịch vụ","Đơn vị tính","Số lượng tồn","Giá bán"};
-        modelTblDichVu = new DefaultTableModel(colsDV, 0) ;
+        String[] colsDV = {"STT", "Mã dịch vụ", "Tên dịch vụ", "Tên loại dịch vụ", "Đơn vị tính", "Số lượng tồn", "Giá bán"};
+        modelTblDichVu = new DefaultTableModel(colsDV, 0);
         JScrollPane scrDichVu;
 
         tblDichVu = new JTable(modelTblDichVu);
@@ -225,14 +213,14 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
         tblDichVu.getTableHeader().setForeground(Color.BLUE);
         Custom.getInstance().setCustomTable(tblDichVu);
 
-        pnlDSDV.add(scrDichVu = new JScrollPane(tblDichVu,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
+        pnlDSDV.add(scrDichVu = new JScrollPane(tblDichVu, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
                 BorderLayout.CENTER);
-        scrDichVu.setBounds(10,20,1220,425);
+        scrDichVu.setBounds(10, 20, 1220, 425);
         scrDichVu.setOpaque(false);
         scrDichVu.getViewport().setOpaque(false);
         scrDichVu.getViewport().setBackground(Color.WHITE);
         pnlDichVu.add(pnlDSDV);
-        //
+
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/images/background.png"));
         lblBackGround = new JLabel(backgroundImage);
         lblBackGround.setBounds(0, 0, getWidth(), getHeight());
@@ -242,21 +230,18 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
         loadCboService();
         cmbLoaiDichVu.addActionListener(this);
         tblDichVu.addMouseListener(this);
-
         btnThem.addActionListener(this);
         btnLamMoi.addActionListener(this);
         btnSua.addActionListener(this);
         btnXoa.addActionListener(this);
-
         txtMaDichVu.setEditable(false);
         reSizeColumnTableService();
-
     }
 
     /**
      * Thay đổi kích thước cột
      */
-    private void reSizeColumnTableService(){
+    private void reSizeColumnTableService() {
         TableColumnModel tblModel = tblDichVu.getColumnModel();
         tblModel.getColumn(0).setPreferredWidth(20);
         tblModel.getColumn(1).setPreferredWidth(40);
@@ -267,11 +252,11 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
     /**
      * Load thông tin dịch vụ lên tblDichVu
      */
-    private void loadService(){
+    private void loadService() {
         java.util.List<Service> list = serviceDAO.getAllDichVu();
-        int i=1;
-        for (Service service : list){
-            modelTblDichVu.addRow(new Object[]{i,service.getMaDichVu(),service.getTenDichVu(),service.getMaLoaiDichVu().getTenLoaiDichVu(),service.getDonViTinh(),service.getSoLuongTon(),df.format(service.getGiaBan())});
+        int i = 1;
+        for (Service service : list) {
+            modelTblDichVu.addRow(new Object[]{i, service.getMaDichVu(), service.getTenDichVu(), service.getMaLoaiDichVu().getTenLoaiDichVu(), service.getDonViTinh(), service.getSoLuongTon(), df.format(service.getGiaBan())});
             i++;
         }
     }
@@ -298,8 +283,6 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
 
     /**
      * Hiển thị thông báo khi kiểm tra thông tin trong form
-     * @param txtTenDichVu
-     * @param message
      */
     private void showMessage(JTextField txtTenDichVu, String message) {
         txtTenDichVu.requestFocus();
@@ -308,11 +291,12 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
 
     /**
      * Kiểm tra thông tin trong form
+     *
      * @return {@code boolean}: kết quả trả về của quá trình kiểm tra thông tin
-     *          <ul>
-     *              <li>Nếu hợp lệ thì trả về {@code true}</li>
-     *              <li>Nếu không hợp lệ thì trả về {@code false}</li>
-     *          </ul>
+     * <ul>
+     *     <li>Nếu hợp lệ thì trả về {@code true}</li>
+     *     <li>Nếu không hợp lệ thì trả về {@code false}</li>
+     * </ul>
      */
     private boolean validData() {
         String ten = txtTenDichVu.getText().trim();
@@ -321,19 +305,19 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
         String giaBan = txtGiaBan.getText();
 
         if (!((ten.length() > 0) && ten.matches("^[A-Za-z0-9À-ỹ ]+"))) {
-            showMessage(txtTenDichVu,"Tên dịch vụ không được chứa kí tự đặc biệt");
+            showMessage(txtTenDichVu, "Tên dịch vụ không được chứa kí tự đặc biệt");
             return false;
         }
         if (!((donViTinh.length()) > 0 && donViTinh.matches("^[A-Za-zÀ-ỹ ]+"))) {
-            showMessage(txtDonViTinh,"Đơn vị tính không được chứa số và kí tự đặc biệt");
+            showMessage(txtDonViTinh, "Đơn vị tính không được chứa số và kí tự đặc biệt");
             return false;
         }
         if (!((soLuongTon.length()) > 0 && soLuongTon.matches("^[0-9]\\d*"))) {
-            showMessage(txtSoLuongTon,"Số lượng tồn phải là số và lớn hơn hoặc bằng 0");
+            showMessage(txtSoLuongTon, "Số lượng tồn phải là số và lớn hơn hoặc bằng 0");
             return false;
         }
         if (!((giaBan.length()) > 0 && giaBan.matches("^[1-9]\\d*"))) {
-            showMessage(txtGiaBan,"Giá bán phải lớn hơn 0");
+            showMessage(txtGiaBan, "Giá bán phải lớn hơn 0");
             return false;
         }
         return true;
@@ -341,21 +325,25 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
 
     /**
      * Lấy mã loại dịch vụ
+     *
      * @return mã loại dịch vụ
      */
-    public String getMaLoaiDichVu(){
+    public String getMaLoaiDichVu() {
         String tenLDV = cmbLoaiDichVu.getSelectedItem().toString().trim();
         String maLDV = typeOfServiceDAO.getServiceCodeByName(tenLDV);
         return maLDV;
     }
+
     /**
      * Lấy mã dịch vụ
+     *
      * @return mã dịch vụ
      */
-    public String getMaDichVu(){
+    public String getMaDichVu() {
         String MaDV = serviceDAO.generateNextServiceId();
         return MaDV;
     }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
@@ -376,7 +364,7 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
                         modelTblDichVu.getDataVector().removeAllElements();
                         loadService();
                         reset();
-                        JOptionPane.showMessageDialog(this,"Thêm dịch vụ thành công");
+                        JOptionPane.showMessageDialog(this, "Thêm dịch vụ thành công");
                     }
                 }
 
@@ -402,12 +390,12 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
                         JOptionPane.YES_NO_OPTION);
                 if (ans == JOptionPane.YES_OPTION) {
 //                    serviceDAO.delete(service.getMaDichVu());
-                    if(serviceDAO.delete(service.getMaDichVu())==true){
-                        JOptionPane.showMessageDialog(this,"Xóa thành công");
+                    if (serviceDAO.delete(service.getMaDichVu()) == true) {
+                        JOptionPane.showMessageDialog(this, "Xóa thành công");
                         modelTblDichVu.removeRow(row);
                         modelTblDichVu.getDataVector().removeAllElements();
-                    }else{
-                        JOptionPane.showMessageDialog(this,"Xóa không thành công! \nDịch vụ đang được sử dụng!");
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Xóa không thành công! \nDịch vụ đang được sử dụng!");
                     }
                     reset();
                     loadService();
@@ -442,7 +430,7 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
                         tblDichVu.setValueAt(quantityStr, row, 5);
                         tblDichVu.setValueAt(priceStr, row, 6);
                         reset();
-                        JOptionPane.showMessageDialog(this,"Sửa thành công");
+                        JOptionPane.showMessageDialog(this, "Sửa thành công");
                     }
                 }
             } else {
@@ -454,7 +442,7 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
     /**
      * làm mới các thông tin trong form
      */
-    private void reset(){
+    private void reset() {
         txtMaDichVu.setText("");
         txtTenDichVu.setText("");
         cmbLoaiDichVu.setSelectedIndex(0);
@@ -466,7 +454,7 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
     }
 
     @Override
-    public void mouseClicked (MouseEvent e){
+    public void mouseClicked(MouseEvent e) {
         Object o = e.getSource();
         if (o.equals(tblDichVu)) {
             int row = tblDichVu.getSelectedRow();
@@ -482,22 +470,22 @@ public class Service_UI extends JPanel implements ActionListener, MouseListener{
     }
 
     @Override
-    public void mousePressed (MouseEvent e){
+    public void mousePressed(MouseEvent e) {
 
     }
 
     @Override
-    public void mouseReleased (MouseEvent e){
+    public void mouseReleased(MouseEvent e) {
 
     }
 
     @Override
-    public void mouseEntered (MouseEvent e){
+    public void mouseEntered(MouseEvent e) {
 
     }
 
     @Override
-    public void mouseExited (MouseEvent e){
+    public void mouseExited(MouseEvent e) {
 
     }
 

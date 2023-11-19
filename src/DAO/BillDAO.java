@@ -2,10 +2,8 @@ package DAO;
 
 import ConnectDB.ConnectDB;
 import Entity.*;
-import jdk.jshell.execution.LoaderDelegate;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -21,12 +19,73 @@ import java.util.Date;
 public class BillDAO {
     private static BillDAO instance = new BillDAO();
 
+    /**
+     * Tạo thể hiện hiện tại cho BillDAO
+     */
     public static BillDAO getInstance() {
         return instance;
     }
 
     /**
+     * Lấy ra số lượng hóa đơn theo khoảng thời gian
+     *
+     * @param startDate:Ngày bát đầu
+     * @param endDate:Ngày   kết thúc
+     * @return {@code int}:Tổng bill
+     */
+
+    public static int getTotalLineOfBillList(Date startDate, Date endDate) {
+        int totalCount = 0;
+        ConnectDB.getInstance();
+        PreparedStatement statement = null;
+        Connection con = ConnectDB.getConnection();
+
+        try {
+            // Chuỗi SQL để lấy số lượng hóa đơn trong khoảng thời gian đã chọn
+            String sql = "SELECT COUNT(*) AS total FROM HoaDon WHERE ngayGioTra >= ? AND ngayGioTra <= ?";
+            statement = con.prepareStatement(sql);
+            // Thiết lập các tham số trong câu lệnh SQL
+            statement.setDate(1, (java.sql.Date) startDate);
+            statement.setDate(2, (java.sql.Date) endDate);
+
+            // Thực thi câu lệnh SQL
+            ResultSet rs = statement.executeQuery();
+
+            if (rs.next()) {
+                totalCount = rs.getInt("total");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return totalCount;
+    }
+
+    /**
+     * Update thuộc tính Khuyến Mãi của hóa đơn
+     *
+     * @return {@code boolean} :True or false
+     */
+    public static boolean updateKM(String b) {
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        PreparedStatement statement = null;
+        int n = 0;
+        try {
+            String sql = "update dbo.HoaDon" + " set khuyenMai = 'KM'"
+                    + " where maHoaDon = ?";
+            statement = con.prepareStatement(sql);
+            statement.setString(1, b);
+            n = statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return n > 0;
+    }
+
+    /**
      * Lấy ra toàn bộ Hóa Đơn
+     *
      * @return {@code ArrayList<Bill>}:Danh sách hóa đơn
      */
     public ArrayList<Bill> getAllBill() {
@@ -62,6 +121,7 @@ public class BillDAO {
 
     /**
      * Lấy ra toàn bộ hóa đơn bao gồm cả chi tiết dịch vụ
+     *
      * @return {@code ArrayList<Bill>}:Danh sách hóa đơn
      */
     public ArrayList<Bill> getAllBill2() {
@@ -85,7 +145,7 @@ public class BillDAO {
                 int tinhTrang = rs.getInt(7);
                 String khuyenMai = rs.getString(8);
                 ArrayList<DetailsOfService> ctDV = new ArrayList<DetailsOfService>(9);
-                Bill bill = new Bill(maHoaDon, maNhanVien, maKhachHang, maPhong, ngayGioDat, ngayGioTra, tinhTrang, khuyenMai,ctDV);
+                Bill bill = new Bill(maHoaDon, maNhanVien, maKhachHang, maPhong, ngayGioDat, ngayGioTra, tinhTrang, khuyenMai, ctDV);
 
                 dsBill.add(bill);
             }
@@ -97,7 +157,8 @@ public class BillDAO {
 
     /**
      * Lấy ra hóa đơn theo ngày
-     * @param tuNgay:Ngày bắt đầu
+     *
+     * @param tuNgay:Ngày  bắt đầu
      * @param denNgay:Ngày kết thúc
      * @return {@code ArrayList<Bill>}:Danh sách hóa đơn
      */
@@ -139,6 +200,7 @@ public class BillDAO {
 
     /**
      * Thêm hóa đơn
+     *
      * @param bill: hóa đơn cần thêm
      * @return {@code boolean} :True or false
      */
@@ -181,6 +243,7 @@ public class BillDAO {
 
     /**
      * Lấy Hóa Đơn dựa trên mã Phòng
+     *
      * @param roomID: mã phòng được truyền vào
      * @return {@code Bill}:Hóa đơn
      */
@@ -224,6 +287,7 @@ public class BillDAO {
 
         return bill;
     }
+
     public Bill getBillByBillID(String billID) {
         Bill bill = null;
         Connection conn = null;
@@ -267,6 +331,7 @@ public class BillDAO {
 
     /**
      * Lấy hóa đơn dựa trên tên khách hàng
+     *
      * @param customerName: Tên khách hàng cần tìm hóa đơn
      * @return {@code Bill}:Hóa đơn
      */
@@ -314,41 +379,8 @@ public class BillDAO {
     }
 
     /**
-     *Lấy ra số lượng hóa đơn theo khoảng thời gian
-     * @param startDate:Ngày bát đầu
-     * @param endDate:Ngày kết thúc
-     * @return {@code int}:Tổng bill
-     */
-
-    public static int getTotalLineOfBillList(Date startDate, Date endDate) {
-        int totalCount = 0;
-        ConnectDB.getInstance();
-        PreparedStatement statement = null;
-        Connection con = ConnectDB.getConnection();
-
-        try {
-            // Chuỗi SQL để lấy số lượng hóa đơn trong khoảng thời gian đã chọn
-            String sql = "SELECT COUNT(*) AS total FROM HoaDon WHERE ngayGioTra >= ? AND ngayGioTra <= ?";
-            statement = con.prepareStatement(sql);
-            // Thiết lập các tham số trong câu lệnh SQL
-            statement.setDate(1, (java.sql.Date) startDate);
-            statement.setDate(2, (java.sql.Date) endDate);
-
-            // Thực thi câu lệnh SQL
-            ResultSet rs = statement.executeQuery();
-
-            if (rs.next()) {
-                totalCount = rs.getInt("total");
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-
-        return totalCount;
-    }
-
-    /**
-     *Tạo mã hóa đơn với dựa trên mã của hóa đơn cuối cùng
+     * Tạo mã hóa đơn với dựa trên mã của hóa đơn cuối cùng
+     *
      * @return {@code String}:mã hóa đơn
      */
     public String generateNextBillId() {
@@ -378,7 +410,8 @@ public class BillDAO {
 
     /**
      * Hàm thanh toán hóa đơn
-     * @param billId: mã hóa đơn
+     *
+     * @param billId:     mã hóa đơn
      * @param ngayGioTra: Ngày giờ thanh toán
      * @return {@code boolean}: True hoặc False
      */
@@ -455,10 +488,10 @@ public class BillDAO {
 
     /**
      * Cập nhật tình trạng phòng dựa trên phiếu đặt
-     * @param con: kết nối driver
-     * @param maPhong: mã phòng cần cập nhật
+     *
+     * @param con:       kết nối driver
+     * @param maPhong:   mã phòng cần cập nhật
      * @param tinhTrang: tình trạng cần cập nhật
-     * @throws SQLException
      */
     private void updateRoomStatus(Connection con, String maPhong, String tinhTrang) throws SQLException {
         String updateRoomSql = "UPDATE dbo.Phong SET tinhTrang = ? WHERE maPhong = ?;";
@@ -474,34 +507,12 @@ public class BillDAO {
         }
     }
 
-
-    /**
-     * Update thuộc tính Khuyến Mãi của hóa đơn
-     * @param b:
-     * @return {@code boolean} :True or false
-     */
-    public static boolean updateKM(String b) {
-        ConnectDB.getInstance();
-        Connection con = ConnectDB.getConnection();
-        PreparedStatement statement = null;
-        int n = 0;
-        try {
-            String sql = "update dbo.HoaDon" + " set khuyenMai = 'KM'"
-                    + " where maHoaDon = ?";
-            statement = con.prepareStatement(sql);
-            statement.setString(1,b);
-            n = statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return n > 0;
-    }
-
     /**
      * Lấy ra hóa đơn dựa trên mã khách hàng và khoảng thời gian
+     *
      * @param customerID: Mã khách hàng
-     * @param fromDate: Ngày bắt đầu
-     * @param toDate: Ngày kết thúc
+     * @param fromDate:   Ngày bắt đầu
+     * @param toDate:     Ngày kết thúc
      * @return {@code ArrayList<Bill>}: Danh sách hóa đơn
      */
     public ArrayList<Bill> getBillByCustomerIDAndDateRange(String customerID, Date fromDate, Date toDate) {

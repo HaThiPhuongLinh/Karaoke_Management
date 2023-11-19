@@ -338,7 +338,7 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
     }
 
     /**
-     * Gán mã phiếu đặt xong cho label
+     * Gán mã phiếu đặt cho label
      */
     public void setRoomID(String roomID) {
         lblRoomID2.setText(roomID);

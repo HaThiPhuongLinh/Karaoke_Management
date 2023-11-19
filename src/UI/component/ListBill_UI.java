@@ -61,7 +61,6 @@ public class ListBill_UI extends JPanel implements ActionListener, MouseListener
         roomDAO = new RoomDAO();
         ctdv_dao = new DetailOfServiceDAO();
 
-        //phan viet code
         JLabel headerLabel = new JLabel("THỐNG KÊ HOÁ ĐƠN");
         headerLabel.setBounds(570, 10, 1175, 40);
         headerLabel.setFont(new Font("Arial", Font.BOLD, 25));
@@ -97,7 +96,6 @@ public class ListBill_UI extends JPanel implements ActionListener, MouseListener
 
         panel1.setLayout(null);
 
-        //        Từ ngày
         lblTuNgay = new JLabel("Từ ngày:");
         lblTuNgay.setFont(new Font("Arial", Font.PLAIN, 14));
         lblTuNgay.setBounds(150, 100, 120, 30);
@@ -108,7 +106,7 @@ public class ListBill_UI extends JPanel implements ActionListener, MouseListener
         dpTuNgay.setOpaque(false);
         dpTuNgay.setBounds(230, 100, 300, 30);
         add(dpTuNgay);
-//      Đến ngày
+
         lblDenNgay = new JLabel("Đến ngày: ");
         lblDenNgay.setFont(new Font("Arial", Font.PLAIN, 14));
         lblDenNgay.setBounds(450, 100, 120, 30);
@@ -120,7 +118,6 @@ public class ListBill_UI extends JPanel implements ActionListener, MouseListener
         dpDenNgay.setBounds(530, 100, 300, 30);
         add(dpDenNgay);
 
-//      Lọc theo
         JLabel labelLocTheo = new JLabel("Lọc theo:");
         labelLocTheo.setFont(new Font("Arial", Font.PLAIN, 14));
         labelLocTheo.setBounds(750, 100, 150, 30);
@@ -138,22 +135,18 @@ public class ListBill_UI extends JPanel implements ActionListener, MouseListener
         Custom.setCustomComboBox(cmbLocTheo);
         add(cmbLocTheo);
 
-        //        btn thống kê
         btnThongKe = new JButton("Thống kê");
         btnThongKe.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnThongKe);
         btnThongKe.setBounds(430, 160, 150, 30);
         add(btnThongKe);
 
-        //        btn làm mới
         btnLamMoi = new JButton("Làm mới");
         btnLamMoi.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnLamMoi);
         btnLamMoi.setBounds(630, 160, 150, 30);
         add(btnLamMoi);
 
-
-//      danh sách khách hàng
         JPanel panelDSDV = new JPanel();
         panelDSDV.setLayout(null);
         panelDSDV.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DANH SÁCH KHÁCH HÀNG",
@@ -171,7 +164,6 @@ public class ListBill_UI extends JPanel implements ActionListener, MouseListener
         tblHD.setForeground(new Color(255, 255, 255));
         tblHD.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
         tblHD.getTableHeader().setForeground(Color.BLUE);
-//        tableLDV.getTableHeader().setBackground(new Color(255, 255, 255));
         Custom.getInstance().setCustomTable(tblHD);
 
         panelDSDV.add(scrollPaneDV = new JScrollPane(tblHD, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
@@ -183,13 +175,13 @@ public class ListBill_UI extends JPanel implements ActionListener, MouseListener
         panel1.add(panelDSDV);
 
         lblSum = new JLabel("Tổng doanh thu:");
-        lblSum.setBounds(910,470,130,30);
+        lblSum.setBounds(910, 470, 130, 30);
         lblSum.setFont(new Font("Arial", Font.PLAIN, 14));
         lblSum.setForeground(Color.WHITE);
         panelDSDV.add(lblSum);
 
         txtSum = new JTextField();
-        txtSum.setBounds(1040,470,160,28);
+        txtSum.setBounds(1040, 470, 160, 28);
         txtSum.setFont(new Font("Arial", Font.PLAIN, 16));
         panelDSDV.add(txtSum);
 
@@ -205,7 +197,6 @@ public class ListBill_UI extends JPanel implements ActionListener, MouseListener
         loadHD();
         tblHD.addMouseListener(this);
 
-        //phan viet code
         try {
             ConnectDB.getInstance().connect();
         } catch (Exception e) {
@@ -448,17 +439,13 @@ public class ListBill_UI extends JPanel implements ActionListener, MouseListener
                 //System.out.println("MaHoaDon được chọn: " + maHoaDon);
                 Bill bill = billDAO.getBillByBillID(maHoaDon);
                 String maPhong = modelTblHD.getValueAt(row, 3).toString();
-//                Room room = roomDAO.getRoomByRoomId(maPhong);
-//                if (room == null)
-//                    room = new Room();
-//                bill.setMaPhong(room);
+
                 String billId = bill.getMaHoaDon();
                 ArrayList<DetailsOfService> billInfoList = ctdv_dao.getDetailsOfServiceForBill(billId);
                 bill.setLstDetails(billInfoList);
                 long millis = System.currentTimeMillis();
                 Timestamp ngayTra = bill.getNgayGioTra();
                 bill.setNgayGioTra(ngayTra);
-                Double totalPriceBill = bill.getTongTienHD();
 
                 InfoBill winPayment = new InfoBill(bill);
                 winPayment.setModal(true);
@@ -468,6 +455,11 @@ public class ListBill_UI extends JPanel implements ActionListener, MouseListener
         }
     }
 
+    /**
+     * Tính tổng cột tổng tiền trên bảng
+     *
+     * @return double
+     */
     public double sumRevenue() {
         double tongGiaTri = 0.0;
         for (int i = 0; i < modelTblHD.getRowCount(); i++) {
@@ -477,7 +469,6 @@ public class ListBill_UI extends JPanel implements ActionListener, MouseListener
         }
         return tongGiaTri;
     }
-
 
 
     @Override

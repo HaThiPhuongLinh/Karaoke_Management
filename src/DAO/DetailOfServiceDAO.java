@@ -1,12 +1,14 @@
 package DAO;
 
 import ConnectDB.ConnectDB;
-import Entity.*;
+import Entity.Bill;
+import Entity.DetailsOfService;
+import Entity.Service;
 
 import java.sql.*;
-//import java.sql.Date;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.Date;
+
 /**
  * Lấy dữ liệu từ database cho lớp {@code DetailOfServiceDAO}
  * <p>
@@ -21,11 +23,16 @@ import java.util.Date;
 public class DetailOfServiceDAO {
     private static DetailOfServiceDAO instance = new DetailOfServiceDAO();
 
+    /**
+     * Tạo thể hiện hiện tại cho DetailOfServiceDAO
+     */
     public static DetailOfServiceDAO getInstance() {
         return instance;
     }
+
     /**
      * lấy danh sách thông tin tất cả chi tiết dịch vụ
+     *
      * @return {@code ArrayList<DetailsOfService>}: danh sách chi tiết dịch vụ
      */
     public ArrayList<DetailsOfService> getAllDetailsOfService() {
@@ -55,7 +62,8 @@ public class DetailOfServiceDAO {
 
     /**
      * Lấy danh sách chi tiết dịch vụ trong khoản từ ngày bắt đầu đến ngày kết thúc
-     * @param tuNgay ngày bắt đầu
+     *
+     * @param tuNgay  ngày bắt đầu
      * @param denNgay ngày kết thúc
      * @return {@code ArrayList<DetailsOfService>} danh sách chi tiết dịch vụ
      */
@@ -91,6 +99,7 @@ public class DetailOfServiceDAO {
 
     /**
      * Lấy danh sách dịch vụ theo mã phòng
+     *
      * @param roomId mã phòng
      * @return {@code ArrayList<DetailsOfService>} danh sách chi tiết dịch vụ
      */
@@ -140,6 +149,7 @@ public class DetailOfServiceDAO {
 
     /**
      * Lấy danh sách chi tiết dịch vụ theo mã hóa đơn
+     *
      * @param billID mã hóa đơn
      * @return {@code ArrayList<DetailsOfService>} danh sách chi tiết dịch vụ
      */
@@ -183,7 +193,8 @@ public class DetailOfServiceDAO {
 
     /**
      * Lấy chi tiết dịch vụ theo mã hóa đơn và mã dịch vụ
-     * @param billId mã hóa đơn
+     *
+     * @param billId    mã hóa đơn
      * @param serviceId mã dịch vụ
      * @return chi tiết dịch vụ được tìm thấy
      */
@@ -235,14 +246,15 @@ public class DetailOfServiceDAO {
 
     /**
      * cập nhật chi tiết dịch vụ
+     *
      * @param detailsOfService chi tiết dịch vụ cần cập nhật
-     * @param soLuongDat số lượng đặt
-     * @param maHoaDon mã hóa đơn
+     * @param soLuongDat       số lượng đặt
+     * @param maHoaDon         mã hóa đơn
      * @return {@code boolean}: kết quả trả về của câu truy vấn
-     *          <ul>
-     *              <li>Nếu cập nhật thành công thì trả về {@code true}</li>
-     *              <li>Nếu cập nhật thất bại thì trả về {@code false}</li>
-     *          </ul>
+     * <ul>
+     *     <li>Nếu cập nhật thành công thì trả về {@code true}</li>
+     *     <li>Nếu cập nhật thất bại thì trả về {@code false}</li>
+     * </ul>
      */
     public boolean updateServiceDetail(DetailsOfService detailsOfService, int soLuongDat, String maHoaDon) {
         ConnectDB.getInstance();

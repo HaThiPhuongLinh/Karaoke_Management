@@ -13,9 +13,8 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
-
-import javax.swing.*;
 import javax.swing.Timer;
+import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
@@ -40,29 +39,26 @@ import java.util.concurrent.TimeUnit;
  * </p>
  * Nội dung cập nhật: cập nhật cách tính tổng tiền (tt= tt - ((tt+vat))*15%))
  */
-
-public class Statistic_UI extends JPanel implements  ActionListener, ItemListener {
+public class Statistic_UI extends JPanel implements ActionListener, ItemListener {
+    public static Staff staffLogin = null;
+    private static DetailOfServiceDAO detailOfServiceDAO;
     private JTextField txtTongDoanhThu;
-    private ChartPanel chartPanel;
+    private ChartPanel pnlChare;
     private JButton btnLamMoi, btnThongKe;
     private JComboBox<String> cmbLocTheo;
-    private DatePicker pickerTuNgay,pickerDenNgay;
+    private DatePicker pickerTuNgay, pickerDenNgay;
     private JLabel lblBackGround, lblTime;
     private BillDAO billDAO;
-    private static DetailOfServiceDAO detailOfServiceDAO;
     private DecimalFormat df = new DecimalFormat("#,###.## VND");
     private DefaultCategoryDataset dataset;
-    public static Staff staffLogin = null;
 
-
-    public Statistic_UI(Staff staff){
+    public Statistic_UI(Staff staff) {
         this.staffLogin = staff;
         setLayout(null);
         setBounds(0, 0, 1475, 770);
 
         billDAO = new BillDAO();
         detailOfServiceDAO = new DetailOfServiceDAO();
-        //phan viet code
 
         JLabel lblThongKeDoanhThu = new JLabel("THỐNG KÊ DOANH THU");
         lblThongKeDoanhThu.setBounds(570, 10, 1175, 40);
@@ -90,7 +86,7 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
         });
         timer.start();
 
-        JPanel pnlThongTinThongke =  new JPanel();
+        JPanel pnlThongTinThongke = new JPanel();
         pnlThongTinThongke.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "THÔNG TIN THỐNG KÊ",
                 TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
         pnlThongTinThongke.setBounds(10, 70, 1245, 670);
@@ -99,7 +95,6 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
 
         pnlThongTinThongke.setLayout(null);
 
-        //        Từ ngày
         JLabel lblTuNgay = new JLabel("Từ ngày:");
         lblTuNgay.setFont(new Font("Arial", Font.PLAIN, 14));
         lblTuNgay.setBounds(150, 100, 120, 30);
@@ -110,7 +105,7 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
         pickerTuNgay.setOpaque(false);
         pickerTuNgay.setBounds(230, 100, 300, 30);
         add(pickerTuNgay);
-//      Đến ngày
+
         JLabel lblDenNgay = new JLabel("Đến ngày: ");
         lblDenNgay.setFont(new Font("Arial", Font.PLAIN, 14));
         lblDenNgay.setBounds(450, 100, 120, 30);
@@ -122,7 +117,6 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
         pickerDenNgay.setBounds(530, 100, 300, 30);
         add(pickerDenNgay);
 
-//      Lọc theo
         JLabel lblLocTheo = new JLabel("Lọc theo:");
         lblLocTheo.setFont(new Font("Arial", Font.PLAIN, 14));
         lblLocTheo.setBounds(750, 100, 150, 30);
@@ -136,24 +130,21 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
         cmbLocTheo.addItem("3 tháng gần nhất");
         cmbLocTheo.addItem("6 tháng gần nhất");
         cmbLocTheo.addItem("1 năm gần nhất");
-        cmbLocTheo.setBounds(830,100,200,30);
+        cmbLocTheo.setBounds(830, 100, 200, 30);
         Custom.setCustomComboBox(cmbLocTheo);
         add(cmbLocTheo);
 
-        //        btn thống kê
         btnThongKe = new JButton("Thống kê");
         btnThongKe.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnThongKe);
         btnThongKe.setBounds(430, 160, 150, 30);
         add(btnThongKe);
 
-        //        btn làm mới
         btnLamMoi = new JButton("Làm mới");
         btnLamMoi.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnLamMoi);
         btnLamMoi.setBounds(630, 160, 150, 30);
         add(btnLamMoi);
-
 
         JPanel pnlDoanhThu = new JPanel();
         pnlDoanhThu.setLayout(null);
@@ -164,15 +155,13 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
 
         JFreeChart chart = ChartFactory.createBarChart("BIỂU ĐỒ DOANH THU", "Ngày", "VND", null,
                 PlotOrientation.VERTICAL, false, false, false);
-//         chart.getPlot().setBackgroundPaint(Color.WHITE);
         chart.setBackgroundPaint(Color.WHITE);
 
-        chartPanel = new ChartPanel(chart);
-        chartPanel.setBounds(10, 20, 950, 500);
-        chartPanel.setOpaque(false);
-        pnlDoanhThu.add(chartPanel);
+        pnlChare = new ChartPanel(chart);
+        pnlChare.setBounds(10, 20, 950, 500);
+        pnlChare.setOpaque(false);
+        pnlDoanhThu.add(pnlChare);
 
-//        Tổng doanh thu
         JLabel lblTongDoanhThu = new JLabel("Tổng doanh thu:");
         lblTongDoanhThu.setFont(new Font("Arial", Font.PLAIN, 14));
         lblTongDoanhThu.setBounds(980, 50, 150, 30);
@@ -182,17 +171,10 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
         txtTongDoanhThu = new JTextField();
         txtTongDoanhThu.setBounds(980, 80, 200, 30);
         txtTongDoanhThu.setColumns(3);
-        txtTongDoanhThu.setFont(new Font("Arial",Font.PLAIN,20));
+        txtTongDoanhThu.setFont(new Font("Arial", Font.PLAIN, 20));
         pnlDoanhThu.add(txtTongDoanhThu);
 
-//        JLabel lblVND = new JLabel("VND");
-//        lblVND.setFont(new Font("Arial", Font.PLAIN, 20));
-//        lblVND.setBounds(1140, 80, 150, 29);
-//        lblVND.setForeground(Color.WHITE);
-//        pnlDoanhThu.add(lblVND);
-
         pnlThongTinThongke.add(pnlDoanhThu);
-        //
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/images/background.png"));
         lblBackGround = new JLabel(backgroundImage);
         lblBackGround.setBounds(0, 0, getWidth(), getHeight());
@@ -202,6 +184,194 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
         btnLamMoi.addActionListener(this);
         cmbLocTheo.addItemListener(this);
     }
+
+    /**
+     * Lấy danh sách thông kê doanh thu theo ngày
+     */
+    public static ArrayList<Object[]> calculateTotalByDate(ArrayList<Bill> listBill) {
+        Map<String, Double> totalByDate = new HashMap<>();
+        ArrayList<DetailsOfService> list1 = detailOfServiceDAO.getAllDetailsOfService();
+
+        for (Bill b : listBill) {
+            Date ngay = b.getNgayGioTra();
+            System.out.printf("----------------" + ngay + "----------------");
+
+            String dateTimeString = String.valueOf(ngay);
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+            SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+
+            String formattedDate = null;
+            try {
+                Date date = inputFormat.parse(dateTimeString);
+                formattedDate = outputFormat.format(date);
+                System.out.println(formattedDate);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            double gia = 0;
+            for (DetailsOfService details : list1) {
+                if (b.getMaHoaDon().equals(details.getMaHoaDon().getMaHoaDon())) {
+                    gia += details.getSoLuong() * details.getGiaBan();
+                }
+            }
+            double quantity = b.tinhTienPhong() + gia;
+
+
+            if (b.getKhuyenMai().trim().equalsIgnoreCase("KM")) {
+                double totalBillWithVAT = quantity * 1.08; // Tính tổng bill kèm VAT
+                quantity = totalBillWithVAT - (totalBillWithVAT * 0.15);
+            } else {
+                quantity += quantity * 8 / 100;
+            }
+
+            if (totalByDate.containsKey(formattedDate)) {
+                // Nếu ngày đã tồn tại trong HashMap, cộng dồn tổng tiền
+                double existingTotal = totalByDate.get(formattedDate);
+                totalByDate.put(formattedDate, existingTotal + quantity);
+            } else {
+                // Nếu ngày chưa tồn tại trong HashMap, thêm mới với tổng tiền
+                totalByDate.put(formattedDate, quantity);
+            }
+        }
+
+        // Chuyển HashMap thành ArrayList<Object>
+        ArrayList<Object[]> resultList = new ArrayList<>();
+        for (Map.Entry<String, Double> entry : totalByDate.entrySet()) {
+            Object[] item = new Object[]{entry.getKey(), entry.getValue()};
+            System.out.printf(entry.getKey() + "\n");
+            System.out.printf(entry.getValue() + "\n");
+            resultList.add(item);
+        }
+        return resultList;
+    }
+
+    /**
+     * Lấy danh sách thông kê doanh thu theo năm
+     *
+     * @param listBill: danh sách hóa đơn
+     */
+    public static ArrayList<Object[]> calculateTotalByYear(ArrayList<Bill> listBill) {
+        Map<String, Double> totalByDate = new HashMap<>();
+        ArrayList<DetailsOfService> list1 = detailOfServiceDAO.getAllDetailsOfService();
+
+
+        for (Bill b : listBill) {
+            Date ngay = b.getNgayGioTra();
+            System.out.printf("----------------" + ngay + "----------------");
+
+            String dateTimeString = String.valueOf(ngay);
+
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy");
+
+            String formattedDate = null;
+            try {
+                Date date = inputFormat.parse(dateTimeString);
+                formattedDate = outputFormat.format(date);
+                System.out.println("Ngày định dạng lại: " + formattedDate);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            double gia = 0;
+            for (DetailsOfService details : list1) {
+                if (b.getMaHoaDon().equals(details.getMaHoaDon().getMaHoaDon())) {
+                    gia += details.getSoLuong() * details.getGiaBan();
+                }
+            }
+            double quantity = b.tinhTienPhong() + gia;
+
+            if (b.getKhuyenMai().trim().equalsIgnoreCase("KM")) {
+                double totalBillWithVAT = quantity * 1.08; // Tính tổng bill kèm VAT
+                quantity = totalBillWithVAT - (totalBillWithVAT * 0.15);
+            } else {
+                quantity += quantity * 8 / 100;
+            }
+
+            if (totalByDate.containsKey(formattedDate)) {
+                // Nếu năm đã tồn tại trong HashMap, cộng dồn tổng tiền
+                double existingTotal = totalByDate.get(formattedDate);
+                totalByDate.put(formattedDate, existingTotal + quantity);
+            } else {
+                // Nếu năm chưa tồn tại trong HashMap, thêm mới với tổng tiền
+                totalByDate.put(formattedDate, quantity);
+            }
+        }
+
+        // Chuyển HashMap thành ArrayList<Object>
+        ArrayList<Object[]> resultList = new ArrayList<>();
+        for (Map.Entry<String, Double> entry : totalByDate.entrySet()) {
+            Object[] item = new Object[]{entry.getKey(), entry.getValue()};
+            System.out.printf(entry.getKey() + "\n");
+            System.out.printf(entry.getValue() + "\n");
+            resultList.add(item);
+        }
+        return resultList;
+    }
+
+    /**
+     * Lấy danh sách thông kê doanh thu theo tháng
+     */
+    public static ArrayList<Object[]> calculateTotalByMonth(ArrayList<Bill> listBill) {
+        Map<String, Double> totalByDate = new HashMap<>();
+        ArrayList<DetailsOfService> list1 = detailOfServiceDAO.getAllDetailsOfService();
+
+
+        for (Bill b : listBill) {
+            Date ngay = b.getNgayGioTra();
+            System.out.printf("----------------" + ngay + "----------------");
+
+            String dateTimeString = String.valueOf(ngay);
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+            SimpleDateFormat outputFormat = new SimpleDateFormat("MM-yyyy");
+
+            String formattedDate = null;
+            try {
+                Date date = inputFormat.parse(dateTimeString);
+                formattedDate = outputFormat.format(date);
+                System.out.println("Ngày định dạng lại: " + formattedDate);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            double gia = 0;
+            for (DetailsOfService details : list1) {
+                if (b.getMaHoaDon().equals(details.getMaHoaDon().getMaHoaDon())) {
+                    gia += details.getSoLuong() * details.getGiaBan();
+                }
+            }
+            double quantity = b.tinhTienPhong() + gia;
+
+            if (b.getKhuyenMai().trim().equalsIgnoreCase("KM")) {
+                double totalBillWithVAT = quantity * 1.08; // Tính tổng bill kèm VAT
+                quantity = totalBillWithVAT - (totalBillWithVAT * 0.15);
+            } else {
+                quantity += quantity * 8 / 100;
+            }
+
+            if (totalByDate.containsKey(formattedDate)) {
+                // Nếu tháng đã tồn tại trong HashMap, cộng dồn tổng tiền
+                double existingTotal = totalByDate.get(formattedDate);
+                totalByDate.put(formattedDate, existingTotal + quantity);
+            } else {
+                // Nếu tháng chưa tồn tại trong HashMap, thêm mới với tổng tiền
+                totalByDate.put(formattedDate, quantity);
+            }
+        }
+
+        // Chuyển HashMap thành ArrayList<Object>
+        ArrayList<Object[]> resultList = new ArrayList<>();
+        for (Map.Entry<String, Double> entry : totalByDate.entrySet()) {
+
+            Object[] item = new Object[]{entry.getKey(), entry.getValue()};
+            System.out.printf(entry.getKey() + "\n");
+            System.out.printf(entry.getValue() + "\n");
+            resultList.add(item);
+        }
+        return resultList;
+    }
+
     /**
      * Gán thời gian hiện tại cho label lblTime
      */
@@ -296,7 +466,7 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
     @Override
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
-        if (o.equals(btnThongKe)){
+        if (o.equals(btnThongKe)) {
             Date tuNgay = null;
             try {
                 tuNgay = pickerTuNgay.getFullDate();
@@ -307,7 +477,7 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
                 ex.printStackTrace();
             }
 
-        }else if (o.equals(btnLamMoi)){
+        } else if (o.equals(btnLamMoi)) {
             dataset.clear();
             txtTongDoanhThu.setText("");
             cmbLocTheo.setSelectedIndex(0);
@@ -318,6 +488,7 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
 
     /**
      * Hiển thị biểu đồ thống kê
+     *
      * @param fromDate       {@code Date} ngày bắt đầu
      * @param toDate         {@code Date} ngày kết thúc
      * @param dayOfMonth     {@code int} số ngày trong tháng
@@ -327,7 +498,7 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
      */
     public void showStatistical(Date fromDate, Date toDate, int dayOfMonth, int dayOfYear, String format,
                                 ArrayList<Object[]> totalPriceList) {
-        chartPanel.removeAll();
+        pnlChare.removeAll();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(fromDate);
         int day1 = calendar.get(Calendar.DAY_OF_MONTH);
@@ -401,11 +572,11 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
 
             Double totalPrice = 0.0;
 
-            for (int k=0;k<size;k++){
-                System.out.printf(totalPriceList.get(k)[0]+"\n");
-                System.out.printf(totalPriceList.get(k)[1]+"\n");
+            for (int k = 0; k < size; k++) {
+                System.out.printf(totalPriceList.get(k)[0] + "\n");
+                System.out.printf(totalPriceList.get(k)[1] + "\n");
                 if (fullDayStr.trim().equals(totalPriceList.get(k)[0])) {
-                    System.out.printf(fullDayStr+"----------------");
+                    System.out.printf(fullDayStr + "----------------");
                     totalPrice = (Double) totalPriceList.get(k)[1];
                     if (totalPrice == null) {
                         totalPrice = 0.0;
@@ -426,76 +597,11 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
         JFreeChart chart = ChartFactory.createBarChart("BIỂU ĐỒ DOANH THU " + title, timeUnit, "VND", dataset,
                 PlotOrientation.VERTICAL, false, false, false);
         chart.getPlot().setBackgroundPaint(Color.WHITE);
-        chartPanel.setChart(chart);
-    }
-
-    /**
-     * Lấy danh sách thông kê doanh thu theo ngày
-     * @param listBill
-     * @return
-     */
-    public static ArrayList<Object[]> calculateTotalByDate(ArrayList<Bill> listBill) {
-        Map<String, Double> totalByDate = new HashMap<>();
-        ArrayList<DetailsOfService> list1 = detailOfServiceDAO.getAllDetailsOfService();
-
-        for (Bill b : listBill) {
-            Date ngay = b.getNgayGioTra();
-            System.out.printf("----------------"+ngay+"----------------");
-
-            String dateTimeString = String.valueOf(ngay);
-            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-            SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
-
-            String formattedDate = null;
-            try {
-                Date date = inputFormat.parse(dateTimeString);
-                formattedDate = outputFormat.format(date);
-                System.out.println(formattedDate);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            double gia = 0;
-            for (DetailsOfService details : list1){
-                if (b.getMaHoaDon().equals(details.getMaHoaDon().getMaHoaDon())){
-                    gia += details.getSoLuong()*details.getGiaBan();
-                }
-            }
-            double quantity = b.tinhTienPhong() + gia;
-
-
-            if (b.getKhuyenMai().trim().equalsIgnoreCase("KM")){
-                double totalBillWithVAT = quantity * 1.08; // Tính tổng bill kèm VAT
-                quantity = totalBillWithVAT - (totalBillWithVAT * 0.15);
-            }else{
-                quantity += quantity*8/100;
-            }
-
-            if (totalByDate.containsKey(formattedDate)) {
-                // Nếu ngày đã tồn tại trong HashMap, cộng dồn tổng tiền
-                double existingTotal = totalByDate.get(formattedDate);
-                totalByDate.put(formattedDate, existingTotal + quantity);
-            } else {
-                // Nếu ngày chưa tồn tại trong HashMap, thêm mới với tổng tiền
-                totalByDate.put(formattedDate, quantity);
-            }
-        }
-
-        // Chuyển HashMap thành ArrayList<Object>
-        ArrayList<Object[]> resultList = new ArrayList<>();
-        for (Map.Entry<String, Double> entry : totalByDate.entrySet()) {
-            Object[] item = new Object[]{entry.getKey(), entry.getValue()};
-            System.out.printf(entry.getKey() + "\n");
-            System.out.printf(entry.getValue() + "\n");
-            resultList.add(item);
-        }
-        return resultList;
+        pnlChare.setChart(chart);
     }
 
     /**
      * Thống kê doanh thu
-     * @param listBill
-     * @throws ParseException
      */
     private void statistical(ArrayList<Bill> listBill) throws ParseException {
         Date fromDate = pickerTuNgay.getFullDate();
@@ -504,7 +610,7 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
         int TotalBill = 0;
         TotalBill = billDAO.getTotalLineOfBillList(fromDate, toDate);
 
-        System.out.printf(TotalBill+"");
+        System.out.printf(TotalBill + "");
 
         ArrayList<Object[]> totalPriceList = new ArrayList<>();
         long difference = toDate.getTime() - fromDate.getTime();
@@ -540,141 +646,14 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
             JOptionPane.showMessageDialog(this, message, "Lỗi", JOptionPane.ERROR_MESSAGE);
         } else if (days >= 0 && days <= dayOfMonth) {
             totalPriceList = calculateTotalByDate(listBill);
-            showStatistical(fromDate, toDate, dayOfMonth, dayOfYear, "dd",totalPriceList);
+            showStatistical(fromDate, toDate, dayOfMonth, dayOfYear, "dd", totalPriceList);
         } else if (days > dayOfMonth && days <= dayOfYear) {
-            totalPriceList =  calculateTotalByMonth(listBill);
+            totalPriceList = calculateTotalByMonth(listBill);
             showStatistical(fromDate, toDate, dayOfMonth, dayOfYear, "mm", totalPriceList);
         } else if (days > dayOfYear) {
-            totalPriceList =  calculateTotalByYear(listBill);
-            showStatistical(fromDate, toDate, dayOfMonth, dayOfYear, "yyyy",totalPriceList);
+            totalPriceList = calculateTotalByYear(listBill);
+            showStatistical(fromDate, toDate, dayOfMonth, dayOfYear, "yyyy", totalPriceList);
         }
-    }
-    /**
-     * Lấy danh sách thông kê doanh thu theo năm
-     * @param listBill
-     * @return
-     */
-    public static ArrayList<Object[]> calculateTotalByYear(ArrayList<Bill> listBill) {
-        Map<String, Double> totalByDate = new HashMap<>();
-        ArrayList<DetailsOfService> list1 = detailOfServiceDAO.getAllDetailsOfService();
-
-
-        for (Bill b : listBill) {
-            Date ngay = b.getNgayGioTra();
-            System.out.printf("----------------"+ngay+"----------------");
-
-            String dateTimeString = String.valueOf(ngay);
-
-            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy");
-
-            String formattedDate = null;
-            try {
-                Date date = inputFormat.parse(dateTimeString);
-                formattedDate = outputFormat.format(date);
-                System.out.println("Ngày định dạng lại: " + formattedDate);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            double gia = 0;
-            for (DetailsOfService details : list1){
-                if (b.getMaHoaDon().equals(details.getMaHoaDon().getMaHoaDon())){
-                    gia += details.getSoLuong()*details.getGiaBan();
-                }
-            }
-            double quantity = b.tinhTienPhong() + gia;
-
-            if (b.getKhuyenMai().trim().equalsIgnoreCase("KM")){
-                double totalBillWithVAT = quantity * 1.08; // Tính tổng bill kèm VAT
-                quantity = totalBillWithVAT - (totalBillWithVAT * 0.15);
-            }else{
-                quantity += quantity*8/100;
-            }
-
-            if (totalByDate.containsKey(formattedDate)) {
-                // Nếu năm đã tồn tại trong HashMap, cộng dồn tổng tiền
-                double existingTotal = totalByDate.get(formattedDate);
-                totalByDate.put(formattedDate, existingTotal + quantity);
-            } else {
-                // Nếu năm chưa tồn tại trong HashMap, thêm mới với tổng tiền
-                totalByDate.put(formattedDate, quantity);
-            }
-        }
-
-        // Chuyển HashMap thành ArrayList<Object>
-        ArrayList<Object[]> resultList = new ArrayList<>();
-        for (Map.Entry<String, Double> entry : totalByDate.entrySet()) {
-            Object[] item = new Object[]{entry.getKey(), entry.getValue()};
-            System.out.printf(entry.getKey() + "\n");
-            System.out.printf(entry.getValue() + "\n");
-            resultList.add(item);
-        }
-        return resultList;
-    }
-
-    /**
-     * Lấy danh sách thông kê doanh thu theo tháng
-     * @param listBill
-     * @return
-     */
-    public static ArrayList<Object[]> calculateTotalByMonth(ArrayList<Bill> listBill) {
-        Map<String, Double> totalByDate = new HashMap<>();
-        ArrayList<DetailsOfService> list1 = detailOfServiceDAO.getAllDetailsOfService();
-
-
-        for (Bill b : listBill) {
-            Date ngay = b.getNgayGioTra();
-            System.out.printf("----------------"+ngay+"----------------");
-
-            String dateTimeString = String.valueOf(ngay);
-            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-            SimpleDateFormat outputFormat = new SimpleDateFormat("MM-yyyy");
-
-            String formattedDate = null;
-            try {
-                Date date = inputFormat.parse(dateTimeString);
-                formattedDate = outputFormat.format(date);
-                System.out.println("Ngày định dạng lại: " + formattedDate);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            double gia = 0;
-            for (DetailsOfService details : list1){
-                if (b.getMaHoaDon().equals(details.getMaHoaDon().getMaHoaDon())){
-                    gia += details.getSoLuong()*details.getGiaBan();
-                }
-            }
-            double quantity = b.tinhTienPhong() + gia;
-
-            if (b.getKhuyenMai().trim().equalsIgnoreCase("KM")){
-                double totalBillWithVAT = quantity * 1.08; // Tính tổng bill kèm VAT
-                quantity = totalBillWithVAT - (totalBillWithVAT * 0.15);
-            }else{
-                quantity += quantity*8/100;
-            }
-
-            if (totalByDate.containsKey(formattedDate)) {
-                // Nếu tháng đã tồn tại trong HashMap, cộng dồn tổng tiền
-                double existingTotal = totalByDate.get(formattedDate);
-                totalByDate.put(formattedDate, existingTotal + quantity);
-            } else {
-                // Nếu tháng chưa tồn tại trong HashMap, thêm mới với tổng tiền
-                totalByDate.put(formattedDate, quantity);
-            }
-        }
-
-        // Chuyển HashMap thành ArrayList<Object>
-        ArrayList<Object[]> resultList = new ArrayList<>();
-        for (Map.Entry<String, Double> entry : totalByDate.entrySet()) {
-
-            Object[] item = new Object[]{entry.getKey(), entry.getValue()};
-            System.out.printf(entry.getKey() + "\n");
-            System.out.printf(entry.getValue() + "\n");
-            resultList.add(item);
-        }
-        return resultList;
     }
 
 }

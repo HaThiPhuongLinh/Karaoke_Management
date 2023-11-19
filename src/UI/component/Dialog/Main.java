@@ -3,7 +3,7 @@ package UI.component.Dialog;
 import DAO.RoomDAO;
 import Entity.Room;
 import Entity.Staff;
-import UI.LoginUI;
+import UI.Login_UI;
 import UI.component.*;
 import menu.swing.RoundPanel;
 import menu.Header;
@@ -51,7 +51,7 @@ public class Main extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                dispose();
-                LoginUI login = new LoginUI();
+                Login_UI login = new Login_UI();
                 login.setVisible(true);
             }
         });

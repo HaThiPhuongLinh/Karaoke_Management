@@ -16,14 +16,10 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -38,11 +34,11 @@ import java.util.List;
  */
 public class DialogBill extends JDialog implements ActionListener {
     private final String WORKING_DIR = System.getProperty("user.dir");
-    private  JTextField txtKM;
+    private JTextField txtKM;
     private JTextField txtBillId, txtStaffName, txtCustomerName, txtRoomId, txtRoomTypeName, txtRoomPrice, txtStartTime,
             txtEndTime, txtUsedTime, txtTotalPriceService, txtTotalPriceRoom, txtVAT, txtTotalPriceBill;
     private JTable tblTableBillInfo;
-    private DefaultTableModel modelTableBillInfo;
+    private DefaultTableModel modelTblBillInfo;
     private JButton btnPayment, btnBack, btnExportPdf;
     private String formatTime = "HH:mm:ss dd/MM/yyyy";
     private DecimalFormat df = new DecimalFormat("#,###.## VND");
@@ -144,9 +140,9 @@ public class DialogBill extends JDialog implements ActionListener {
         pnInfoService.add(pnTable);
 
         String[] colsBillInfo = {"STT", "Tên dịch vụ ", "Số lượng", "Đơn giá", "Thành tiền"};
-        modelTableBillInfo = new DefaultTableModel(colsBillInfo, 0);
+        modelTblBillInfo = new DefaultTableModel(colsBillInfo, 0);
 
-        tblTableBillInfo = new JTable(modelTableBillInfo);
+        tblTableBillInfo = new JTable(modelTblBillInfo);
         tblTableBillInfo.setBackground(new Color(255, 255, 255, 0));
         tblTableBillInfo.setForeground(new Color(255, 255, 255));
         Custom.getInstance().setCustomTableBill(tblTableBillInfo);
@@ -487,8 +483,8 @@ public class DialogBill extends JDialog implements ActionListener {
      * Hiển thị thông tin các dịch vụ đã đặt
      */
     private void showServiceOrders() {
-        modelTableBillInfo.getDataVector().removeAllElements();
-        modelTableBillInfo.fireTableDataChanged();
+        modelTblBillInfo.getDataVector().removeAllElements();
+        modelTblBillInfo.fireTableDataChanged();
         List<DetailsOfService> serviceOrders = bill.getLstDetails();
         int i = 1;
         for (DetailsOfService item : serviceOrders) {
@@ -497,7 +493,7 @@ public class DialogBill extends JDialog implements ActionListener {
             String quantityStr = df2.format(item.getSoLuong());
             String priceStr = df.format(item.getGiaBan());
             String totalPriceStr = df.format(item.tinhTienDichVu());
-            modelTableBillInfo.addRow(new Object[]{addSpaceToString(sttStr), addSpaceToString(service.getTenDichVu()),
+            modelTblBillInfo.addRow(new Object[]{addSpaceToString(sttStr), addSpaceToString(service.getTenDichVu()),
                     addSpaceToString(quantityStr), addSpaceToString(priceStr), addSpaceToString(totalPriceStr)});
         }
     }
