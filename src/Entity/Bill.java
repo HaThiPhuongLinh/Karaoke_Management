@@ -174,11 +174,7 @@ public class Bill {
             long difference = ngayGioTra.getTime() - ngayGioDat.getTime();
             soPhut = (int) TimeUnit.MILLISECONDS.toMinutes(difference);
         }
-        if(soPhut <= 60) {
-            soPhut = 60;
-        }
-        soPhut = (int) soPhut / 15;
-        return soPhut * 1.0 / 4;
+        return soPhut * 1.0 / 60;
     }
 
     /**
@@ -192,14 +188,16 @@ public class Bill {
             soPhut = (int) TimeUnit.MILLISECONDS.toMinutes(difference);
         }
 
-        if (soPhut <= 60) {
-            soPhut = 60;
-        }
-
         int gio = soPhut / 60;
         int phut = soPhut % 60;
 
-        return gio + " giờ " + phut + " phút";
+        // Nếu số phút nhỏ hơn hoặc bằng 60, hiển thị theo số phút.
+        if (soPhut <= 60) {
+            return soPhut + " phút";
+        } else {
+            // Ngược lại, hiển thị theo giờ và phút.
+            return gio + " giờ " + phut + " phút";
+        }
     }
 
     /**
@@ -208,7 +206,6 @@ public class Bill {
      */
     public Double tinhTongTienDichVu() {
         if (lstDetails == null) {
-
             return 0.0;
         }
         else {

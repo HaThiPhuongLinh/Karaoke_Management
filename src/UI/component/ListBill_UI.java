@@ -1,11 +1,12 @@
 package UI.component;
 
 import ConnectDB.ConnectDB;
-import DAO.*;
-import Entity.Room;
-import Entity.Staff;
+import DAO.BillDAO;
+import DAO.DetailOfServiceDAO;
+import DAO.RoomDAO;
 import Entity.Bill;
 import Entity.DetailsOfService;
+import Entity.Staff;
 import UI.CustomUI.Custom;
 import UI.component.Dialog.DatePicker;
 import UI.component.Dialog.InfoBill;
@@ -31,22 +32,24 @@ import java.util.Date;
  * Lần cập nhật cuối : 06/11/2023
  * Nội dung cập nhật : Sửa tổng tiền dịch vụ
  */
-public class ListBill_UI extends JPanel implements ActionListener,MouseListener,ItemListener {
+public class ListBill_UI extends JPanel implements ActionListener, MouseListener, ItemListener {
     public static Staff staffLogin = null;
     private JComboBox<String> cmbLocTheo;
+    private JTextField txtSum;
     private JTable tblHD;
     private DefaultTableModel modelTblHD;
     private JButton btnThongKe, btnLamMoi;
-    private JLabel lblDenNgay, lblTuNgay;
+    private JLabel lblDenNgay, lblTuNgay, lblSum;
     private JLabel lblBackground, lblTime;
     private DatePicker dpDenNgay, dpTuNgay;
     private BillDAO billDAO;
     private DetailOfServiceDAO serviceDetailDAO = DetailOfServiceDAO.getInstance();
     private Bill bills = new Bill();
     private RoomDAO roomDAO;
-    private  DetailOfServiceDAO ctdv_dao;
+    private DetailOfServiceDAO ctdv_dao;
 
     private DecimalFormat df = new DecimalFormat("#,###.## VND");
+
     public ListBill_UI(Staff staff) {
         this.staffLogin = staff;
         setLayout(null);
@@ -55,7 +58,7 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
         java.util.List<DetailsOfService> serviceOrders = new ArrayList<>();
         serviceOrders = serviceDetailDAO.getDetailsOfServiceForBill(bills.getMaHoaDon());
         bills.setLstDetails(serviceOrders);
-        roomDAO =new RoomDAO();
+        roomDAO = new RoomDAO();
         ctdv_dao = new DetailOfServiceDAO();
 
         //phan viet code
@@ -85,7 +88,7 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
         });
         timer.start();
 
-        JPanel panel1 =  new JPanel();
+        JPanel panel1 = new JPanel();
         panel1.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "THÔNG TIN THỐNG KÊ",
                 TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
         panel1.setBounds(10, 70, 1245, 670);
@@ -131,7 +134,7 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
         cmbLocTheo.addItem("3 tháng gần nhất");
         cmbLocTheo.addItem("6 tháng gần nhất");
         cmbLocTheo.addItem("1 năm gần nhất");
-        cmbLocTheo.setBounds(830,100,200,30);
+        cmbLocTheo.setBounds(830, 100, 200, 30);
         Custom.setCustomComboBox(cmbLocTheo);
         add(cmbLocTheo);
 
@@ -158,8 +161,8 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
         panelDSDV.setBounds(5, 130, 1235, 530);
         panelDSDV.setOpaque(false);
 
-        String[] colsDV = { "Mã HD", "Tên Nhân Viên", "Tên Khách Hàng","Mã Phòng","Tiền Phòng","Tiền Dich Vụ","Tổng Tiền" };
-        modelTblHD = new DefaultTableModel(colsDV, 0) ;
+        String[] colsDV = {"Mã HD", "Tên Nhân Viên", "Tên Khách Hàng", "Mã Phòng", "Tiền Phòng", "Tiền Dich Vụ", "Tổng Tiền"};
+        modelTblHD = new DefaultTableModel(colsDV, 0);
         JScrollPane scrollPaneDV;
 
         tblHD = new JTable(modelTblHD);
@@ -171,14 +174,25 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
 //        tableLDV.getTableHeader().setBackground(new Color(255, 255, 255));
         Custom.getInstance().setCustomTable(tblHD);
 
-        panelDSDV.add(scrollPaneDV = new JScrollPane(tblHD,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
+        panelDSDV.add(scrollPaneDV = new JScrollPane(tblHD, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
                 BorderLayout.CENTER);
-        scrollPaneDV.setBounds(10,20,1220,500);
+        scrollPaneDV.setBounds(10, 20, 1220, 440);
         scrollPaneDV.setOpaque(false);
         scrollPaneDV.getViewport().setOpaque(false);
         scrollPaneDV.getViewport().setBackground(Color.WHITE);
         panel1.add(panelDSDV);
-        //
+
+        lblSum = new JLabel("Tổng doanh thu:");
+        lblSum.setBounds(910,470,130,30);
+        lblSum.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblSum.setForeground(Color.WHITE);
+        panelDSDV.add(lblSum);
+
+        txtSum = new JTextField();
+        txtSum.setBounds(1040,470,160,28);
+        txtSum.setFont(new Font("Arial", Font.PLAIN, 16));
+        panelDSDV.add(txtSum);
+
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/images/background.png"));
         lblBackground = new JLabel(backgroundImage);
         lblBackground.setBounds(0, 0, getWidth(), getHeight());
@@ -239,18 +253,20 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
             cmbLocTheo.setSelectedIndex(0);
             dpTuNgay.setValueToDay();
             dpDenNgay.setValueToDay();
+            txtSum.setText("");
         }
     }
 
     /**
      * Load lại danh sách hóa đơn đã thanh toán
+     *
      * @param listBill:Danh sách hóa đơn cần load
      */
     public void reloadHD(ArrayList<Bill> listBill) {
 
-        for (Bill bill :listBill) {
+        for (Bill bill : listBill) {
 
-            if(bill.getTinhTrangHD()==1) {
+            if (bill.getTinhTrangHD() == 1) {
                 java.util.List<DetailsOfService> serviceOrders = new ArrayList<>();
                 serviceOrders = serviceDetailDAO.getDetailsOfServiceForBill(bill.getMaHoaDon());
                 bill.setLstDetails(serviceOrders);
@@ -281,18 +297,20 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
                 }
 
                 double totalPrice = bill.getTongTienHD() + vat - km;
-                Object[] rowData = {bill.getMaHoaDon(),bill.getMaNhanVien().getTenNhanVien(),bill.getMaKH().getTenKhachHang(), bill.getMaPhong().getMaPhong(), df.format(totalPriceRoom),df.format(totalPriceService),df.format(totalPrice)};
+                Object[] rowData = {bill.getMaHoaDon(), bill.getMaNhanVien().getTenNhanVien(), bill.getMaKH().getTenKhachHang(), bill.getMaPhong().getMaPhong(), df.format(totalPriceRoom), df.format(totalPriceService), df.format(totalPrice)};
                 modelTblHD.addRow(rowData);
+
+                txtSum.setText(df.format(sumRevenue()));
             }
         }
     }
+
     /**
      * Load  danh sách hóa đơn đã thanh toán
-     *
      */
     public void loadHD() {
-        for (Bill bill :billDAO.getAllBill2()) {
-            if(bill.getTinhTrangHD()==1) {
+        for (Bill bill : billDAO.getAllBill2()) {
+            if (bill.getTinhTrangHD() == 1) {
                 java.util.List<DetailsOfService> serviceOrders = new ArrayList<>();
                 serviceOrders = serviceDetailDAO.getDetailsOfServiceForBill(bill.getMaHoaDon());
                 bill.setLstDetails(serviceOrders);
@@ -323,17 +341,18 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
                     km = 0.0;
                 }
                 double totalPrice = bill.getTongTienHD() + vat - km;
-                Object[] rowData = {bill.getMaHoaDon(),bill.getMaNhanVien().getTenNhanVien(),bill.getMaKH().getTenKhachHang(), bill.getMaPhong().getMaPhong(), df.format(totalPriceRoom),df.format(totalPriceService),df.format(totalPrice)};
+                Object[] rowData = {bill.getMaHoaDon(), bill.getMaNhanVien().getTenNhanVien(), bill.getMaKH().getTenKhachHang(), bill.getMaPhong().getMaPhong(), df.format(totalPriceRoom), df.format(totalPriceService), df.format(totalPrice)};
                 modelTblHD.addRow(rowData);
 
+                txtSum.setText(df.format(sumRevenue()));
             }
         }
     }
 
     /**
      * Hàm để regex dữ liệu nhập vào
+     *
      * @return {@code boolean}:Dữ liệu nhập đúng hoặc sai
-     * @throws ParseException
      */
     public boolean validData() throws ParseException {
         Date tuNgay = dpTuNgay.getFullDate();
@@ -346,6 +365,7 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
 
     /**
      * Lọc hóa đơn đã thanh toán theo các mốc thời gian khác nhau
+     *
      * @param e the event to be processed
      */
     public void itemStateChanged(ItemEvent e) {
@@ -420,12 +440,12 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
     @Override
     public void mouseClicked(MouseEvent e) {
         Object o = e.getSource();
-        if(o.equals(tblHD)) {
+        if (o.equals(tblHD)) {
             int row = tblHD.getSelectedRow();
-            System.out.println("Đã nhấp chuột");
+            //System.out.println("Đã nhấp chuột");
             if (row != -1) {
                 String maHoaDon = modelTblHD.getValueAt(row, 0).toString();
-                System.out.println("MaHoaDon được chọn: " + maHoaDon);
+                //System.out.println("MaHoaDon được chọn: " + maHoaDon);
                 Bill bill = billDAO.getBillByBillID(maHoaDon);
                 String maPhong = modelTblHD.getValueAt(row, 3).toString();
 //                Room room = roomDAO.getRoomByRoomId(maPhong);
@@ -436,18 +456,27 @@ public class ListBill_UI extends JPanel implements ActionListener,MouseListener,
                 ArrayList<DetailsOfService> billInfoList = ctdv_dao.getDetailsOfServiceForBill(billId);
                 bill.setLstDetails(billInfoList);
                 long millis = System.currentTimeMillis();
-               Timestamp ngayTra =bill.getNgayGioTra();
+                Timestamp ngayTra = bill.getNgayGioTra();
                 bill.setNgayGioTra(ngayTra);
                 Double totalPriceBill = bill.getTongTienHD();
 
                 InfoBill winPayment = new InfoBill(bill);
                 winPayment.setModal(true);
                 winPayment.setVisible(true);
-                System.out.println("Dialog InfoBill được hiển thị");
+                //System.out.println("Dialog InfoBill được hiển thị");
             }
         }
+    }
 
+    public double sumRevenue() {
+        double tongGiaTri = 0.0;
+        for (int i = 0; i < modelTblHD.getRowCount(); i++) {
+            String giaTriCotTongTien = modelTblHD.getValueAt(i, 6).toString();
+            double giaTri = Double.parseDouble(giaTriCotTongTien.replace(" VND", "").replace(",", ""));
+            tongGiaTri += giaTri;
         }
+        return tongGiaTri;
+    }
 
 
 

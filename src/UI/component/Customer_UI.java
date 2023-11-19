@@ -29,7 +29,6 @@ import java.util.Date;
  * Lần cập nhật cuối : 15/11/2023
  * Nội dung cập nhật : cập nhật regex cho CCCD của khách hàng
  */
-
 public class Customer_UI extends JPanel implements ActionListener, MouseListener {
     private JTable tblKH;
     private DefaultTableModel modelTableKH;

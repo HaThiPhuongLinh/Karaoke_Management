@@ -67,9 +67,9 @@ public class ReservationFormList extends JFrame implements ActionListener, Mouse
         return instance;
     }
 
-    public static void main(String[] args) {
-        new UI.component.Dialog.ReservationFormList().setVisible(true);
-    }
+//    public static void main(String[] args) {
+//        new UI.component.Dialog.ReservationFormList().setVisible(true);
+//    }
 
     public void setKaraokeBookingUI(KaraokeBooking_UI main) {
         this.main = main;
@@ -444,8 +444,7 @@ public class ReservationFormList extends JFrame implements ActionListener, Mouse
                         ArrayList<Room> yourListOfRooms = roomDAO.getRoomList();
                         main.LoadRoomList(yourListOfRooms);
                     }
-                }else {
-                    JOptionPane.showMessageDialog(this, "Hủy đặt phòng thất bại");
+                } else {
                 }
                 txtTim.setText("");
             }

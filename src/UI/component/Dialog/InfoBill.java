@@ -4,8 +4,6 @@ import DAO.*;
 import Entity.*;
 import UI.CustomUI.Custom;
 import UI.component.Bill_UI;
-import UI.component.ListBill_UI;
-import com.itextpdf.text.DocumentException;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -17,14 +15,8 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -226,8 +218,6 @@ public class InfoBill extends JDialog implements ActionListener {
         btnBack.setBounds(340, 670, 130, 35);
         pnMain.add(btnBack);
 
-
-
         JLabel txtPhoneNumber = new JLabel("0999.999.999");
         txtPhoneNumber.setBackground(Color.WHITE);
         txtPhoneNumber.setFont(new Font("Dialog", Font.PLAIN, 16));
@@ -352,13 +342,11 @@ public class InfoBill extends JDialog implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
- if (o.equals(btnBack)) {
+        if (o.equals(btnBack)) {
             this.dispose();
 
         }
     }
-
-
 
     /**
      * chạy tất cả các hàm khi bắt đầu chạy form

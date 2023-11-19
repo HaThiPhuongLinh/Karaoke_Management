@@ -50,7 +50,7 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
     private JLabel lblBackGround, lblTime;
     private BillDAO billDAO;
     private static DetailOfServiceDAO detailOfServiceDAO;
-    private DecimalFormat df = new DecimalFormat("#,###.##");
+    private DecimalFormat df = new DecimalFormat("#,###.## VND");
     private DefaultCategoryDataset dataset;
     public static Staff staffLogin = null;
 
@@ -180,16 +180,16 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
         pnlDoanhThu.add(lblTongDoanhThu);
 
         txtTongDoanhThu = new JTextField();
-        txtTongDoanhThu.setBounds(980, 80, 150, 30);
+        txtTongDoanhThu.setBounds(980, 80, 200, 30);
         txtTongDoanhThu.setColumns(3);
-        txtTongDoanhThu.setFont(new Font("Dialog",Font.PLAIN,20));
+        txtTongDoanhThu.setFont(new Font("Arial",Font.PLAIN,20));
         pnlDoanhThu.add(txtTongDoanhThu);
 
-        JLabel lblVND = new JLabel("VND");
-        lblVND.setFont(new Font("Arial", Font.PLAIN, 20));
-        lblVND.setBounds(1140, 80, 150, 29);
-        lblVND.setForeground(Color.WHITE);
-        pnlDoanhThu.add(lblVND);
+//        JLabel lblVND = new JLabel("VND");
+//        lblVND.setFont(new Font("Arial", Font.PLAIN, 20));
+//        lblVND.setBounds(1140, 80, 150, 29);
+//        lblVND.setForeground(Color.WHITE);
+//        pnlDoanhThu.add(lblVND);
 
         pnlThongTinThongke.add(pnlDoanhThu);
         //
@@ -461,7 +461,7 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
                     gia += details.getSoLuong()*details.getGiaBan();
                 }
             }
-            double quantity = b.getMaPhong().getGiaPhong() * b.tinhGioThue() + gia;
+            double quantity = b.tinhTienPhong() + gia;
 
 
             if (b.getKhuyenMai().trim().equalsIgnoreCase("KM")){
@@ -583,8 +583,7 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
                     gia += details.getSoLuong()*details.getGiaBan();
                 }
             }
-            double quantity = b.getMaPhong().getGiaPhong() * b.tinhGioThue() + gia;
-
+            double quantity = b.tinhTienPhong() + gia;
 
             if (b.getKhuyenMai().trim().equalsIgnoreCase("KM")){
                 double totalBillWithVAT = quantity * 1.08; // Tính tổng bill kèm VAT
@@ -647,7 +646,7 @@ public class Statistic_UI extends JPanel implements  ActionListener, ItemListene
                     gia += details.getSoLuong()*details.getGiaBan();
                 }
             }
-            double quantity = b.getMaPhong().getGiaPhong() * b.tinhGioThue() + gia;
+            double quantity = b.tinhTienPhong() + gia;
 
             if (b.getKhuyenMai().trim().equalsIgnoreCase("KM")){
                 double totalBillWithVAT = quantity * 1.08; // Tính tổng bill kèm VAT

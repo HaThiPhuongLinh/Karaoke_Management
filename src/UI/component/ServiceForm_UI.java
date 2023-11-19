@@ -648,11 +648,11 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
         if (o.equals(btnFindRoom)) {
             String roomID = txtFind.getText().trim();
             if (roomID.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Chưa nhập mã phòng");
+                JOptionPane.showMessageDialog(this, "Chưa nhập mã phòng.");
             } else {
                 ArrayList roomInUse = roomDAO.getRoomsByRoomIdAndStatus(roomID, "Đang sử dụng");
                 if (roomInUse.size() == 0) {
-                    JOptionPane.showMessageDialog(this, "Không tìm thấy");
+                    JOptionPane.showMessageDialog(this, "Không tìm thấy!");
                 } else {
                     loadRoomListByRoomID(roomID);
                 }
@@ -667,9 +667,9 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
         }
         if (o.equals(btnUse)) {
             if (txtName.getText().trim().equals("")) {
-                JOptionPane.showMessageDialog(this, "Bạn cần phải chọn dịch vụ");
+                JOptionPane.showMessageDialog(this, "Bạn cần phải chọn dịch vụ!");
             } else if (txtFind.getText().trim().equals("")) {
-                JOptionPane.showMessageDialog(this, "Bạn cần phải chọn phòng");
+                JOptionPane.showMessageDialog(this, "Bạn cần phải chọn phòng!");
             } else {
                 int orderQuantity = (int) txtQuantity.getValue();
                 if (isDoubleClick) {
@@ -682,7 +682,7 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
 
                 if (quantityInStock <= 0) {
                     message = "Dịch vụ đã hết";
-                    JOptionPane.showMessageDialog(this, message, "Cảnh bảo", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, message, "Cảnh báo", JOptionPane.ERROR_MESSAGE);
                 } else {
                     String typeMessage = "Thêm";
                     Service service = new Service();

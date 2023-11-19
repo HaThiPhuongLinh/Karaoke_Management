@@ -136,9 +136,9 @@ public class ChooseCustomer extends JFrame implements ActionListener, MouseListe
         btnALL.addActionListener(this);
     }
 
-    public static void main(String[] args) {
-        new ChooseCustomer(main).setVisible(true);
-    }
+//    public static void main(String[] args) {
+//        new ChooseCustomer(main).setVisible(true);
+//    }
 
     @Override
     public void mouseClicked(MouseEvent e) {

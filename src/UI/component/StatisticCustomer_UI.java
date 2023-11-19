@@ -275,7 +275,7 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
                 }
             }
 
-            double roomPrice = bill.getMaPhong().getGiaPhong() * bill.tinhGioThue();
+            double roomPrice = bill.tinhTienPhong();
             double totalServicePrice = gia;
 
             double totalQuantity;
@@ -444,7 +444,7 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
         tblDichVu1.getColumnModel().getColumn(6).setPreferredWidth(10);
         tblDichVu1.getColumnModel().getColumn(7).setPreferredWidth(50);
         tblDichVu1.getColumnModel().getColumn(8).setPreferredWidth(150);
-        tblDichVu1.getColumnModel().getColumn(9).setPreferredWidth(40);
+        tblDichVu1.getColumnModel().getColumn(9).setPreferredWidth(70);
 
         panel.add(scrKhachHang = new JScrollPane(tblDichVu1,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
                 BorderLayout.CENTER);
@@ -504,14 +504,14 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
             SimpleDateFormat sdfOutput1 = new SimpleDateFormat("HH:mm:ss");
             String gioPhutGiayDat = sdfOutput1.format(date1);
 
-            modelTblDichVu1.addRow(new Object[]{i,bill.getMaHoaDon(),bill.getMaKH().getMaKhachHang(),bill.getMaKH().getTenKhachHang(),ngayThangDinhDang,gioPhutGiayDat,gioPhutGiayTra,bill.tinhGioThue(),df.format(bill.getMaPhong().getGiaPhong()),df.format(bill.tinhTienPhong())});
+            modelTblDichVu1.addRow(new Object[]{i,bill.getMaHoaDon(),bill.getMaKH().getMaKhachHang(),bill.getMaKH().getTenKhachHang(),ngayThangDinhDang,gioPhutGiayDat,gioPhutGiayTra,bill.tinhThoiGianSuDung(),df.format(bill.getMaPhong().getGiaPhong()),df.format(bill.tinhTienPhong())});
             ArrayList<DetailsOfService> details = detailOfServiceDAO.getDetailsOfServiceForBill(bill.getMaHoaDon());
             double gia=0;
             for (DetailsOfService detailsOfService:details){
                 modelTblDichVu1.addRow(new Object[]{"","",detailsOfService.getMaDichVu().getMaDichVu(),detailsOfService.getMaDichVu().getTenDichVu(),ngayThangDinhDang,gioPhutGiayDat,gioPhutGiayTra,detailsOfService.getSoLuong(),df.format(detailsOfService.getGiaBan()),df.format((detailsOfService.getGiaBan()*detailsOfService.getSoLuong()))});
                 gia += detailsOfService.getGiaBan()*detailsOfService.getSoLuong();
             }
-            double quantity = bill.getMaPhong().getGiaPhong() * bill.tinhGioThue() + gia;
+            double quantity = bill.tinhTienPhong() + gia;
             if (bill.getKhuyenMai().trim().equalsIgnoreCase("KM")){
                 double totalBillWithVAT = quantity * 1.08; // Tính tổng bill kèm VAT
                 quantity = totalBillWithVAT - (totalBillWithVAT * 0.15);

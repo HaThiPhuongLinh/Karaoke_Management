@@ -174,9 +174,9 @@ public class DiaLogDatePicker extends JDialog implements ActionListener, ChangeL
         spinYear.addChangeListener(this);
     }
 
-    public static void main(String[] args) {
-        new DiaLogDatePicker().setVisible(true);
-    }
+//    public static void main(String[] args) {
+//        new DiaLogDatePicker().setVisible(true);
+//    }
 
     @Override
     public void actionPerformed(ActionEvent e) {

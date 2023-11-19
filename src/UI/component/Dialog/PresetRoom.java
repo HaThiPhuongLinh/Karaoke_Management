@@ -172,12 +172,12 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
         return instance;
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            PresetRoom presetRoom = new PresetRoom();
-            presetRoom.setVisible(true);
-        });
-    }
+//    public static void main(String[] args) {
+//        SwingUtilities.invokeLater(() -> {
+//            PresetRoom presetRoom = new PresetRoom();
+//            presetRoom.setVisible(true);
+//        });
+//    }
 
     private void updateDateComboBox() {
         LocalDate currentDate = LocalDate.now();
