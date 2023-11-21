@@ -50,9 +50,13 @@ public class Main extends JFrame {
         menu.setLogoutAction(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-               dispose();
-                Login_UI login = new Login_UI();
-                login.setVisible(true);
+                int choice = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn đăng xuất?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+
+                if (choice == JOptionPane.YES_OPTION) {
+                    dispose();
+                    Login_UI login = new Login_UI();
+                    login.setVisible(true);
+                }
             }
         });
 

@@ -271,7 +271,7 @@ public class ListBill_UI extends JPanel implements ActionListener, MouseListener
                 calendarNgaySinhKhachHang.setTime(bill.getMaKH().getNgaySinh());
 
                 Calendar calendarNgayDat = Calendar.getInstance();
-                calendarNgayDat.setTime(bill.getNgayGioDat());
+                calendarNgayDat.setTime(bill.getThoiGianVao());
 
                 int ngaySinhKhachHangValue = calendarNgaySinhKhachHang.get(Calendar.DAY_OF_MONTH);
                 int thangSinhKhachHangValue = calendarNgaySinhKhachHang.get(Calendar.MONTH) + 1;
@@ -316,7 +316,7 @@ public class ListBill_UI extends JPanel implements ActionListener, MouseListener
                 calendarNgaySinhKhachHang.setTime(bill.getMaKH().getNgaySinh());
 
                 Calendar calendarNgayDat = Calendar.getInstance();
-                calendarNgayDat.setTime(bill.getNgayGioDat());
+                calendarNgayDat.setTime(bill.getThoiGianVao());
 
                 int ngaySinhKhachHangValue = calendarNgaySinhKhachHang.get(Calendar.DAY_OF_MONTH);
                 int thangSinhKhachHangValue = calendarNgaySinhKhachHang.get(Calendar.MONTH) + 1;
@@ -444,8 +444,8 @@ public class ListBill_UI extends JPanel implements ActionListener, MouseListener
                 ArrayList<DetailsOfService> billInfoList = ctdv_dao.getDetailsOfServiceForBill(billId);
                 bill.setLstDetails(billInfoList);
                 long millis = System.currentTimeMillis();
-                Timestamp ngayTra = bill.getNgayGioTra();
-                bill.setNgayGioTra(ngayTra);
+                Timestamp ngayTra = bill.getThoiGianRa();
+                bill.setThoiGianRa(ngayTra);
 
                 InfoBill winPayment = new InfoBill(bill);
                 winPayment.setModal(true);

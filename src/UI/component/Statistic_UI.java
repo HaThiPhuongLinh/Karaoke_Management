@@ -193,7 +193,7 @@ public class Statistic_UI extends JPanel implements ActionListener, ItemListener
         ArrayList<DetailsOfService> list1 = detailOfServiceDAO.getAllDetailsOfService();
 
         for (Bill b : listBill) {
-            Date ngay = b.getNgayGioTra();
+            Date ngay = b.getThoiGianRa();
             System.out.printf("----------------" + ngay + "----------------");
 
             String dateTimeString = String.valueOf(ngay);
@@ -257,7 +257,7 @@ public class Statistic_UI extends JPanel implements ActionListener, ItemListener
 
 
         for (Bill b : listBill) {
-            Date ngay = b.getNgayGioTra();
+            Date ngay = b.getThoiGianRa();
             System.out.printf("----------------" + ngay + "----------------");
 
             String dateTimeString = String.valueOf(ngay);
@@ -319,7 +319,7 @@ public class Statistic_UI extends JPanel implements ActionListener, ItemListener
 
 
         for (Bill b : listBill) {
-            Date ngay = b.getNgayGioTra();
+            Date ngay = b.getThoiGianRa();
             System.out.printf("----------------" + ngay + "----------------");
 
             String dateTimeString = String.valueOf(ngay);

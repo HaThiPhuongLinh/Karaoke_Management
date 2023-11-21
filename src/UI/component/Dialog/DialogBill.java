@@ -379,7 +379,7 @@ public class DialogBill extends JDialog implements ActionListener {
 //            JOptionPane.showMessageDialog(null, message, "Thông báo", type);
 //        } else
         if (o.equals(btnPayment)) {
-            boolean isPaid = billDAO.paymentBill(bill.getMaHoaDon(), bill.getNgayGioTra());
+            boolean isPaid = billDAO.paymentBill(bill.getMaHoaDon(), bill.getThoiGianRa());
             if (isPaid) {
                 paid = isPaid;
                 //btnExportPdf.setEnabled(true);
@@ -459,10 +459,10 @@ public class DialogBill extends JDialog implements ActionListener {
         txtRoomId.setText(bill.getMaPhong().getMaPhong());
         txtRoomTypeName.setText(roomType.getTenLoaiPhong());
         txtRoomPrice.setText(df.format(bill.getMaPhong().getGiaPhong()) + "/giờ");
-        Timestamp startTime = bill.getNgayGioDat();
+        Timestamp startTime = bill.getThoiGianVao();
         String startTimeStr = ConvertTime.getInstance().convertTimeToString(startTime, formatTime);
         txtStartTime.setText(startTimeStr);
-        Timestamp endTime = bill.getNgayGioTra();
+        Timestamp endTime = bill.getThoiGianRa();
         String endTimeStr = ConvertTime.getInstance().convertTimeToString(endTime, formatTime);
         txtEndTime.setText(endTimeStr);
         String usedTime = convertRentalTime(bill.tinhGioThue());

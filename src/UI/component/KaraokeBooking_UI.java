@@ -467,7 +467,7 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
                         if (bill != null) {
                             txtName.setText(bill.getMaKH().getTenKhachHang());
                             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-                            txtStart.setText(sdf.format(bill.getNgayGioDat()));
+                            txtStart.setText(sdf.format(bill.getThoiGianVao()));
                         }
                     }
                     if (roomActiveE.getTinhTrang().equalsIgnoreCase("Trống")) {

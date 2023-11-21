@@ -454,7 +454,7 @@ public class StatisticService_UI extends JPanel implements ActionListener, ItemL
             String ngayThangDinhDang = "";
             for (Bill bill : listBill) {
                 if (details.getMaHoaDon().getMaHoaDon().trim().equalsIgnoreCase(bill.getMaHoaDon())) {
-                    String ngayThang = String.valueOf(bill.getNgayGioTra());
+                    String ngayThang = String.valueOf(bill.getThoiGianRa());
                     SimpleDateFormat sdfInput = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
                     Date date = null;
                     try {

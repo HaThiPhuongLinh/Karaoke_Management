@@ -243,7 +243,7 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
         modelTablePDP.fireTableDataChanged();
         int i = 1;
         for (Bill bill : billDAO.getAllBill()) {
-            String date = formatDate(bill.getNgayGioDat());
+            String date = formatDate(bill.getThoiGianVao());
             if (bill.getTinhTrangHD() == 0) {
                 Object[] rowData = {i, bill.getMaPhong().getMaPhong(), bill.getMaPhong().getLoaiPhong().getTenLoaiPhong(), bill.getMaKH().getTenKhachHang(), date, df.format(bill.getMaPhong().getGiaPhong())};
                 modelTablePDP.addRow(rowData);
@@ -283,7 +283,7 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
     public void loadHD() {
         int i = 1;
         for (Bill bill : billDAO.getAllBill()) {
-            String date = formatDate(bill.getNgayGioDat());
+            String date = formatDate(bill.getThoiGianVao());
             if (bill.getTinhTrangHD() == 0) {
                 Object[] rowData = {i, bill.getMaPhong().getMaPhong(), bill.getMaPhong().getLoaiPhong().getTenLoaiPhong(), bill.getMaKH().getTenKhachHang(), date, df.format(bill.getMaPhong().getGiaPhong())};
                 modelTablePDP.addRow(rowData);
@@ -302,7 +302,7 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
         int i = 1;
         for (Bill bill : lst) {
             if (bill.getTinhTrangHD() == 0) {
-                String date = formatDate(bill.getNgayGioDat());
+                String date = formatDate(bill.getThoiGianVao());
                 Object[] rowData = {i, bill.getMaPhong().getMaPhong(), bill.getMaPhong().getLoaiPhong().getTenLoaiPhong(), bill.getMaKH().getTenKhachHang(), date, df.format(bill.getMaPhong().getGiaPhong())};
                 modelTablePDP.addRow(rowData);
                 i++;
@@ -330,7 +330,7 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
                 String txtMaP = txtTK.getText();
                 rsvf = billDAO.getBillByRoomID(txtMaP);
                 if (rsvf != null) {
-                    String date = formatDate(rsvf.getNgayGioDat());
+                    String date = formatDate(rsvf.getThoiGianVao());
                     Object[] rowData = {1, rsvf.getMaPhong().getMaPhong(), rsvf.getMaPhong().getLoaiPhong().getTenLoaiPhong(), rsvf.getMaKH().getTenKhachHang(), date, df.format(rsvf.getMaPhong().getGiaPhong())};
                     modelTablePDP.addRow(rowData);
                 } else {
@@ -344,7 +344,7 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
                 String txtTen = txtKH.getText();
                 rsvf2 = billDAO.getBillByCustomerName(txtTen);
                 if (rsvf2 != null) {
-                    String date2 = formatDate(rsvf2.getNgayGioDat());
+                    String date2 = formatDate(rsvf2.getThoiGianVao());
                     Object[] rowData = {1, rsvf2.getMaPhong().getMaPhong(), rsvf2.getMaPhong().getLoaiPhong().getTenLoaiPhong(), rsvf2.getMaKH().getTenKhachHang(), date2, df.format(rsvf2.getMaPhong().getGiaPhong())};
                     modelTablePDP.addRow(rowData);
                 } else {
@@ -371,7 +371,7 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
                     bill.setLstDetails(billInfoList);
                     long millis = System.currentTimeMillis();
                     Timestamp endTime = new Timestamp(millis);
-                    bill.setNgayGioTra(endTime);
+                    bill.setThoiGianRa(endTime);
 
                     DialogBill winPayment = new DialogBill(bill);
                     winPayment.setBillUI(this);
@@ -380,7 +380,7 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
                     Boolean isPaid = winPayment.getPaid();
                     if (isPaid) {
                     } else {
-                        bill.setNgayGioTra(null);
+                        bill.setThoiGianRa(null);
                     }
                 }
             }

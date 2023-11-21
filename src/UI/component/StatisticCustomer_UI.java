@@ -470,7 +470,7 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
 
         int i = 1;
         for (Bill bill : listBill) {
-            String ngayThang = String.valueOf(bill.getNgayGioTra());
+            String ngayThang = String.valueOf(bill.getThoiGianRa());
             SimpleDateFormat sdfInput = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
             Date date = null;
             try {
@@ -486,7 +486,7 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
             SimpleDateFormat sdfOutput2 = new SimpleDateFormat("HH:mm:ss");
             String gioPhutGiayTra = sdfOutput2.format(date);
             //==============================
-            String gioDat = String.valueOf(bill.getNgayGioDat());
+            String gioDat = String.valueOf(bill.getThoiGianVao());
             SimpleDateFormat sdfInput1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
             Date date1 = null;
             try {

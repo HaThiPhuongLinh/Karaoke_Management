@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -17,8 +16,8 @@ public class Bill {
     private Staff maNhanVien;
     private Customer maKhachHang;
     private Room maPhong;
-    private Timestamp ngayGioDat;
-    private Timestamp ngayGioTra;
+    private Timestamp thoiGianVao;
+    private Timestamp thoiGianRa;
     private int tinhTrangHD;
     private String khuyenMai;
 
@@ -32,28 +31,28 @@ public class Bill {
     }
 
     public Bill(ResultSet rs) throws SQLException {
-        this(rs.getString("maHoaDon"), rs.getTimestamp("ngayGioDat"), rs.getTimestamp("ngayGioTra"),
+        this(rs.getString("maHoaDon"), rs.getTimestamp("thoiGianVao"), rs.getTimestamp("thoiGianRa"),
                 rs.getInt("tinhTrangHD"), rs.getString("khuyenMai"));
     }
 
-    public Bill(String maHoaDon, Staff maNhanVien, Customer maKH, Room maPhong, Timestamp ngayGioDat, Timestamp ngayGioTra, int tinhTrangHD, String khuyenMai){
+    public Bill(String maHoaDon, Staff maNhanVien, Customer maKH, Room maPhong, Timestamp thoiGianVao, Timestamp thoiGianRa, int tinhTrangHD, String khuyenMai){
         this.maHoaDon= maHoaDon;
         this.maNhanVien=maNhanVien;
         this.maKhachHang=maKH;
         this.maPhong=maPhong;
-        this.ngayGioDat=ngayGioDat;
-        this.ngayGioTra=ngayGioTra;
+        this.thoiGianVao = thoiGianVao;
+        this.thoiGianRa = thoiGianRa;
         this.tinhTrangHD = tinhTrangHD;
         this.khuyenMai = khuyenMai;
     }
 
-    public Bill(String maHoaDon, Staff maNhanVien, Customer maKhachHang, Room maPhong, Timestamp ngayGioDat, Timestamp ngayGioTra, int tinhTrangHD, String khuyenMai, List<DetailsOfService> lstDetails) {
+    public Bill(String maHoaDon, Staff maNhanVien, Customer maKhachHang, Room maPhong, Timestamp thoiGianVao, Timestamp thoiGianRa, int tinhTrangHD, String khuyenMai, List<DetailsOfService> lstDetails) {
         this.maHoaDon = maHoaDon;
         this.maNhanVien = maNhanVien;
         this.maKhachHang = maKhachHang;
         this.maPhong = maPhong;
-        this.ngayGioDat = ngayGioDat;
-        this.ngayGioTra = ngayGioTra;
+        this.thoiGianVao = thoiGianVao;
+        this.thoiGianRa = thoiGianRa;
         this.tinhTrangHD = tinhTrangHD;
         this.khuyenMai = khuyenMai;
         this.lstDetails = lstDetails;
@@ -63,10 +62,10 @@ public class Bill {
         this.lstDetails = lstDetails;
     }
 
-    public Bill(String maHoaDon, Timestamp ngayGioDat, Timestamp ngayGioTra, int tinhTrangHD, String khuyenMai) {
+    public Bill(String maHoaDon, Timestamp thoiGianVao, Timestamp thoiGianRa, int tinhTrangHD, String khuyenMai) {
         this.maHoaDon = maHoaDon;
-        this.ngayGioDat = ngayGioDat;
-        this.ngayGioTra = ngayGioTra;
+        this.thoiGianVao = thoiGianVao;
+        this.thoiGianRa = thoiGianRa;
         this.tinhTrangHD = tinhTrangHD;
         this.khuyenMai = khuyenMai;
 
@@ -117,20 +116,20 @@ public class Bill {
         this.maPhong = maPhong;
     }
 
-    public Timestamp getNgayGioDat() {
-        return ngayGioDat;
+    public Timestamp getThoiGianVao() {
+        return thoiGianVao;
     }
 
-    public void setNgayGioDat(Timestamp ngayGioDat) {
-        this.ngayGioDat = ngayGioDat;
+    public void setThoiGianVao(Timestamp thoiGianVao) {
+        this.thoiGianVao = thoiGianVao;
     }
 
-    public Timestamp getNgayGioTra() {
-        return ngayGioTra;
+    public Timestamp getThoiGianRa() {
+        return thoiGianRa;
     }
 
-    public void setNgayGioTra(Timestamp ngayGioTra) {
-        this.ngayGioTra = ngayGioTra;
+    public void setThoiGianRa(Timestamp thoiGianRa) {
+        this.thoiGianRa = thoiGianRa;
     }
 
     public int getTinhTrangHD() {
@@ -156,8 +155,8 @@ public class Bill {
                 ", maNhanVien=" + maNhanVien +
                 ", maKhachHang=" + maKhachHang +
                 ", maPhong=" + maPhong +
-                ", ngayGioDat=" + ngayGioDat +
-                ", ngayGioTra=" + ngayGioTra +
+                ", thoiGianVao=" + thoiGianVao +
+                ", thoiGianRa=" + thoiGianRa +
                 ", tinhTrangHD=" + tinhTrangHD +
                 ", khuyenMai='" + khuyenMai + '\'' +
                 ", lstDetails=" + lstDetails +
@@ -170,8 +169,8 @@ public class Bill {
      */
     public Double tinhGioThue() {
         int soPhut = 0;
-        if (ngayGioTra != null && ngayGioDat != null) {
-            long difference = ngayGioTra.getTime() - ngayGioDat.getTime();
+        if (thoiGianRa != null && thoiGianVao != null) {
+            long difference = thoiGianRa.getTime() - thoiGianVao.getTime();
             soPhut = (int) TimeUnit.MILLISECONDS.toMinutes(difference);
         }
         return soPhut * 1.0 / 60;
@@ -183,8 +182,8 @@ public class Bill {
      */
     public String tinhThoiGianSuDung() {
         int soPhut = 0;
-        if (ngayGioTra != null && ngayGioDat != null) {
-            long difference = ngayGioTra.getTime() - ngayGioDat.getTime();
+        if (thoiGianRa != null && thoiGianVao != null) {
+            long difference = thoiGianRa.getTime() - thoiGianVao.getTime();
             soPhut = (int) TimeUnit.MILLISECONDS.toMinutes(difference);
         }
 

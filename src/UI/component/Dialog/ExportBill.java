@@ -14,11 +14,6 @@ import com.itextpdf.text.pdf.*;
 import UI.CustomUI.Custom;
 import Entity.*;
 
-import javax.print.*;
-import javax.print.attribute.HashPrintRequestAttributeSet;
-import javax.print.attribute.PrintRequestAttributeSet;
-import javax.print.attribute.standard.Copies;
-
 /**
  * Sử dụng xuất hóa đơn dạng pdf
  * Người tham gia thiết kế: Nguyễn Đình Dương, Hà Thị Phương Linh
@@ -218,12 +213,12 @@ public class ExportBill {
             doc.add(pRoomTypePrice);
 
             // start Time
-            String startTime = ConvertTime.getInstance().convertTimeToString(bill.getNgayGioDat(), formatTime);
+            String startTime = ConvertTime.getInstance().convertTimeToString(bill.getThoiGianVao(), formatTime);
             Paragraph pStartTime = createRowBillInfoPdf("Giờ bắt đầu: ", startTime, 5);
             doc.add(pStartTime);
 
             // end Time
-            String endTime = ConvertTime.getInstance().convertTimeToString(bill.getNgayGioTra(), formatTime);
+            String endTime = ConvertTime.getInstance().convertTimeToString(bill.getThoiGianRa(), formatTime);
             Paragraph pEndTime = createRowBillInfoPdf("Giờ kết thúc: ", endTime, 5);
             doc.add(pEndTime);
 

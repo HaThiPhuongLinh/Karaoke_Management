@@ -73,7 +73,7 @@ public class DetailOfServiceDAO {
         PreparedStatement statement = null;
         Connection con = ConnectDB.getConnection();
         try {
-            String sql = "SELECT ct.* FROM ChiTietDichVu ct JOIN HoaDon hd ON ct.maHoaDon = hd.maHoaDon WHERE hd.ngayGioTra >= ? AND hd.ngayGioTra <= ?";
+            String sql = "SELECT ct.* FROM ChiTietDichVu ct JOIN HoaDon hd ON ct.maHoaDon = hd.maHoaDon WHERE hd.thoiGianRa >= ? AND hd.thoiGianRa <= ?";
 //            String sql = "SELECT ct.maDichVu, SUM(ct.soLuong) as soLuongBan FROM ChiTietDichVu ct JOIN HoaDon hd ON ct.maHoaDon = hd.maHoaDon WHERE hd.ngayGioTra >= ? AND hd.ngayGioTra <= ? GROUP BY ct.maDichVu";
             statement = con.prepareStatement(sql);
 
@@ -111,8 +111,8 @@ public class DetailOfServiceDAO {
 
         try {
             String sql = "SELECT ctdv.soLuong, ctdv.giaBan, dv.maDichVu, dv.giaBan, dv.soLuongTon, dv.tenDichVu, " +
-                    "ldv.maLoaiDichVu, ldv.tenLoaiDichVu, hd.maHoaDon, hd.ngayGioDat," +
-                    " hd.ngayGioTra, hd.maKhachHang, hd.maNhanVien, hd.tinhTrangHD, hd.maPhong " +
+                    "ldv.maLoaiDichVu, ldv.tenLoaiDichVu, hd.maHoaDon, hd.thoiGianVao," +
+                    " hd.thoiGianRa, hd.maKhachHang, hd.maNhanVien, hd.tinhTrangHD, hd.maPhong " +
                     "FROM dbo.ChiTietDichVu ctdv, dbo.HoaDon hd, dbo.DichVu dv, dbo.LoaiDichVu ldv " +
                     "WHERE ctdv.maHoaDon = hd.maHoaDon AND hd.maPhong = ? AND ctdv.maDichVu = dv.maDichVu" +
                     " AND dv.maLoaiDichVu = ldv.maLoaiDichVu AND hd.tinhTrangHD = 0";
@@ -208,7 +208,7 @@ public class DetailOfServiceDAO {
             String sql = "SELECT TOP 1 ctdv.soLuong, ctdv.giaBan, ctdv.maHoaDon," +
                     "dv.maDichVu, dv.giaBan, dv.soLuongTon, dv.tenDichVu," +
                     "ldv.maLoaiDichVu, ldv.tenLoaiDichVu," +
-                    "hd.maHoaDon, hd.ngayGioDat, hd.ngayGioTra, " +
+                    "hd.maHoaDon, hd.thoiGianVao, hd.thoiGianRa, " +
                     "hd.maKhachHang, hd.maNhanVien, hd.tinhTrangHD, hd.maPhong " +
                     "FROM dbo.ChiTietDichVu ctdv, dbo.HoaDon hd, dbo.DichVu dv, dbo.LoaiDichVu ldv, dbo.Phong p " +
                     "WHERE ctdv.maHoaDon = hd.maHoaDon AND ctdv.maDichVu = dv.maDichVu " +
@@ -365,7 +365,7 @@ public class DetailOfServiceDAO {
             conn = ConnectDB.getInstance().getConnection();
             String query = "SELECT * FROM ChiTietDichVu ct " +
                     "JOIN HoaDon hd ON ct.maHoaDon = hd.maHoaDon " +
-                    "WHERE ct.maDichVu LIKE ? AND hd.ngayGioTra >= ? AND hd.ngayGioTra <= ?";
+                    "WHERE ct.maDichVu LIKE ? AND hd.thoiGianRa >= ? AND hd.thoiGianRa <= ?";
             stmt = conn.prepareStatement(query);
             stmt.setString(1, serviceID);
             stmt.setDate(2, new java.sql.Date(fromDate.getTime()));

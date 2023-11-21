@@ -42,7 +42,7 @@ public class BillDAO {
 
         try {
             // Chuỗi SQL để lấy số lượng hóa đơn trong khoảng thời gian đã chọn
-            String sql = "SELECT COUNT(*) AS total FROM HoaDon WHERE ngayGioTra >= ? AND ngayGioTra <= ?";
+            String sql = "SELECT COUNT(*) AS total FROM HoaDon WHERE thoiGianVao >= ? AND thoiGianRa <= ?";
             statement = con.prepareStatement(sql);
             // Thiết lập các tham số trong câu lệnh SQL
             statement.setDate(1, (java.sql.Date) startDate);
@@ -104,12 +104,12 @@ public class BillDAO {
                 Staff maNhanVien = new Staff(rs.getString(2));
                 Customer maKhachHang = new Customer(rs.getString(3));
                 Room maPhong = new Room(rs.getString(4));
-                Timestamp ngayGioDat = rs.getTimestamp(5);
-                Timestamp ngayGioTra = rs.getTimestamp(6);
+                Timestamp thoiGianVao = rs.getTimestamp(5);
+                Timestamp thoiGianRa = rs.getTimestamp(6);
                 int tinhTrang = rs.getInt(7);
                 String khuyenMai = rs.getString(8);
 
-                Bill bill = new Bill(maHoaDon, maNhanVien, maKhachHang, maPhong, ngayGioDat, ngayGioTra, tinhTrang, khuyenMai);
+                Bill bill = new Bill(maHoaDon, maNhanVien, maKhachHang, maPhong, thoiGianVao, thoiGianRa, tinhTrang, khuyenMai);
 
                 dsBill.add(bill);
             }
@@ -140,12 +140,12 @@ public class BillDAO {
                 Staff maNhanVien = new Staff(rs.getString(2));
                 Customer maKhachHang = new Customer(rs.getString(3));
                 Room maPhong = new Room(rs.getString(4));
-                Timestamp ngayGioDat = rs.getTimestamp(5);
-                Timestamp ngayGioTra = rs.getTimestamp(6);
+                Timestamp thoiGianVao = rs.getTimestamp(5);
+                Timestamp thoiGianRa = rs.getTimestamp(6);
                 int tinhTrang = rs.getInt(7);
                 String khuyenMai = rs.getString(8);
                 ArrayList<DetailsOfService> ctDV = new ArrayList<DetailsOfService>(9);
-                Bill bill = new Bill(maHoaDon, maNhanVien, maKhachHang, maPhong, ngayGioDat, ngayGioTra, tinhTrang, khuyenMai, ctDV);
+                Bill bill = new Bill(maHoaDon, maNhanVien, maKhachHang, maPhong, thoiGianVao, thoiGianRa, tinhTrang, khuyenMai, ctDV);
 
                 dsBill.add(bill);
             }
@@ -169,7 +169,7 @@ public class BillDAO {
         PreparedStatement statement = null;
         Connection con = ConnectDB.getConnection();
         try {
-            String sql = "SELECT * FROM dbo.HoaDon WHERE ngayGioTra >= ? AND ngayGioTra <= ?";
+            String sql = "SELECT * FROM dbo.HoaDon WHERE thoiGianRa >= ? AND thoiGianRa <= ?";
 //            String sql = "SELECT ct.* FROM ChiTietDichVu ct JOIN HoaDon hd ON ct.maHoaDon = hd.maHoaDon WHERE hd.ngayGioTra >= ? AND hd.ngayGioTra <= ?";
             statement = con.prepareStatement(sql);
 
@@ -183,12 +183,12 @@ public class BillDAO {
                 Staff maNhanVien = new Staff(rs.getString(2));
                 Customer maKhachHang = new Customer(rs.getString(3));
                 Room maPhong = new Room(rs.getString(4));
-                Timestamp ngayGioDat = rs.getTimestamp(5);
-                Timestamp ngayGioTra = rs.getTimestamp(6);
+                Timestamp thoiGianVao = rs.getTimestamp(5);
+                Timestamp thoiGianRa = rs.getTimestamp(6);
                 int tinhTrang = rs.getInt(7);
                 String khuyenMai = rs.getString(8);
 
-                Bill bill = new Bill(maHoaDon, maNhanVien, maKhachHang, maPhong, ngayGioDat, ngayGioTra, tinhTrang, khuyenMai);
+                Bill bill = new Bill(maHoaDon, maNhanVien, maKhachHang, maPhong, thoiGianVao, thoiGianRa, tinhTrang, khuyenMai);
 
                 dsStaff.add(bill);
             }
@@ -211,7 +211,7 @@ public class BillDAO {
         PreparedStatement statement = null;
 
         try {
-            String sql = "INSERT INTO HoaDon (maHoaDon, maNhanVien, maKhachHang, maPhong, ngayGioDat, ngayGioTra, tinhTrangHD, khuyenMai) " +
+            String sql = "INSERT INTO HoaDon (maHoaDon, maNhanVien, maKhachHang, maPhong, thoiGianVao, thoiGianRa, tinhTrangHD, khuyenMai) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
             statement = con.prepareStatement(sql);
@@ -219,8 +219,8 @@ public class BillDAO {
             statement.setString(2, bill.getMaNhanVien().getMaNhanVien());
             statement.setString(3, bill.getMaKH().getMaKhachHang());
             statement.setString(4, bill.getMaPhong().getMaPhong());
-            statement.setTimestamp(5, bill.getNgayGioDat());
-            statement.setTimestamp(6, bill.getNgayGioTra());
+            statement.setTimestamp(5, bill.getThoiGianVao());
+            statement.setTimestamp(6, bill.getThoiGianRa());
             statement.setInt(7, bill.getTinhTrangHD());
             statement.setString(8, bill.getKhuyenMai());
 
@@ -266,12 +266,12 @@ public class BillDAO {
                 String maHoaDon = rs.getString("maHoaDon");
                 Staff maNhanVien = new Staff(rs.getString("maNhanVien"));
                 Customer maKhachHang = new Customer(rs.getString("maKhachHang"));
-                Timestamp ngayGioDat = rs.getTimestamp("ngayGioDat");
-                Timestamp ngayGioTra = rs.getTimestamp("ngayGioTra");
+                Timestamp thoiGianVao = rs.getTimestamp("thoiGianVao");
+                Timestamp thoiGianRa = rs.getTimestamp("thoiGianRa");
                 int tinhTrang = rs.getInt("tinhTrangHD");
                 String khuyenMai = rs.getString("khuyenMai");
 
-                bill = new Bill(maHoaDon, maNhanVien, maKhachHang, new Room(roomID), ngayGioDat, ngayGioTra, tinhTrang, khuyenMai);
+                bill = new Bill(maHoaDon, maNhanVien, maKhachHang, new Room(roomID), thoiGianVao, thoiGianRa, tinhTrang, khuyenMai);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -307,12 +307,12 @@ public class BillDAO {
                 Staff maNhanVien = new Staff(rs.getString("maNhanVien"));
                 Customer maKhachHang = new Customer(rs.getString("maKhachHang"));
                 Room maPhong = new Room(rs.getString("maPhong"));
-                Timestamp ngayGioDat = rs.getTimestamp("ngayGioDat");
-                Timestamp ngayGioTra = rs.getTimestamp("ngayGioTra");
+                Timestamp thoiGianVao = rs.getTimestamp("thoiGianVao");
+                Timestamp thoiGianRa = rs.getTimestamp("thoiGianRa");
                 int tinhTrang = rs.getInt("tinhTrangHD");
                 String khuyenMai = rs.getString("khuyenMai");
 
-                bill = new Bill(billID, maNhanVien, maKhachHang, maPhong, ngayGioDat, ngayGioTra, tinhTrang, khuyenMai);
+                bill = new Bill(billID, maNhanVien, maKhachHang, maPhong, thoiGianVao, thoiGianRa, tinhTrang, khuyenMai);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -363,12 +363,12 @@ public class BillDAO {
                     Staff maNhanVien = new Staff(rs.getString(2));
                     Customer maKhachHang = new Customer(rs.getString(3));
                     Room maPhong = new Room(rs.getString(4));
-                    Timestamp ngayGioDat = rs.getTimestamp(5);
-                    Timestamp ngayGioTra = rs.getTimestamp(6);
+                    Timestamp thoiGianVao = rs.getTimestamp(5);
+                    Timestamp thoiGianRa = rs.getTimestamp(6);
                     int tinhTrang = rs.getInt(7);
                     String khuyenMai = rs.getString(8);
 
-                    bill = new Bill(maHoaDon, maNhanVien, maKhachHang, maPhong, ngayGioDat, ngayGioTra, tinhTrang, khuyenMai);
+                    bill = new Bill(maHoaDon, maNhanVien, maKhachHang, maPhong, thoiGianVao, thoiGianRa, tinhTrang, khuyenMai);
                 }
             }
         } catch (SQLException e) {
@@ -412,19 +412,19 @@ public class BillDAO {
      * Hàm thanh toán hóa đơn
      *
      * @param billId:     mã hóa đơn
-     * @param ngayGioTra: Ngày giờ thanh toán
+     * @param thoiGianRa: Ngày giờ thanh toán
      * @return {@code boolean}: True hoặc False
      */
-    public boolean paymentBill(String billId, Timestamp ngayGioTra) {
+    public boolean paymentBill(String billId, Timestamp thoiGianRa) {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
         PreparedStatement statement = null;
 
         try {
             // Update ngày trả và tình trạng hóa đơn
-            String sql = "UPDATE dbo.HoaDon SET ngayGioTra = ?, tinhTrangHD = 1 WHERE maHoaDon = ?;";
+            String sql = "UPDATE dbo.HoaDon SET thoiGianRa = ?, tinhTrangHD = 1 WHERE maHoaDon = ?;";
             statement = con.prepareStatement(sql);
-            statement.setTimestamp(1, ngayGioTra);
+            statement.setTimestamp(1, thoiGianRa);
             statement.setString(2, billId);
 
             int rowsAffected = statement.executeUpdate();
@@ -523,7 +523,7 @@ public class BillDAO {
 
         try {
             conn = ConnectDB.getInstance().getConnection();
-            String query = "SELECT * FROM HoaDon WHERE maKhachHang = ? AND ngayGioTra >= ? AND ngayGioTra <= ?";
+            String query = "SELECT * FROM HoaDon WHERE maKhachHang = ? AND thoiGianVao >= ? AND thoiGianRa <= ?";
             stmt = conn.prepareStatement(query);
             stmt.setString(1, customerID);
             stmt.setDate(2, (java.sql.Date) fromDate);
@@ -535,12 +535,12 @@ public class BillDAO {
                 String maHoaDon = rs.getString("maHoaDon");
                 Staff maNhanVien = new Staff(rs.getString("maNhanVien"));
                 Room maPhong = new Room(rs.getString("maPhong"));
-                Timestamp ngayGioDat = rs.getTimestamp("ngayGioDat");
-                Timestamp ngayGioTra = rs.getTimestamp("ngayGioTra");
+                Timestamp thoiGianVao = rs.getTimestamp("thoiGianVao");
+                Timestamp thoiGianRa = rs.getTimestamp("thoiGianRa");
                 int tinhTrang = rs.getInt("tinhTrangHD");
                 String khuyenMai = rs.getString("khuyenMai");
 
-                lst.add(new Bill(maHoaDon, maNhanVien, new Customer(customerID), maPhong, ngayGioDat, ngayGioTra, tinhTrang, khuyenMai));
+                lst.add(new Bill(maHoaDon, maNhanVien, new Customer(customerID), maPhong, thoiGianVao, thoiGianRa, tinhTrang, khuyenMai));
             }
         } catch (SQLException e) {
             e.printStackTrace();
