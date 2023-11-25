@@ -33,8 +33,8 @@ import java.util.Date;
  * Giao diện dùng để lập hóa đơn
  * Người thiết kế Nguyễn Đình Dương
  * Ngày tạo:22/10/2023
- * Lần cập nhật cuối : 06/11/2023
- * Nội dung cập nhật : Sửa tính năng lập hóa đơn
+ * Lần cập nhật cuối : 25/11/2023
+ * Nội dung cập nhật : cập nhật chức năng tìm khách hàng theo tên không dấu
  */
 public class Bill_UI extends JPanel implements ActionListener, MouseListener {
     public static Staff staffLogin = null;
@@ -55,7 +55,6 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
     private DetailOfServiceDAO ctdv_dao;
     private ArrayList<DetailsOfService> dsCTDV;
     private Bill rsvf;
-    private Bill rsvf2;
 
     public Bill_UI(Staff staff) {
         this.staffLogin = staff;
@@ -340,13 +339,15 @@ public class Bill_UI extends JPanel implements ActionListener, MouseListener {
                 }
             } else if (!txtKH.getText().trim().equals("")) {
                 modelTablePDP.getDataVector().removeAllElements();
-
+                ArrayList<Bill> bills = new ArrayList<>();
                 String txtTen = txtKH.getText();
-                rsvf2 = billDAO.getBillByCustomerName(txtTen);
-                if (rsvf2 != null) {
-                    String date2 = formatDate(rsvf2.getThoiGianVao());
-                    Object[] rowData = {1, rsvf2.getMaPhong().getMaPhong(), rsvf2.getMaPhong().getLoaiPhong().getTenLoaiPhong(), rsvf2.getMaKH().getTenKhachHang(), date2, df.format(rsvf2.getMaPhong().getGiaPhong())};
-                    modelTablePDP.addRow(rowData);
+                bills = billDAO.getBillsByCustomerName(txtTen);
+                if (bills != null && !bills.isEmpty()) {
+                    for (Bill rsvf2 : bills) {
+                        String date2 = formatDate(rsvf2.getThoiGianVao());
+                        Object[] rowData = {1, rsvf2.getMaPhong().getMaPhong(), rsvf2.getMaPhong().getLoaiPhong().getTenLoaiPhong(), rsvf2.getMaKH().getTenKhachHang(), date2, df.format(rsvf2.getMaPhong().getGiaPhong())};
+                        modelTablePDP.addRow(rowData);
+                    }
                 } else {
                     JOptionPane.showMessageDialog(this, "Không có phòng đang được sử dụng khớp với thông tin tìm kiếm");
                     txtKH.selectAll();

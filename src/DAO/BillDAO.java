@@ -12,9 +12,9 @@ import java.util.Date;
  * <p>
  * Ngày tạo: 23/10/2023
  * <p>
- * Lần cập nhật cuối: 06/11/2023
+ * Lần cập nhật cuối: 25/11/2023
  * <p>
- * Nội dung cập nhật: cập nhật lịch sử code
+ * Nội dung cập nhật: cập nhật chức năng hàm getBillsByCustomerName (tìm khách hàng theo tên không dấu)
  */
 public class BillDAO {
     private static BillDAO instance = new BillDAO();
@@ -330,35 +330,34 @@ public class BillDAO {
     }
 
     /**
-     * Lấy hóa đơn dựa trên tên khách hàng
+     * Lấy danh sách hóa đơn dựa trên tên khách hàng
      *
      * @param customerName: Tên khách hàng cần tìm hóa đơn
-     * @return {@code Bill}:Hóa đơn
+     * @return {@code ArrayList<Bill>}: Danh sách hóa đơn
      */
-
-    public Bill getBillByCustomerName(String customerName) {
+    public ArrayList<Bill> getBillsByCustomerName(String customerName) {
         ConnectDB.getInstance();
         PreparedStatement statement = null;
         Connection con = ConnectDB.getConnection();
-        Bill bill = null;
+        ArrayList<Bill> billList = new ArrayList<>();
 
         try {
             // Tìm mã khách hàng dựa trên tên khách hàng
-            String customerQuery = "SELECT maKhachHang FROM dbo.KhachHang WHERE tenKhachHang like ?";
+            String customerQuery = "SELECT maKhachHang FROM dbo.KhachHang WHERE tenKhachHang COLLATE Latin1_General_CI_AI LIKE ?";
             statement = con.prepareStatement(customerQuery);
             statement.setString(1, "%" + customerName + "%");
             ResultSet customerResultSet = statement.executeQuery();
 
-            if (customerResultSet.next()) {
+            while (customerResultSet.next()) {
                 String customerID = customerResultSet.getString("maKhachHang");
-
-                // Lấy hóa đơn dựa trên mã khách hàng
-                String sql = "SELECT * FROM dbo.HoaDon WHERE maKhachHang = ?";
+                String sql = "SELECT * FROM dbo.HoaDon "
+                        + "JOIN dbo.KhachHang ON dbo.HoaDon.maKhachHang = dbo.KhachHang.maKhachHang "
+                        + "WHERE dbo.HoaDon.maKhachHang = ? AND dbo.HoaDon.tinhTrangHD = 0";
                 statement = con.prepareStatement(sql);
                 statement.setString(1, customerID);
                 ResultSet rs = statement.executeQuery();
 
-                if (rs.next()) {
+                while (rs.next()) {
                     String maHoaDon = rs.getString(1);
                     Staff maNhanVien = new Staff(rs.getString(2));
                     Customer maKhachHang = new Customer(rs.getString(3));
@@ -368,14 +367,15 @@ public class BillDAO {
                     int tinhTrang = rs.getInt(7);
                     String khuyenMai = rs.getString(8);
 
-                    bill = new Bill(maHoaDon, maNhanVien, maKhachHang, maPhong, thoiGianVao, thoiGianRa, tinhTrang, khuyenMai);
+                    Bill bill = new Bill(maHoaDon, maNhanVien, maKhachHang, maPhong, thoiGianVao, thoiGianRa, tinhTrang, khuyenMai);
+                    billList.add(bill);
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return bill;
+        return billList;
     }
 
     /**

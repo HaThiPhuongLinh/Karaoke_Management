@@ -15,9 +15,9 @@ import java.util.List;
  * <p>
  * Ngày tạo: 07/10/2023
  * <p>
- * Lần cập nhật cuối: 7/11/2023
+ * Lần cập nhật cuối: 25/11/2023
  * <p>
- * Nội dung cập nhật: thêm javadoc
+ * Nội dung cập nhật: cập nhật chức năng tìm dịch vụ không dấu
  */
 public class ServiceDAO {
     /**
@@ -309,7 +309,7 @@ public class ServiceDAO {
             String sql = "SELECT dv.maDichVu, dv.tenDichVu, dv.giaBan, dv.soLuongTon, dv.donViTinh, ldv.maLoaiDichVu, ldv.tenLoaiDichVu " +
                     "FROM dbo.DichVu dv, dbo.LoaiDichVu ldv " +
                     "WHERE dv.maLoaiDichVu = ldv.maLoaiDichVu " +
-                    "AND dv.tenDichVu LIKE ? " +
+                    "AND dv.tenDichVu COLLATE Latin1_General_CI_AI LIKE ? " +
                     "AND ldv.tenLoaiDichVu = ? ";
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setString(1, "%" + serviceName + "%");

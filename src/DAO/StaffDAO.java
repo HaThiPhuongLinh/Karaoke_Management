@@ -12,9 +12,9 @@ import java.util.List;
  * <p>
  * Ngày tạo: 23/09/2023
  * <p>
- * Lần cập nhật cuối: 06/11/2023
+ * Lần cập nhật cuối: 25/11/2023
  * <p>
- * Nội dung cập nhật: cập nhật lịch sử code
+ * Nội dung cập nhật: cập nhật chức năng tìm nhân viên không dấu
  */
 public class StaffDAO {
 
@@ -99,7 +99,7 @@ public class StaffDAO {
         ArrayList<Staff> staffList = new ArrayList<Staff>();
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
-        String query = "SELECT * FROM NhanVien where tenNhanVien like ?";
+        String query = "SELECT * FROM NhanVien where tenNhanVien COLLATE Latin1_General_CI_AI like ?";
 
         try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
             preparedStatement.setString(1, "%" + name + "%");

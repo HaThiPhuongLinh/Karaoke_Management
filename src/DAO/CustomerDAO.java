@@ -15,9 +15,9 @@ import java.util.List;
  * <p>
  * Ngày tạo: 23/09/2023
  * <p>
- * Lần cập nhật cuối: 15/11/2023
+ * Lần cập nhật cuối: 25/11/2023
  * <p>
- * Nội dung cập nhật:  thêm chức năng tìm phiếu đặt phòng dựa trên tên khách hàng và trạng thái
+ * Nội dung cập nhật:  cập nhật chức năng tìm khách hàng không dấu
  */
 public class CustomerDAO {
     private static CustomerDAO instance = new CustomerDAO();
@@ -163,7 +163,7 @@ public class CustomerDAO {
         PreparedStatement stmt = null;
         try {
             Connection con = ConnectDB.getConnection();
-            String sql = "SELECT * FROM KhachHang where tenKhachHang like ?";
+            String sql = "SELECT * FROM KhachHang where tenKhachHang COLLATE Latin1_General_CI_AI like ?";
             stmt = con.prepareStatement(sql);
             stmt.setString(1, "%" + name + "%");
 
@@ -301,7 +301,7 @@ public class CustomerDAO {
                     "INNER JOIN KhachHang kh ON pdp.maKhachHang = kh.maKhachHang " +
                     "INNER JOIN Phong p ON pdp.maPhong = p.maPhong " +
                     "INNER JOIN LoaiPhong lp ON p.maLoaiPhong = lp.maLoaiPhong " +
-                    "WHERE kh.tenKhachHang LIKE ?";
+                    "WHERE kh.tenKhachHang COLLATE Latin1_General_CI_AI LIKE ?";
             stmt = conn.prepareStatement(query);
             stmt.setString(1, "%" + customerName + "%");
 
@@ -363,7 +363,7 @@ public class CustomerDAO {
                     "INNER JOIN KhachHang kh ON pdp.maKhachHang = kh.maKhachHang " +
                     "INNER JOIN Phong p ON pdp.maPhong = p.maPhong " +
                     "INNER JOIN LoaiPhong lp ON p.maLoaiPhong = lp.maLoaiPhong " +
-                    "WHERE kh.tenKhachHang LIKE ? AND pdp.trangThai = ?";
+                    "WHERE kh.tenKhachHang COLLATE Latin1_General_CI_AI LIKE ? AND pdp.trangThai = ?";
             stmt = conn.prepareStatement(query);
             stmt.setString(1, "%" + customerName + "%");
             stmt.setInt(2, status);
