@@ -19,9 +19,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.text.DecimalFormat;
+import java.text.Normalizer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.regex.Pattern;
 
 /**
  * Sử dụng để tìm kiếm dịch vụ
@@ -287,11 +289,13 @@ public class SearchingService_UI extends JPanel implements ActionListener, Mouse
         String time = sdf.format(new Date());
         lblTime.setText(time);
     }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         if (o.equals(btnTimKiem)) {
             String txtTenDV = txtTenDichVu.getText();
+
             if(txtTenDV.equalsIgnoreCase("")){
                 JOptionPane.showMessageDialog(this,"Chưa nhập tên dịch vụ cần tìm");
             }
@@ -313,7 +317,6 @@ public class SearchingService_UI extends JPanel implements ActionListener, Mouse
 
         }else if(o.equals(btnlamMoi)){
             txtTenDichVu.setText("");
-//            textFieldGiaBan.setText("");
             cmbGiaBan.setSelectedIndex(0);
             cmbLDV.setSelectedIndex(0);
             modelTblDichVu.getDataVector().removeAllElements();
