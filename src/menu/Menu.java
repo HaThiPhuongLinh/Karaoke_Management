@@ -2,8 +2,6 @@ package menu;
 
 import Entity.Account;
 import Entity.Staff;
-import UI.LoginUI;
-import UI.component.Dialog.Main;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import menu.mode.LightDarkMode;
 
@@ -22,7 +20,7 @@ import javax.swing.border.EmptyBorder;
 
 
 public class Menu extends JPanel implements ActionListener {
-    private JButton buttonLogout;
+    private JButton btnLogOut;
     private final String menuItems[][] = {
             {"~Khách Hàng~"},
             {"Khách Hàng", "Tìm kiếm khách hàng", "Cập nhật khách hàng"},
@@ -86,7 +84,7 @@ public class Menu extends JPanel implements ActionListener {
     }
 
     public void setLogoutAction(ActionListener actionListener) {
-        buttonLogout.addActionListener(actionListener);
+        btnLogOut.addActionListener(actionListener);
     }
 
 
@@ -98,22 +96,22 @@ public class Menu extends JPanel implements ActionListener {
                 UIScale.scale(2),
                 UIScale.scale(2)
         ));
-        buttonLogout = new JButton("Log out", new FlatSVGIcon(getClass().getResource("/menu/icon/4.svg")));
-        buttonLogout.setBackground(new Color(192, 192, 192));
-        buttonLogout.setForeground(new Color(49, 62, 74));
-        buttonLogout.setFocusPainted(false);
-        buttonLogout.setBorderPainted(false);
-        buttonLogout.setFont(new Font("Dialog", Font.PLAIN, 16));
+        btnLogOut = new JButton("Log out", new FlatSVGIcon(getClass().getResource("/menu/icon/4.svg")));
+        btnLogOut.setBackground(new Color(192, 192, 192));
+        btnLogOut.setForeground(new Color(49, 62, 74));
+        btnLogOut.setFocusPainted(false);
+        btnLogOut.setBorderPainted(false);
+        btnLogOut.setFont(new Font("Dialog", Font.PLAIN, 16));
 
 
-        buttonLogout.addMouseListener(new MouseAdapter() {
+        btnLogOut.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent evt) {
-                buttonLogout.setBackground(Color.decode("#329B24"));
-                buttonLogout.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                btnLogOut.setBackground(Color.decode("#329B24"));
+                btnLogOut.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             }
             public void mouseExited(MouseEvent evt) {
-                buttonLogout.setBackground(Color.white);
-                buttonLogout.setCursor(Cursor.getDefaultCursor());
+                btnLogOut.setBackground(Color.white);
+                btnLogOut.setCursor(Cursor.getDefaultCursor());
             }
         });
 
@@ -128,7 +126,7 @@ public class Menu extends JPanel implements ActionListener {
         panelMenu = new JPanel(new MenuItemLayout(this));
         panelMenu.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         panelMenu.setBackground(new Color(51, 51, 51));
-        panelMenu.add(buttonLogout);
+        panelMenu.add(btnLogOut);
         scroll.setViewportView(panelMenu);
         scroll.setBorder(null);
         JScrollBar vscroll = scroll.getVerticalScrollBar();
@@ -306,7 +304,7 @@ public class Menu extends JPanel implements ActionListener {
                 int loginButtonX = ldx + ldWidth + ldgap;
                 int loginButtonY = ldy - loginButtonHeight - gap;
 
-                buttonLogout.setBounds(loginButtonX, loginButtonY, loginButtonWidth, loginButtonHeight);
+                btnLogOut.setBounds(loginButtonX, loginButtonY, loginButtonWidth, loginButtonHeight);
 
             }
         }

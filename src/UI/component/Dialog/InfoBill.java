@@ -4,7 +4,6 @@ import DAO.*;
 import Entity.*;
 import UI.CustomUI.Custom;
 import UI.component.Bill_UI;
-import com.itextpdf.text.DocumentException;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -16,8 +15,6 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -27,19 +24,19 @@ import java.util.List;
 
 /**
  * Thiết kế giao diện hóa đơn tính tiền
- * Người tham gia thiết kế: Nguyễn Đình Dương, Hà Thị Phương Linh
+ * Người tham gia thiết kế: Nguyễn Đình Dương
  * Ngày tạo: 29/10/2023
  * Lần cập nhật cuối: 06/11/2023
  * Nội dung cập nhật: cập nhật khi click thanh toán thì hiển thị file pdf
  */
-public class DialogBill extends JDialog implements ActionListener {
+public class InfoBill extends JDialog implements ActionListener {
     private final String WORKING_DIR = System.getProperty("user.dir");
-    private JTextField txtKM;
+    private  JTextField txtKM;
     private JTextField txtBillId, txtStaffName, txtCustomerName, txtRoomId, txtRoomTypeName, txtRoomPrice, txtStartTime,
             txtEndTime, txtUsedTime, txtTotalPriceService, txtTotalPriceRoom, txtVAT, txtTotalPriceBill;
     private JTable tblTableBillInfo;
-    private DefaultTableModel modelTblBillInfo;
-    private JButton btnPayment, btnBack, btnExportPdf;
+    private DefaultTableModel modelTableBillInfo;
+    private JButton  btnBack;
     private String formatTime = "HH:mm:ss dd/MM/yyyy";
     private DecimalFormat df = new DecimalFormat("#,###.## VND");
     private DecimalFormat df2 = new DecimalFormat("#,###.##");
@@ -58,7 +55,7 @@ public class DialogBill extends JDialog implements ActionListener {
      *
      * @param bill {@code HoaDon}: hóa đơn cần thanh toán
      */
-    public DialogBill(Bill bill) {
+    public InfoBill(Bill bill) {
         this.bill = bill;
         detailOfBillDAO = new DetailOfBillDAO();
         Staff staff = null;
@@ -116,7 +113,7 @@ public class DialogBill extends JDialog implements ActionListener {
         lblKaraokeName.setBounds(180, 0, 350, 100);
         pnMain.add(lblKaraokeName);
 
-        JLabel lblBillName = new JLabel("HÓA ĐƠN TÍNH TIỀN");
+        JLabel lblBillName = new JLabel("THÔNG TIN HÓA ĐƠN");
         lblBillName.setForeground(Color.WHITE);
         lblBillName.setFont(new Font("Dialog", Font.BOLD, 24));
         lblBillName.setHorizontalAlignment(SwingConstants.CENTER);
@@ -140,9 +137,9 @@ public class DialogBill extends JDialog implements ActionListener {
         pnInfoService.add(pnTable);
 
         String[] colsBillInfo = {"STT", "Tên dịch vụ ", "Số lượng", "Đơn giá", "Thành tiền"};
-        modelTblBillInfo = new DefaultTableModel(colsBillInfo, 0);
+        modelTableBillInfo = new DefaultTableModel(colsBillInfo, 0);
 
-        tblTableBillInfo = new JTable(modelTblBillInfo);
+        tblTableBillInfo = new JTable(modelTableBillInfo);
         tblTableBillInfo.setBackground(new Color(255, 255, 255, 0));
         tblTableBillInfo.setForeground(new Color(255, 255, 255));
         Custom.getInstance().setCustomTableBill(tblTableBillInfo);
@@ -218,19 +215,9 @@ public class DialogBill extends JDialog implements ActionListener {
 
         btnBack = new JButton("Quay lại");
         btnBack.setFont(new Font("Dialog", Font.BOLD, 15));
-        btnBack.setBounds(240, 670, 130, 35);
+        btnBack.setBounds(340, 670, 130, 35);
         pnMain.add(btnBack);
 
-        btnPayment = new JButton("Thanh toán");
-        btnPayment.setFont(new Font("Dialog", Font.BOLD, 15));
-        btnPayment.setBounds(420, 670, 130, 35);
-        pnMain.add(btnPayment);
-
-//        btnExportPdf = new JButton("Xuất PDF");
-//        btnExportPdf.setFont(new Font("Dialog", Font.BOLD, 15));
-//        btnExportPdf.setBounds(620, 670, 130, 35);
-//
-//        pnMain.add(btnExportPdf);
         JLabel txtPhoneNumber = new JLabel("0999.999.999");
         txtPhoneNumber.setBackground(Color.WHITE);
         txtPhoneNumber.setFont(new Font("Dialog", Font.PLAIN, 16));
@@ -346,9 +333,6 @@ public class DialogBill extends JDialog implements ActionListener {
         panel.add(txtUsedTime);
         txtUsedTime.setEditable(false);
         Custom.getInstance().setCustomTextFieldBill(txtUsedTime);
-
-        //btnExportPdf.addActionListener(this);
-        btnPayment.addActionListener(this);
         btnBack.addActionListener(this);
 
         allLoaded();
@@ -358,69 +342,10 @@ public class DialogBill extends JDialog implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
-//        if (o.equals(btnExportPdf)) {
-//            Boolean result = null;
-//            try {
-//                result = ExportBill.getInstance().exportBillToPdf(bill, path);
-//            } catch (DocumentException ex) {
-//                throw new RuntimeException(ex);
-//            } catch (IOException ex) {
-//                throw new RuntimeException(ex);
-//            }
-//            String message = "";
-//            int type = JOptionPane.INFORMATION_MESSAGE;
-//            if (result) {
-//                message = "Xuất file pdf thành công";
-//                type = JOptionPane.INFORMATION_MESSAGE;
-//            } else {
-//                message = "Xuất file pdf thất bại";
-//                type = JOptionPane.ERROR_MESSAGE;
-//            }
-//            JOptionPane.showMessageDialog(null, message, "Thông báo", type);
-//        } else
-        if (o.equals(btnPayment)) {
-            boolean isPaid = billDAO.paymentBill(bill.getMaHoaDon(), bill.getThoiGianRa());
-            if (isPaid) {
-                paid = isPaid;
-                //btnExportPdf.setEnabled(true);
-                btnPayment.setEnabled(false);
-                JOptionPane.showMessageDialog(null, "Thanh toán hóa đơn thành công", "Thông báo",
-                        JOptionPane.INFORMATION_MESSAGE);
-                ArrayList<Bill> bills = billDAO.getAllBill();
-                main.loadHD2(bills);
-                String maHD = bill.getMaHoaDon();
-                String maPhong = bill.getMaPhong().getMaPhong();
-                String soGio = bill.tinhThoiGianSuDung();
-                double giaPhong = bill.getMaPhong().getGiaPhong();
-                DetailsOfBill dtbill = new DetailsOfBill(new Bill(maHD), new Room(maPhong), soGio, giaPhong);
-                try {
-                    detailOfBillDAO.insert(dtbill);
-                } catch (SQLException ex) {
-                    throw new RuntimeException(ex);
-                }
-
-                String pdfFilePath = path;
-                try {
-                    ExportBill.getInstance().exportBillToPdf(bill, pdfFilePath);
-                } catch (DocumentException ex) {
-                    throw new RuntimeException(ex);
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-
-            } else {
-                JOptionPane.showMessageDialog(null, "Lỗi khi thanh toán vui lòng thử lại!!!", "Thông báo",
-                        JOptionPane.ERROR_MESSAGE);
-            }
-
-        } else if (o.equals(btnBack)) {
+        if (o.equals(btnBack)) {
             this.dispose();
 
         }
-    }
-
-    public void setBillUI(Bill_UI main) {
-        this.main = main;
     }
 
     /**
@@ -483,8 +408,8 @@ public class DialogBill extends JDialog implements ActionListener {
      * Hiển thị thông tin các dịch vụ đã đặt
      */
     private void showServiceOrders() {
-        modelTblBillInfo.getDataVector().removeAllElements();
-        modelTblBillInfo.fireTableDataChanged();
+        modelTableBillInfo.getDataVector().removeAllElements();
+        modelTableBillInfo.fireTableDataChanged();
         List<DetailsOfService> serviceOrders = bill.getLstDetails();
         int i = 1;
         for (DetailsOfService item : serviceOrders) {
@@ -493,7 +418,7 @@ public class DialogBill extends JDialog implements ActionListener {
             String quantityStr = df2.format(item.getSoLuong());
             String priceStr = df.format(item.getGiaBan());
             String totalPriceStr = df.format(item.tinhTienDichVu());
-            modelTblBillInfo.addRow(new Object[]{addSpaceToString(sttStr), addSpaceToString(service.getTenDichVu()),
+            modelTableBillInfo.addRow(new Object[]{addSpaceToString(sttStr), addSpaceToString(service.getTenDichVu()),
                     addSpaceToString(quantityStr), addSpaceToString(priceStr), addSpaceToString(totalPriceStr)});
         }
     }

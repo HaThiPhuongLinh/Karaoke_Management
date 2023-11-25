@@ -1,10 +1,11 @@
 package DAO;
-import java.sql.*;
-import java.util.List;
+
 import ConnectDB.ConnectDB;
 import Entity.TypeOfService;
 
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Thêm, sửa, đọc dữ liệu từ database cho lớp {@code TypeOfServiceDAO}
@@ -17,10 +18,48 @@ import java.util.ArrayList;
  * <p>
  * Nội dung cập nhật: thêm hàm kiểm tra tham chiếu checkIfTypeOfServiceIsReferenced
  */
-
 public class TypeOfServiceDAO {
     /**
+     * Kiểm tra có tham chiếu từ dịch vụ và loại dịch vụ hay không
+     *
+     * @param maLoaiDichVu: mã loại dịch vụ
+     * @return (@ boolean): true/false
+     */
+    public static boolean checkIfTypeOfServiceIsReferenced(String maLoaiDichVu) {
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+
+        try {
+            String sql = "SELECT TOP 1 * FROM DichVu WHERE maLoaiDichVu = ?";
+            statement = con.prepareStatement(sql);
+            statement.setString(1, maLoaiDichVu);
+            rs = statement.executeQuery();
+
+            return rs.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // Đóng tài nguyên
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * lấy danh sách thông tin tất cả loại dịch vụ
+     *
      * @return {@code ArrayList<Service>}: danh sách dịch vụ
      */
     public List<TypeOfService> getAllLoaiDichVu() {
@@ -41,8 +80,10 @@ public class TypeOfServiceDAO {
         }
         return dsLoaiDichVu;
     }
+
     /**
      * lấy loại dịch vụ theo mã loại dịch vụ
+     *
      * @param typeID mã loại dịch vụ
      * @return dịch vụ theo mã loại dịch vụ được tìm
      */
@@ -68,8 +109,10 @@ public class TypeOfServiceDAO {
 
         return tr;
     }
+
     /**
      * Lấy danh sách loại dịch vụ theo tên loại dịch vụ
+     *
      * @param name tên loại dịch vụ
      * @return {@code ArrayList<Service>}: danh sách theo tên loại dịch vụ
      */
@@ -102,22 +145,24 @@ public class TypeOfServiceDAO {
         }
         return lst;
     }
+
     /**
      * Thêm loại dịch vụ mới vào cơ sở dữ liệu
+     *
      * @param s {@code Service}: loại dịch vụ cần thêm
      * @return {@code boolean}: kết quả trả về của câu truy vấn
-     *          <ul>
-     *              <li>Nếu thêm thành công thì trả về {@code true}</li>
-     *              <li>Nếu thêm thất bại thì trả về {@code false}</li>
-     *          </ul>
+     * <ul>
+     *     <li>Nếu thêm thành công thì trả về {@code true}</li>
+     *     <li>Nếu thêm thất bại thì trả về {@code false}</li>
+     * </ul>
      */
-    public boolean insert(TypeOfService s){
+    public boolean insert(TypeOfService s) {
         ConnectDB.getInstance();
         Connection con = new ConnectDB().getConnection();
         PreparedStatement statement = null;
-        int n=0;
-        try{
-            String sql = "insert into dbo.LoaiDichVu (maLoaiDichVu,tenLoaiDichVu)"+"values (?,?)";
+        int n = 0;
+        try {
+            String sql = "insert into dbo.LoaiDichVu (maLoaiDichVu,tenLoaiDichVu)" + "values (?,?)";
             statement = con.prepareStatement(sql);
             statement.setString(1, s.getMaLoaiDichVu());
             statement.setString(2, s.getTenLoaiDichVu());
@@ -125,16 +170,18 @@ public class TypeOfServiceDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return n>0;
+        return n > 0;
     }
+
     /**
      * Cập nhật thông tin loại dịch vụ vào cơ sở dữ liệu
+     *
      * @param s {@code: Service}: loại dịch vụ cần cập nhật
      * @return {@code: boolean}: kết quả trả về của câu truy vấn
-     *          <ul>
-     *              <li>Nếu cập nhật thành công thì trả về {@code: true}</li>
-     *              <li>Nếu cập nhật thất bại thì trả về {@code: false}</li>
-     *          </ul>
+     * <ul>
+     *     <li>Nếu cập nhật thành công thì trả về {@code: true}</li>
+     *     <li>Nếu cập nhật thất bại thì trả về {@code: false}</li>
+     * </ul>
      */
     public boolean update(TypeOfService s) {
         int n = 0;
@@ -158,14 +205,16 @@ public class TypeOfServiceDAO {
         }
         return n > 0;
     }
+
     /**
      * Xóa thông tin loại dịch vụ trong cơ sở dữ liệu
+     *
      * @param id {@code: Service}: mã loại dịch vụ cần cập nhật
      * @return {@code: boolean}: kết quả trả về của câu truy vấn
-     *          <ul>
-     *              <li>Nếu xóa thành công thì trả về {@code: true}</li>
-     *              <li>Nếu xóa thất bại thì trả về {@code: false}</li>
-     *          </ul>
+     * <ul>
+     *     <li>Nếu xóa thành công thì trả về {@code: true}</li>
+     *     <li>Nếu xóa thất bại thì trả về {@code: false}</li>
+     * </ul>
      */
     public boolean delete(String id) {
         int n = 0;
@@ -189,8 +238,10 @@ public class TypeOfServiceDAO {
         }
         return n > 0;
     }
+
     /**
      * tìm mã loại dịch vụ theo tên loại dịch vụ
+     *
      * @param TypeOfserviceName tên loại dịch vụ
      * @return {@code ArrayList<Service>}: mã loại dịch vụ theo tên loại dịch vụ
      */
@@ -222,8 +273,10 @@ public class TypeOfServiceDAO {
         }
         return serviceCode;
     }
+
     /**
      * Tạo mã loại dịch vụ phát sinh tự động bằng cách lấy mã cuối cùng trong database tăng lên 1
+     *
      * @return mã loại dịch vụ mới
      */
     public String generateNextTypeOfServiceId() {
@@ -250,42 +303,5 @@ public class TypeOfServiceDAO {
             e.printStackTrace();
         }
         return nextServiceId;
-    }
-
-    /**
-     * Kiểm tra có tham chiếu từ dịch vụ và loại dịch vụ hay không
-     * @param maLoaiDichVu: mã loại dịch vụ
-     * @return (@boolean): true/false
-     */
-    public static boolean checkIfTypeOfServiceIsReferenced(String maLoaiDichVu) {
-        ConnectDB.getInstance();
-        Connection con = ConnectDB.getConnection();
-        PreparedStatement statement = null;
-        ResultSet rs = null;
-
-        try {
-            String sql = "SELECT TOP 1 * FROM DichVu WHERE maLoaiDichVu = ?";
-            statement = con.prepareStatement(sql);
-            statement.setString(1, maLoaiDichVu);
-            rs = statement.executeQuery();
-
-            return rs.next();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            // Đóng tài nguyên
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return false;
     }
 }

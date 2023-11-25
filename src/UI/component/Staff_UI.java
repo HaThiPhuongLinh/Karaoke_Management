@@ -2,7 +2,8 @@ package UI.component;
 
 import ConnectDB.ConnectDB;
 import DAO.StaffDAO;
-import Entity.*;
+import Entity.Account;
+import Entity.Staff;
 import UI.CustomUI.Custom;
 import UI.component.Dialog.DatePicker;
 
@@ -21,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+
 /**
  * Giao diện dùng để quản lý nhân viên
  * Người thiết kế Nguyễn Đình Dương
@@ -28,26 +30,24 @@ import java.util.Date;
  * Lần cập nhật cuối : 15/10/2023
  * Nội dung cập nhật : Update sự kiện mouseclicked cho bảng
  */
-public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
-    private  JTextField txtBaoLoi;
-    private  JTextField txtDiaChi;
+public class Staff_UI extends JPanel implements ActionListener, MouseListener {
+    public static Staff staffLogin = null;
+    private JTextField txtBaoLoi, txtDiaChi;
     private JTable tblNV;
-    private DefaultTableModel modelTableNV;
+    private DefaultTableModel modelTblNV;
     private JLabel lblBackground, lblChucVu, lblTaiKhoan, lblTinhTrang, lblTime, lblMaNV, lblTenNV, lblGioitinhNV, lblSdtNV, lblNgaySinh, lblCmnd;
     private JTextField txtMaNV, txtTenNV, txtSDTNV, txtCMNDNV, txtTaiKhoan;
     private JComboBox cboGioiTinhNV, cboChucVu, cbotinhTrang;
-    private JPanel timeNow, pnlStaffList, pnlStaffControl;
+    private JPanel pnlTime, pnlStaffList, pnlStaffControl;
     private DatePicker dpNgaySinhNV;
     private JButton btnThem, btnSua, btnLamMoi;
     private StaffDAO StaffDAO;
-    public static Staff staffLogin = null;
 
     public Staff_UI(Staff staff) {
         this.staffLogin = staff;
         setLayout(null);
         setBounds(0, 0, 1475, 770);
 
-        //phan viet code
         StaffDAO = new StaffDAO();
         try {
             ConnectDB.getInstance().connect();
@@ -60,16 +60,16 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
         headerLabel.setForeground(Color.WHITE);
         Component add = add(headerLabel);
 
-        timeNow = new JPanel();
-        timeNow.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "", TitledBorder.LEADING, TitledBorder.TOP));
-        timeNow.setBounds(12, 10, 300, 50);
-        timeNow.setOpaque(false);
-        add(timeNow);
+        pnlTime = new JPanel();
+        pnlTime.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "", TitledBorder.LEADING, TitledBorder.TOP));
+        pnlTime.setBounds(12, 10, 300, 50);
+        pnlTime.setOpaque(false);
+        add(pnlTime);
 
         lblTime = new JLabel();
         lblTime.setFont(new Font("Arial", Font.BOLD, 33));
         lblTime.setForeground(Color.WHITE);
-        timeNow.add(lblTime);
+        pnlTime.add(lblTime);
         Timer timer = new Timer(10, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -210,7 +210,7 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
         pnlStaffControl.add(txtCMNDNV);
 
         txtBaoLoi = new JTextField();
-        txtBaoLoi.setFont(new Font("Arial",Font.BOLD,13));
+        txtBaoLoi.setFont(new Font("Arial", Font.BOLD, 13));
         txtBaoLoi.setForeground(Color.RED);
         txtBaoLoi.setBounds(195, 210, 400, 30);
         pnlStaffControl.add(txtBaoLoi);
@@ -232,10 +232,10 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
         panelDSNV.setOpaque(false);
 
         String[] colsNV = {"Mã NV", "Tên NV", "SDT", "CCCD", "Giới Tính", "Ngày Sinh", "Địa Chỉ", "Chức Vụ", "Tình Trạng", "Tài Khoản"};
-        modelTableNV = new DefaultTableModel(colsNV, 0);
+        modelTblNV = new DefaultTableModel(colsNV, 0);
         JScrollPane scrollPaneNV;
 
-        tblNV = new JTable(modelTableNV);
+        tblNV = new JTable(modelTblNV);
         tblNV.setFont(new Font("Arial", Font.BOLD, 14));
         tblNV.setBackground(new Color(255, 255, 255, 0));
         tblNV.setForeground(new Color(255, 255, 255));
@@ -262,13 +262,19 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
 
         reSizeColumnTableStaff();
     }
-//Thiết lập thời gian thực cho lblTime
+
+    /**
+     * Cập nhật thời gian thực cho lblTime
+     */
     private void updateTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String time = sdf.format(new Date());
         lblTime.setText(time);
     }
-//Set size cho table Nhân viên
+
+    /**
+     * Thay đổi kích thước các cột trong bảng nhân viên
+     */
     private void reSizeColumnTableStaff() {
         TableColumnModel tcm = tblNV.getColumnModel();
 
@@ -280,8 +286,10 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
         tcm.getColumn(8).setPreferredWidth(70);
         tcm.getColumn(9).setPreferredWidth(120);
     }
+
     /**
      * hàm sử dụng định dạng "HH:mm:ss" để biểu diễn thời gian (giờ, phút và giây) của đối tượng date
+     *
      * @param date : ngày cần định dạng
      * @return {@code String}: ngày cần định dạng
      */
@@ -289,7 +297,11 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyy");
         return sdf.format(date);
     }
-    //Load danh sách tất cả nhân viên lên bảng
+
+
+    /**
+     * Tải danh sách nhân viên lên bảng
+     */
     public void loadNV() {
         String gt = "";
         for (Staff staff : StaffDAO.getAllStaff()) {
@@ -299,14 +311,15 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
             } else {
                 gt = "Nữ";
             }
-            Object[] rowData = {staff.getMaNhanVien(), staff.getTenNhanVien(), staff.getSoDienThoai(), staff.getCCCD(), gt, date,staff.getDiaChi(), staff.getChucVu(), staff.getTrangThai(), staff.getTaiKhoan().getTaiKhoan()};
-            modelTableNV.addRow(rowData);
+            Object[] rowData = {staff.getMaNhanVien(), staff.getTenNhanVien(), staff.getSoDienThoai(), staff.getCCCD(), gt, date, staff.getDiaChi(), staff.getChucVu(), staff.getTrangThai(), staff.getTaiKhoan().getTaiKhoan()};
+            modelTblNV.addRow(rowData);
         }
     }
 
     /**
      * Hiển thị thông báo lỗi
-     * @param txt:Nơi thông báo lỗi
+     *
+     * @param txt:Nơi     thông báo lỗi
      * @param message:Lỗi cần thông báo
      */
     private void showMessage(JTextField txt, String message) {
@@ -316,6 +329,7 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
 
     /**
      * Regex dữ liệu nhập
+     *
      * @return {@code boolean} :True or False
      */
     private boolean validData() {
@@ -348,22 +362,23 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
         }
 
         if (!((ten.length() > 0) && ten.matches("^[A-Za-zÀ-ỹ ]+"))) {
-            showMessage(txtTenNV,"Tên nhân viên không được chứa kí tự đặc biệt và số");
+            showMessage(txtTenNV, "Tên nhân viên không được chứa kí tự đặc biệt và số");
             return false;
         }
         if (!((diachi.length()) > 0 && diachi.matches("^[A-Za-zÀ-ỹ ]+"))) {
-            showMessage(txtDiaChi,"Địa chỉ không được chứa số và kí tự đặc biệt");
+            showMessage(txtDiaChi, "Địa chỉ không được chứa số và kí tự đặc biệt");
             return false;
         }
         if (!((taikhoan.length()) > 0 && taikhoan.matches("^[a-z1-9]*"))) {
-            showMessage(txtTaiKhoan,"Tài khoản không được chứa kí tự đặc biệt");
+            showMessage(txtTaiKhoan, "Tài khoản không được chứa kí tự đặc biệt");
             return false;
         }
         if (!((cccd.length()) > 0 && cccd.matches("^0[0-9]{11}$"))) {
-            showMessage(txtCMNDNV,"CCCD phải gồm 12 số ");
+            showMessage(txtCMNDNV, "CCCD phải gồm 12 số ");
             return false;
-        }if (!((sdt.length()) > 0 && sdt.matches("^0[0-9]{9}$"))) {
-            showMessage(txtSDTNV,"SDT phải gồm 10 số ");
+        }
+        if (!((sdt.length()) > 0 && sdt.matches("^0[0-9]{9}$"))) {
+            showMessage(txtSDTNV, "SDT phải gồm 10 số ");
             return false;
         }
         return true;
@@ -371,9 +386,10 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
 
     /**
      * Lấy mã nhân viên
+     *
      * @return {@code String}:Mã nhân viên
      */
-    public String laymaNV(){
+    public String laymaNV() {
         String MaNV = StaffDAO.generateNextStaffId();
         return MaNV;
     }
@@ -383,12 +399,12 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
         Object o = e.getSource();
         if (o.equals(btnLamMoi)) {
             reFresh();
-            modelTableNV.getDataVector().removeAllElements();
+            modelTblNV.getDataVector().removeAllElements();
             loadNV();
         } else if (o.equals(btnThem)) {
             if (txtTenNV.getText().equals("") || txtSDTNV.getText().equals("") || txtCMNDNV.getText().equals("") || txtDiaChi.getText().equals("") || txtTaiKhoan.getText().equals("")) {
                 JOptionPane.showMessageDialog(this, "Bạn phải nhập thông tin nhân viên");
-            } else if (validData()){
+            } else if (validData()) {
                 String ma = laymaNV();
                 String ten = txtTenNV.getText().trim();
                 String sdt = txtSDTNV.getText().trim();
@@ -414,10 +430,10 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
 
                 if (StaffDAO.addStaff(kh)) {
                     String date = formatDate(kh.getNgaySinh());
-                    modelTableNV.addRow(new Object[]{kh.getMaNhanVien(), kh.getTenNhanVien(), kh.getSoDienThoai(),
+                    modelTblNV.addRow(new Object[]{kh.getMaNhanVien(), kh.getTenNhanVien(), kh.getSoDienThoai(),
                             kh.getCCCD(), gt, date, kh.getDiaChi(), kh.getChucVu(), kh.getTrangThai(), kh.getTaiKhoan().getTaiKhoan()});
-                    modelTableNV.fireTableDataChanged();
-                    modelTableNV.getDataVector().removeAllElements();
+                    modelTblNV.fireTableDataChanged();
+                    modelTblNV.getDataVector().removeAllElements();
                     loadNV();
                     JOptionPane.showMessageDialog(this, "Thêm nhân viên thành công");
                     reFresh();
@@ -425,7 +441,7 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
             }
         } else if (o.equals(btnSua)) {
             int row = tblNV.getSelectedRow();
-            if(row > 0){
+            if (row > 0) {
                 if (txtTenNV.getText().equals("") || txtSDTNV.getText().equals("") || txtCMNDNV.getText().equals("") || txtDiaChi.getText().equals("") || txtTaiKhoan.getText().equals("")) {
                     JOptionPane.showMessageDialog(this, "Bạn phải nhập thông tin nhân viên");
                 } else if (validData()) {
@@ -436,9 +452,9 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
                     boolean gt = true;
                     String chucVu = cboChucVu.getSelectedItem().toString();
                     String diachi = txtDiaChi.getText().trim();
-                    String trangthai=cbotinhTrang.getSelectedItem().toString();
+                    String trangthai = cbotinhTrang.getSelectedItem().toString();
                     String cccd = txtCMNDNV.getText().trim();
-                    String taikhoan =txtTaiKhoan.getText().trim();
+                    String taikhoan = txtTaiKhoan.getText().trim();
                     if (gioiTinh == "Nam") {
                         gt = true;
                     } else {
@@ -451,27 +467,28 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
                     } catch (ParseException e3) {
                         e3.printStackTrace();
                     }
-                    Staff kh = new Staff(ma, ten, sdt, cccd, gt, ngaysinh ,diachi,chucVu,trangthai,new Account(taikhoan));
-                    boolean result = StaffDAO.updateStaff(kh,trangthai.trim().equalsIgnoreCase("Đã nghỉ"));
+                    Staff kh = new Staff(ma, ten, sdt, cccd, gt, ngaysinh, diachi, chucVu, trangthai, new Account(taikhoan));
+                    boolean result = StaffDAO.updateStaff(kh, trangthai.trim().equalsIgnoreCase("Đã nghỉ"));
                     if (result == true) {
                         String date = formatDate(kh.getNgaySinh());
-                        modelTableNV.setValueAt(kh.getMaNhanVien(), row, 0);
-                        modelTableNV.setValueAt(kh.getTenNhanVien(), row, 1);
-                        modelTableNV.setValueAt(kh.getSoDienThoai(), row, 2);
-                        modelTableNV.setValueAt(gt, row, 3);
-                        modelTableNV.setValueAt(kh.isGioiTinh(), row, 4);
-                        modelTableNV.setValueAt(date, row, 5);
-                        modelTableNV.setValueAt(kh.getDiaChi(), row, 6);
-                        modelTableNV.setValueAt(kh.getChucVu(), row, 7);
-                        modelTableNV.setValueAt(kh.getTrangThai(), row, 8);
-                        modelTableNV.setValueAt(kh.getTaiKhoan().getTaiKhoan(), row, 9);
-                        modelTableNV.fireTableDataChanged();
-                        modelTableNV.getDataVector().removeAllElements();
+                        modelTblNV.setValueAt(kh.getMaNhanVien(), row, 0);
+                        modelTblNV.setValueAt(kh.getTenNhanVien(), row, 1);
+                        modelTblNV.setValueAt(kh.getSoDienThoai(), row, 2);
+                        modelTblNV.setValueAt(gt, row, 3);
+                        modelTblNV.setValueAt(kh.isGioiTinh(), row, 4);
+                        modelTblNV.setValueAt(date, row, 5);
+                        modelTblNV.setValueAt(kh.getDiaChi(), row, 6);
+                        modelTblNV.setValueAt(kh.getChucVu(), row, 7);
+                        modelTblNV.setValueAt(kh.getTrangThai(), row, 8);
+                        modelTblNV.setValueAt(kh.getTaiKhoan().getTaiKhoan(), row, 9);
+                        modelTblNV.fireTableDataChanged();
+                        modelTblNV.getDataVector().removeAllElements();
                         loadNV();
                         JOptionPane.showMessageDialog(this, "Cập nhật thành công");
                         reFresh();
                     }
-                }} else {
+                }
+            } else {
                 JOptionPane.showMessageDialog(this, "Bạn phải chọn dòng cần sửa");
             }
         }
@@ -480,7 +497,7 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
     /**
      * Làm mới các ô nhập dữ liệu
      */
-    private void reFresh(){
+    private void reFresh() {
         txtMaNV.setText("");
         txtTenNV.setText("");
         cboGioiTinhNV.setSelectedIndex(0);
@@ -493,24 +510,24 @@ public class Staff_UI extends JPanel implements  ActionListener, MouseListener {
         txtSDTNV.setText("");
         txtBaoLoi.setText("");
     }
+
     @Override
     public void mouseClicked(MouseEvent e) {
         int row = tblNV.getSelectedRow();
-        txtMaNV.setText(modelTableNV.getValueAt(row, 0).toString());
-        txtTenNV.setText(modelTableNV.getValueAt(row, 1).toString());
-        txtSDTNV.setText(modelTableNV.getValueAt(row, 2).toString());
-        txtCMNDNV.setText(modelTableNV.getValueAt(row, 3).toString());
-        cboGioiTinhNV.setSelectedItem(modelTableNV.getValueAt(row,4).toString());
+        txtMaNV.setText(modelTblNV.getValueAt(row, 0).toString());
+        txtTenNV.setText(modelTblNV.getValueAt(row, 1).toString());
+        txtSDTNV.setText(modelTblNV.getValueAt(row, 2).toString());
+        txtCMNDNV.setText(modelTblNV.getValueAt(row, 3).toString());
+        cboGioiTinhNV.setSelectedItem(modelTblNV.getValueAt(row, 4).toString());
         try {
-            dpNgaySinhNV.setValue(modelTableNV.getValueAt(row, 5).toString());
+            dpNgaySinhNV.setValue(modelTblNV.getValueAt(row, 5).toString());
         } catch (ParseException e1) {
             e1.printStackTrace();
         }
-        txtDiaChi.setText(modelTableNV.getValueAt(row, 6).toString());
-        cboChucVu.setSelectedItem(modelTableNV.getValueAt(row,7).toString());
-        cbotinhTrang.setSelectedItem(modelTableNV.getValueAt(row,8).toString());
-        txtTaiKhoan.setText(modelTableNV.getValueAt(row, 9).toString());
-
+        txtDiaChi.setText(modelTblNV.getValueAt(row, 6).toString());
+        cboChucVu.setSelectedItem(modelTblNV.getValueAt(row, 7).toString());
+        cbotinhTrang.setSelectedItem(modelTblNV.getValueAt(row, 8).toString());
+        txtTaiKhoan.setText(modelTblNV.getValueAt(row, 9).toString());
 
 
     }

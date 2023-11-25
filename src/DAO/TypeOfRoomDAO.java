@@ -79,6 +79,44 @@ public class TypeOfRoomDAO {
     }
 
     /**
+     * Kiểm tra có tham chiếu từ phòng và loại phòng hay không
+     *
+     * @param maLoaiPhong: mã loại phòng
+     * @return (@ boolean): true/false
+     */
+    public static boolean checkIfTypeOfRoomIsReferenced(String maLoaiPhong) {
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+
+        try {
+            String sql = "SELECT TOP 1 * FROM Phong WHERE maLoaiPhong = ?";
+            statement = con.prepareStatement(sql);
+            statement.setString(1, maLoaiPhong);
+            rs = statement.executeQuery();
+
+            return rs.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // Đóng tài nguyên
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Lấy ra loại phòng dựa theo mã loại phòng
      *
      * @param roomID: mã loại phòng
@@ -219,42 +257,5 @@ public class TypeOfRoomDAO {
             }
         }
         return n > 0;
-    }
-
-    /**
-     * Kiểm tra có tham chiếu từ phòng và loại phòng hay không
-     * @param maLoaiPhong: mã loại phòng
-     * @return (@boolean): true/false
-     */
-    public static boolean checkIfTypeOfRoomIsReferenced(String maLoaiPhong) {
-        ConnectDB.getInstance();
-        Connection con = ConnectDB.getConnection();
-        PreparedStatement statement = null;
-        ResultSet rs = null;
-
-        try {
-            String sql = "SELECT TOP 1 * FROM Phong WHERE maLoaiPhong = ?";
-            statement = con.prepareStatement(sql);
-            statement.setString(1, maLoaiPhong);
-            rs = statement.executeQuery();
-
-            return rs.next();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            // Đóng tài nguyên
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return false;
     }
 }

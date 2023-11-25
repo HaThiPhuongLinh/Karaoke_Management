@@ -1,12 +1,14 @@
 package DAO;
 
 import ConnectDB.ConnectDB;
-import Entity.*;
+import Entity.Bill;
+import Entity.DetailsOfService;
+import Entity.Service;
 
 import java.sql.*;
-//import java.sql.Date;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.Date;
+
 /**
  * Lấy dữ liệu từ database cho lớp {@code DetailOfServiceDAO}
  * <p>
@@ -14,18 +16,23 @@ import java.util.Date;
  * <p>
  * Ngày tạo: 07/10/2023
  * <p>
- * Lần cập nhật cuối: 7/11/2023
+ * Lần cập nhật cuối: 18/11/2023
  * <p>
- * Nội dung cập nhật: thêm javadoc
+ * Nội dung cập nhật: thêm hàm getBillByServiceIDAndDateRange
  */
 public class DetailOfServiceDAO {
     private static DetailOfServiceDAO instance = new DetailOfServiceDAO();
 
+    /**
+     * Tạo thể hiện hiện tại cho DetailOfServiceDAO
+     */
     public static DetailOfServiceDAO getInstance() {
         return instance;
     }
+
     /**
      * lấy danh sách thông tin tất cả chi tiết dịch vụ
+     *
      * @return {@code ArrayList<DetailsOfService>}: danh sách chi tiết dịch vụ
      */
     public ArrayList<DetailsOfService> getAllDetailsOfService() {
@@ -55,7 +62,8 @@ public class DetailOfServiceDAO {
 
     /**
      * Lấy danh sách chi tiết dịch vụ trong khoản từ ngày bắt đầu đến ngày kết thúc
-     * @param tuNgay ngày bắt đầu
+     *
+     * @param tuNgay  ngày bắt đầu
      * @param denNgay ngày kết thúc
      * @return {@code ArrayList<DetailsOfService>} danh sách chi tiết dịch vụ
      */
@@ -65,7 +73,7 @@ public class DetailOfServiceDAO {
         PreparedStatement statement = null;
         Connection con = ConnectDB.getConnection();
         try {
-            String sql = "SELECT ct.* FROM ChiTietDichVu ct JOIN HoaDon hd ON ct.maHoaDon = hd.maHoaDon WHERE hd.ngayGioTra >= ? AND hd.ngayGioTra <= ?";
+            String sql = "SELECT ct.* FROM ChiTietDichVu ct JOIN HoaDon hd ON ct.maHoaDon = hd.maHoaDon WHERE hd.thoiGianRa >= ? AND hd.thoiGianRa <= ?";
 //            String sql = "SELECT ct.maDichVu, SUM(ct.soLuong) as soLuongBan FROM ChiTietDichVu ct JOIN HoaDon hd ON ct.maHoaDon = hd.maHoaDon WHERE hd.ngayGioTra >= ? AND hd.ngayGioTra <= ? GROUP BY ct.maDichVu";
             statement = con.prepareStatement(sql);
 
@@ -91,6 +99,7 @@ public class DetailOfServiceDAO {
 
     /**
      * Lấy danh sách dịch vụ theo mã phòng
+     *
      * @param roomId mã phòng
      * @return {@code ArrayList<DetailsOfService>} danh sách chi tiết dịch vụ
      */
@@ -102,8 +111,8 @@ public class DetailOfServiceDAO {
 
         try {
             String sql = "SELECT ctdv.soLuong, ctdv.giaBan, dv.maDichVu, dv.giaBan, dv.soLuongTon, dv.tenDichVu, " +
-                    "ldv.maLoaiDichVu, ldv.tenLoaiDichVu, hd.maHoaDon, hd.ngayGioDat," +
-                    " hd.ngayGioTra, hd.maKhachHang, hd.maNhanVien, hd.tinhTrangHD, hd.maPhong " +
+                    "ldv.maLoaiDichVu, ldv.tenLoaiDichVu, hd.maHoaDon, hd.thoiGianVao," +
+                    " hd.thoiGianRa, hd.maKhachHang, hd.maNhanVien, hd.tinhTrangHD, hd.maPhong " +
                     "FROM dbo.ChiTietDichVu ctdv, dbo.HoaDon hd, dbo.DichVu dv, dbo.LoaiDichVu ldv " +
                     "WHERE ctdv.maHoaDon = hd.maHoaDon AND hd.maPhong = ? AND ctdv.maDichVu = dv.maDichVu" +
                     " AND dv.maLoaiDichVu = ldv.maLoaiDichVu AND hd.tinhTrangHD = 0";
@@ -140,6 +149,7 @@ public class DetailOfServiceDAO {
 
     /**
      * Lấy danh sách chi tiết dịch vụ theo mã hóa đơn
+     *
      * @param billID mã hóa đơn
      * @return {@code ArrayList<DetailsOfService>} danh sách chi tiết dịch vụ
      */
@@ -183,7 +193,8 @@ public class DetailOfServiceDAO {
 
     /**
      * Lấy chi tiết dịch vụ theo mã hóa đơn và mã dịch vụ
-     * @param billId mã hóa đơn
+     *
+     * @param billId    mã hóa đơn
      * @param serviceId mã dịch vụ
      * @return chi tiết dịch vụ được tìm thấy
      */
@@ -197,7 +208,7 @@ public class DetailOfServiceDAO {
             String sql = "SELECT TOP 1 ctdv.soLuong, ctdv.giaBan, ctdv.maHoaDon," +
                     "dv.maDichVu, dv.giaBan, dv.soLuongTon, dv.tenDichVu," +
                     "ldv.maLoaiDichVu, ldv.tenLoaiDichVu," +
-                    "hd.maHoaDon, hd.ngayGioDat, hd.ngayGioTra, " +
+                    "hd.maHoaDon, hd.thoiGianVao, hd.thoiGianRa, " +
                     "hd.maKhachHang, hd.maNhanVien, hd.tinhTrangHD, hd.maPhong " +
                     "FROM dbo.ChiTietDichVu ctdv, dbo.HoaDon hd, dbo.DichVu dv, dbo.LoaiDichVu ldv, dbo.Phong p " +
                     "WHERE ctdv.maHoaDon = hd.maHoaDon AND ctdv.maDichVu = dv.maDichVu " +
@@ -235,14 +246,15 @@ public class DetailOfServiceDAO {
 
     /**
      * cập nhật chi tiết dịch vụ
+     *
      * @param detailsOfService chi tiết dịch vụ cần cập nhật
-     * @param soLuongDat số lượng đặt
-     * @param maHoaDon mã hóa đơn
+     * @param soLuongDat       số lượng đặt
+     * @param maHoaDon         mã hóa đơn
      * @return {@code boolean}: kết quả trả về của câu truy vấn
-     *          <ul>
-     *              <li>Nếu cập nhật thành công thì trả về {@code true}</li>
-     *              <li>Nếu cập nhật thất bại thì trả về {@code false}</li>
-     *          </ul>
+     * <ul>
+     *     <li>Nếu cập nhật thành công thì trả về {@code true}</li>
+     *     <li>Nếu cập nhật thất bại thì trả về {@code false}</li>
+     * </ul>
      */
     public boolean updateServiceDetail(DetailsOfService detailsOfService, int soLuongDat, String maHoaDon) {
         ConnectDB.getInstance();
@@ -335,8 +347,15 @@ public class DetailOfServiceDAO {
         return false;
     }
 
-
-    public ArrayList<DetailsOfService> getBillByServiceID(String ServiceID) {
+    /**
+     * Lấy danh sách các đối tượng DetailsOfService cho một ID dịch vụ cụ thể trong khoảng thời gian xác định.
+     *
+     * @param serviceID ID của dịch vụ.
+     * @param fromDate  Ngày bắt đầu của khoảng thời gian.
+     * @param toDate    Ngày kết thúc của khoảng thời gian.
+     * @return ArrayList chứa các đối tượng DetailsOfService.
+     */
+    public ArrayList<DetailsOfService> getBillByServiceIDAndDateRange(String serviceID, Date fromDate, Date toDate) {
         ArrayList<DetailsOfService> lst = new ArrayList<>();
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -344,9 +363,13 @@ public class DetailOfServiceDAO {
 
         try {
             conn = ConnectDB.getInstance().getConnection();
-            String query = "SELECT * FROM ChiTietDichVu WHERE maDichVu like ?";
+            String query = "SELECT * FROM ChiTietDichVu ct " +
+                    "JOIN HoaDon hd ON ct.maHoaDon = hd.maHoaDon " +
+                    "WHERE ct.maDichVu LIKE ? AND hd.thoiGianRa >= ? AND hd.thoiGianRa <= ?";
             stmt = conn.prepareStatement(query);
-            stmt.setString(1, ServiceID);
+            stmt.setString(1, serviceID);
+            stmt.setDate(2, new java.sql.Date(fromDate.getTime()));
+            stmt.setDate(3, new java.sql.Date(toDate.getTime()));
 
             rs = stmt.executeQuery();
 
@@ -367,4 +390,5 @@ public class DetailOfServiceDAO {
         }
         return lst;
     }
+
 }

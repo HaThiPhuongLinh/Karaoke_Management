@@ -41,8 +41,8 @@ public class SwitchRoom extends JFrame implements ActionListener {
     private ReservationFormDAO reservationFormDAO = new ReservationFormDAO();
     private DecimalFormat df = new DecimalFormat("#,###.##");
     private KaraokeBooking_UI main;
-    private String roomIdOld = ""; // Giá trị ban đầu của lblRoomID2
-    private String roomIdNew = ""; // Giá trị ban đầu của lblRoomID2
+    private String roomIdOld = "";
+    private String roomIdNew = "";
 
     public SwitchRoom() {
         setSize(740, 460);
@@ -183,9 +183,9 @@ public class SwitchRoom extends JFrame implements ActionListener {
         btnRefresh.addActionListener(this);
     }
 
-    public static void main(String[] args) {
-        new SwitchRoom().setVisible(true);
-    }
+//    public static void main(String[] args) {
+//        new SwitchRoom().setVisible(true);
+//    }
 
     public void setKaraokeBookingUI(KaraokeBooking_UI main) {
         this.main = main;
@@ -244,7 +244,7 @@ public class SwitchRoom extends JFrame implements ActionListener {
                     long thirtyMinutesMillis = 30 * 60 * 1000; // 30 phút trong mili giây
                     long timeToReturnMillis = reservationTimeMillis - thirtyMinutesMillis;
                     Timestamp timeToReturn = new Timestamp(timeToReturnMillis);
-                    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+                    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
                     int choice = JOptionPane.showConfirmDialog(
                             this,
                             "Phải trả phòng trước " + sdf.format(timeToReturn) + ". Bạn có muốn đổi qua phòng này không?",
@@ -252,7 +252,7 @@ public class SwitchRoom extends JFrame implements ActionListener {
                             JOptionPane.YES_NO_OPTION
                     );
                     if(choice == JOptionPane.YES_OPTION){
-                        String message = String.format("Bạn có chắc chắn muốn chuyển từ phòng %s qua phòng %s", roomIdOld, roomIdNew);
+                        String message = String.format("Bạn có chắc chắn muốn chuyển từ phòng %s qua phòng %s?", roomIdOld, roomIdNew);
                         int select = JOptionPane.showConfirmDialog(this, message, "Xác nhận chuyển phòng",
                                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
                         if (select == JOptionPane.OK_OPTION) {
@@ -278,10 +278,10 @@ public class SwitchRoom extends JFrame implements ActionListener {
                                         }
                                     }
                                     main.LoadRoomList(yourListOfRooms);
-                                    JOptionPane.showMessageDialog(this, "Chuyển phòng thành công");
+                                    JOptionPane.showMessageDialog(this, "Chuyển phòng thành công!");
                                     dispose();
                                 } else {
-                                    JOptionPane.showMessageDialog(this, "Chuyển phòng thất bại");
+                                    JOptionPane.showMessageDialog(this, "Chuyển phòng thất bại!");
                                 }
                             }
                         }

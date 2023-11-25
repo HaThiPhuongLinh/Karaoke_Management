@@ -19,12 +19,73 @@ import java.util.Date;
 public class BillDAO {
     private static BillDAO instance = new BillDAO();
 
+    /**
+     * Tạo thể hiện hiện tại cho BillDAO
+     */
     public static BillDAO getInstance() {
         return instance;
     }
 
     /**
+     * Lấy ra số lượng hóa đơn theo khoảng thời gian
+     *
+     * @param startDate:Ngày bát đầu
+     * @param endDate:Ngày   kết thúc
+     * @return {@code int}:Tổng bill
+     */
+
+    public static int getTotalLineOfBillList(Date startDate, Date endDate) {
+        int totalCount = 0;
+        ConnectDB.getInstance();
+        PreparedStatement statement = null;
+        Connection con = ConnectDB.getConnection();
+
+        try {
+            // Chuỗi SQL để lấy số lượng hóa đơn trong khoảng thời gian đã chọn
+            String sql = "SELECT COUNT(*) AS total FROM HoaDon WHERE thoiGianVao >= ? AND thoiGianRa <= ?";
+            statement = con.prepareStatement(sql);
+            // Thiết lập các tham số trong câu lệnh SQL
+            statement.setDate(1, (java.sql.Date) startDate);
+            statement.setDate(2, (java.sql.Date) endDate);
+
+            // Thực thi câu lệnh SQL
+            ResultSet rs = statement.executeQuery();
+
+            if (rs.next()) {
+                totalCount = rs.getInt("total");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return totalCount;
+    }
+
+    /**
+     * Update thuộc tính Khuyến Mãi của hóa đơn
+     *
+     * @return {@code boolean} :True or false
+     */
+    public static boolean updateKM(String b) {
+        ConnectDB.getInstance();
+        Connection con = ConnectDB.getConnection();
+        PreparedStatement statement = null;
+        int n = 0;
+        try {
+            String sql = "update dbo.HoaDon" + " set khuyenMai = 'KM'"
+                    + " where maHoaDon = ?";
+            statement = con.prepareStatement(sql);
+            statement.setString(1, b);
+            n = statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return n > 0;
+    }
+
+    /**
      * Lấy ra toàn bộ Hóa Đơn
+     *
      * @return {@code ArrayList<Bill>}:Danh sách hóa đơn
      */
     public ArrayList<Bill> getAllBill() {
@@ -43,12 +104,12 @@ public class BillDAO {
                 Staff maNhanVien = new Staff(rs.getString(2));
                 Customer maKhachHang = new Customer(rs.getString(3));
                 Room maPhong = new Room(rs.getString(4));
-                Timestamp ngayGioDat = rs.getTimestamp(5);
-                Timestamp ngayGioTra = rs.getTimestamp(6);
+                Timestamp thoiGianVao = rs.getTimestamp(5);
+                Timestamp thoiGianRa = rs.getTimestamp(6);
                 int tinhTrang = rs.getInt(7);
                 String khuyenMai = rs.getString(8);
 
-                Bill bill = new Bill(maHoaDon, maNhanVien, maKhachHang, maPhong, ngayGioDat, ngayGioTra, tinhTrang, khuyenMai);
+                Bill bill = new Bill(maHoaDon, maNhanVien, maKhachHang, maPhong, thoiGianVao, thoiGianRa, tinhTrang, khuyenMai);
 
                 dsBill.add(bill);
             }
@@ -60,6 +121,7 @@ public class BillDAO {
 
     /**
      * Lấy ra toàn bộ hóa đơn bao gồm cả chi tiết dịch vụ
+     *
      * @return {@code ArrayList<Bill>}:Danh sách hóa đơn
      */
     public ArrayList<Bill> getAllBill2() {
@@ -78,12 +140,12 @@ public class BillDAO {
                 Staff maNhanVien = new Staff(rs.getString(2));
                 Customer maKhachHang = new Customer(rs.getString(3));
                 Room maPhong = new Room(rs.getString(4));
-                Timestamp ngayGioDat = rs.getTimestamp(5);
-                Timestamp ngayGioTra = rs.getTimestamp(6);
+                Timestamp thoiGianVao = rs.getTimestamp(5);
+                Timestamp thoiGianRa = rs.getTimestamp(6);
                 int tinhTrang = rs.getInt(7);
                 String khuyenMai = rs.getString(8);
                 ArrayList<DetailsOfService> ctDV = new ArrayList<DetailsOfService>(9);
-                Bill bill = new Bill(maHoaDon, maNhanVien, maKhachHang, maPhong, ngayGioDat, ngayGioTra, tinhTrang, khuyenMai,ctDV);
+                Bill bill = new Bill(maHoaDon, maNhanVien, maKhachHang, maPhong, thoiGianVao, thoiGianRa, tinhTrang, khuyenMai, ctDV);
 
                 dsBill.add(bill);
             }
@@ -95,7 +157,8 @@ public class BillDAO {
 
     /**
      * Lấy ra hóa đơn theo ngày
-     * @param tuNgay:Ngày bắt đầu
+     *
+     * @param tuNgay:Ngày  bắt đầu
      * @param denNgay:Ngày kết thúc
      * @return {@code ArrayList<Bill>}:Danh sách hóa đơn
      */
@@ -106,7 +169,7 @@ public class BillDAO {
         PreparedStatement statement = null;
         Connection con = ConnectDB.getConnection();
         try {
-            String sql = "SELECT * FROM dbo.HoaDon WHERE ngayGioTra >= ? AND ngayGioTra <= ?";
+            String sql = "SELECT * FROM dbo.HoaDon WHERE thoiGianRa >= ? AND thoiGianRa <= ?";
 //            String sql = "SELECT ct.* FROM ChiTietDichVu ct JOIN HoaDon hd ON ct.maHoaDon = hd.maHoaDon WHERE hd.ngayGioTra >= ? AND hd.ngayGioTra <= ?";
             statement = con.prepareStatement(sql);
 
@@ -120,12 +183,12 @@ public class BillDAO {
                 Staff maNhanVien = new Staff(rs.getString(2));
                 Customer maKhachHang = new Customer(rs.getString(3));
                 Room maPhong = new Room(rs.getString(4));
-                Timestamp ngayGioDat = rs.getTimestamp(5);
-                Timestamp ngayGioTra = rs.getTimestamp(6);
+                Timestamp thoiGianVao = rs.getTimestamp(5);
+                Timestamp thoiGianRa = rs.getTimestamp(6);
                 int tinhTrang = rs.getInt(7);
                 String khuyenMai = rs.getString(8);
 
-                Bill bill = new Bill(maHoaDon, maNhanVien, maKhachHang, maPhong, ngayGioDat, ngayGioTra, tinhTrang, khuyenMai);
+                Bill bill = new Bill(maHoaDon, maNhanVien, maKhachHang, maPhong, thoiGianVao, thoiGianRa, tinhTrang, khuyenMai);
 
                 dsStaff.add(bill);
             }
@@ -137,6 +200,7 @@ public class BillDAO {
 
     /**
      * Thêm hóa đơn
+     *
      * @param bill: hóa đơn cần thêm
      * @return {@code boolean} :True or false
      */
@@ -147,7 +211,7 @@ public class BillDAO {
         PreparedStatement statement = null;
 
         try {
-            String sql = "INSERT INTO HoaDon (maHoaDon, maNhanVien, maKhachHang, maPhong, ngayGioDat, ngayGioTra, tinhTrangHD, khuyenMai) " +
+            String sql = "INSERT INTO HoaDon (maHoaDon, maNhanVien, maKhachHang, maPhong, thoiGianVao, thoiGianRa, tinhTrangHD, khuyenMai) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
             statement = con.prepareStatement(sql);
@@ -155,8 +219,8 @@ public class BillDAO {
             statement.setString(2, bill.getMaNhanVien().getMaNhanVien());
             statement.setString(3, bill.getMaKH().getMaKhachHang());
             statement.setString(4, bill.getMaPhong().getMaPhong());
-            statement.setTimestamp(5, bill.getNgayGioDat());
-            statement.setTimestamp(6, bill.getNgayGioTra());
+            statement.setTimestamp(5, bill.getThoiGianVao());
+            statement.setTimestamp(6, bill.getThoiGianRa());
             statement.setInt(7, bill.getTinhTrangHD());
             statement.setString(8, bill.getKhuyenMai());
 
@@ -179,6 +243,7 @@ public class BillDAO {
 
     /**
      * Lấy Hóa Đơn dựa trên mã Phòng
+     *
      * @param roomID: mã phòng được truyền vào
      * @return {@code Bill}:Hóa đơn
      */
@@ -201,12 +266,53 @@ public class BillDAO {
                 String maHoaDon = rs.getString("maHoaDon");
                 Staff maNhanVien = new Staff(rs.getString("maNhanVien"));
                 Customer maKhachHang = new Customer(rs.getString("maKhachHang"));
-                Timestamp ngayGioDat = rs.getTimestamp("ngayGioDat");
-                Timestamp ngayGioTra = rs.getTimestamp("ngayGioTra");
+                Timestamp thoiGianVao = rs.getTimestamp("thoiGianVao");
+                Timestamp thoiGianRa = rs.getTimestamp("thoiGianRa");
                 int tinhTrang = rs.getInt("tinhTrangHD");
                 String khuyenMai = rs.getString("khuyenMai");
 
-                bill = new Bill(maHoaDon, maNhanVien, maKhachHang, new Room(roomID), ngayGioDat, ngayGioTra, tinhTrang, khuyenMai);
+                bill = new Bill(maHoaDon, maNhanVien, maKhachHang, new Room(roomID), thoiGianVao, thoiGianRa, tinhTrang, khuyenMai);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return bill;
+    }
+
+    public Bill getBillByBillID(String billID) {
+        Bill bill = null;
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = ConnectDB.getInstance().getConnection();
+            String query = "SELECT * FROM HoaDon WHERE maHoaDon = ? ";
+            stmt = conn.prepareStatement(query);
+            stmt.setString(1, billID);
+
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+
+                Staff maNhanVien = new Staff(rs.getString("maNhanVien"));
+                Customer maKhachHang = new Customer(rs.getString("maKhachHang"));
+                Room maPhong = new Room(rs.getString("maPhong"));
+                Timestamp thoiGianVao = rs.getTimestamp("thoiGianVao");
+                Timestamp thoiGianRa = rs.getTimestamp("thoiGianRa");
+                int tinhTrang = rs.getInt("tinhTrangHD");
+                String khuyenMai = rs.getString("khuyenMai");
+
+                bill = new Bill(billID, maNhanVien, maKhachHang, maPhong, thoiGianVao, thoiGianRa, tinhTrang, khuyenMai);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -225,6 +331,7 @@ public class BillDAO {
 
     /**
      * Lấy hóa đơn dựa trên tên khách hàng
+     *
      * @param customerName: Tên khách hàng cần tìm hóa đơn
      * @return {@code Bill}:Hóa đơn
      */
@@ -256,12 +363,12 @@ public class BillDAO {
                     Staff maNhanVien = new Staff(rs.getString(2));
                     Customer maKhachHang = new Customer(rs.getString(3));
                     Room maPhong = new Room(rs.getString(4));
-                    Timestamp ngayGioDat = rs.getTimestamp(5);
-                    Timestamp ngayGioTra = rs.getTimestamp(6);
+                    Timestamp thoiGianVao = rs.getTimestamp(5);
+                    Timestamp thoiGianRa = rs.getTimestamp(6);
                     int tinhTrang = rs.getInt(7);
                     String khuyenMai = rs.getString(8);
 
-                    bill = new Bill(maHoaDon, maNhanVien, maKhachHang, maPhong, ngayGioDat, ngayGioTra, tinhTrang, khuyenMai);
+                    bill = new Bill(maHoaDon, maNhanVien, maKhachHang, maPhong, thoiGianVao, thoiGianRa, tinhTrang, khuyenMai);
                 }
             }
         } catch (SQLException e) {
@@ -272,41 +379,8 @@ public class BillDAO {
     }
 
     /**
-     *Lấy ra số lượng hóa đơn theo khoảng thời gian
-     * @param startDate:Ngày bát đầu
-     * @param endDate:Ngày kết thúc
-     * @return {@code int}:Tổng bill
-     */
-
-    public static int getTotalLineOfBillList(Date startDate, Date endDate) {
-        int totalCount = 0;
-        ConnectDB.getInstance();
-        PreparedStatement statement = null;
-        Connection con = ConnectDB.getConnection();
-
-        try {
-            // Chuỗi SQL để lấy số lượng hóa đơn trong khoảng thời gian đã chọn
-            String sql = "SELECT COUNT(*) AS total FROM HoaDon WHERE ngayGioTra >= ? AND ngayGioTra <= ?";
-            statement = con.prepareStatement(sql);
-            // Thiết lập các tham số trong câu lệnh SQL
-            statement.setDate(1, (java.sql.Date) startDate);
-            statement.setDate(2, (java.sql.Date) endDate);
-
-            // Thực thi câu lệnh SQL
-            ResultSet rs = statement.executeQuery();
-
-            if (rs.next()) {
-                totalCount = rs.getInt("total");
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-
-        return totalCount;
-    }
-
-    /**
-     *Tạo mã hóa đơn với dựa trên mã của hóa đơn cuối cùng
+     * Tạo mã hóa đơn với dựa trên mã của hóa đơn cuối cùng
+     *
      * @return {@code String}:mã hóa đơn
      */
     public String generateNextBillId() {
@@ -336,20 +410,21 @@ public class BillDAO {
 
     /**
      * Hàm thanh toán hóa đơn
-     * @param billId: mã hóa đơn
-     * @param ngayGioTra: Ngày giờ thanh toán
+     *
+     * @param billId:     mã hóa đơn
+     * @param thoiGianRa: Ngày giờ thanh toán
      * @return {@code boolean}: True hoặc False
      */
-    public boolean paymentBill(String billId, Timestamp ngayGioTra) {
+    public boolean paymentBill(String billId, Timestamp thoiGianRa) {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
         PreparedStatement statement = null;
 
         try {
             // Update ngày trả và tình trạng hóa đơn
-            String sql = "UPDATE dbo.HoaDon SET ngayGioTra = ?, tinhTrangHD = 1 WHERE maHoaDon = ?;";
+            String sql = "UPDATE dbo.HoaDon SET thoiGianRa = ?, tinhTrangHD = 1 WHERE maHoaDon = ?;";
             statement = con.prepareStatement(sql);
-            statement.setTimestamp(1, ngayGioTra);
+            statement.setTimestamp(1, thoiGianRa);
             statement.setString(2, billId);
 
             int rowsAffected = statement.executeUpdate();
@@ -413,10 +488,10 @@ public class BillDAO {
 
     /**
      * Cập nhật tình trạng phòng dựa trên phiếu đặt
-     * @param con: kết nối driver
-     * @param maPhong: mã phòng cần cập nhật
+     *
+     * @param con:       kết nối driver
+     * @param maPhong:   mã phòng cần cập nhật
      * @param tinhTrang: tình trạng cần cập nhật
-     * @throws SQLException
      */
     private void updateRoomStatus(Connection con, String maPhong, String tinhTrang) throws SQLException {
         String updateRoomSql = "UPDATE dbo.Phong SET tinhTrang = ? WHERE maPhong = ?;";
@@ -432,31 +507,15 @@ public class BillDAO {
         }
     }
 
-
     /**
-     * Update thuộc tính Khuyến Mãi của hóa đơn
-     * @param b:
-     * @return {@code boolean} :True or false
+     * Lấy ra hóa đơn dựa trên mã khách hàng và khoảng thời gian
+     *
+     * @param customerID: Mã khách hàng
+     * @param fromDate:   Ngày bắt đầu
+     * @param toDate:     Ngày kết thúc
+     * @return {@code ArrayList<Bill>}: Danh sách hóa đơn
      */
-    public static boolean updateKM(String b) {
-        ConnectDB.getInstance();
-        Connection con = ConnectDB.getConnection();
-        PreparedStatement statement = null;
-        int n = 0;
-        try {
-            String sql = "update dbo.HoaDon" + " set khuyenMai = 'KM'"
-                    + " where maHoaDon = ?";
-            statement = con.prepareStatement(sql);
-            statement.setString(1,b);
-            n = statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return n > 0;
-    }
-
-
-    public ArrayList<Bill> getBillByCustomerID(String CustomerID) {
+    public ArrayList<Bill> getBillByCustomerIDAndDateRange(String customerID, Date fromDate, Date toDate) {
         ArrayList<Bill> lst = new ArrayList<>();
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -464,9 +523,11 @@ public class BillDAO {
 
         try {
             conn = ConnectDB.getInstance().getConnection();
-            String query = "SELECT * FROM HoaDon WHERE maKhachHang like ?";
+            String query = "SELECT * FROM HoaDon WHERE maKhachHang = ? AND thoiGianVao >= ? AND thoiGianRa <= ?";
             stmt = conn.prepareStatement(query);
-            stmt.setString(1, CustomerID);
+            stmt.setString(1, customerID);
+            stmt.setDate(2, (java.sql.Date) fromDate);
+            stmt.setDate(3, (java.sql.Date) toDate);
 
             rs = stmt.executeQuery();
 
@@ -474,26 +535,18 @@ public class BillDAO {
                 String maHoaDon = rs.getString("maHoaDon");
                 Staff maNhanVien = new Staff(rs.getString("maNhanVien"));
                 Room maPhong = new Room(rs.getString("maPhong"));
-                Timestamp ngayGioDat = rs.getTimestamp("ngayGioDat");
-                Timestamp ngayGioTra = rs.getTimestamp("ngayGioTra");
+                Timestamp thoiGianVao = rs.getTimestamp("thoiGianVao");
+                Timestamp thoiGianRa = rs.getTimestamp("thoiGianRa");
                 int tinhTrang = rs.getInt("tinhTrangHD");
                 String khuyenMai = rs.getString("khuyenMai");
 
-                lst.add(new Bill(maHoaDon, maNhanVien, new Customer(CustomerID),maPhong, ngayGioDat, ngayGioTra, tinhTrang, khuyenMai));
+                lst.add(new Bill(maHoaDon, maNhanVien, new Customer(customerID), maPhong, thoiGianVao, thoiGianRa, tinhTrang, khuyenMai));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-//        finally {
-//            try {
-//                if (stmt != null) {
-//                    stmt.close();
-//                }
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//        }
 
         return lst;
     }
+
 }

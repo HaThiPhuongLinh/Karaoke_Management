@@ -11,7 +11,8 @@ import javax.swing.*;
  */
 public class Home_UI extends JPanel {
     private JLabel lblBackGround;
-    public Home_UI(){
+
+    public Home_UI() {
         setLayout(null);
         setBounds(0, 0, 1475, 770);
 

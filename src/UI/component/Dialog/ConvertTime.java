@@ -13,20 +13,17 @@ import java.text.SimpleDateFormat;
  * <li>{@code java.sql.Timestamp} sang {@code String}</li>
  * </ul>
  * <p>
- * Người tham gia thiết kế: Phạm Đăng Đan
+ * Người tham gia thiết kế: Nguyễn Đình Dương
  * <p>
- * Ngày tạo: 13/10/2021
+ * Ngày tạo: 29/10/2023
  * <p>
- * Lần cập nhật cuối: 19/11/2021
- * <p>
- * Nội dung cập nhật: thêm mô tả lớp và hàm (java doc)
+ * Lần cập nhật cuối: 29/10/2023
  */
 public class ConvertTime {
     private static ConvertTime instance = new ConvertTime();
 
     /**
      * Sử dụng kiến trúc singleton để tạo ra đối tượng {@code ConvertTime} duy nhất
-     *
      * @return {@code ConvertTime}: đối tượng ConvertTime
      */
     public static ConvertTime getInstance() {
@@ -36,9 +33,7 @@ public class ConvertTime {
     }
 
     /**
-     * Chuyển đổi ngày ở kiểu dữ liệu {@code java.sql.Date} sang ngày ở kiểu dữ liệu
-     * java.util.Date
-     *
+     * Chuyển đổi ngày ở kiểu dữ liệu {@code java.sql.Date} sang ngày ở kiểu dữ liệu java.util.Date
      * @param date {@code java.sql.Date}
      * @return java.util.Date
      */
@@ -48,9 +43,7 @@ public class ConvertTime {
     }
 
     /**
-     * chuyển đổi ngày ở kiểu dữ liệu {@code java.util.Date} sang ngày ở kiểu dạng
-     * chuỗi
-     *
+     * chuyển đổi ngày ở kiểu dữ liệu {@code java.util.Date} sang ngày ở kiểu dạng chuỗi
      * @param date       {@code java.sql.Date}: ngày cần chuyển đổi ở kiểu dữ liệu
      * @param formatTime {@code String}: định dạng cần format. Ví dụ:
      *                   {@code dd/MM/yyyy}, {@code hh:mm:ss},
@@ -64,11 +57,8 @@ public class ConvertTime {
     }
 
     /**
-     * chuyển đổi ngày ở kiểu dữ liệu {@code java.sql.Timestamp} sang ngày ở kiểu
-     * dạng chuỗi
-     *
-     * @param date       {@code java.sql.Timestamp}: ngày cần chuyển đổi ở kiểu dữ
-     *                   liệu
+     * chuyển đổi ngày ở kiểu dữ liệu {@code java.sql.Timestamp} sang ngày ở kiểu dạng chuỗi
+     * @param date       {@code java.sql.Timestamp}: ngày cần chuyển đổi ở kiểu dữ liệu
      * @param formatTime {@code String}: định dạng cần format. Ví dụ:
      *                   {@code dd/MM/yyyy}, {@code hh:mm:ss},
      *                   {@code dd/MM/yyyy hh:mm:ss}, ...

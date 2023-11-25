@@ -17,14 +17,19 @@ import java.util.List;
  * Nội dung cập nhật: cập nhật lịch sử code
  */
 public class StaffDAO {
+
     private static StaffDAO instance = new StaffDAO();
 
+    /**
+     * Tạo thể hiện hiện tại cho StaffDAO
+     */
     public static StaffDAO getInstance() {
         return instance;
     }
 
     /**
      * Lấy ra toàn bộ nhân viên
+     *
      * @return {@code List<Staff> }:danh sách nhân viên
      */
     public ArrayList<Staff> getAllStaff() {
@@ -54,7 +59,7 @@ public class StaffDAO {
 
     /**
      * Lấy ra nhân viên dựa trên tên tài khoản
-     * @param username
+     *
      * @return {@code Staff }:nhân viên
      */
     public Staff getStaffByUsername(String username) {
@@ -85,6 +90,7 @@ public class StaffDAO {
 
     /**
      * lấy ra danh sách nhân viên theo tên
+     *
      * @param name:Tên của nhân viên cần lấy
      * @return {@code List<Staff> }:danh sách nhân viên
      */
@@ -112,7 +118,7 @@ public class StaffDAO {
 
     /**
      * Lấy ra danh sách nhân viên dựa trên số điện thoại
-     * @param sdt
+     *
      * @return {@code List<Staff> }:danh sách nhân viên
      */
 
@@ -145,8 +151,8 @@ public class StaffDAO {
 
     /**
      * Lấy ra danh sách nhân viên dựa trên Căn cước công dân
+     *
      * @param cccd:Căn cước công dân của nhân viên cần lấy
-     * @return
      */
     public List<Staff> getListNhanVienByCCCD(String cccd) {
         List<Staff> cccdlistt = new ArrayList<Staff>();
@@ -177,6 +183,7 @@ public class StaffDAO {
 
     /**
      * Thêm nhân viên
+     *
      * @param staff:Nhân viên cần thêm
      * @return {@code boolean} : Được hoặc không
      */
@@ -243,7 +250,8 @@ public class StaffDAO {
 
     /**
      * Update nhân viên
-     * @param s:Nhân viên cần update
+     *
+     * @param s:Nhân           viên cần update
      * @param isResigning:Tình trạng tài khoản của nhân viên cần update
      * @return {@code boolean} : Được hoặc không
      */
@@ -318,6 +326,7 @@ public class StaffDAO {
 
     /**
      * Lấy nhân viên dựa trên mã Nhân Viên
+     *
      * @param maNhanVien:mã nhân viên cần tìm
      * @return {@code Staff}:Nhân viên
      */
@@ -350,6 +359,7 @@ public class StaffDAO {
 
     /**
      * Tạo mã nhân vien dựa trên mã của nhân viên cuối cùng
+     *
      * @return {@code String}: mã Nhân viên
      */
     public String generateNextStaffId() {
@@ -381,6 +391,7 @@ public class StaffDAO {
 
     /**
      * Lấy ra nhân viên dựa trên mã hóa đơn
+     *
      * @param maHoaDon: mã hóa đơn
      * @return {@code Staff}:  Nhân viên
      */

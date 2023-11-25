@@ -17,7 +17,7 @@ import java.sql.*;
  */
 public class DiaLogDatePicker extends JDialog implements ActionListener, ChangeListener {
     private int width = 450, heightPn = 210, widthPn = width - 20;
-    private JButton[] button = new JButton[49];
+    private JButton[] btn = new JButton[49];
     private String day = "";
     private int month = Calendar.getInstance().get(Calendar.MONTH);
     private int year = Calendar.getInstance().get(Calendar.YEAR);
@@ -25,7 +25,7 @@ public class DiaLogDatePicker extends JDialog implements ActionListener, ChangeL
     private SpinnerNumberModel spinYearModel;
     private JSpinner spinYear;
     private int check = 0, viTri = -1;
-    private JLabel lbMonth, lbYear, lbThu, lbNgayThang, lbToDay;
+    private JLabel lblMonth, lblYear, lblThu, lblNgayThang, lblToDay;
     private String blueColor = "#5F009D";
     private String whiteColor = "#fafafa";
 
@@ -50,57 +50,57 @@ public class DiaLogDatePicker extends JDialog implements ActionListener, ChangeL
         pnMain.add(pnShowTime);
         pnShowTime.setLayout(null);
 
-        lbYear = new JLabel("year");
-        lbYear.setFont(new Font("Dialog", Font.BOLD, 15));
-        lbYear.setBounds(12, 12, 107, 16);
-        lbYear.setForeground(Color.decode("#aeb5df"));
-        pnShowTime.add(lbYear);
+        lblYear = new JLabel("year");
+        lblYear.setFont(new Font("Dialog", Font.BOLD, 15));
+        lblYear.setBounds(12, 12, 107, 16);
+        lblYear.setForeground(Color.decode("#aeb5df"));
+        pnShowTime.add(lblYear);
 
-        lbThu = new JLabel("thứ");
-        lbThu.setFont(new Font("Dialog", Font.BOLD, 18));
-        lbThu.setBounds(12, 40, 107, 25);
-        lbThu.setForeground(Color.WHITE);
-        pnShowTime.add(lbThu);
+        lblThu = new JLabel("thứ");
+        lblThu.setFont(new Font("Dialog", Font.BOLD, 18));
+        lblThu.setBounds(12, 40, 107, 25);
+        lblThu.setForeground(Color.WHITE);
+        pnShowTime.add(lblThu);
 
-        lbNgayThang = new JLabel("tháng ngày");
-        lbNgayThang.setFont(new Font("Dialog", Font.BOLD, 18));
-        lbNgayThang.setBounds(12, 68, 107, 25);
-        lbNgayThang.setForeground(Color.WHITE);
-        pnShowTime.add(lbNgayThang);
+        lblNgayThang = new JLabel("tháng ngày");
+        lblNgayThang.setFont(new Font("Dialog", Font.BOLD, 18));
+        lblNgayThang.setBounds(12, 68, 107, 25);
+        lblNgayThang.setForeground(Color.WHITE);
+        pnShowTime.add(lblNgayThang);
 
         String[] header = { "S", "M", "T", "W", "T", "F", "S" };
         JPanel pnDateTable = new JPanel(new GridLayout(7, 7));
         pnDateTable.setBackground(Color.decode(whiteColor));
 
-        for (int i = 0; i < button.length; i++) {
+        for (int i = 0; i < btn.length; i++) {
             final int selection = i;
-            button[i] = new JButton();
-            button[i].setFocusPainted(false);
-            button[i].setBackground(Color.WHITE);
+            btn[i] = new JButton();
+            btn[i].setFocusPainted(false);
+            btn[i].setBackground(Color.WHITE);
             if (i < 7) {
-                button[i].setText(header[i]);
-                button[i].setEnabled(false);
-                button[i].setForeground(Color.decode(blueColor));
+                btn[i].setText(header[i]);
+                btn[i].setEnabled(false);
+                btn[i].setForeground(Color.decode(blueColor));
             } else {
-                button[i].addActionListener(new ActionListener() {
+                btn[i].addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent ae) {
-                        day = button[selection].getActionCommand();
+                        day = btn[selection].getActionCommand();
                         if (viTri != -1) {
-                            button[viTri].setBackground(Color.decode(whiteColor));
-                            button[viTri].setForeground(Color.BLACK);
+                            btn[viTri].setBackground(Color.decode(whiteColor));
+                            btn[viTri].setForeground(Color.BLACK);
                         }
                         viTri = selection;
-                        button[selection].setBackground(Color.decode(blueColor));
-                        button[selection].setForeground(Color.decode(whiteColor));
-                        int day = Integer.parseInt(button[selection].getText());
+                        btn[selection].setBackground(Color.decode(blueColor));
+                        btn[selection].setForeground(Color.decode(whiteColor));
+                        int day = Integer.parseInt(btn[selection].getText());
                         displayShowDate(day);
                     }
                 });
             }
-            button[i].setBorder(null);
-            button[i].setPreferredSize(new Dimension(20, 20));
-            button[i].setBackground(Color.decode(whiteColor));
-            pnDateTable.add(button[i]);
+            btn[i].setBorder(null);
+            btn[i].setPreferredSize(new Dimension(20, 20));
+            btn[i].setBackground(Color.decode(whiteColor));
+            pnDateTable.add(btn[i]);
         }
 
         JPanel pnBtn = new JPanel();
@@ -112,16 +112,16 @@ public class DiaLogDatePicker extends JDialog implements ActionListener, ChangeL
 
         spinYearModel = new SpinnerNumberModel(year, 1900, null, 1);
         spinYear = new JSpinner(spinYearModel);
-        lbMonth = new JLabel("tháng");
-        lbMonth.setHorizontalAlignment(SwingConstants.CENTER);
-        lbMonth.setFont(new Font("Dialog", Font.BOLD, 14));
+        lblMonth = new JLabel("tháng");
+        lblMonth.setHorizontalAlignment(SwingConstants.CENTER);
+        lblMonth.setFont(new Font("Dialog", Font.BOLD, 14));
 
         int h = 25;
         btnPre.setBounds(3, 0, 41, h);
         btnPre.setBackground(Color.decode(whiteColor));
         btnPre.setForeground(Color.decode(blueColor));
         btnPre.setBorder(null);
-        lbMonth.setBounds(62, 2, 105, 25);
+        lblMonth.setBounds(62, 2, 105, 25);
         spinYear.setBounds(165, 2, 70, h);
         btnNext.setBounds(287, 0, 41, h);
         btnNext.setBackground(Color.decode(whiteColor));
@@ -132,7 +132,7 @@ public class DiaLogDatePicker extends JDialog implements ActionListener, ChangeL
         pnDateTable.setBounds(101, 30, 330, 140);
 
         pnBtn.add(btnPre);
-        pnBtn.add(lbMonth);
+        pnBtn.add(lblMonth);
         pnBtn.add(spinYear);
         pnBtn.add(btnNext);
 
@@ -159,9 +159,9 @@ public class DiaLogDatePicker extends JDialog implements ActionListener, ChangeL
         btnCancel.setBorder(null);
         pnSubmit.add(btnCancel);
 
-        lbToDay = new JLabel("Today: ");
-        lbToDay.setBounds(10, 6, 162, 14);
-        pnSubmit.add(lbToDay);
+        lblToDay = new JLabel("Today: ");
+        lblToDay.setBounds(10, 6, 162, 14);
+        pnSubmit.add(lblToDay);
 
         displayDate();
         showToDay();
@@ -174,9 +174,9 @@ public class DiaLogDatePicker extends JDialog implements ActionListener, ChangeL
         spinYear.addChangeListener(this);
     }
 
-    public static void main(String[] args) {
-        new DiaLogDatePicker().setVisible(true);
-    }
+//    public static void main(String[] args) {
+//        new DiaLogDatePicker().setVisible(true);
+//    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -206,8 +206,8 @@ public class DiaLogDatePicker extends JDialog implements ActionListener, ChangeL
 
     // thay đổi lịch theo tháng năm
     public void displayDate() {
-        for (int i = 7; i < button.length; i++)
-            button[i].setText("");
+        for (int i = 7; i < btn.length; i++)
+            btn[i].setText("");
         SimpleDateFormat sdfMonth = new SimpleDateFormat("MMMM");
         Calendar cal = Calendar.getInstance();
         int y = (int) spinYear.getValue();
@@ -216,20 +216,20 @@ public class DiaLogDatePicker extends JDialog implements ActionListener, ChangeL
 
         cal.set(year, month, 1);
 
-        lbMonth.setText(sdfMonth.format(cal.getTime()));
+        lblMonth.setText(sdfMonth.format(cal.getTime()));
         spinYear.setValue(year);
 
         int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
         int daysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
         for (int i = 0; i < 6 + dayOfWeek; i++) {
-            button[i].setEnabled(false);
+            btn[i].setEnabled(false);
         }
         for (int i = 6 + dayOfWeek, day = 1; day <= daysInMonth; i++, day++) {
-            button[i].setText("" + day);
-            button[i].setEnabled(true);
+            btn[i].setText("" + day);
+            btn[i].setEnabled(true);
         }
-        for (int i = 6 + dayOfWeek + daysInMonth; i < button.length; i++) {
-            button[i].setEnabled(false);
+        for (int i = 6 + dayOfWeek + daysInMonth; i < btn.length; i++) {
+            btn[i].setEnabled(false);
         }
     }
 
@@ -237,15 +237,15 @@ public class DiaLogDatePicker extends JDialog implements ActionListener, ChangeL
     public void showToDay() {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd");
-        lbNgayThang.setText(sdf.format(cal.getTime()));
+        lblNgayThang.setText(sdf.format(cal.getTime()));
         sdf = new SimpleDateFormat("E");
 
-        lbThu.setText(sdf.format(cal.getTime()) + ",");
+        lblThu.setText(sdf.format(cal.getTime()) + ",");
         sdf = new SimpleDateFormat("yyyy");
 
-        lbYear.setText(sdf.format(cal.getTime()));
+        lblYear.setText(sdf.format(cal.getTime()));
         sdf = new SimpleDateFormat("dd/MM/yyyy");
-        lbToDay.setText("Today: " + sdf.format(cal.getTime()));
+        lblToDay.setText("Today: " + sdf.format(cal.getTime()));
     }
 
     // hiện ngày đã chọn
@@ -256,13 +256,13 @@ public class DiaLogDatePicker extends JDialog implements ActionListener, ChangeL
             year = y;
         cal.set(year, month, day);
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd");
-        lbNgayThang.setText(sdf.format(cal.getTime()));
+        lblNgayThang.setText(sdf.format(cal.getTime()));
 
         sdf = new SimpleDateFormat("E");
-        lbThu.setText(sdf.format(cal.getTime()) + ",");
+        lblThu.setText(sdf.format(cal.getTime()) + ",");
 
         sdf = new SimpleDateFormat("yyyy");
-        lbYear.setText(sdf.format(cal.getTime()));
+        lblYear.setText(sdf.format(cal.getTime()));
     }
 
     // lấy ngày chọn từ lịch

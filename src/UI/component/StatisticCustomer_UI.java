@@ -4,7 +4,10 @@ import DAO.BillDAO;
 import DAO.CustomerDAO;
 import DAO.DetailOfServiceDAO;
 import DAO.ServiceDAO;
-import Entity.*;
+import Entity.Bill;
+import Entity.Customer;
+import Entity.DetailsOfService;
+import Entity.Staff;
 import UI.CustomUI.Custom;
 import UI.component.Dialog.DatePicker;
 
@@ -12,12 +15,12 @@ import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -26,31 +29,30 @@ import java.util.HashMap;
 /**
  * Sử dụng để thống kê khách hàng
  * <p>
- * Người tham gia thiết kế: Nguyễn Quang Duy
+ * Người tham gia thiết kế: Nguyễn Quang Duy, Hà Thị Phương Linh
  * </p>
  * ngày tạo: 12/10/2023
  * <p>
- * Lần cập nhật cuối: 13/11/2023
+ * Lần cập nhật cuối: 18/11/2023
  * </p>
- * Nội dung cập nhật: cập nhật cách tính tổng tiền (tt= tt - ((tt+vat))*15%))
+ * Nội dung cập nhật: cập nhật chức năng hiển thị danh sách hóa đơn của khách hàng theo khoảng thời gian (displayNewPanel)
  */
-
 public class StatisticCustomer_UI extends JPanel implements ActionListener, ItemListener {
+    public static Staff staffLogin = null;
     private JComboBox<String> cmbLocTheo;
     private JTable tblDichVu;
     private DefaultTableModel modelTblDichVu;
     private JButton btnThongKe, btnLamMoi;
     private JLabel lblDenNgay, lblTuNgay;
     private JLabel lblBackGround, lblTime;
-    private DatePicker pickerDenNgay,pickerTuNgay;
+    private DatePicker pickerDenNgay, pickerTuNgay;
     private BillDAO billDAO;
     private CustomerDAO customerDAO;
     private ServiceDAO serviceDAO;
     private DetailOfServiceDAO detailOfServiceDAO;
     private DecimalFormat df = new DecimalFormat("#,###.## VND");
-    public static Staff staffLogin = null;
 
-    public StatisticCustomer_UI(Staff staff){
+    public StatisticCustomer_UI(Staff staff) {
         this.staffLogin = staff;
         setLayout(null);
         setBounds(0, 0, 1475, 770);
@@ -60,7 +62,6 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
         serviceDAO = new ServiceDAO();
         detailOfServiceDAO = new DetailOfServiceDAO();
 
-        //phan viet code
         JLabel lblThongKeKhachHang = new JLabel("THỐNG KÊ KHÁCH HÀNG");
         lblThongKeKhachHang.setBounds(570, 10, 1175, 40);
         lblThongKeKhachHang.setFont(new Font("Arial", Font.BOLD, 25));
@@ -87,7 +88,7 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
         });
         timer.start();
 
-        JPanel pnlThongTinThongKe =  new JPanel();
+        JPanel pnlThongTinThongKe = new JPanel();
         pnlThongTinThongKe.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "THÔNG TIN THỐNG KÊ",
                 TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.BOLD, 14), Color.WHITE));
         pnlThongTinThongKe.setBounds(10, 70, 1245, 670);
@@ -96,7 +97,6 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
 
         pnlThongTinThongKe.setLayout(null);
 
-        //        Từ ngày
         lblTuNgay = new JLabel("Từ ngày:");
         lblTuNgay.setFont(new Font("Arial", Font.PLAIN, 14));
         lblTuNgay.setBounds(150, 100, 120, 30);
@@ -107,7 +107,7 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
         pickerTuNgay.setOpaque(false);
         pickerTuNgay.setBounds(230, 100, 300, 30);
         add(pickerTuNgay);
-//      Đến ngày
+
         lblDenNgay = new JLabel("Đến ngày: ");
         lblDenNgay.setFont(new Font("Arial", Font.PLAIN, 14));
         lblDenNgay.setBounds(450, 100, 120, 30);
@@ -119,7 +119,6 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
         pickerDenNgay.setBounds(530, 100, 300, 30);
         add(pickerDenNgay);
 
-//      Lọc theo
         JLabel lblLocTheo = new JLabel("Lọc theo:");
         lblLocTheo.setFont(new Font("Arial", Font.PLAIN, 14));
         lblLocTheo.setBounds(750, 100, 150, 30);
@@ -133,26 +132,22 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
         cmbLocTheo.addItem("3 tháng gần nhất");
         cmbLocTheo.addItem("6 tháng gần nhất");
         cmbLocTheo.addItem("1 năm gần nhất");
-        cmbLocTheo.setBounds(830,100,200,30);
+        cmbLocTheo.setBounds(830, 100, 200, 30);
         Custom.setCustomComboBox(cmbLocTheo);
         add(cmbLocTheo);
 
-        //        btn thống kê
         btnThongKe = new JButton("Thống kê");
         btnThongKe.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnThongKe);
         btnThongKe.setBounds(430, 160, 150, 30);
         add(btnThongKe);
 
-        //        btn làm mới
         btnLamMoi = new JButton("Làm mới");
         btnLamMoi.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnLamMoi);
         btnLamMoi.setBounds(630, 160, 150, 30);
         add(btnLamMoi);
 
-
-//      danh sách khách hàng
         JPanel pnlDSDV = new JPanel();
         pnlDSDV.setLayout(null);
         pnlDSDV.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DANH SÁCH KHÁCH HÀNG",
@@ -160,8 +155,8 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
         pnlDSDV.setBounds(5, 130, 1235, 530);
         pnlDSDV.setOpaque(false);
 
-        String[] colsDV = { "STT", "Mã khách hàng", "Tên khách hàng","Tổng doanh số" };
-        modelTblDichVu = new DefaultTableModel(colsDV, 0) ;
+        String[] colsDV = {"STT", "Mã khách hàng", "Tên khách hàng", "Tổng doanh số"};
+        modelTblDichVu = new DefaultTableModel(colsDV, 0);
         JScrollPane scrKhachHang;
 
         tblDichVu = new JTable(modelTblDichVu);
@@ -172,14 +167,14 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
         tblDichVu.getTableHeader().setForeground(Color.BLUE);
         Custom.getInstance().setCustomTable(tblDichVu);
 
-        pnlDSDV.add(scrKhachHang = new JScrollPane(tblDichVu,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
+        pnlDSDV.add(scrKhachHang = new JScrollPane(tblDichVu, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
                 BorderLayout.CENTER);
-        scrKhachHang.setBounds(10,20,1220,500);
+        scrKhachHang.setBounds(10, 20, 1220, 500);
         scrKhachHang.setOpaque(false);
         scrKhachHang.getViewport().setOpaque(false);
         scrKhachHang.getViewport().setBackground(Color.WHITE);
         pnlThongTinThongKe.add(pnlDSDV);
-        //
+
         ImageIcon backgroundImage = new ImageIcon(getClass().getResource("/images/background.png"));
         lblBackGround = new JLabel(backgroundImage);
         lblBackGround.setBounds(0, 0, getWidth(), getHeight());
@@ -190,18 +185,6 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
 
         cmbLocTheo.addItemListener(this);
 
-
-//        tblDichVu.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-//            @Override
-//            public void valueChanged(ListSelectionEvent e) {
-//                // Xử lý sự kiện khi dòng đang được chọn thay đổi
-//                if (!e.getValueIsAdjusting()) {
-//                    int selectedRow = tblDichVu.getSelectedRow();
-//                    // Hiển thị panel mới dựa trên dòng đã chọn
-//                    displayNewPanel(selectedRow);
-//                }
-//            }
-//        });
         tblDichVu.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -209,11 +192,20 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
                 int selectedRow = tblDichVu.rowAtPoint(e.getPoint());
                 // Kiểm tra nếu chọn dòng hợp lệ
                 if (selectedRow >= 0) {
-                    displayNewPanel(selectedRow);
+                    try {
+                        Date tuNgay = pickerTuNgay.getFullDate();
+                        Date denNgay = pickerDenNgay.addOneDay();
+
+                        displayNewPanel(selectedRow, cmbLocTheo.getSelectedItem().toString(), tuNgay, denNgay);
+                    } catch (ParseException ex) {
+                        ex.printStackTrace();
+                    }
                 }
             }
         });
+
     }
+
     /**
      * Gán thời gian hiện tại cho label lblTime
      */
@@ -259,7 +251,6 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
 
     /**
      * Đưa dữ liệu thống kê vào table
-     * @param listBill
      */
     private void docDuLieuVaoTable(ArrayList<Bill> listBill) {
         int i = 1;
@@ -277,7 +268,7 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
                 }
             }
 
-            double roomPrice = bill.getMaPhong().getGiaPhong() * bill.tinhGioThue();
+            double roomPrice = bill.tinhTienPhong();
             double totalServicePrice = gia;
 
             double totalQuantity;
@@ -307,7 +298,7 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
                     s1 = kh.getTenKhachHang();
                 }
             }
-            dataToAdd.add(new Object[] { i, customerID, s1, df.format(totalQuantity) });
+            dataToAdd.add(new Object[]{i, customerID, s1, df.format(totalQuantity)});
 
         }
 
@@ -328,8 +319,8 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
 
     /**
      * kiểm tra ngày bắt đầu và ngày kết thúc
+     *
      * @return fasle nếu ngày kết thúc < ngày bắt đầu và ngược lại thì true
-     * @throws ParseException
      */
     public boolean validData() throws ParseException {
         Date tuNgay = pickerTuNgay.getFullDate();
@@ -410,20 +401,24 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
         }
     }
 
-    private void displayNewPanel(int selectedRow) {
-        // Tạo panel mới
+    /**
+     * Hiển thị panel mới (chứa hóa đơn của dòng được click)
+     *
+     * @param selectedRow:    dòng được chọn
+     * @param selectedOption: giá trị được chọn trong combobox
+     * @param fromDate:       ngày bắt đầu
+     * @param toDate:         ngày kết thúc
+     */
+    private void displayNewPanel(int selectedRow, String selectedOption, Date fromDate, Date toDate) {
         JPanel panel = new JPanel();
         panel.setPreferredSize(new Dimension(1300, 500));
         panel.setLayout(null);
         panel.setBorder(new TitledBorder(
                 new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "DANH SÁCH HÓA ĐƠN",
                 TitledBorder.LEADING, TitledBorder.TOP));
-//        panel.setBounds(12, 10, 300, 50);
-        // Tùy chỉnh panel theo nhu cầu của bạn
-        // Ví dụ: Thêm các thành phần và đặt thuộc tính
 
-        String[] colsDV = { "STT","Mã HĐ" ,"Mã KH/Mã DV", "Tên KH/Tên DV","Ngày lập","Giờ vào","Giờ ra","Số giờ/Số lượng","Giá phòng(Giờ)/Giá dịch vụ" ,"Tổng tiền"};
-        DefaultTableModel modelTblDichVu1 = new DefaultTableModel(colsDV, 0) ;
+        String[] colsDV = {"STT", "Mã HĐ", "Mã KH/Mã DV", "Tên KH/Tên DV", "Ngày lập", "Giờ vào", "Giờ ra", "Số giờ/Số lượng", "Giá phòng(Giờ)/Giá dịch vụ", "Tổng tiền"};
+        DefaultTableModel modelTblDichVu1 = new DefaultTableModel(colsDV, 0);
         JScrollPane scrKhachHang;
 
         JTable tblDichVu1 = new JTable(modelTblDichVu1);
@@ -443,27 +438,39 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
         tblDichVu1.getColumnModel().getColumn(6).setPreferredWidth(10);
         tblDichVu1.getColumnModel().getColumn(7).setPreferredWidth(50);
         tblDichVu1.getColumnModel().getColumn(8).setPreferredWidth(150);
-        tblDichVu1.getColumnModel().getColumn(9).setPreferredWidth(40);
+        tblDichVu1.getColumnModel().getColumn(9).setPreferredWidth(70);
 
-        panel.add(scrKhachHang = new JScrollPane(tblDichVu1,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
+        panel.add(scrKhachHang = new JScrollPane(tblDichVu1, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
                 BorderLayout.CENTER);
-        scrKhachHang.setBounds(10,20,1280,480);
-//        scrKhachHang.setOpaque(false);
-//        scrKhachHang.getViewport().setOpaque(false);
-//        scrKhachHang.getViewport().setBackground(Color.WHITE);
-//        pnlThongTinThongKe.add(panel);
+        scrKhachHang.setBounds(10, 20, 1280, 470);
 
-//        JLabel label = new JLabel("Dòng đã chọn: " + selectedRow);
-//        panel.add(label);
+        String makh = modelTblDichVu.getValueAt(selectedRow, 1) + "";
 
-        String makh = modelTblDichVu.getValueAt(selectedRow,1)+"";
+        ArrayList<Bill> listBill;
+        if ("7 ngày".equals(selectedOption)) {
+            listBill = billDAO.getBillByCustomerIDAndDateRange(makh,
+                    Date.from(fromDate.toInstant().minus(7, ChronoUnit.DAYS)), toDate);
+        } else if ("1 tháng".equals(selectedOption)) {
+            listBill = billDAO.getBillByCustomerIDAndDateRange(makh,
+                    Date.from(fromDate.toInstant().minus(1, ChronoUnit.MONTHS)), toDate);
+        } else if ("3 tháng".equals(selectedOption)) {
+            listBill = billDAO.getBillByCustomerIDAndDateRange(makh,
+                    Date.from(fromDate.toInstant().minus(3, ChronoUnit.MONTHS)), toDate);
+        } else if ("6 tháng".equals(selectedOption)) {
+            listBill = billDAO.getBillByCustomerIDAndDateRange(makh,
+                    Date.from(fromDate.toInstant().minus(6, ChronoUnit.MONTHS)), toDate);
+        } else if ("1 năm".equals(selectedOption)) {
+            listBill = billDAO.getBillByCustomerIDAndDateRange(makh,
+                    Date.from(fromDate.toInstant().minus(1, ChronoUnit.YEARS)), toDate);
+        } else {
+            listBill = billDAO.getBillByCustomerIDAndDateRange(makh, fromDate, toDate);
+        }
 
-        ArrayList<Bill> listBill = billDAO.getBillByCustomerID(makh);
-        System.out.printf(listBill.size()+"");
+        System.out.printf(listBill.size() + "");
 
-        int i=1;
-        for (Bill bill: listBill){
-            String ngayThang = String.valueOf(bill.getNgayGioTra());
+        int i = 1;
+        for (Bill bill : listBill) {
+            String ngayThang = String.valueOf(bill.getThoiGianRa());
             SimpleDateFormat sdfInput = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
             Date date = null;
             try {
@@ -478,8 +485,8 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
 
             SimpleDateFormat sdfOutput2 = new SimpleDateFormat("HH:mm:ss");
             String gioPhutGiayTra = sdfOutput2.format(date);
-//==============================
-            String gioDat = String.valueOf(bill.getNgayGioDat());
+            //==============================
+            String gioDat = String.valueOf(bill.getThoiGianVao());
             SimpleDateFormat sdfInput1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
             Date date1 = null;
             try {
@@ -491,21 +498,22 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
             SimpleDateFormat sdfOutput1 = new SimpleDateFormat("HH:mm:ss");
             String gioPhutGiayDat = sdfOutput1.format(date1);
 
-            modelTblDichVu1.addRow(new Object[]{i,bill.getMaHoaDon(),bill.getMaKH().getMaKhachHang(),bill.getMaKH().getTenKhachHang(),ngayThangDinhDang,gioPhutGiayDat,gioPhutGiayTra,bill.tinhGioThue(),df.format(bill.getMaPhong().getGiaPhong()),df.format(bill.tinhTienPhong())});
+            modelTblDichVu1.addRow(new Object[]{i, bill.getMaHoaDon(), bill.getMaKH().getMaKhachHang(), bill.getMaKH().getTenKhachHang(), ngayThangDinhDang, gioPhutGiayDat, gioPhutGiayTra, bill.tinhThoiGianSuDung(), df.format(bill.getMaPhong().getGiaPhong()), df.format(bill.tinhTienPhong())});
             ArrayList<DetailsOfService> details = detailOfServiceDAO.getDetailsOfServiceForBill(bill.getMaHoaDon());
-            double gia=0;
-            for (DetailsOfService detailsOfService:details){
-                modelTblDichVu1.addRow(new Object[]{"","",detailsOfService.getMaDichVu().getMaDichVu(),detailsOfService.getMaDichVu().getTenDichVu(),ngayThangDinhDang,gioPhutGiayDat,gioPhutGiayTra,detailsOfService.getSoLuong(),df.format(detailsOfService.getGiaBan()),df.format((detailsOfService.getGiaBan()*detailsOfService.getSoLuong()))});
-                gia += detailsOfService.getGiaBan()*detailsOfService.getSoLuong();
+            double gia = 0;
+            for (DetailsOfService detailsOfService : details) {
+                modelTblDichVu1.addRow(new Object[]{"", "", detailsOfService.getMaDichVu().getMaDichVu(), detailsOfService.getMaDichVu().getTenDichVu(), ngayThangDinhDang, gioPhutGiayDat, gioPhutGiayTra, detailsOfService.getSoLuong(), df.format(detailsOfService.getGiaBan()), df.format((detailsOfService.getGiaBan() * detailsOfService.getSoLuong()))});
+                gia += detailsOfService.getGiaBan() * detailsOfService.getSoLuong();
             }
-            double quantity = bill.getMaPhong().getGiaPhong() * bill.tinhGioThue() + gia;
-            if (bill.getKhuyenMai().trim().equalsIgnoreCase("KM")){
+            double quantity = bill.tinhTienPhong() + gia;
+            if (bill.getKhuyenMai().trim().equalsIgnoreCase("KM")) {
                 double totalBillWithVAT = quantity * 1.08; // Tính tổng bill kèm VAT
                 quantity = totalBillWithVAT - (totalBillWithVAT * 0.15);
-            }else{
-                quantity += quantity*8/100;
+            } else {
+                quantity += quantity * 8 / 100;
             }
-            modelTblDichVu1.addRow(new Object[]{"","","","","","","","","Tổng tiền (VAT 8%):",df.format(quantity)});
+            modelTblDichVu1.addRow(new Object[]{"", "", "", "", "", "", "", "", "Tổng tiền (VAT 8%):", df.format(quantity)});
+            modelTblDichVu1.addRow(new Object[]{});
 
             i++;
         }

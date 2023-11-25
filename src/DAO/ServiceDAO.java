@@ -1,10 +1,13 @@
 package DAO;
-import java.sql.*;
-import java.util.List;
+
 import ConnectDB.ConnectDB;
-import Entity.TypeOfService;
 import Entity.Service;
+import Entity.TypeOfService;
+
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Thêm, sửa, đọc dữ liệu từ database cho lớp {@code ServiceDAO}
  * <p>
@@ -19,6 +22,7 @@ import java.util.ArrayList;
 public class ServiceDAO {
     /**
      * lấy danh sách thông tin tất cả dịch vụ
+     *
      * @return {@code ArrayList<Service>}: danh sách dịch vụ
      */
     public List<Service> getAllDichVu() {
@@ -31,7 +35,7 @@ public class ServiceDAO {
             ResultSet rs = statement.executeQuery(sql);
             while (rs.next()) {
                 dsDichVu.add(
-                        new Service(rs.getString(1), rs.getString(2), new TypeOfService(rs.getString(3)), rs.getString(4),rs.getInt(5), rs.getDouble(6)));
+                        new Service(rs.getString(1), rs.getString(2), new TypeOfService(rs.getString(3)), rs.getString(4), rs.getInt(5), rs.getDouble(6)));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -41,6 +45,7 @@ public class ServiceDAO {
 
     /**
      * Lấy danh sách dịch vụ theo tên dịch vụ
+     *
      * @param name tên dịch vụ
      * @return {@code ArrayList<Service>}: danh sách theo tên dịch vụ
      */
@@ -77,43 +82,45 @@ public class ServiceDAO {
 
     /**
      * Thêm dịch vụ mới vào cơ sở dữ liệu
+     *
      * @param s {@code Service}: dịch vụ cần thêm
      * @return {@code boolean}: kết quả trả về của câu truy vấn
-     *          <ul>
-     *              <li>Nếu thêm thành công thì trả về {@code true}</li>
-     *              <li>Nếu thêm thất bại thì trả về {@code false}</li>
-     *          </ul>
+     * <ul>
+     *     <li>Nếu thêm thành công thì trả về {@code true}</li>
+     *     <li>Nếu thêm thất bại thì trả về {@code false}</li>
+     * </ul>
      */
-    public boolean insert(Service s){
+    public boolean insert(Service s) {
         ConnectDB.getInstance();
         Connection con = new ConnectDB().getConnection();
         PreparedStatement statement = null;
-        int n=0;
-        try{
-            String sql = "insert into dbo.DichVu (maDichVu,tenDichVu,maLoaiDichVu,donViTinh,soLuongTon,giaBan)"+"values (?,?,?,?,?,?)";
+        int n = 0;
+        try {
+            String sql = "insert into dbo.DichVu (maDichVu,tenDichVu,maLoaiDichVu,donViTinh,soLuongTon,giaBan)" + "values (?,?,?,?,?,?)";
             statement = con.prepareStatement(sql);
             statement.setString(1, s.getMaDichVu());
             statement.setString(2, s.getTenDichVu());
-            statement.setString(3,s.getMaLoaiDichVu().getMaLoaiDichVu());
-            statement.setString(4,s.getDonViTinh());
-            statement.setInt(5,s.getSoLuongTon());
+            statement.setString(3, s.getMaLoaiDichVu().getMaLoaiDichVu());
+            statement.setString(4, s.getDonViTinh());
+            statement.setInt(5, s.getSoLuongTon());
             statement.setDouble(6, s.getGiaBan());
 
             n = statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return n>0;
+        return n > 0;
     }
 
     /**
      * Cập nhật thông tin dịch vụ vào cơ sở dữ liệu
+     *
      * @param s {@code: Service}: dịch vụ cần cập nhật
      * @return {@code: boolean}: kết quả trả về của câu truy vấn
-     *          <ul>
-     *              <li>Nếu cập nhật thành công thì trả về {@code: true}</li>
-     *              <li>Nếu cập nhật thất bại thì trả về {@code: false}</li>
-     *          </ul>
+     * <ul>
+     *     <li>Nếu cập nhật thành công thì trả về {@code: true}</li>
+     *     <li>Nếu cập nhật thất bại thì trả về {@code: false}</li>
+     * </ul>
      */
     public boolean update(Service s) {
         int n = 0;
@@ -124,7 +131,7 @@ public class ServiceDAO {
         try {
             stmt = con.prepareStatement(sql);
             stmt.setString(1, s.getTenDichVu());
-            stmt.setString(2,s.getMaLoaiDichVu().getMaLoaiDichVu());
+            stmt.setString(2, s.getMaLoaiDichVu().getMaLoaiDichVu());
             stmt.setString(3, s.getDonViTinh());
             stmt.setInt(4, s.getSoLuongTon());
             stmt.setDouble(5, s.getGiaBan());
@@ -145,12 +152,13 @@ public class ServiceDAO {
 
     /**
      * Xóa thông tin dịch vụ trong cơ sở dữ liệu
+     *
      * @param id {@code: Service}: mã dịch vụ cần cập nhật
      * @return {@code: boolean}: kết quả trả về của câu truy vấn
-     *          <ul>
-     *              <li>Nếu xóa thành công thì trả về {@code: true}</li>
-     *              <li>Nếu xóa thất bại thì trả về {@code: false}</li>
-     *          </ul>
+     * <ul>
+     *     <li>Nếu xóa thành công thì trả về {@code: true}</li>
+     *     <li>Nếu xóa thất bại thì trả về {@code: false}</li>
+     * </ul>
      */
     public boolean delete(String id) {
         int n = 0;
@@ -177,6 +185,7 @@ public class ServiceDAO {
 
     /**
      * lấy dịch vụ theo mã dịch vụ
+     *
      * @param maDichVu mã dịch vụ
      * @return dịch vụ theo mã dịch vụ được tìm
      */
@@ -219,6 +228,7 @@ public class ServiceDAO {
 
     /**
      * Tạo mã dịch vụ phát sinh tự động bằng cách lấy mã cuối cùng trong database tăng lên 1
+     *
      * @return mã dịch vụ mới
      */
     public String generateNextServiceId() {
@@ -246,8 +256,10 @@ public class ServiceDAO {
         }
         return nextServiceId;
     }
+
     /**
      * Lấy danh sách dịch vụ theo tên loại dịch vụ
+     *
      * @param serviceTypeName tên loại dịch vụ
      * @return {@code ArrayList<Service>}: danh sách theo tên loại dịch vụ
      */
@@ -262,7 +274,7 @@ public class ServiceDAO {
                     "WHERE dv.maLoaiDichVu = ldv.maLoaiDichVu AND ldv.tenLoaiDichVu = ?";
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setString(1, serviceTypeName);
-            ResultSet  resultSet = statement.executeQuery();
+            ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
                 String maDichVu = resultSet.getString("maDichVu");
@@ -280,9 +292,11 @@ public class ServiceDAO {
         }
         return serviceList;
     }
+
     /**
      * Lấy danh sách dịch vụ theo tên dịch vụ và tên loại dịch vụ
-     * @param serviceName tên dịch vụ
+     *
+     * @param serviceName     tên dịch vụ
      * @param serviceTypeName tên loại dịch vụ
      * @return {@code ArrayList<Service>}: danh sách theo tên dịch vụ và tên loại dịch vụ
      */

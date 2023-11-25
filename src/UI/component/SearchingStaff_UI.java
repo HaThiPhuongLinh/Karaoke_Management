@@ -18,6 +18,7 @@ import java.awt.event.MouseListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
 /**
  * Giao diện dùng để tìm kiếm nhân viên
  * Người thiết kế Nguyễn Đình Dương
@@ -26,16 +27,15 @@ import java.util.Date;
  * Nội dung cập nhật : cập nhật định dạng combobox
  */
 public class SearchingStaff_UI extends JPanel implements ActionListener, MouseListener {
-    private JButton btnLamMoi;
+    public static Staff staffLogin = null;
+    private JButton btnLamMoi, btnTim;
     private JTable tblNV;
     private DefaultTableModel modelTblNV;
     private JLabel lblBackground, lblTime, lblSearchbyName, lblSearchbyNumber, lblSearchbyCCCD, lblSearchStatus;
-    private JPanel timeNow, pnlStaffList, pnlStaffControl;
+    private JPanel pnlTime, pnlStaffList, pnlStaffControl;
     private JComboBox<String> cmbTinhTrang;
     private JTextField txtSearchbyName, txtSearchbyNumber, txtSearchbyCCCD;
-    private JButton btnTim;
     private StaffDAO StaffDAO;
-    public static Staff staffLogin = null;
 
     public SearchingStaff_UI(Staff staff) {
         this.staffLogin = staff;
@@ -54,16 +54,16 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
         headerLabel.setForeground(Color.WHITE);
         Component add = add(headerLabel);
 
-        timeNow = new JPanel();
-        timeNow.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "", TitledBorder.LEADING, TitledBorder.TOP));
-        timeNow.setBounds(12, 10, 300, 50);
-        timeNow.setOpaque(false);
-        add(timeNow);
+        pnlTime = new JPanel();
+        pnlTime.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(160, 160, 160)), "", TitledBorder.LEADING, TitledBorder.TOP));
+        pnlTime.setBounds(12, 10, 300, 50);
+        pnlTime.setOpaque(false);
+        add(pnlTime);
 
         lblTime = new JLabel();
         lblTime.setFont(new Font("Arial", Font.BOLD, 33));
         lblTime.setForeground(Color.WHITE);
-        timeNow.add(lblTime);
+        pnlTime.add(lblTime);
         Timer timer = new Timer(10, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -101,6 +101,7 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
         Custom.setCustomBtn(btnTim);
         btnTim.setFont(new Font("Arial", Font.BOLD, 14));
         pnlStaffControl.add(btnTim);
+
         btnLamMoi = new JButton("Làm Mới");
         btnLamMoi.setBounds(585, 205, 100, 30);
         Custom.setCustomBtn(btnLamMoi);
@@ -179,7 +180,7 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
             public void actionPerformed(ActionEvent e) {
                 String selectedNhanVien = (String) cmbTinhTrang.getSelectedItem();
                 modelTblNV.setRowCount(0);
-                String gt ="";
+                String gt = "";
                 for (Staff staff : StaffDAO.getAllStaff()) {
                     String date = formatDate(staff.getNgaySinh());
                     if (staff.isGioiTinh() == true) {
@@ -188,7 +189,7 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
                         gt = "Nữ";
                     }
                     if (selectedNhanVien.equalsIgnoreCase("Tất cả") || selectedNhanVien.equalsIgnoreCase(staff.getTrangThai())) {
-                        Object[] rowData = { staff.getMaNhanVien(), staff.getTenNhanVien(), staff.getSoDienThoai(),
+                        Object[] rowData = {staff.getMaNhanVien(), staff.getTenNhanVien(), staff.getSoDienThoai(),
                                 staff.getCCCD(), gt, date, staff.getDiaChi(),
                                 staff.getChucVu(), staff.getTrangThai(), staff.getTaiKhoan().getTaiKhoan()};
                         modelTblNV.addRow(rowData);
@@ -223,8 +224,10 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
         tcm.getColumn(8).setPreferredWidth(70);
         tcm.getColumn(9).setPreferredWidth(120);
     }
+
     /**
      * hàm sử dụng định dạng "HH:mm:ss" để biểu diễn thời gian (giờ, phút và giây) của đối tượng date
+     *
      * @param date : ngày cần định dạng
      * @return {@code String}: ngày cần định dạng
      */
@@ -245,7 +248,7 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
             } else {
                 gt = "Nữ";
             }
-            Object[] rowData = {staff.getMaNhanVien(), staff.getTenNhanVien(), staff.getSoDienThoai(), staff.getCCCD(), gt, date ,staff.getDiaChi(), staff.getChucVu(), staff.getTrangThai(), staff.getTaiKhoan().getTaiKhoan()};
+            Object[] rowData = {staff.getMaNhanVien(), staff.getTenNhanVien(), staff.getSoDienThoai(), staff.getCCCD(), gt, date, staff.getDiaChi(), staff.getChucVu(), staff.getTrangThai(), staff.getTaiKhoan().getTaiKhoan()};
             modelTblNV.addRow(rowData);
         }
     }
@@ -269,7 +272,7 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
             } else if (!txtSearchbyName.getText().trim().equals("")) {
                 modelTblNV.getDataVector().removeAllElements();
                 int i = 1;
-                String gt ="";
+                String gt = "";
                 if (cus1.size() != 0) {
                     for (Staff staff : cus1) {
                         String date = formatDate(staff.getNgaySinh());
@@ -291,7 +294,7 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
             } else if (!txtSearchbyNumber.getText().trim().equals("")) {
                 modelTblNV.getDataVector().removeAllElements();
                 int i = 1;
-                String gt ="";
+                String gt = "";
                 if (cus2.size() != 0) {
                     for (Staff staff : cus2) {
                         String date = formatDate(staff.getNgaySinh());
@@ -313,9 +316,9 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
             } else if (!txtSearchbyCCCD.getText().trim().equals("")) {
                 modelTblNV.getDataVector().removeAllElements();
                 int i = 1;
-                String gt ="";
+                String gt = "";
                 if (cus3.size() != 0) {
-                    for (Staff staff: cus3) {
+                    for (Staff staff : cus3) {
                         String date = formatDate(staff.getNgaySinh());
                         if (staff.isGioiTinh() == true) {
                             gt = "Nam";

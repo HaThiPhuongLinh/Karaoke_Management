@@ -12,15 +12,16 @@ import java.util.List;
  * <p>
  * Ngày tạo: 24/09/2023
  * <p>
- * Lần cập nhật cuối: 15/11/2023
+ * Lần cập nhật cuối: 18/11/2023
  * <p>
- * Nội dung cập nhật: thêm chức năng tìm theo combobox trạng thái phiếu đặt
+ * Nội dung cập nhật: cập nhật chức năng tìm phiếu đang chờ (getReservationsByRoomID)
  */
 public class ReservationFormDAO {
 
     /**
      * Lấy ra toàn bộ phiếu đặt phòng
-     * @return  List<ReservationForm>
+     *
+     * @return List<ReservationForm>
      */
     public List<ReservationForm> getAllForm() {
         List<ReservationForm> listForm = new ArrayList<ReservationForm>();
@@ -32,7 +33,7 @@ public class ReservationFormDAO {
             ResultSet rs = statement.executeQuery(sql);
             while (rs.next()) {
                 listForm.add(
-                        new ReservationForm(rs.getString(1), rs.getTimestamp(2), rs.getTimestamp(3), new Staff(rs.getString(4)), new Customer(rs.getString(5)),new Room(rs.getString(6)), rs.getInt(7)));
+                        new ReservationForm(rs.getString(1), rs.getTimestamp(2), rs.getTimestamp(3), new Staff(rs.getString(4)), new Customer(rs.getString(5)), new Room(rs.getString(6)), rs.getInt(7)));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -42,6 +43,7 @@ public class ReservationFormDAO {
 
     /**
      * Thêm phiếu đặt phòng
+     *
      * @param form: phiếu đặt phòng
      * @return true/false
      */
@@ -82,6 +84,7 @@ public class ReservationFormDAO {
 
     /**
      * Xóa phiếu đặt phòng thông qua mã phiếu
+     *
      * @param maPhieuDat: mã phiếu đặt
      * @return {@code boolean}: true/false
      */
@@ -117,6 +120,7 @@ public class ReservationFormDAO {
 
     /**
      * Lấy ra phiếu đặt phòng bằng mã phòng
+     *
      * @param roomID: mã phòng
      * @return {@code ReservationForm}: phiếu đặt phòng
      */
@@ -164,6 +168,7 @@ public class ReservationFormDAO {
 
     /**
      * Lấy ra phiếu đặt phòng bằng mã phiếu đặt
+     *
      * @param formID: mã phiếu đặt
      * @return {@code ReservationForm}: phiếu đặt phòng
      */
@@ -211,6 +216,7 @@ public class ReservationFormDAO {
 
     /**
      * Phát sinh mã phiếu đặt phòng ngẫu nhiên PDP+xxxx (x++)
+     *
      * @return String
      */
     public String generateNextFormId() {
@@ -240,6 +246,7 @@ public class ReservationFormDAO {
 
     /**
      * Lấy ra danh sách phiếu đặt phòng
+     *
      * @param roomID: mã phòng
      * @return {@code ArrayList<Bill>}: danh sách phiếu đặt phòng
      */
@@ -251,7 +258,7 @@ public class ReservationFormDAO {
 
         try {
             con = ConnectDB.getInstance().getConnection();
-            String query = "SELECT * FROM PhieuDatPhong WHERE maPhong = ?;";
+            String query = "SELECT * FROM PhieuDatPhong WHERE maPhong = ? AND trangThai = 2;";
             stmt = con.prepareStatement(query);
             stmt.setString(1, roomID);
 
@@ -285,11 +292,12 @@ public class ReservationFormDAO {
 
     /**
      * Cập nhật hiệu lực và trạng thái của phiếu đặt phòng
-     * @param formID: mã phiếu đặt
+     *
+     * @param formID:    mã phiếu đặt
      * @param trangThai: giá trị trạng thái mới (0 - Đã hủy, 1 - Đã nhận, 2 - Đang chờ)
      * @return {@code boolean}: true/false
      */
-    public boolean updateReservationStatus(String formID,  int trangThai) {
+    public boolean updateReservationStatus(String formID, int trangThai) {
         Connection conn = null;
         PreparedStatement stmt = null;
 
@@ -320,8 +328,9 @@ public class ReservationFormDAO {
 
     /**
      * Kiểm tra xem có phiếu đặt nào cho phòng có trạng thái khác 0 hay không
+     *
      * @param roomID: mã phòng
-     * @return (@boolean): true/false
+     * @return (@ boolean): true/false
      */
     public boolean hasActiveReservationsForRoom(String roomID) {
         ConnectDB.getInstance();
@@ -356,6 +365,7 @@ public class ReservationFormDAO {
 
     /**
      * Lấy ra danh sách phiếu đặt phòng có trạng thái khác 0 của một phòng
+     *
      * @param roomID: mã phòng
      * @return {@code ArrayList<ReservationForm>}: danh sách phiếu đặt phòng có trạng thái khác 0
      */
@@ -401,6 +411,7 @@ public class ReservationFormDAO {
 
     /**
      * Tìm phiếu đặt phòng dựa trên trạng thái
+     *
      * @param status: Trạng thái cần tìm kiếm (0 - Đã hủy, 1 - Đã nhận, 2 - Đang chờ)
      * @return {@code ArrayList<ReservationForm> }:Danh sách phiếu đặt phòng
      */

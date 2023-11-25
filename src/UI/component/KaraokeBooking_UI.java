@@ -39,12 +39,12 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
     public static JTextField txtCustomer;
     public static Staff staffLogin = null;
     private static KaraokeBooking_UI instance = new KaraokeBooking_UI(staffLogin);
-    private DefaultTableModel modelTblService;
+    public JTextField txtRoom;
     KaraokeBooking_UI main = this;
+    private DefaultTableModel modelTblService;
     private JPanel pnlShowRoom, pnlRoomList, pnlTimeNow, pnlRoomControl, pnlShowCustomer, pnlShowDetails;
     private JLabel lblBackGround, lblTime, lblRoom, lblStatus, lblCustomer, lblRoom2, lblTypeRoom, lblLocation, lblName, lblStart;
     private JTextField txtLocation, txtName, txtStart, txtTypeRoom;
-    public JTextField txtRoom;
     private JScrollPane scrShowRoom, scrService;
     private JButton btnSwitchRoom, btnBookRoom, btnPresetRoom, btnChooseCustomer, btnForm;
     private JButton[] btnRoomList;
@@ -319,7 +319,6 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
 
     /**
      * Tạo thể hiện hiện tại cho class KaraokeBooking_UI
-     * @return
      */
     public static KaraokeBooking_UI getInstance() {
         if (instance == null)
@@ -348,7 +347,7 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
     }
 
     /**
-     * Load dữ liệu tất cả loại phòng lên cboRoomType
+     * Tải dữ liệu tất cả loại phòng lên cboRoomType
      */
     private void loadCboRoomType() {
         java.util.List<TypeOfRoom> dataList = typeOfRoomDAO.getAllLoaiPhong();
@@ -359,9 +358,9 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
     }
 
     /**
-     * Load thông tin phòng lên btnRoomList bao gồm roomID và status của Room (statusP)
+     * Tải thông tin phòng lên btnRoomList bao gồm mã phòng và trạng thái phòng
      *
-     * @param roomID1 {@code ArrayList<Room>}: ID phòng
+     * @param roomID1 {@code ArrayList<Room>}: mã phòng
      */
     public void loadRoom(String roomID1) {
         Room room = roomDAO.getRoomByRoomId(roomID1);
@@ -468,7 +467,7 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
                         if (bill != null) {
                             txtName.setText(bill.getMaKH().getTenKhachHang());
                             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-                            txtStart.setText(sdf.format(bill.getNgayGioDat()));
+                            txtStart.setText(sdf.format(bill.getThoiGianVao()));
                         }
                     }
                     if (roomActiveE.getTinhTrang().equalsIgnoreCase("Trống")) {
@@ -583,7 +582,6 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
 
     /**
      * Sinh mã hóa đơn tự động
-     * @return
      */
     private String generateBillID() {
         String billID = billDAO.generateNextBillId();
@@ -611,8 +609,8 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
                 if (room == null) {
                     room = new Room();
                 }
-                if(room.getTinhTrang().equalsIgnoreCase("Đang sử dụng")){
-                    JOptionPane.showMessageDialog(this,"Phòng đang sử dụng. Không được đặt.");
+                if (room.getTinhTrang().equalsIgnoreCase("Đang sử dụng")) {
+                    JOptionPane.showMessageDialog(this, "Phòng đang sử dụng. Không được đặt.");
                 } else {
 
                     // Lấy danh sách các phiếu đặt phòng cho phòng hiện tại và sắp xếp chúng theo thời gian đặt
@@ -627,51 +625,47 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
                         long reservationTimeMillis = earliestReservation.getThoiGianDat().getTime();
                         long timeDifferenceHours = (reservationTimeMillis - currentTimeMillis) / (60 * 60 * 1000);
 
-                        if (timeDifferenceHours > 3) {
-                            int choice = JOptionPane.showConfirmDialog(
-                                    this,
-                                    "Phòng đã có phiếu đặt vào lúc " + sdf.format(earliestReservation.getThoiGianDat()) + ". Bạn có muốn sử dụng ngay không?",
-                                    "Xác nhận",
-                                    JOptionPane.YES_NO_OPTION
-                            );
+                        int choice = JOptionPane.showConfirmDialog(
+                                this,
+                                "Phòng đã có phiếu đặt vào lúc " + sdf.format(earliestReservation.getThoiGianDat()) + ". Bạn có muốn sử dụng ngay không?",
+                                "Xác nhận",
+                                JOptionPane.YES_NO_OPTION
+                        );
 
-                            if (choice == JOptionPane.YES_OPTION) {
-                                String customerName = txtCustomer.getText().trim();
-                                String customerID = customerDAO.getIdByTenKhachHang(customerName);
-                                Customer c = customerDAO.getKhachHangById(customerID);
-                                if (c == null) {
-                                    c = new Customer();
-                                }
-                                Timestamp startTime = new Timestamp(currentTimeMillis);
-                                Timestamp receiveTime = null;
-                                int tinhTrang = 0;
-                                String khuyenMai = "";
-
-                                String billID = generateBillID();
-                                Bill bill = new Bill(billID, staffLogin, c, room, startTime, receiveTime, tinhTrang, khuyenMai);
-                                boolean resultBill = billDAO.addBill(bill);
-
-                                if (resultBill) {
-                                    long thirtyMinutesMillis = 30 * 60 * 1000; // 30 phút trong mili giây
-                                    long timeToReturnMillis = reservationTimeMillis - thirtyMinutesMillis;
-
-                                    Timestamp timeToReturn = new Timestamp(timeToReturnMillis);
-                                    JOptionPane.showMessageDialog(
-                                            this,
-                                            "Cho thuê phòng thành công. Vui lòng trả phòng trước " + sdf.format(timeToReturn),
-                                            "Thông báo",
-                                            JOptionPane.INFORMATION_MESSAGE
-                                    );
-                                    roomDAO.updateRoomStatus(roomID, "Đang sử dụng");
-                                    ArrayList<Room> roomList = roomDAO.getRoomList();
-                                    LoadRoomList(roomList);
-                                    txtCustomer.setText("");
-                                } else {
-                                    JOptionPane.showMessageDialog(this, "Cho thuê phòng thất bại");
-                                }
+                        if (choice == JOptionPane.YES_OPTION) {
+                            String customerName = txtCustomer.getText().trim();
+                            String customerID = customerDAO.getIdByTenKhachHang(customerName);
+                            Customer c = customerDAO.getKhachHangById(customerID);
+                            if (c == null) {
+                                c = new Customer();
                             }
-                        } else {
-                            JOptionPane.showMessageDialog(this, "Không thể đặt phòng vì đã có phiếu đặt vào lúc " + sdf.format(earliestReservation.getThoiGianDat()));
+                            Timestamp startTime = new Timestamp(currentTimeMillis);
+                            Timestamp receiveTime = null;
+                            int tinhTrang = 0;
+                            String khuyenMai = "";
+
+                            String billID = generateBillID();
+                            Bill bill = new Bill(billID, staffLogin, c, room, startTime, receiveTime, tinhTrang, khuyenMai);
+                            boolean resultBill = billDAO.addBill(bill);
+
+                            if (resultBill) {
+                                long thirtyMinutesMillis = 30 * 60 * 1000; // 30 phút trong mili giây
+                                long timeToReturnMillis = reservationTimeMillis - thirtyMinutesMillis;
+
+                                Timestamp timeToReturn = new Timestamp(timeToReturnMillis);
+                                JOptionPane.showMessageDialog(
+                                        this,
+                                        "Cho thuê phòng thành công. Vui lòng trả phòng trước " + sdf.format(timeToReturn),
+                                        "Thông báo",
+                                        JOptionPane.INFORMATION_MESSAGE
+                                );
+                                roomDAO.updateRoomStatus(roomID, "Đang sử dụng");
+                                ArrayList<Room> roomList = roomDAO.getRoomList();
+                                LoadRoomList(roomList);
+                                txtCustomer.setText("");
+                            } else {
+                                JOptionPane.showMessageDialog(this, "Cho thuê phòng thất bại");
+                            }
                         }
                     } else {
                         // Không có phiếu đặt nào, cho phép đặt phòng
@@ -738,6 +732,7 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
 
     /**
      * Hiển thị thông tin chi tiết dịch vụ của phòng khi click vào phòng đang sử dụng
+     *
      * @param maPhong: mã phòng
      */
     private void showBillInfo(String maPhong) {
@@ -758,7 +753,7 @@ public class KaraokeBooking_UI extends JPanel implements ActionListener, MouseLi
             String priceStr = df.format(item.getGiaBan());
             String quantityStr = String.valueOf(item.getSoLuong());
             modelTblService.addRow(new Object[]{service.getTenDichVu(),
-                   quantityStr, priceStr});
+                    quantityStr, priceStr});
         }
     }
 

@@ -1,7 +1,10 @@
 package DAO;
 
 import ConnectDB.ConnectDB;
-import Entity.*;
+import Entity.Customer;
+import Entity.ReservationForm;
+import Entity.Room;
+import Entity.TypeOfRoom;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -19,12 +22,16 @@ import java.util.List;
 public class CustomerDAO {
     private static CustomerDAO instance = new CustomerDAO();
 
+    /**
+     * Tạo thể hiện hiện tại cho CustomerDAO
+     */
     public static CustomerDAO getInstance() {
         return instance;
     }
 
     /**
      * Cập nhật khách hàng
+     *
      * @param kh:Khách hàng cần cập nhật
      * @return {@code boolean}: True or false
      */
@@ -52,6 +59,7 @@ public class CustomerDAO {
 
     /**
      * Lấy ra danh sách toàn bộ khách hàng
+     *
      * @return {@code List<Customer> }:Danh sách khách hàng
      */
 
@@ -75,8 +83,8 @@ public class CustomerDAO {
 
     /**
      * Lấy ra mã khách hàng dựa trên tên khách hàng
+     *
      * @param tenKhachHang:Tên khách hàng cần lấy mã
-     * @return
      */
     public String getIdByTenKhachHang(String tenKhachHang) {
         String id = null;
@@ -110,7 +118,7 @@ public class CustomerDAO {
 
     /**
      * Lấy ra khách hàng dựa trên mã khách hàng
-     * @param id
+     *
      * @return {@code Customer }: khách hàng
      */
     public Customer getKhachHangById(String id) {
@@ -145,6 +153,7 @@ public class CustomerDAO {
 
     /**
      * Lấy ra danh sách khách hàng dựa theo tên khách hàng
+     *
      * @param name:Tên khách hàng cần tìm
      * @return {@code List<Customer> }:Danh sách khách hàng
      */
@@ -177,6 +186,7 @@ public class CustomerDAO {
 
     /**
      * Lấy ra danh sách khách hàng dựa trên số điện thoại
+     *
      * @param sdt:Số điện thoại của khách hàng cần tìm
      * @return {@code List<Customer> }:Danh sách khách hàng
      */
@@ -209,6 +219,7 @@ public class CustomerDAO {
 
     /**
      * Lấy ra danh sách khách hàng dựa trên cccd
+     *
      * @param cccd:Căn cước công dân của khách hàng cần tìm
      * @return {@code List<Customer> }:Danh sách hách hàng
      */
@@ -241,11 +252,12 @@ public class CustomerDAO {
 
     /**
      * Lấy ra khách hàng dựa trên số điện thoại
+     *
      * @param sdt:Số điện thoại của khách hàng cần tìm
      * @return {@code Customer }:Khách hàng
      */
-    public  Customer getKhachHangBySDT(String sdt) {
-       Customer c = null;
+    public Customer getKhachHangBySDT(String sdt) {
+        Customer c = null;
         ConnectDB.getInstance();
         PreparedStatement stmt = null;
         try {
@@ -256,7 +268,7 @@ public class CustomerDAO {
 
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-               c = new Customer(rs);
+                c = new Customer(rs);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -272,6 +284,7 @@ public class CustomerDAO {
 
     /**
      * Tìm phiếu đặt phòng dựa trên tên khách hàng
+     *
      * @param customerName:Tên khách hàng cần tìm phiếu đặt phòng
      * @return {@code ArrayList<ReservationForm> }:Danh sách phiếu đặt phòng
      */
@@ -334,9 +347,9 @@ public class CustomerDAO {
      * Tìm phiếu đặt phòng dựa trên tên khách hàng và trạng thái
      *
      * @param customerName: Tên khách hàng cần tìm phiếu đặt phòng
-     * @param status: Trạng thái cần tìm (0 - Đã hủy, 1 - Đã nhận, 2 - Đang chờ)
+     * @param status:       Trạng thái cần tìm (0 - Đã hủy, 1 - Đã nhận, 2 - Đang chờ)
      */
-    public ArrayList<ReservationForm>  searchReservationForms(String customerName, int status) {
+    public ArrayList<ReservationForm> searchReservationForms(String customerName, int status) {
         ArrayList<ReservationForm> result = new ArrayList<>();
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -395,6 +408,7 @@ public class CustomerDAO {
 
     /**
      * Lấy ra khách hàng dựa trên mã Hóa đơn
+     *
      * @param maHoaDon:Mã hóa đơn của khách hàng cần lấy
      * @return {@code Customer }:Khách hàng
      */
@@ -424,9 +438,9 @@ public class CustomerDAO {
 
     /**
      * Thêm khách hàng
+     *
      * @param kh:Khách hàng cần thêm
      * @return {@code boolean} :True or false
-     * @throws SQLException
      */
 
     public boolean insert(Customer kh) throws SQLException {
@@ -459,6 +473,7 @@ public class CustomerDAO {
 
     /**
      * Xóa khách hàng
+     *
      * @param kh:Khách hàng cần xóa
      * @return {@code boolean} :True or false
      */

@@ -1,9 +1,10 @@
 package UI.CustomUI;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.awt.*;
-import javax.swing.border.EmptyBorder;
+
 /**
  * Custom giao diện
  * Người tham gia thiết kế: Hà Thị Phương Linh
@@ -12,12 +13,14 @@ import javax.swing.border.EmptyBorder;
  * Nội dung cập nhật: Thêm tính năng custom Bill
  */
 public class Custom {
+    public static String pathFont = "/fonts/";
     private static Custom instance = new Custom();
     private Font fontBold = new Font("Dialog", Font.BOLD, 14);
     private Font fontNormal = new Font("Dialog", Font.PLAIN, 14);
-    public static String pathFont = "/fonts/";
-    public static String PATH_EXPORT_BILL = System.getProperty("user.dir") +
-            "/bill/";
+
+    /**
+     * Tạo thể hiện hiện tại cho Custom
+     */
     public static Custom getInstance() {
         if (instance == null)
             instance = new Custom();
@@ -26,6 +29,7 @@ public class Custom {
 
     /**
      * Custom jbutton
+     *
      * @param btn: button
      */
     public static void setCustomBtn(JButton btn) {
@@ -37,7 +41,8 @@ public class Custom {
 
     /**
      * Custom combobox
-     * @param cmb: combobox
+     *
+     * @param cmb: combobox cần custom
      */
     public static void setCustomComboBox(JComboBox<?> cmb) {
         cmb.setFont(new Font("Arial", Font.PLAIN, 15));
@@ -45,7 +50,25 @@ public class Custom {
 
     /**
      * Custom table
-     * @param tbl: table
+     *
+     * @param tbl: table cần custom
+     */
+    public static void setCustomTable(JTable tbl) {
+        tbl.setFont(new Font("Arial", Font.PLAIN, 14));
+        tbl.setForeground(Color.WHITE);
+        tbl.setBackground(Color.decode("#5F009D"));
+        tbl.setSelectionBackground(Color.decode("#232D31"));
+        tbl.setRowHeight(27);
+        tbl.setShowGrid(true);
+        tbl.setGridColor(Color.WHITE);
+        tbl.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
+        tbl.getTableHeader().setForeground(Color.BLUE);
+    }
+
+    /**
+     * Custom table
+     *
+     * @param tbl: table cần custom
      */
     public void setCustomTableBill(JTable tbl) {
         tbl.setFont(fontNormal);
@@ -60,7 +83,8 @@ public class Custom {
 
     /**
      * Custom label
-     * @param lbl: table
+     *
+     * @param lbl: label cần custom
      */
     public void setCustomLabelBill(JLabel lbl) {
         lbl.setBackground(Color.WHITE);
@@ -70,7 +94,8 @@ public class Custom {
 
     /**
      * Custom txt
-     * @param txt: txt
+     *
+     * @param txt: txt cần custom
      */
     public void setCustomTextFieldBill(JTextField txt) {
         txt.setEditable(false);
@@ -83,7 +108,8 @@ public class Custom {
 
     /**
      * Custom txt
-     * @param txt: txt
+     *
+     * @param txt: txt cần custom
      */
     public void setCustomTextFieldBill2(JTextField txt) {
         txt.setEditable(false);
@@ -92,21 +118,5 @@ public class Custom {
         txt.setOpaque(false);
         txt.setBackground(Color.decode("#5679A3"));
         txt.setFont(fontNormal);
-    }
-
-    /**
-     * Custom table
-     * @param tbl: table
-     */
-    public static void setCustomTable(JTable tbl) {
-        tbl.setFont(new Font("Arial", Font.PLAIN, 14));
-        tbl.setForeground(Color.WHITE);
-        tbl.setBackground(Color.decode("#5F009D"));
-        tbl.setSelectionBackground(Color.decode("#232D31"));
-        tbl.setRowHeight(27);
-        tbl.setShowGrid(true);
-        tbl.setGridColor(Color.WHITE);
-        tbl.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-        tbl.getTableHeader().setForeground(Color.BLUE);
     }
 }

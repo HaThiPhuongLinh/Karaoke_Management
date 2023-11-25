@@ -14,11 +14,6 @@ import com.itextpdf.text.pdf.*;
 import UI.CustomUI.Custom;
 import Entity.*;
 
-import javax.print.*;
-import javax.print.attribute.HashPrintRequestAttributeSet;
-import javax.print.attribute.PrintRequestAttributeSet;
-import javax.print.attribute.standard.Copies;
-
 /**
  * Sử dụng xuất hóa đơn dạng pdf
  * Người tham gia thiết kế: Nguyễn Đình Dương, Hà Thị Phương Linh
@@ -28,11 +23,9 @@ import javax.print.attribute.standard.Copies;
  */
 public class ExportBill {
     private URL fontPath = ExportBill.class.getResource(Custom.pathFont);
-
     private String pdfFontLight = fontPath + "Roboto-300.ttf";
     private String pdfFontLightItalic = fontPath + "Roboto-300_Italic.ttf";
     private String pdfFontMedium = fontPath + "Roboto-500.ttf";
-
     private BaseFont baseFontMedium;
     private BaseFont baseFontLight;
     private BaseFont baseFontLightItalic;
@@ -44,7 +37,6 @@ public class ExportBill {
     private String karaokeName = "ROSIE KARAOKE";
     private String address = "12 Nguyễn Văn Bảo, Phường 4, Gò Vấp, Thành phố Hồ Chí Minh";
     private String phoneNumber = "0999.999.999";
-
     private static ExportBill instance;
 
     static {
@@ -81,7 +73,7 @@ public class ExportBill {
         return time;
     }
     /**
-     * tạo khoảnG trắng trên file pdf
+     * tạo khoảng trắng trên file pdf
      *
      * @return {@code Paragraph}: dòng khoản trắng
      */
@@ -221,12 +213,12 @@ public class ExportBill {
             doc.add(pRoomTypePrice);
 
             // start Time
-            String startTime = ConvertTime.getInstance().convertTimeToString(bill.getNgayGioDat(), formatTime);
+            String startTime = ConvertTime.getInstance().convertTimeToString(bill.getThoiGianVao(), formatTime);
             Paragraph pStartTime = createRowBillInfoPdf("Giờ bắt đầu: ", startTime, 5);
             doc.add(pStartTime);
 
             // end Time
-            String endTime = ConvertTime.getInstance().convertTimeToString(bill.getNgayGioTra(), formatTime);
+            String endTime = ConvertTime.getInstance().convertTimeToString(bill.getThoiGianRa(), formatTime);
             Paragraph pEndTime = createRowBillInfoPdf("Giờ kết thúc: ", endTime, 5);
             doc.add(pEndTime);
 
