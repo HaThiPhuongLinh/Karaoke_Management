@@ -21,6 +21,7 @@ import javax.swing.border.EmptyBorder;
 
 public class Menu extends JPanel implements ActionListener {
     private JButton btnLogOut;
+    private JButton btnSupport;
     private final String menuItems[][] = {
             {"~Khách Hàng~"},
             {"Khách Hàng", "Tìm kiếm khách hàng", "Cập nhật khách hàng"},
@@ -73,7 +74,6 @@ public class Menu extends JPanel implements ActionListener {
     protected final int headerFullHgap = 5;
     private static Menu instance = new Menu();
     private static Staff staffLogin = null;
-    Account user = new Account();
 
     public Menu() {
         init();
@@ -86,7 +86,9 @@ public class Menu extends JPanel implements ActionListener {
     public void setLogoutAction(ActionListener actionListener) {
         btnLogOut.addActionListener(actionListener);
     }
-
+    public void setSupportAction(ActionListener actionListener) {
+        btnSupport.addActionListener(actionListener);
+    }
 
     private void init() {
         setLayout(new MenuLayout());
@@ -102,7 +104,6 @@ public class Menu extends JPanel implements ActionListener {
         btnLogOut.setFocusPainted(false);
         btnLogOut.setBorderPainted(false);
         btnLogOut.setFont(new Font("Dialog", Font.PLAIN, 16));
-
 
         btnLogOut.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent evt) {
@@ -145,9 +146,32 @@ public class Menu extends JPanel implements ActionListener {
         createMenu();
         lightDarkMode = new LightDarkMode();
 
+        btnSupport = new JButton("Hỗ trợ?");
+        btnSupport.setOpaque(false);
+        btnSupport.setContentAreaFilled(false);
+        btnSupport.setFocusPainted(false);
+        btnSupport.setBorder(null);
+        btnSupport.setForeground(Color.white);
+        btnSupport.setVerticalTextPosition(SwingConstants.BOTTOM);
+        btnSupport.setHorizontalTextPosition(SwingConstants.CENTER);
+        btnSupport.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnSupport.setFont(new Font("sansserif", Font.BOLD, 14));
+
+        btnSupport.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent evt) {
+                btnSupport.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            }
+            public void mouseExited(MouseEvent evt) {
+                btnSupport.setCursor(Cursor.getDefaultCursor());
+            }
+        });
+
         add(header);
         add(scroll);
+        add(btnSupport);
         add(lightDarkMode);
+        Dimension scrollSize = scroll.getViewport().getViewSize();
+
     }
 
     private void createMenu() {
@@ -283,7 +307,6 @@ public class Menu extends JPanel implements ActionListener {
                 int hgap = menuFull ? sheaderFullHgap : 0;
                 int accentColorHeight = 0;
 
-
                 header.setBounds(x + hgap, y, iconWidth - (hgap * 2), iconHeight);
                 int ldgap = UIScale.scale(10);
                 int ldWidth = width - ldgap * 2;
@@ -295,7 +318,9 @@ public class Menu extends JPanel implements ActionListener {
                 int menuy = y + iconHeight + gap;
                 int menuWidth = width;
                 int menuHeight = height - (iconHeight + gap) - (ldHeight + ldgap * 2) - (accentColorHeight);
-                scroll.setBounds(menux, menuy, menuWidth, menuHeight);
+                scroll.setBounds(menux, menuy, menuWidth, 580);
+
+                btnSupport.setBounds(x-10,660,100,36);
 
                 lightDarkMode.setBounds(ldx, ldy, ldWidth, ldHeight);
 

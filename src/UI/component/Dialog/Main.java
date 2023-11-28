@@ -60,6 +60,14 @@ public class Main extends JFrame {
             }
         });
 
+        menu.setSupportAction(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                    Support s = new Support(staffLogin);
+                s.setVisible(true);
+            }
+        });
+
         setBackground(new Color(0, 0, 0, 0));
         menu.addMenuEvent((int index, int subIndex, MenuAction action) -> {
             if (index == 0) {

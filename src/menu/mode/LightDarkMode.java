@@ -9,6 +9,8 @@ import com.formdev.flatlaf.themes.FlatMacLightLaf;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.nimbus.NimbusStyle;
@@ -18,7 +20,7 @@ import javax.swing.plaf.nimbus.NimbusStyle;
  * @author Raven
  */
 public class LightDarkMode extends JPanel {
-
+    private JButton btnSupport;
     public void setMenuFull(boolean menuFull) {
         this.menuFull = menuFull;
         if (menuFull) {
@@ -67,6 +69,7 @@ public class LightDarkMode extends JPanel {
         add(buttonLight);
         add(buttonDark);
         add(buttonLighDark);
+
     }
 
     private void changeMode(boolean dark) {
@@ -109,14 +112,14 @@ public class LightDarkMode extends JPanel {
 
             button.setFocusPainted(false);
             button.setBorderPainted(false);
-            button.setFont(new Font("sansserif", Font.BOLD, 11));
+            button.setFont(new Font("sansserif", Font.BOLD, 12));
         } else {
             button.setBackground(null); // Xóa màu nền
             button.setForeground(new Color(240, 240, 240));
 
             button.setFocusPainted(false);
             button.setBorderPainted(false);
-            button.setFont(new Font("sansserif", Font.BOLD, 11));
+            button.setFont(new Font("sansserif", Font.BOLD, 12));
         }
 
     }
@@ -159,12 +162,14 @@ public class LightDarkMode extends JPanel {
                 int width = parent.getWidth() - (insets.left + insets.right);
                 int height = parent.getHeight() - (insets.top + insets.bottom);
                 int buttonWidth = (width - gap) / 2;
+
                 if (menuFull) {
                     buttonLight.setBounds(x, y, buttonWidth, height);
                     buttonDark.setBounds(x + buttonWidth + gap, y, buttonWidth, height);
                 } else {
                     buttonLighDark.setBounds(x, y, width, height);
                 }
+
             }
         }
     }

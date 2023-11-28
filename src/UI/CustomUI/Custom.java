@@ -14,6 +14,7 @@ import java.awt.*;
  */
 public class Custom {
     public static String pathFont = "/fonts/";
+    public static String pathImages = "/images/help/";
     private static Custom instance = new Custom();
     private Font fontBold = new Font("Dialog", Font.BOLD, 14);
     private Font fontNormal = new Font("Dialog", Font.PLAIN, 14);

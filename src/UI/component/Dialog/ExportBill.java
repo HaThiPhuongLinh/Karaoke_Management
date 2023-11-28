@@ -378,7 +378,7 @@ public class ExportBill {
     private void showFooterPdf(Document doc) {
         Font font = new Font(baseFontLightItalic, 15);
         // skip
-        String message = "Quy khách vui lòng kiểm tra lại hóa đơn trước khi thanh toán. "
+        String message = "Quý khách vui lòng kiểm tra lại hóa đơn trước khi thanh toán. "
                 + "\nXin cảm ơn và hẹn gặp lại quý khách.";
         try {
             Paragraph pSkip = skipRowPdf();

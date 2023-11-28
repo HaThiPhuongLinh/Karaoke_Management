@@ -61,7 +61,7 @@ public class ListBill_UI extends JPanel implements ActionListener, MouseListener
         roomDAO = new RoomDAO();
         ctdv_dao = new DetailOfServiceDAO();
 
-        JLabel headerLabel = new JLabel("THỐNG KÊ HOÁ ĐƠN");
+        JLabel headerLabel = new JLabel("DANH SÁCH HOÁ ĐƠN");
         headerLabel.setBounds(570, 10, 1175, 40);
         headerLabel.setFont(new Font("Arial", Font.BOLD, 25));
         headerLabel.setForeground(Color.WHITE);
@@ -135,7 +135,7 @@ public class ListBill_UI extends JPanel implements ActionListener, MouseListener
         Custom.setCustomComboBox(cmbLocTheo);
         add(cmbLocTheo);
 
-        btnThongKe = new JButton("Thống kê");
+        btnThongKe = new JButton("Xem");
         btnThongKe.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnThongKe);
         btnThongKe.setBounds(430, 160, 150, 30);

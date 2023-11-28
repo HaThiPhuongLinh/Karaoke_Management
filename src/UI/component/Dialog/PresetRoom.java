@@ -29,8 +29,8 @@ import java.util.Map;
  * Giao diện cho thuê phòng
  * Người tham gia thiết kế: Hà Thị Phương Linh
  * Ngày tạo: 24/10/2023
- * Lần cập nhật cuối: 01/11/2023
- * Nội dung cập nhật: Sửa tính năng check số điện thoại khách
+ * Lần cập nhật cuối: 29/11/2023
+ * Nội dung cập nhật: cập nhật chức năng gửi SMS về số điện thoại khách hàng
  */
 public class PresetRoom extends JFrame implements ActionListener, MouseListener {
     private static PresetRoom instance = new PresetRoom();
@@ -46,6 +46,7 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
     private Staff staffLogin = null;
     private ReservationFormDAO reservationFormDAO;
     private RoomDAO roomDAO;
+    private SendSMS sms;
 
     public PresetRoom() {
         setSize(460, 300);
@@ -63,6 +64,7 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
         customerDAO = new CustomerDAO();
         reservationFormDAO = new ReservationFormDAO();
         roomDAO = new RoomDAO();
+        sms = new SendSMS();
 
         pnlTop = new JPanel();
         pnlTop.setBackground(Color.decode("#5F009D"));
@@ -329,6 +331,10 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
                 roomDAO.updateRoomStatus(roomID, "Chờ");
             }
             JOptionPane.showMessageDialog(this, "Cho thuê phòng thành công");
+
+            String customerPhoneNumber = txtPhone.getText().trim();
+            sms.sendConfirmationSMS(formatPhoneNumber(customerPhoneNumber), roomID.trim(),room.getLoaiPhong().getTenLoaiPhong(), formatDateTime(selectedDateTime));
+
             ArrayList<Room> yourListOfRooms = roomDAO.getRoomList();
             main.LoadRoomList(yourListOfRooms);
         } else {
@@ -336,6 +342,34 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
         }
         dispose();
     }
+
+    /**
+     * Định dạng lại số điện thoại từ 0x qua +84x
+     * @param phoneNumber: số điện thoại cần định dạng
+     * @return String
+     */
+    private String formatPhoneNumber(String phoneNumber) {
+
+        phoneNumber = phoneNumber.replaceAll("\\s", "").replaceAll("-", "");
+
+        if (phoneNumber.startsWith("0")) {
+            phoneNumber = "+84" + phoneNumber.substring(1);
+        }
+
+        return phoneNumber;
+    }
+
+
+    /**
+     * Định dạng ngày đặt phòng thành HH:mm dd/MM/yyyy
+     * @param dateTime: ngày định dạng
+     * @return String
+     */
+    private String formatDateTime(LocalDateTime dateTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy");
+        return dateTime.format(formatter);
+    }
+
 
     /**
      * Gán mã phiếu đặt cho label

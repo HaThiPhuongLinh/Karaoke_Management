@@ -24,8 +24,8 @@ import java.util.Date;
  * Giao diện đặt dịch vụ
  * Người tham gia thiết kế: Hà Thị Phương Linh
  * Ngày tạo: 09/10/2023
- * Lần cập nhật cuối: 08/11/2023
- * Nội dung cập nhật: cập nhật định dạng tiền VND
+ * Lần cập nhật cuối: 27/11/2023
+ * Nội dung cập nhật: cập nhật tổng tiền khi trả/thêm dịch vụ
  */
 public class ServiceForm_UI extends JPanel implements ActionListener, MouseListener, ItemListener {
     public static Staff staffLogin = null;
@@ -643,7 +643,7 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
         if (o.equals(btnFindRoom)) {
             String roomID = txtFind.getText().trim();
             if (roomID.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Chưa nhập mã phòng.");
+                JOptionPane.showMessageDialog(this, "Chưa nhập mã phòng!");
             } else {
                 ArrayList roomInUse = roomDAO.getRoomsByRoomIdAndStatus(roomID, "Đang sử dụng");
                 if (roomInUse.size() == 0) {
@@ -738,6 +738,7 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
                             searchService(1);
                             txtQuantity.setValue(1);
                             txtStock.setText(String.valueOf(newQuantity));
+                            txtSum.setText(df.format(service.getGiaBan()));
                         } else {
                             JOptionPane.showMessageDialog(this, message);
                         }
@@ -751,9 +752,9 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
         }
         if (o.equals(btnReturn)) {
             if (txtName.getText().trim().equals("")) {
-                JOptionPane.showMessageDialog(this, "Bạn cần phải chọn dịch vụ");
+                JOptionPane.showMessageDialog(this, "Bạn cần phải chọn dịch vụ!");
             } else if (txtFind.getText().trim().equals("")) {
-                JOptionPane.showMessageDialog(this, "Bạn cần phải chọn phòng");
+                JOptionPane.showMessageDialog(this, "Bạn cần phải chọn phòng!");
             } else {
                 int cancelQuantity = (int) txtQuantity.getValue();
                 String message = "";
@@ -771,7 +772,7 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
                     if (serviceDetail != null) {
                         newOrderQuantity = serviceDetail.getSoLuong() - cancelQuantity;
                         if (newOrderQuantity < 0 || newOrderQuantity > service.getSoLuongTon()) {
-                            JOptionPane.showMessageDialog(this, "Số lượng hủy không hợp lệ.");
+                            JOptionPane.showMessageDialog(this, "Số lượng trả không hợp lệ!");
                             return;
                         }
                         serviceDetail.setSoLuong(newOrderQuantity);
@@ -795,6 +796,7 @@ public class ServiceForm_UI extends JPanel implements ActionListener, MouseListe
                         searchService(1);
                         txtQuantity.setValue(1);
                         txtStock.setText(String.valueOf(service.getSoLuongTon()));
+                        txtSum.setText(df.format(service.getGiaBan()));
                     } else {
                         JOptionPane.showMessageDialog(this, message);
                     }
