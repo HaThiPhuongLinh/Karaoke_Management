@@ -398,7 +398,7 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
 
                     // Tạo tên file duy nhất dựa trên thời gian
                     String timeStamp = new SimpleDateFormat("dd-MM-yyyy 'lúc' HH'giờ'mm'phút'ss'giây'").format(new Date());
-                    String fileName = "E:\\16\\KaraokeManagement\\excel\\KhachHang"+"\\Báo cáo ngày " + timeStamp + ".xlsx"; // Đường dẫn đầy đủ của ổ đĩa E
+                    String fileName = "E:\\16\\KaraokeManagement\\excel\\KhachHang"+"\\Báo cáo ngày " + timeStamp + ".xlsx";
 
                     FileOutputStream out = new FileOutputStream(fileName);
                     JOptionPane.showMessageDialog(null, "Xuất file thành công\n File được lưu ở E:\\16\\KaraokeManagement\\excel\\KhachHang");
