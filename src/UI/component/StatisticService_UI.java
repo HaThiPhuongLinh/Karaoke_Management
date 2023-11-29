@@ -478,8 +478,10 @@ public class StatisticService_UI extends JPanel implements ActionListener, ItemL
         // Hiển thị panel mới
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setResizable(false);
         frame.getContentPane().add(panel);
         frame.pack();
+        frame.setAlwaysOnTop(true);
         frame.setVisible(true);
         frame.setLocationRelativeTo(null);
     }

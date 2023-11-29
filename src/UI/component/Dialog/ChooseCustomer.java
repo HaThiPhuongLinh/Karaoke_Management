@@ -48,6 +48,7 @@ public class ChooseCustomer extends JFrame implements ActionListener, MouseListe
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
+        setAlwaysOnTop(true);
         this.main = main;
 
         try {

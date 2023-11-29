@@ -46,6 +46,7 @@ public class ReservationFormList extends JFrame implements ActionListener, Mouse
         setSize(1050, 550);
         setLocationRelativeTo(null);
         setResizable(false);
+        setAlwaysOnTop(true);
         this.main = main;
         reservationFormDAO = new ReservationFormDAO();
         billDAO = new BillDAO();

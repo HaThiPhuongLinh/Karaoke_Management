@@ -54,6 +54,7 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
         setResizable(false);
         setUndecorated(true);
         setLayout(null);
+        setAlwaysOnTop(true);
 
         try {
             ConnectDB.getInstance().connect();

@@ -50,6 +50,7 @@ public class SwitchRoom extends JFrame implements ActionListener {
         setResizable(false);
         setLayout(null);
         setUndecorated(true);
+        setAlwaysOnTop(true);
 
         try {
             ConnectDB.getInstance().connect();

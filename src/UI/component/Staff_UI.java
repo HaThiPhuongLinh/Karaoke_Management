@@ -27,17 +27,17 @@ import java.util.Date;
  * Giao diện dùng để quản lý nhân viên
  * Người thiết kế Nguyễn Đình Dương
  * Ngày tạo:9/10/2023
- * Lần cập nhật cuối : 15/10/2023
- * Nội dung cập nhật : Update sự kiện mouseclicked cho bảng
+ * Lần cập nhật cuối : 29/11/2023
+ * Nội dung cập nhật : cập nhật set giá trị các JTextField
  */
 public class Staff_UI extends JPanel implements ActionListener, MouseListener {
     public static Staff staffLogin = null;
-    private JTextField txtBaoLoi, txtDiaChi;
+    private JTextField txtBaoLoi;
     private JTable tblNV;
     private DefaultTableModel modelTblNV;
     private JLabel lblBackground, lblChucVu, lblTaiKhoan, lblTinhTrang, lblTime, lblMaNV, lblTenNV, lblGioitinhNV, lblSdtNV, lblNgaySinh, lblCmnd;
-    private JTextField txtMaNV, txtTenNV, txtSDTNV, txtCMNDNV, txtTaiKhoan;
-    private JComboBox cboGioiTinhNV, cboChucVu, cbotinhTrang;
+    public JTextField txtMaNV, txtDiaChi, txtTenNV, txtSDTNV, txtCMNDNV, txtTaiKhoan;
+    private JComboBox cmbGioiTinh, cmbChucVu, cmbTinhTrang;
     private JPanel pnlTime, pnlStaffList, pnlStaffControl;
     private DatePicker dpNgaySinhNV;
     private JButton btnThem, btnSua, btnLamMoi;
@@ -118,12 +118,12 @@ public class Staff_UI extends JPanel implements ActionListener, MouseListener {
         lblGioitinhNV.setForeground(Color.WHITE);
         pnlStaffControl.add(lblGioitinhNV);
 
-        cboGioiTinhNV = new JComboBox<String>();
-        cboGioiTinhNV.addItem("Nam");
-        cboGioiTinhNV.addItem("Nữ");
-        cboGioiTinhNV.setBounds(440, 110, 105, 30);
-        Custom.setCustomComboBox(cboGioiTinhNV);
-        pnlStaffControl.add(cboGioiTinhNV);
+        cmbGioiTinh = new JComboBox<String>();
+        cmbGioiTinh.addItem("Nam");
+        cmbGioiTinh.addItem("Nữ");
+        cmbGioiTinh.setBounds(440, 110, 105, 30);
+        Custom.setCustomComboBox(cmbGioiTinh);
+        pnlStaffControl.add(cmbGioiTinh);
 
         lblSdtNV = new JLabel("SDT: ");
         lblSdtNV.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -169,12 +169,12 @@ public class Staff_UI extends JPanel implements ActionListener, MouseListener {
         lblChucVu.setForeground(Color.WHITE);
         pnlStaffControl.add(lblChucVu);
 
-        cboChucVu = new JComboBox<String>();
-        cboChucVu.addItem("Nhân Viên");
-        cboChucVu.addItem("Quản lý");
-        cboChucVu.setBounds(440, 160, 105, 30);
-        Custom.setCustomComboBox(cboChucVu);
-        pnlStaffControl.add(cboChucVu);
+        cmbChucVu = new JComboBox<String>();
+        cmbChucVu.addItem("Nhân Viên");
+        cmbChucVu.addItem("Quản lý");
+        cmbChucVu.setBounds(440, 160, 105, 30);
+        Custom.setCustomComboBox(cmbChucVu);
+        pnlStaffControl.add(cmbChucVu);
 
         lblTinhTrang = new JLabel("Tình Trạng: ");
         lblTinhTrang.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -182,12 +182,12 @@ public class Staff_UI extends JPanel implements ActionListener, MouseListener {
         lblTinhTrang.setForeground(Color.WHITE);
         pnlStaffControl.add(lblTinhTrang);
 
-        cbotinhTrang = new JComboBox<String>();
-        cbotinhTrang.addItem("Đang làm");
-        cbotinhTrang.addItem("Đã nghỉ");
-        cbotinhTrang.setBounds(715, 60, 350, 30);
-        Custom.setCustomComboBox(cbotinhTrang);
-        pnlStaffControl.add(cbotinhTrang);
+        cmbTinhTrang = new JComboBox<String>();
+        cmbTinhTrang.addItem("Đang làm");
+        cmbTinhTrang.addItem("Đã nghỉ");
+        cmbTinhTrang.setBounds(715, 60, 350, 30);
+        Custom.setCustomComboBox(cmbTinhTrang);
+        pnlStaffControl.add(cmbTinhTrang);
 
         lblTaiKhoan = new JLabel("Tài Khoản: ");
         lblTaiKhoan.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -261,6 +261,58 @@ public class Staff_UI extends JPanel implements ActionListener, MouseListener {
         btnLamMoi.addActionListener(this);
 
         reSizeColumnTableStaff();
+    }
+
+    public void setTxtDiaChi(String sdt) {
+        txtDiaChi.setText(sdt);
+    }
+
+    public void setTxtTenNV(String tenNV) {
+        txtTenNV.setText(tenNV);
+    }
+
+    public void setTxtSDTNV(String sdt) {
+        txtSDTNV.setText(sdt);
+    }
+
+    public void setTxtCMNDNV(String cccd) {
+        txtCMNDNV.setText(cccd);
+    }
+
+    public void setTxtTaiKhoan(String tk) {
+        txtTaiKhoan.setText(tk);
+    }
+
+    public void setCmbGioiTinh(String gioiTinh) {
+        if(gioiTinh.equalsIgnoreCase("Nam")){
+            cmbGioiTinh.setSelectedIndex(0);
+        } else {
+            cmbGioiTinh.setSelectedIndex(1);
+        }
+    }
+
+    public void setCmbChucVu(String chucVu) {
+        if(chucVu.equalsIgnoreCase("Quản lý")){
+            cmbChucVu.setSelectedIndex(1);
+        } else {
+            cmbChucVu.setSelectedIndex(0);
+        }
+    }
+
+    public void setCmbTinhTrang(String tinhTrang) {
+        if(tinhTrang.equalsIgnoreCase("Đang làm")){
+            cmbTinhTrang.setSelectedIndex(0);
+        } else {
+            cmbTinhTrang.setSelectedIndex(1);
+        }
+    }
+
+    public void setNgaySinh(String ngaySinhStr) throws ParseException {
+        if (ngaySinhStr != null && !ngaySinhStr.trim().isEmpty()) {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            Date ngaySinh = sdf.parse(ngaySinhStr);
+            dpNgaySinhNV.setValue(java.sql.Date.valueOf(ngaySinh.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()));
+        }
     }
 
     /**
@@ -384,6 +436,8 @@ public class Staff_UI extends JPanel implements ActionListener, MouseListener {
         return true;
     }
 
+
+
     /**
      * Lấy mã nhân viên
      *
@@ -408,12 +462,12 @@ public class Staff_UI extends JPanel implements ActionListener, MouseListener {
                 String ma = laymaNV();
                 String ten = txtTenNV.getText().trim();
                 String sdt = txtSDTNV.getText().trim();
-                String gioiTinh = cboGioiTinhNV.getSelectedItem().toString();
+                String gioiTinh = cmbGioiTinh.getSelectedItem().toString();
                 boolean gt = true;
                 String cccd = txtCMNDNV.getText().trim();
-                String chucVu = cboChucVu.getSelectedItem().toString();
+                String chucVu = cmbChucVu.getSelectedItem().toString();
                 String diachi = txtDiaChi.getText().trim();
-                String trangthai = cbotinhTrang.getSelectedItem().toString();
+                String trangthai = cmbTinhTrang.getSelectedItem().toString();
                 String taikhoan = txtTaiKhoan.getText().trim();
                 if (gioiTinh == "Nam") {
                     gt = true;
@@ -448,11 +502,11 @@ public class Staff_UI extends JPanel implements ActionListener, MouseListener {
                     String ma = txtMaNV.getText().trim();
                     String ten = txtTenNV.getText().trim();
                     String sdt = txtSDTNV.getText().trim();
-                    String gioiTinh = cboGioiTinhNV.getSelectedItem().toString();
+                    String gioiTinh = cmbGioiTinh.getSelectedItem().toString();
                     boolean gt = true;
-                    String chucVu = cboChucVu.getSelectedItem().toString();
+                    String chucVu = cmbChucVu.getSelectedItem().toString();
                     String diachi = txtDiaChi.getText().trim();
-                    String trangthai = cbotinhTrang.getSelectedItem().toString();
+                    String trangthai = cmbTinhTrang.getSelectedItem().toString();
                     String cccd = txtCMNDNV.getText().trim();
                     String taikhoan = txtTaiKhoan.getText().trim();
                     if (gioiTinh == "Nam") {
@@ -500,12 +554,12 @@ public class Staff_UI extends JPanel implements ActionListener, MouseListener {
     private void reFresh() {
         txtMaNV.setText("");
         txtTenNV.setText("");
-        cboGioiTinhNV.setSelectedIndex(0);
+        cmbGioiTinh.setSelectedIndex(0);
         txtCMNDNV.setText("");
         dpNgaySinhNV.setValueToDay();
         txtTaiKhoan.setText("");
-        cbotinhTrang.setSelectedIndex(0);
-        cboChucVu.setSelectedIndex(0);
+        cmbTinhTrang.setSelectedIndex(0);
+        cmbChucVu.setSelectedIndex(0);
         txtDiaChi.setText("");
         txtSDTNV.setText("");
         txtBaoLoi.setText("");
@@ -518,15 +572,15 @@ public class Staff_UI extends JPanel implements ActionListener, MouseListener {
         txtTenNV.setText(modelTblNV.getValueAt(row, 1).toString());
         txtSDTNV.setText(modelTblNV.getValueAt(row, 2).toString());
         txtCMNDNV.setText(modelTblNV.getValueAt(row, 3).toString());
-        cboGioiTinhNV.setSelectedItem(modelTblNV.getValueAt(row, 4).toString());
+        cmbGioiTinh.setSelectedItem(modelTblNV.getValueAt(row, 4).toString());
         try {
             dpNgaySinhNV.setValue(modelTblNV.getValueAt(row, 5).toString());
         } catch (ParseException e1) {
             e1.printStackTrace();
         }
         txtDiaChi.setText(modelTblNV.getValueAt(row, 6).toString());
-        cboChucVu.setSelectedItem(modelTblNV.getValueAt(row, 7).toString());
-        cbotinhTrang.setSelectedItem(modelTblNV.getValueAt(row, 8).toString());
+        cmbChucVu.setSelectedItem(modelTblNV.getValueAt(row, 7).toString());
+        cmbTinhTrang.setSelectedItem(modelTblNV.getValueAt(row, 8).toString());
         txtTaiKhoan.setText(modelTblNV.getValueAt(row, 9).toString());
 
 

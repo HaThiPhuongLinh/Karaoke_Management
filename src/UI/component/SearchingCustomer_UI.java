@@ -22,10 +22,10 @@ import java.util.Date;
 
 /**
  * Giao diện dùng để tìm kiếm khách hàng
- * Người thiết kế Nguyễn Đình Dương
+ * Người thiết kế: Nguyễn Đình Dương, Hà Thị Phương Linh
  * Ngày tạo:7/10/2023
- * Lần cập nhật cuối : 18/10/2023
- * Nội dung cập nhật : Sửa tính năng tìm theo SDT
+ * Lần cập nhật cuối: 29/11/2023
+ * Nội dung cập nhật: cập nhật chuyển đổi qua Customer_UI
  */
 public class SearchingCustomer_UI extends JPanel implements ActionListener {
     public static Staff staffLogin = null;
@@ -154,15 +154,15 @@ public class SearchingCustomer_UI extends JPanel implements ActionListener {
         modelTblKH = new DefaultTableModel(colsKH, 0);
         JScrollPane scrollPaneKH;
 
-        JTable tableKH = new JTable(modelTblKH);
-        tableKH.setFont(new Font("Arial", Font.BOLD, 14));
-        tableKH.setBackground(new Color(255, 255, 255, 0));
-        tableKH.setForeground(new Color(255, 255, 255));
-        tableKH.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-        tableKH.getTableHeader().setForeground(Color.BLUE);
-        Custom.getInstance().setCustomTable(tableKH);
+        JTable tblKH = new JTable(modelTblKH);
+        tblKH.setFont(new Font("Arial", Font.BOLD, 14));
+        tblKH.setBackground(new Color(255, 255, 255, 0));
+        tblKH.setForeground(new Color(255, 255, 255));
+        tblKH.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
+        tblKH.getTableHeader().setForeground(Color.BLUE);
+        Custom.getInstance().setCustomTable(tblKH);
 
-        panelDSKH.add(scrollPaneKH = new JScrollPane(tableKH, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
+        panelDSKH.add(scrollPaneKH = new JScrollPane(tblKH, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
                 BorderLayout.CENTER);
         scrollPaneKH.setBounds(10, 20, 1210, 380);
         scrollPaneKH.setOpaque(false);
@@ -178,9 +178,9 @@ public class SearchingCustomer_UI extends JPanel implements ActionListener {
         lblBackground.setBounds(0, 0, getWidth(), getHeight());
         add(lblBackground);
 
-        tableKH.getSelectionModel().addListSelectionListener(e -> {
+        tblKH.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
-                int selectedRow = tableKH.getSelectedRow();
+                int selectedRow = tblKH.getSelectedRow();
                 if (selectedRow != -1) {
                     isRowSelected = true;
                     selectedTenKH = (String) modelTblKH.getValueAt(selectedRow, 2);
@@ -215,6 +215,10 @@ public class SearchingCustomer_UI extends JPanel implements ActionListener {
         });
     }
 
+    /**
+     * Tạo thể hiện hiện tại cho SearchingCustomer_UI
+     * @return
+     */
     public static SearchingCustomer_UI getInstance() {
         if (instance == null)
             instance = new SearchingCustomer_UI(staffLogin);

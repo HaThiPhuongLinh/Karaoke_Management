@@ -4,6 +4,7 @@ import ConnectDB.ConnectDB;
 import DAO.StaffDAO;
 import Entity.Staff;
 import UI.CustomUI.Custom;
+import UI.component.Dialog.Main;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -15,20 +16,22 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
 /**
  * Giao diện dùng để tìm kiếm nhân viên
- * Người thiết kế Nguyễn Đình Dương
- * Ngày tạo:7/10/2023
- * Lần cập nhật cuối : 12/11/2023
- * Nội dung cập nhật : cập nhật định dạng combobox
+ * Người thiết kế Nguyễn Đình Dương, Hà Thị Phương Linh
+ * Ngày tạo: 7/10/2023
+ * Lần cập nhật cuối: 29/11/2023
+ * Nội dung cập nhật: cập nhật set giá trị các JTextField
  */
 public class SearchingStaff_UI extends JPanel implements ActionListener, MouseListener {
     public static Staff staffLogin = null;
-    private JButton btnLamMoi, btnTim;
+    private static SearchingStaff_UI instance;
+    private JButton btnLamMoi, btnTim, btnCapNhat;
     private JTable tblNV;
     private DefaultTableModel modelTblNV;
     private JLabel lblBackground, lblTime, lblSearchbyName, lblSearchbyNumber, lblSearchbyCCCD, lblSearchStatus;
@@ -36,6 +39,9 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
     private JComboBox<String> cmbTinhTrang;
     private JTextField txtSearchbyName, txtSearchbyNumber, txtSearchbyCCCD;
     private StaffDAO StaffDAO;
+    private static Main m;
+    boolean isRowSelected = false;
+    private String selectedGT, selectedTennv, selectedSDT, selectedCCCD, selectedBorn, selectedAdd, selectedCV, selectedTT, selectedTK;
 
     public SearchingStaff_UI(Staff staff) {
         this.staffLogin = staff;
@@ -107,6 +113,12 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
         Custom.setCustomBtn(btnLamMoi);
         btnLamMoi.setFont(new Font("Arial", Font.BOLD, 14));
         pnlStaffControl.add(btnLamMoi);
+
+        btnCapNhat = new JButton("Cập nhật");
+        btnCapNhat.setFont(new Font("Arial", Font.BOLD, 14));
+        Custom.setCustomBtn(btnCapNhat);
+        btnCapNhat.setBounds(1085, 205, 100, 30);
+        pnlStaffControl.add(btnCapNhat);
 
         lblSearchbyNumber = new JLabel("Tìm Theo SDT: ");
         lblSearchbyNumber.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -198,7 +210,66 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
             }
         });
 
+        tblNV.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                int selectedRow = tblNV.getSelectedRow();
+                if (selectedRow != -1) {
+                    isRowSelected = true;
+                    selectedTennv = (String) modelTblNV.getValueAt(selectedRow, 1);
+                    selectedSDT = (String) modelTblNV.getValueAt(selectedRow, 2);
+                    selectedCCCD = (String) modelTblNV.getValueAt(selectedRow, 3);
+                    selectedGT = (String) modelTblNV.getValueAt(selectedRow, 4);
+                    selectedBorn = (String) modelTblNV.getValueAt(selectedRow, 5);
+                    selectedAdd = (String) modelTblNV.getValueAt(selectedRow, 6);
+                    selectedCV = (String) modelTblNV.getValueAt(selectedRow, 7);
+                    selectedTT = (String) modelTblNV.getValueAt(selectedRow, 8);
+                    selectedTK = (String) modelTblNV.getValueAt(selectedRow, 9);
+                }
+            }
+        });
+
+        btnCapNhat.addActionListener(e -> {
+            if (isRowSelected) {
+                Staff_UI staffUi = new Staff_UI(staffLogin);
+                staffUi.setTxtTenNV(selectedTennv);
+                staffUi.setTxtSDTNV(selectedSDT);
+                staffUi.setTxtCMNDNV(selectedCCCD);
+                staffUi.setCmbGioiTinh(selectedGT);
+                staffUi.setTxtDiaChi(selectedBorn);
+                staffUi.setCmbChucVu(selectedCV);
+                staffUi.setCmbTinhTrang(selectedTT);
+                staffUi.setTxtTaiKhoan(selectedTK);
+                try {
+                    staffUi.setNgaySinh(selectedBorn);
+                } catch (ParseException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+                m.showForm(staffUi);
+
+                isRowSelected = false;
+            } else {
+                // Hiển thị thông báo cho người dùng rằng cần chọn một dòng trước khi cập nhật
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn một dòng trước khi cập nhật.", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            }
+        });
+
         reSizeColumnTableStaff();
+    }
+
+    /**
+     * Tạo thể hiện hiện tại cho SearchingStaff_UI
+     * @return
+     */
+    public static SearchingStaff_UI getInstance() {
+        if (instance == null)
+            instance = new SearchingStaff_UI(staffLogin);
+        instance.setM(m);
+        return instance;
+    }
+
+    public void setM(Main main) {
+        this.m = main;
     }
 
     /**

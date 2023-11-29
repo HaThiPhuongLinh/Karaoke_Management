@@ -522,7 +522,9 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.getContentPane().add(panel);
+        frame.setResizable(false);
         frame.pack();
+        frame.setAlwaysOnTop(true);
         frame.setVisible(true);
         frame.setLocationRelativeTo(null);
     }

@@ -52,6 +52,9 @@ public class Main extends JFrame {
         SearchingCustomer_UI c = SearchingCustomer_UI.getInstance();
         c.setM(this);
 
+        SearchingStaff_UI s = SearchingStaff_UI.getInstance();
+        s.setM(this);
+
         menu.setLogoutAction(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
