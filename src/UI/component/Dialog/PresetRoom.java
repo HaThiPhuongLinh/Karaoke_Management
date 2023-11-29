@@ -223,7 +223,9 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
 
                     if (choice == JOptionPane.YES_OPTION) {
                         dispose();
-                        m.showForm(new Customer_UI(staffLogin));
+                        Customer_UI customer_ui = new Customer_UI(staffLogin);
+                        customer_ui.setSDT(phone);
+                        m.showForm(customer_ui);
                     }
                 }
             } else {

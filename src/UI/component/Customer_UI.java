@@ -6,6 +6,7 @@ import Entity.Customer;
 import Entity.Staff;
 import UI.CustomUI.Custom;
 import UI.component.Dialog.DatePicker;
+import UI.component.Dialog.Main;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -27,15 +28,15 @@ import java.util.Date;
  * Giao diện dùng để quản lý khách hàng
  * Người thiết kế: Nguyễn Đình Dương
  * Ngày tạo:9/10/2023
- * Lần cập nhật cuối : 15/11/2023
- * Nội dung cập nhật : cập nhật regex cho CCCD của khách hàng
+ * Lần cập nhật cuối : 29/11/2023
+ * Nội dung cập nhật : sửa public cho biến txtSDTKH
  */
 public class Customer_UI extends JPanel implements ActionListener, MouseListener {
     public static Staff staffLogin = null;
     private JTable tblKH;
     private DefaultTableModel modelTableKH;
     private JLabel lblBackground, lblTime, lblMaKH, lblTenKH, lblGioitinhKH, lblSdtKH, lblNgaySinh, lblCmnd;
-    private JTextField txtMaKH, txtTenKH, txtSDTKH, txtCMNDKH, txtHienThiLoi;
+    public JTextField txtMaKH, txtTenKH, txtCMNDKH, txtHienThiLoi, txtSDTKH;
     private JComboBox cmbGioiTinh;
     private JPanel timeNow, pnlCusList, pnlCusControl;
     private DatePicker dpNgaySinh;
@@ -223,6 +224,55 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
     }
 
     /**
+     * Gán sdt cho txtSDTKH
+     * @param sdt: SDT cần gán
+     */
+    public void setSDT(String sdt) {
+        txtSDTKH.setText(sdt);
+    }
+
+    /**
+     * Gán tên KH cho txtTenKH
+     * @param tenKH: tên KH cần gán
+     */
+    public void setTenKH(String tenKH) {
+        txtTenKH.setText(tenKH);
+    }
+
+    /**
+     * Gán cccd cho txtCMNDKH
+     * @param cccd: cccd cần gán
+     */
+    public void setCMNDKH(String cccd) {
+        txtCMNDKH.setText(cccd);
+    }
+
+    /**
+     * Gán gioiTinh cho cmbGioiTinh
+     * @param gioiTinh: gioiTinh cần gán
+     */
+    public void setGioiTinh(String gioiTinh) {
+        if(gioiTinh.equalsIgnoreCase("Nam")){
+            cmbGioiTinh.setSelectedIndex(0);
+        } else {
+            cmbGioiTinh.setSelectedIndex(1);
+        }
+    }
+
+    /**
+     * Gán ngày sinh cho dpNgaySinh từ một chuỗi
+     * @param ngaySinhStr: chuỗi ngày sinh cần gán
+     */
+    public void setNgaySinh(String ngaySinhStr) throws ParseException {
+        if (ngaySinhStr != null && !ngaySinhStr.trim().isEmpty()) {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            Date ngaySinh = sdf.parse(ngaySinhStr);
+            dpNgaySinh.setValue(java.sql.Date.valueOf(ngaySinh.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()));
+        }
+    }
+
+
+    /**
      * Thiết lập thời gian thực cho lblTime
      */
     private void updateTime() {
@@ -312,10 +362,11 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
 
             return false;
         }
-        if (!((cccd.length()) > 0 && cccd.matches("^0[0-9]{11}$"))) {
+        if (cccd.length() > 0 && !cccd.matches("^0[0-9]{11}$")) {
             showMessage(txtCMNDKH, "CCCD phải gồm 12 số và bắt đầu bằng 0");
             return false;
         }
+
         return true;
     }
 
@@ -328,7 +379,6 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
             loadKH();
         } else if (o.equals(btnThem)) {
             if (txtTenKH.getText().equals("") || txtSDTKH.getText().equals("")
-                    || txtCMNDKH.getText().equals("")
             ) {
                 JOptionPane.showMessageDialog(this, "Bạn phải nhập thông tin khách hàng");
             } else if (validData()) {
@@ -378,7 +428,6 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
             }
         } else if (o.equals(btnSua)) {
             if (txtTenKH.getText().equals("") || txtSDTKH.getText().equals("")
-                    || txtCMNDKH.getText().equals("")
             ) {
                 JOptionPane.showMessageDialog(this, "Bạn phải nhập thông tin khách hàng");
             } else if (validData()) {

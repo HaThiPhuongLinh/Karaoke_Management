@@ -45,8 +45,13 @@ public class Main extends JFrame {
         if (staffLogin != null) {
             menu.setHeader(staffLogin.getTenNhanVien());
         }
+
         PresetRoom presetRoom = PresetRoom.getInstance();
         presetRoom.setM(this);
+
+        SearchingCustomer_UI c = SearchingCustomer_UI.getInstance();
+        c.setM(this);
+
         menu.setLogoutAction(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

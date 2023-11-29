@@ -5,6 +5,8 @@ import DAO.CustomerDAO;
 import Entity.Customer;
 import Entity.Staff;
 import UI.CustomUI.Custom;
+import UI.component.Dialog.Main;
+import UI.component.Dialog.PresetRoom;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -13,6 +15,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,16 +29,20 @@ import java.util.Date;
  */
 public class SearchingCustomer_UI extends JPanel implements ActionListener {
     public static Staff staffLogin = null;
+    private static SearchingCustomer_UI instance;
     private JButton btnlamMoi;
     private DefaultTableModel modelTblKH;
     private JLabel lblBackground, lblTime, lblSearchbyName, lblSearchbyNumber, lblSearchbyCCCD;
     private JTextField txtSearchbyName, txtSearchbyNumber, txtSearchbyCCCD;
     private JPanel plnTime, pnlCusList, pnlCusControl;
-    private JButton btnTim;
+    private JButton btnTim, btnCapNhat;
     private CustomerDAO CustomerDAO;
+    private String selectedGT, selectedTenKH, selectedSDT, selectedCCCD, selectedBorn;
+    private static Main m;
+    boolean isRowSelected = false;
 
     public SearchingCustomer_UI(Staff staff) {
-        this.staffLogin = staff;
+        this.staffLogin = staff;;
         setLayout(null);
         setBounds(0, 0, 1475, 770);
         CustomerDAO = new CustomerDAO();
@@ -109,6 +116,12 @@ public class SearchingCustomer_UI extends JPanel implements ActionListener {
         btnlamMoi.setBounds(585, 195, 100, 30);
         pnlCusControl.add(btnlamMoi);
 
+        btnCapNhat = new JButton("Cập nhật");
+        btnCapNhat.setFont(new Font("Arial", Font.BOLD, 14));
+        Custom.setCustomBtn(btnCapNhat);
+        btnCapNhat.setBounds(1085, 195, 110, 30);
+        pnlCusControl.add(btnCapNhat);
+
         lblSearchbyNumber = new JLabel("Tìm Theo SDT: ");
         lblSearchbyNumber.setFont(new Font("Arial", Font.PLAIN, 14));
         lblSearchbyNumber.setBounds(380, 85, 120, 30);
@@ -164,6 +177,53 @@ public class SearchingCustomer_UI extends JPanel implements ActionListener {
         lblBackground = new JLabel(backgroundImage);
         lblBackground.setBounds(0, 0, getWidth(), getHeight());
         add(lblBackground);
+
+        tableKH.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                int selectedRow = tableKH.getSelectedRow();
+                if (selectedRow != -1) {
+                    isRowSelected = true;
+                    selectedTenKH = (String) modelTblKH.getValueAt(selectedRow, 2);
+                    selectedSDT = (String) modelTblKH.getValueAt(selectedRow, 3);
+                    selectedCCCD = (String) modelTblKH.getValueAt(selectedRow, 4);
+                    selectedGT = (String) modelTblKH.getValueAt(selectedRow, 5);
+                    selectedBorn = (String) modelTblKH.getValueAt(selectedRow, 6);
+                }
+            }
+        });
+
+        btnCapNhat.addActionListener(e -> {
+            if (isRowSelected) {
+                Customer_UI customer_ui = new Customer_UI(staffLogin);
+                customer_ui.setTenKH(selectedTenKH);
+                customer_ui.setSDT(selectedSDT);
+                customer_ui.setCMNDKH(selectedCCCD);
+                customer_ui.setGioiTinh(selectedGT);
+                try {
+                    customer_ui.setNgaySinh(selectedBorn);
+                } catch (ParseException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+                m.showForm(customer_ui);
+
+                isRowSelected = false;
+            } else {
+                // Hiển thị thông báo cho người dùng rằng cần chọn một dòng trước khi cập nhật
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn một dòng trước khi cập nhật.", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            }
+        });
+    }
+
+    public static SearchingCustomer_UI getInstance() {
+        if (instance == null)
+            instance = new SearchingCustomer_UI(staffLogin);
+       instance.setM(m);
+        return instance;
+    }
+
+    public void setM(Main main) {
+            this.m = main;
     }
 
     /**
@@ -174,6 +234,7 @@ public class SearchingCustomer_UI extends JPanel implements ActionListener {
         String time = sdf.format(new Date());
         lblTime.setText(time);
     }
+
 
     /**
      * hàm sử dụng định dạng "HH:mm:ss" để biểu diễn thời gian (giờ, phút và giây) của đối tượng date
