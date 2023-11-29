@@ -40,11 +40,13 @@ import java.util.HashMap;
  * </p>
  * ngày tạo: 12/10/2023
  * <p>
- * Lần cập nhật cuối: 18/11/2023
+ * Lần cập nhật cuối: 29/11/2023
  * </p>
- * Nội dung cập nhật: cập nhật chức năng hiển thị danh sách hóa đơn của khách hàng theo khoảng thời gian (displayNewPanel)
+ * Nội dung cập nhật: cập nhật chức năng xuất báo cáo (Excel)
  */
 public class StatisticCustomer_UI extends JPanel implements ActionListener, ItemListener {
+    private final String WORKING_DIR = System.getProperty("user.dir");
+    private String path = WORKING_DIR + "/KRManagement/excel/";
     public static Staff staffLogin = null;
     private JComboBox<String> cmbLocTheo;
     private JTable tblDichVu;
@@ -397,11 +399,19 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
                     }
 
                     // Tạo tên file duy nhất dựa trên thời gian
-                    String timeStamp = new SimpleDateFormat("dd-MM-yyyy 'lúc' HH'giờ'mm'phút'ss'giây'").format(new Date());
-                    String fileName = "E:\\16\\KaraokeManagement\\excel\\KhachHang"+"\\Báo cáo ngày " + timeStamp + ".xlsx";
+                    String timeStamp = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+                    String fileName = "Báo cáo khách hàng ngày " + timeStamp + ".xlsx";
+                    if (!path.matches("^.+[\\\\/]$")) {
+                        path += "/";
+                    }
+                    File folder = new File(path);
+                    if (!folder.exists())
+                        folder.mkdir();
 
-                    FileOutputStream out = new FileOutputStream(fileName);
-                    JOptionPane.showMessageDialog(null, "Xuất file thành công\n File được lưu ở E:\\16\\KaraokeManagement\\excel\\KhachHang");
+                    String filePath = path + fileName;
+
+                    FileOutputStream out = new FileOutputStream(filePath);
+                    JOptionPane.showMessageDialog(null, "Xuất file thành công. File được lưu ở tệp excel");
                     workbook.write(out);
                     out.close();
                 } catch (Exception e2) {

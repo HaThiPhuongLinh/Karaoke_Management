@@ -18,27 +18,29 @@ public class SendSMS {
     /**
      * Gửi SMS đến số điện thoại
      * @param toPhoneNumber: sdt cần gửi
-     * @param roomID: mã phòng đã đặt
+     * @param roomName: mã phòng đã đặt
      * @param typeOfRoom: loại phòng đã đặt
-     * @param dateTime: ngày giờ đặt
+     * @param date: ngày đặt
+     * @param startTime: giờ đặt
      */
-    public static void sendConfirmationSMS(String toPhoneNumber, String roomID, String typeOfRoom, String dateTime) {
+    public static void sendConfirmationSMS(String toPhoneNumber, String cusName, String roomName, String typeOfRoom,  String date, String startTime) {
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
 
-        String messageBody = "Xác nhận đặt phòng " + roomID + " (" + typeOfRoom + ") vào lúc " + dateTime +
-                " tại Karaoke ROSIE. Vui lòng nhận phòng trong vòng 30 phút so với giờ đặt. Sau 30 phút phiếu đặt sẽ bị hủy. Xin cảm ơn!";
+        String messageBody = "Chào " + cusName + ",\n" +
+                "Phiếu đặt phòng của bạn tại Karaoke ROSIE đã được xác nhận!\n\n" +
+                "Ngày đặt: " + date + "\n" +
+                "Giờ đặt: " + startTime + "\n" +
+                "Phòng hát: " + roomName + "\n" +
+                "Loại phòng: " + typeOfRoom + "\n\n" +
+                "Vui lòng nhận phòng trong vòng 30 phút so với giờ đặt. Sau 30 phút phiếu đặt sẽ bị hủy. Mọi thắc mắc xin liên hệ 0999.999.999\n\n" +
+                "Trân trọng,\nKaraoke ROSIE";
 
         Message message = Message.creator(
-                            new PhoneNumber(toPhoneNumber),
-                            new PhoneNumber(TWILIO_PHONE_NUMBER),
-                            messageBody)
-                    .create();
+                        new PhoneNumber(toPhoneNumber),
+                        new PhoneNumber(TWILIO_PHONE_NUMBER),
+                        messageBody)
+                .create();
 
-            System.out.println("Tin nhắn đã được gửi: " + message.getSid());
-
-    }
-
-    public static void main(String[] args) {
-        sendConfirmationSMS("SỐ_ĐIỆN_THOẠI_KHÁCH_HÀNG", "PHÒNG_SỐ", "LOẠI PHÒNG", "NGÀY_GIỜ");
+        System.out.println("Tin nhắn đã được gửi: " + message.getSid());
     }
 }
