@@ -358,18 +358,10 @@ public class StatisticService_UI extends JPanel implements ActionListener, ItemL
                     cell = row.createCell(7, CellType.STRING);
                     cell.setCellValue("Tổng tiền");
 
-//                    ArrayList<Bill> listBill = billDAO.getListBillByDate(tuNgay, denNgay);
-
-//                    System.out.printf(listBill.size() + "hihi");
-                    int count = 0;
-                    int k = 0;
                     double gia =0;
                     ArrayList<Bill> listBill = billDAO.getAllBill();
                     for (int i = 0; i < listDV.size(); i++) {
-//                        Bill bill = listDV.get(i);
                         DetailsOfService details = listDV.get(i);
-
-                        int l = 0;
 
                         String ngayThangDinhDang = "";
                         for (Bill bill : listBill) {
@@ -382,7 +374,6 @@ public class StatisticService_UI extends JPanel implements ActionListener, ItemL
                                 } catch (ParseException e2) {
                                     e2.printStackTrace();
                                 }
-
                                 // Định dạng lại đối tượng Date thành chuỗi mới
                                 SimpleDateFormat sdfOutput = new SimpleDateFormat("dd-MM-yyyy");
                                 ngayThangDinhDang = sdfOutput.format(date);
@@ -410,9 +401,6 @@ public class StatisticService_UI extends JPanel implements ActionListener, ItemL
                         row.createCell(5).setCellValue("");
                         row.createCell(6).setCellValue("Tổng tiền:");
                         row.createCell(7).setCellValue( df.format(gia));
-
-                        k += 2;
-                        l++;
                     }
 
                     // Tạo tên file duy nhất dựa trên thời gian
