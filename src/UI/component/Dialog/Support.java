@@ -305,55 +305,24 @@ public class Support extends JDialog implements MouseListener {
                     + "<b>Bước 4: </b>Hiển thị chi tiết hóa đơn thanh toán.</p>" + getImageHTML("image143.png") + getPHTML(3)
                     + "</div>" + "</html>";
             txtArea.setText(html);
+        } else if (nodeSelected.equals(nodeTimKiemKhachHang)) {
+            txtArea.setContentType("text/html");
+            txtArea.setEditable(false);
+            txtArea.setBackground(Color.decode("#D7FFF6"));
+            String html = "<html>" + "<h1 style='text-align:center; font-size:20px '>Tìm kiếm khách hàng</h1>" + "<div>"
+                    + getPHTML(1)
+                    + "<b>Bước 1: </b>Chọn chức năng “Tìm kiếm khách hàng” trên menu.</p>" + getImageHTML("image002.png") + getPHTML(1)
+                    + "<b>Bước 2: </b>Nhập thông tin khách hàng cần tìm kiếm (tên, số điện thoại, CCCD).</p>" + getImageHTML("image004.png") + getPHTML(1)
+                    + "<b>Bước 3: </b>Chọn nút tìm kiếm.</p>" + getImageHTML("image006.png") + getPHTML(1)
+                    + "<b>Bước 4: </b>Hiển thị chi tiết thông tin khách hàng.</p>" + getImageHTML("image008.png") + getPHTML(2)
+                    + "<b>4.1: </b>Cập nhật thông tin khách hàng.</p>" + getPHTML(3)
+                    + "<b>4.1.a: </b> Chọn khách hàng cần cập nhật.</p>" + getImageHTML("image010.png") + getPHTML(3)
+                    + "<b>4.1.b: </b>Chọn nút cập nhật. </p>" + getImageHTML("image012.png") + getPHTML(3)
+                    + "<b>4.1.c: </b>Chuyển sang giao diện quản lý khách hàng.</p>" + getImageHTML("image014.png") + getPHTML(1)
+                    + "<b>Bước 5: </b>Chọn nút làm mới để reset dữ liệu.</p>" + getImageHTML("image016.png")
+                    + "</div>" + "</html>";
+            txtArea.setText(html);
         }
-//        } else if (nodeSelected.equals(nodeDatDichVu)) {
-//            txtArea.setContentType("text/html");
-//            txtArea.setEditable(false);
-//            txtArea.setBackground(Color.decode("#D7FFF6"));
-//            String html = "<html>" + "<h1 style='text-align:center; font-size:20px '>Thêm Dịch Vụ Vào Hóa Đơn</h1>"
-//                    + "<div>" + getPHTML(1)
-//                    + "<b>Bước 1: </b>Chọn phòng ở trạng thái “Đang sử dụng” cần thêm dịch vụ.</p>"
-//                    + getImageHTML("image061.png") + getPHTML(1)
-//                    + "<b>Bước 2: </b>Chọn dịch vụ ở Danh sách dịch vụ. Có thể tìm kiếm theo “Tên dịch vụ” hoặc lọc theo “Loại dịch vụ”.</p>"
-//                    + getImageHTML("image063.png") + getPHTML(1)
-//                    + "<b>Bước 3: </b>Click nút “Thêm” để thêm dịch vụ vào Danh sách dịch vụ đã đặt</p>"
-//                    + getImageHTML("image065.png") + "</div>" + "</html>";
-//            txtArea.setText(html);
-//        } else if (nodeSelected.equals(nodeHuyDatDichVu)) {
-//            txtArea.setContentType("text/html");
-//            txtArea.setEditable(false);
-//            txtArea.setBackground(Color.decode("#D7FFF6"));
-//            String html = "<html>" + "<h1 style='text-align:center; font-size:20px '>Hủy Dịch Vụ Đã Thêm</h1>" + "<div>"
-//                    + getPHTML(1) + "<b>Bước 1: </b>Chọn dịch vụ cần huỷ, nhập số lượng cần huỷ.</p>"
-//                    + getImageHTML("image067.png") + getPHTML(1) + "<b>Bước 2: </b>Click nút “Huỷ”</p>"
-//                    + getImageHTML("image069.png")
-//                    // + getPHTML(1)+"<b>Bước 3: </b>Chọn phòng cần thanh toán. Click nút “Thanh
-//                    // toán”.</p>"
-//                    // + getImageHTML("image065.png")
-//                    + "</div>" + "</html>";
-//            txtArea.setText(html);
-//        } else if (nodeSelected.equals(nodeThanhToan)) {
-//            txtArea.setContentType("text/html");
-//            txtArea.setEditable(false);
-//            txtArea.setBackground(Color.decode("#D7FFF6"));
-//            String html = "<html>" + "<h1 style='text-align:center; font-size:20px '>Thanh Toán Hóa Đơn</h1>" + "<div>"
-//                    + getPHTML(1) + "<b>Bước 1: </b>Chọn phòng cần thanh toán. Click nút “Thanh toán”.</p>"
-//                    + getImageHTML("image071.png") + getPHTML(1)
-//                    + "<b>Bước 2: </b>Giao diện Hoá đơn sẽ hiện lên. Người dùng có thể xem lại Hoá đơn và xác nhận thanh toán cũng như có thể xuất hoá đơn ở dạng excel hoặc pdf nếu cần.</p>"
-//                    + getImageHTML("image073.png") + getPHTML(1)
-//                    + "<b>Bước 3: </b>Click nút “Thanh toán” để thanh toán hoá đơn.</p>" + "</div>" + "</html>";
-//            txtArea.setText(html);
-//        } else if (nodeSelected.equals(nodeXuatHoaDon)) {
-//            txtArea.setContentType("text/html");
-//            txtArea.setEditable(false);
-//            txtArea.setBackground(Color.decode("#D7FFF6"));
-//            String html = "<html>" + "<h1 style='text-align:center; font-size:20px '>Xuất Hóa Đơn</h1>" + "<div>"
-//                    + getPHTML(1)
-//                    + "Người dùng có thể xuất hoá đơn ở dạng pdf hoặc excel ở giao diện quản lý hoá đơn hoặc ngay tại lúc thanh toán.</p>"
-//                    + getImageHTML("image074.png") + "<div height='30'></div>" + getImageHTML("image075.png") + "</div>"
-//                    + "</html>";
-//            txtArea.setText(html);
-//        }
     }
 
     public String getPHTML(int x) {

@@ -307,7 +307,7 @@ public class StatisticService_UI extends JPanel implements ActionListener, ItemL
                 if (validData()) {
                     if (tuNgay.before(denNgay)) {
                         if (listDV == null || listDV.isEmpty() || listDV.size() <= 0)
-                            JOptionPane.showMessageDialog(this, "Không tìm thấy thông tin thông kê");
+                            JOptionPane.showMessageDialog(this, "Không tìm thấy thông tin thống kê");
                         else
                             docDuLieuVaoTable(listDV);
                     }
@@ -342,6 +342,7 @@ public class StatisticService_UI extends JPanel implements ActionListener, ItemL
             if (listDV.size() == 0) {
                 JOptionPane.showMessageDialog(null, "Vui lòng thống kê trước khi xuất báo cáo!!!");
             } else {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
                 int confirmation = JOptionPane.showConfirmDialog(null, "Bạn có muốn xuất báo cáo không?", "Xác nhận", JOptionPane.YES_NO_OPTION);
                 if (confirmation == JOptionPane.YES_OPTION) {
                     try {
@@ -351,8 +352,8 @@ public class StatisticService_UI extends JPanel implements ActionListener, ItemL
                         Cell cell = null;
                         row = spreadsheet.createRow((short) 2);
                         row.setHeight((short) 500);
-                        cell = row.createCell(0, CellType.STRING);
-                        cell.setCellValue("DANH SÁCH HÓA ĐƠN (Từ ngày " + tuNgay + " đến ngày " + denNgay + ")");
+                        cell = row.createCell(2, CellType.STRING);
+                        cell.setCellValue("DANH SÁCH HÓA ĐƠN (Từ ngày " + sdf.format(tuNgay) + " đến ngày " + sdf.format(denNgay) + ")");
 
                         CellStyle headerCellStyle = workbook.createCellStyle();
                         XSSFFont headerFont = workbook.createFont();
@@ -487,7 +488,7 @@ public class StatisticService_UI extends JPanel implements ActionListener, ItemL
                             cell.setCellValue(df.format(gia));
                             cell.setCellStyle(headerCellStyle);
                         }
-                    String timeStamp = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+                        String timeStamp = new SimpleDateFormat("dd-MM-yyyy 'lúc' HH'giờ_'mm'phút'").format(new Date());
                     String fileName = "Báo cáo dịch vụ ngày " + timeStamp + ".xlsx";
                     if (!path.matches("^.+[\\\\/]$")) {
                         path += "/";

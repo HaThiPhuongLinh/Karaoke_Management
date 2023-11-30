@@ -242,7 +242,7 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
                 if (validData()) {
                     if (tuNgay.before(denNgay)) {
                         if (listBill == null || listBill.isEmpty() || listBill.size() <= 0) {
-                            JOptionPane.showMessageDialog(this, "Không tìm thấy thông tin thông kê");
+                            JOptionPane.showMessageDialog(this, "Không tìm thấy thông tin thống kê");
                         } else {
                             docDuLieuVaoTable(listBill);
                         }
@@ -279,6 +279,7 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
             if (listBill.size()==0){
                 JOptionPane.showMessageDialog(null,"Vui lòng thống kê trước khi xuất báo cáo!!!");
             }else {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
                 int confirmation = JOptionPane.showConfirmDialog(null, "Bạn có muốn xuất báo cáo không?", "Xác nhận", JOptionPane.YES_NO_OPTION);
                 if (confirmation == JOptionPane.YES_OPTION) {
                     try {
@@ -289,8 +290,8 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
 
                         row = spreadsheet.createRow((short) 2);
                         row.setHeight((short) 500);
-                        cell = row.createCell(0, CellType.STRING);
-                        cell.setCellValue("DANH SÁCH HÓA ĐƠN (Từ ngày " + tuNgay + " đến ngày " + denNgay + ")");
+                        cell = row.createCell(2, CellType.STRING);
+                        cell.setCellValue("DANH SÁCH HÓA ĐƠN (Từ ngày " + sdf.format(tuNgay) + " đến ngày " + sdf.format(denNgay) + ")");
 
                         CellStyle headerCellStyle = workbook.createCellStyle();
                         XSSFFont headerFont = workbook.createFont();
@@ -534,7 +535,7 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
                         cell5.setCellStyle(headerCellStyle);
 
 //                        // Tạo tên file duy nhất dựa trên thời gian
-                        String timeStamp = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+                        String timeStamp = new SimpleDateFormat("dd-MM-yyyy 'lúc' HH'giờ_'mm'phút'").format(new Date());
                         String fileName = "Báo cáo khách hàng ngày " + timeStamp + ".xlsx";
                         if (!path.matches("^.+[\\\\/]$")) {
                             path += "/";
@@ -546,7 +547,6 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
                         String filePath = path + fileName;
 
                         FileOutputStream out = new FileOutputStream(filePath);
-
 
                         JOptionPane.showMessageDialog(null, "Xuất file thành công. File được lưu ở tệp excel");
                         workbook.write(out);
