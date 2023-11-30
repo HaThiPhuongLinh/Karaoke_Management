@@ -21,6 +21,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -533,25 +534,18 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
                         cell5.setCellStyle(headerCellStyle);
 
 //                        // Tạo tên file duy nhất dựa trên thời gian
-//                        String timeStamp = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
-//                        String fileName = "Báo cáo khách hàng ngày " + timeStamp + ".xlsx";
-//                        if (!path.matches("^.+[\\\\/]$")) {
-//                            path += "/";
-//                        }
-//                        File folder = new File(path);
-//                        if (!folder.exists())
-//                            folder.mkdir();
-//
-//                        String filePath = path + fileName;
-//
-//                        FileOutputStream out = new FileOutputStream(filePath);
+                        String timeStamp = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+                        String fileName = "Báo cáo khách hàng ngày " + timeStamp + ".xlsx";
+                        if (!path.matches("^.+[\\\\/]$")) {
+                            path += "/";
+                        }
+                        File folder = new File(path);
+                        if (!folder.exists())
+                            folder.mkdir();
 
+                        String filePath = path + fileName;
 
-                        // Tạo tên file duy nhất dựa trên thời gian
-                        String timeStamp = new SimpleDateFormat("dd-MM-yyyy 'lúc' HH'giờ'mm'phút'ss'giây'").format(new Date());
-                        String fileName = "E:\\16\\KaraokeManagement\\excel\\KhachHang"+"\\Báo cáo ngày " + timeStamp + ".xlsx";
-
-                        FileOutputStream out = new FileOutputStream(fileName);
+                        FileOutputStream out = new FileOutputStream(filePath);
 
 
                         JOptionPane.showMessageDialog(null, "Xuất file thành công. File được lưu ở tệp excel");
