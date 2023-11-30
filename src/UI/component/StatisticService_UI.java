@@ -10,7 +10,9 @@ import Entity.Staff;
 import UI.CustomUI.Custom;
 import UI.component.Dialog.DatePicker;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -144,19 +146,19 @@ public class StatisticService_UI extends JPanel implements ActionListener, ItemL
         btnThongKe = new JButton("Thống kê");
         btnThongKe.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnThongKe);
-        btnThongKe.setBounds(430, 160, 150, 30);
+        btnThongKe.setBounds(300, 160, 120, 30);
         add(btnThongKe);
 
         btnLamMoi = new JButton("Làm mới");
         btnLamMoi.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnLamMoi);
-        btnLamMoi.setBounds(630, 160, 150, 30);
+        btnLamMoi.setBounds(500, 160, 120, 30);
         add(btnLamMoi);
 
         btnXuatExcel = new JButton("Xuất excel");
         btnXuatExcel.setFont(new Font("Arial", Font.BOLD, 14));
         Custom.setCustomBtn(btnXuatExcel);
-        btnXuatExcel.setBounds(830, 160, 150, 30);
+        btnXuatExcel.setBounds(700, 160, 120, 30);
         add(btnXuatExcel);
 
         JPanel pnlDSDV = new JPanel();
@@ -324,108 +326,209 @@ public class StatisticService_UI extends JPanel implements ActionListener, ItemL
             pickerTuNgay.setValueToDay();
             pickerDenNgay.setValueToDay();
         }else if (o.equals(btnXuatExcel)) {
-            int confirmation = JOptionPane.showConfirmDialog(null, "Bạn có muốn xuất báo cáo không?", "Xác nhận", JOptionPane.YES_NO_OPTION);
-            if (confirmation == JOptionPane.YES_OPTION) {
+                Date tuNgay = null;
                 try {
-                    XSSFWorkbook workbook = new XSSFWorkbook();
-                    XSSFSheet spreadsheet = workbook.createSheet("Khách hàng");
-                    XSSFRow row = null;
-                    Cell cell = null;
-
-                    Date tuNgay = pickerTuNgay.getFullDate();
-                    Date denNgay = pickerDenNgay.addOneDay();
-
-                    ArrayList<DetailsOfService> listDV = detailOfServiceDAO.getListCTDVByDate(tuNgay, denNgay);
-
-                    row = spreadsheet.createRow((short) 2);
-                    row.setHeight((short) 500);
-                    cell = row.createCell(0, CellType.STRING);
-                    cell.setCellValue("DANH SÁCH HÓA ĐƠN (Từ ngày " + tuNgay + " đến ngày " + denNgay + ")");
-
-                    row = spreadsheet.createRow((short) 3);
-                    row.setHeight((short) 500);
-                    cell = row.createCell(0, CellType.STRING);
-                    cell.setCellValue("STT");
-                    cell = row.createCell(1, CellType.STRING);
-                    cell.setCellValue("Mã hóa đơn");
-                    cell = row.createCell(2, CellType.STRING);
-                    cell.setCellValue("Mã DV");
-                    cell = row.createCell(3, CellType.STRING);
-                    cell.setCellValue("Tên DV");
-                    cell = row.createCell(4, CellType.STRING);
-                    cell.setCellValue("Ngày lập");
-                    cell = row.createCell(5, CellType.STRING);
-                    cell.setCellValue("Số lượng");
-                    cell = row.createCell(6, CellType.STRING);
-                    cell.setCellValue("Giá Dịch vụ");
-                    cell = row.createCell(7, CellType.STRING);
-                    cell.setCellValue("Tổng tiền");
-
-                    double gia =0;
-                    ArrayList<Bill> listBill = billDAO.getAllBill();
-                    for (int i = 0; i < listDV.size(); i++) {
-                        DetailsOfService details = listDV.get(i);
-
-                        String ngayThangDinhDang = "";
-                        for (Bill bill : listBill) {
-                            if (details.getMaHoaDon().getMaHoaDon().trim().equalsIgnoreCase(bill.getMaHoaDon())) {
-                                String ngayThang = String.valueOf(bill.getThoiGianRa());
-                                SimpleDateFormat sdfInput = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-                                Date date = null;
-                                try {
-                                    date = sdfInput.parse(ngayThang);
-                                } catch (ParseException e2) {
-                                    e2.printStackTrace();
-                                }
-                                // Định dạng lại đối tượng Date thành chuỗi mới
-                                SimpleDateFormat sdfOutput = new SimpleDateFormat("dd-MM-yyyy");
-                                ngayThangDinhDang = sdfOutput.format(date);
-                            }
-                        }
-                        gia += details.getSoLuong() * details.getGiaBan();
-                        row = spreadsheet.createRow((short) 4 + i);
-                        row.setHeight((short) 400);
-                        row.createCell(0).setCellValue(i + 1);
-                        row.createCell(1).setCellValue(details.getMaHoaDon().getMaHoaDon());
-                        row.createCell(2).setCellValue(details.getMaDichVu().getMaDichVu());
-                        row.createCell(3).setCellValue(details.getMaDichVu().getTenDichVu());
-                        row.createCell(4).setCellValue(ngayThangDinhDang);
-                        row.createCell(5).setCellValue( details.getSoLuong());
-                        row.createCell(6).setCellValue(df.format(details.getGiaBan()));
-                        row.createCell(7).setCellValue(df.format(details.getSoLuong() * details.getGiaBan()));
-
-                        row = spreadsheet.createRow((short) 5 +i);
-                        row.setHeight((short) 400);
-                        row.createCell(0).setCellValue("");
-                        row.createCell(1).setCellValue("");
-                        row.createCell(2).setCellValue("");
-                        row.createCell(3).setCellValue("");
-                        row.createCell(4).setCellValue("");
-                        row.createCell(5).setCellValue("");
-                        row.createCell(6).setCellValue("Tổng tiền:");
-                        row.createCell(7).setCellValue( df.format(gia));
-                    }
-
-                    // Tạo tên file duy nhất dựa trên thời gian
-                    String timeStamp = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
-                    String fileName = "Báo cáo dịch vụ ngày " + timeStamp + ".xlsx";
-                    if (!path.matches("^.+[\\\\/]$")) {
-                        path += "/";
-                    }
-                    File folder = new File(path);
-                    if (!folder.exists())
-                        folder.mkdir();
-
-                    String filePath = path + fileName;
-
-                    FileOutputStream out = new FileOutputStream(filePath);
-                    JOptionPane.showMessageDialog(null, "Xuất file thành công. File được lưu ở tệp excel");
-                    workbook.write(out);
-                    out.close();
-                } catch (Exception e2) {
-                    e2.printStackTrace();
+                    tuNgay = pickerTuNgay.getFullDate();
+                } catch (ParseException ex) {
+                    ex.printStackTrace();
                 }
-            }
+                Date denNgay = null;
+                try {
+                    denNgay = pickerDenNgay.addOneDay();
+                } catch (ParseException ex) {
+                    ex.printStackTrace();
+                }
+
+                ArrayList<DetailsOfService> listDV = detailOfServiceDAO.getListCTDVByDate(tuNgay, denNgay);
+
+                if (listDV.size() == 0) {
+                    JOptionPane.showMessageDialog(null, "Vui lòng thống kê trước khi xuất báo cáo!!!");
+                } else {
+                    int confirmation = JOptionPane.showConfirmDialog(null, "Bạn có muốn xuất báo cáo không?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+                    if (confirmation == JOptionPane.YES_OPTION) {
+                        try {
+                            XSSFWorkbook workbook = new XSSFWorkbook();
+                            XSSFSheet spreadsheet = workbook.createSheet("Khách hàng");
+                            XSSFRow row = null;
+                            Cell cell = null;
+
+                            row = spreadsheet.createRow((short) 2);
+                            row.setHeight((short) 500);
+                            cell = row.createCell(0, CellType.STRING);
+                            cell.setCellValue("DANH SÁCH HÓA ĐƠN (Từ ngày " + tuNgay + " đến ngày " + denNgay + ")");
+
+                            CellStyle headerCellStyle = workbook.createCellStyle();
+                            XSSFFont headerFont = workbook.createFont();
+                            headerFont.setFontHeightInPoints((short) 14); // Size 14
+                            headerCellStyle.setFont(headerFont);
+                            cell.setCellStyle(headerCellStyle);
+
+                            row = spreadsheet.createRow((short) 3);
+                            row.setHeight((short) 500);
+                            cell = row.createCell(0, CellType.STRING);
+                            cell.setCellValue("STT");
+                            cell.setCellStyle(headerCellStyle);
+                            spreadsheet.setColumnWidth(0, 3000);
+
+                            cell = row.createCell(1, CellType.STRING);
+                            cell.setCellValue("Mã hóa đơn");
+                            cell.setCellStyle(headerCellStyle);
+                            spreadsheet.setColumnWidth(1, 4000);
+
+                            cell = row.createCell(2, CellType.STRING);
+                            cell.setCellValue("Mã DV");
+                            cell.setCellStyle(headerCellStyle);
+                            spreadsheet.setColumnWidth(2, 4500);
+
+                            cell = row.createCell(3, CellType.STRING);
+                            cell.setCellValue("Tên DV");
+                            cell.setCellStyle(headerCellStyle);
+                            spreadsheet.setColumnWidth(3, 7000);
+
+                            cell = row.createCell(4, CellType.STRING);
+                            cell.setCellValue("Ngày lập");
+                            cell.setCellStyle(headerCellStyle);
+                            spreadsheet.setColumnWidth(4, 4000);
+
+                            cell = row.createCell(5, CellType.STRING);
+                            cell.setCellValue("Số lượng");
+                            cell.setCellStyle(headerCellStyle);
+                            spreadsheet.setColumnWidth(5, 5000);
+
+                            cell = row.createCell(6, CellType.STRING);
+                            cell.setCellValue("Giá Dịch vụ");
+                            cell.setCellStyle(headerCellStyle);
+                            spreadsheet.setColumnWidth(6, 6000);
+
+                            cell = row.createCell(7, CellType.STRING);
+                            cell.setCellValue("Tổng tiền");
+                            cell.setCellStyle(headerCellStyle);
+                            spreadsheet.setColumnWidth(7, 5000);
+
+                            double gia = 0;
+                            ArrayList<Bill> listBill = billDAO.getAllBill();
+                            for (int i = 0; i < listDV.size(); i++) {
+                                DetailsOfService details = listDV.get(i);
+
+                                CellStyle rowStyle = workbook.createCellStyle();
+                                XSSFFont rowFont = workbook.createFont();
+                                // Thiết lập font size cho Font
+                                rowFont.setFontHeightInPoints((short) 12); // Size 12
+                                // Áp dụng font cho CellStyle
+                                rowStyle.setFont(rowFont);
+
+                                String ngayThangDinhDang = "";
+                                for (Bill bill : listBill) {
+                                    if (details.getMaHoaDon().getMaHoaDon().trim().equalsIgnoreCase(bill.getMaHoaDon())) {
+                                        String ngayThang = String.valueOf(bill.getThoiGianRa());
+                                        SimpleDateFormat sdfInput = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+                                        Date date = null;
+                                        try {
+                                            date = sdfInput.parse(ngayThang);
+                                        } catch (ParseException e2) {
+                                            e2.printStackTrace();
+                                        }
+                                        // Định dạng lại đối tượng Date thành chuỗi mới
+                                        SimpleDateFormat sdfOutput = new SimpleDateFormat("dd-MM-yyyy");
+                                        ngayThangDinhDang = sdfOutput.format(date);
+                                    }
+                                }
+
+                                gia += details.getSoLuong() * details.getGiaBan();
+                                row = spreadsheet.createRow((short) 4 + i);
+                                row.setHeight((short) 400);
+
+                                Cell cell2 = null;
+
+//                        row.createCell(0).setCellValue(i + 1);
+                                cell2 = row.createCell(0);
+                                cell2.setCellValue(i + 1);
+                                cell2.setCellStyle(rowStyle);
+
+//                        row.createCell(1).setCellValue(details.getMaHoaDon().getMaHoaDon());
+                                cell2 = row.createCell(1);
+                                cell2.setCellValue(details.getMaHoaDon().getMaHoaDon());
+                                cell2.setCellStyle(rowStyle);
+
+//                        row.createCell(2).setCellValue(details.getMaDichVu().getMaDichVu());
+                                cell2 = row.createCell(2);
+                                cell2.setCellValue(details.getMaDichVu().getMaDichVu());
+                                cell2.setCellStyle(rowStyle);
+
+//                        row.createCell(3).setCellValue(details.getMaDichVu().getTenDichVu());
+                                cell2 = row.createCell(3);
+                                cell2.setCellValue(details.getMaDichVu().getTenDichVu());
+                                cell2.setCellStyle(rowStyle);
+
+//                        row.createCell(4).setCellValue(ngayThangDinhDang);
+                                cell2 = row.createCell(4);
+                                cell2.setCellValue(ngayThangDinhDang);
+                                cell2.setCellStyle(rowStyle);
+
+//                        row.createCell(5).setCellValue( details.getSoLuong());
+                                cell2 = row.createCell(5);
+                                cell2.setCellValue(details.getSoLuong());
+                                cell2.setCellStyle(rowStyle);
+
+//                        row.createCell(6).setCellValue(df.format(details.getGiaBan()));
+                                cell2 = row.createCell(6);
+                                cell2.setCellValue(df.format(details.getGiaBan()));
+                                cell2.setCellStyle(rowStyle);
+
+//                        row.createCell(7).setCellValue(df.format(details.getSoLuong() * details.getGiaBan()));
+                                cell2 = row.createCell(7);
+                                cell2.setCellValue(df.format(details.getSoLuong() * details.getGiaBan()));
+                                cell2.setCellStyle(rowStyle);
+
+                                row = spreadsheet.createRow((short) 5 + i);
+                                row.setHeight((short) 400);
+                                row.createCell(0).setCellValue("");
+                                row.createCell(1).setCellValue("");
+                                row.createCell(2).setCellValue("");
+                                row.createCell(3).setCellValue("");
+                                row.createCell(4).setCellValue("");
+                                row.createCell(5).setCellValue("");
+//                        row.createCell(6).setCellValue("Tổng tiền:");
+                                cell = row.createCell(6, CellType.STRING);
+                                cell.setCellValue("TỔNG DOANH THU");
+                                cell.setCellStyle(headerCellStyle);
+
+//                        row.createCell(7).setCellValue( df.format(gia));
+                                cell = row.createCell(7, CellType.STRING);
+                                cell.setCellValue(df.format(gia));
+                                cell.setCellStyle(headerCellStyle);
+                            }
+
+                            // Tạo tên file duy nhất dựa trên thời gian
+//                    String timeStamp = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+//                    String fileName = "Báo cáo dịch vụ ngày " + timeStamp + ".xlsx";
+//                    if (!path.matches("^.+[\\\\/]$")) {
+//                        path += "/";
+//                    }
+//                    File folder = new File(path);
+//                    if (!folder.exists())
+//                        folder.mkdir();
+//
+//                    String filePath = path + fileName;
+//
+//                    FileOutputStream out = new FileOutputStream(filePath);
+
+                            // Tạo tên file duy nhất dựa trên thời gian
+                            String timeStamp = new SimpleDateFormat("dd-MM-yyyy 'lúc' HH'giờ'mm'phút'ss'giây'").format(new Date());
+                            String fileName = "E:\\16\\KaraokeManagement\\excel\\KhachHang" + "\\Báo cáo ngày " + timeStamp + ".xlsx";
+
+                            FileOutputStream out = new FileOutputStream(fileName);
+
+
+                            JOptionPane.showMessageDialog(null, "Xuất file thành công. File được lưu ở tệp excel");
+                            workbook.write(out);
+                            out.close();
+                        } catch (Exception e2) {
+                            e2.printStackTrace();
+                        }
+                    }
+                }
+
         }
     }
 
