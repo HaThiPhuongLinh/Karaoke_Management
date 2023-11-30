@@ -290,13 +290,13 @@ public class StatisticCustomer_UI extends JPanel implements ActionListener, Item
                         row.setHeight((short) 500);
                         cell = row.createCell(0, CellType.STRING);
                         cell.setCellValue("DANH SÁCH HÓA ĐƠN (Từ ngày " + tuNgay + " đến ngày " + denNgay + ")");
-/////////////////////////
+
                         CellStyle headerCellStyle = workbook.createCellStyle();
                         XSSFFont headerFont = workbook.createFont();
                         headerFont.setFontHeightInPoints((short) 14); // Size 14
                         headerCellStyle.setFont(headerFont);
                         cell.setCellStyle(headerCellStyle);
-//////////////////////////
+
                         row = spreadsheet.createRow((short) 3);
                         row.setHeight((short) 500);
                         cell = row.createCell(0, CellType.STRING);
