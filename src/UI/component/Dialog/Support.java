@@ -323,6 +323,182 @@ public class Support extends JDialog implements MouseListener {
                     + "</div>" + "</html>";
             txtArea.setText(html);
         }
+        else if (nodeSelected.equals(nodeTimKiemNhanVien)) {
+            txtArea.setContentType("text/html");
+            txtArea.setEditable(false);
+            txtArea.setBackground(Color.decode("#D7FFF6"));
+            String html = "<html>" + "<h1 style='text-align:center; font-size:20px '>Tìm kiếm nhân viên</h1>" + "<div>"
+                    + getPHTML(1)
+                    + "<b>Bước 1: </b>Chọn chức năng “Tìm kiếm nhân viên” trên menu.</p>" + getImageHTML("image200.png") + getPHTML(1)
+                    + "<b>Bước 2: </b>Nhập thông tin hoặc tình trạng của nhân viên cần tìm kiếm (tên, số điện thoại, CCCD, tình trạng).</p>" + getImageHTML("image400.png") + getPHTML(1)
+                    + "<b>Bước 3: </b>Chọn nút tìm kiếm.</p>" + getImageHTML("image600.png") + getPHTML(1)
+                    + "<b>Bước 4: </b>Hiển thị chi tiết thông tin nhân viên.</p>" + getImageHTML("image800.png") + getPHTML(2)
+                    + "<b>4.1: </b>Cập nhật thông tin nhân viên.</p>" + getPHTML(3)
+                    + "<b>4.1.a: </b> Chọn nhân viên cần cập nhật.</p>" + getImageHTML("image1000.png") + getPHTML(3)
+                    + "<b>4.1.b: </b>Chọn nút cập nhật. </p>" + getImageHTML("image1200.png") + getPHTML(3)
+                    + "<b>4.1.c: </b>Chuyển sang giao diện quản lý nhân viên.</p>" + getImageHTML("image1400.png") + getPHTML(1)
+                    + "<b>Bước 5: </b>Chọn nút làm mới để reset dữ liệu.</p>" + getImageHTML("image1600.png")
+                    + "</div>" + "</html>";
+            txtArea.setText(html);
+        }else if (nodeSelected.equals(nodeTimKiemPhong)) {
+            txtArea.setContentType("text/html");
+            txtArea.setEditable(false);
+            txtArea.setBackground(Color.decode("#D7FFF6"));
+            String html = "<html>" + "<h1 style='text-align:center; font-size:20px '>Tìm kiếm phòng</h1>" + "<div>"
+                    + getPHTML(1)
+                    + "<b>Bước 1: </b>Chọn chức năng “Tìm kiếm phòng” trên menu.</p>" + getImageHTML("image002p.png") + getPHTML(1)
+                    + "<b>Bước 2: </b>Chọn loại phòng và giá phòng của phòng cần tìm kiếm .</p>" + getImageHTML("image004p.png") + getPHTML(1)
+                    + "<b>Bước 3: </b>Hiển thị chi tiết thông tin phòng.</p>" + getImageHTML("image006p.png") + getPHTML(2)
+                    + "<b>Bước 4: </b>Chọn nút làm mới để reset dữ liệu.</p>" + getImageHTML("image008p.png")
+                    + "</div>" + "</html>";
+            txtArea.setText(html);
+        }else if (nodeSelected.equals(nodeTimKiemDichVu)) {
+            txtArea.setContentType("text/html");
+            txtArea.setEditable(false);
+            txtArea.setBackground(Color.decode("#D7FFF6"));
+            String html = "<html>" + "<h1 style='text-align:center; font-size:20px '>Tìm kiếm dịch vụ</h1>" + "<div>"
+                    + getPHTML(1)
+                    + "<b>Bước 1: </b>Chọn chức năng “Tìm kiếm dịch vụ” trên menu.</p>" + getImageHTML("image004dv.png") + getPHTML(1)
+                    + "<b>Bước 2: </b>Nhập và chọn thông tin  của dịch vụ cần tìm kiếm .</p>" + getImageHTML("image006dv.png") + getPHTML(1)
+                    + "<b>Bước 3: </b>Chọn nút tìm kiếm.</p>" + getImageHTML("image008dv.png") + getPHTML(1)
+                    + "<b>Bước 4: </b>Hiển thị chi tiết thông tin dịch vụ.</p>" + getImageHTML("image010dv.png") + getPHTML(2)
+                    + "<b>Bước 5: </b>Chọn nút làm mới để reset dữ liệu.</p>" + getImageHTML("image012dv.png")
+                    + "</div>" + "</html>";
+            txtArea.setText(html);
+        }else if (nodeSelected.equals(nodeCapNhatNhanVien)) {
+            txtArea.setContentType("text/html");
+            txtArea.setEditable(false);
+            txtArea.setBackground(Color.decode("#D7FFF6"));
+            String html = "<html>" + "<h1 style='text-align:center; font-size:20px '>Cập nhât nhân viên</h1>" + "<div>"
+                    + getPHTML(1)
+                    + "<b>Bước 1: </b>Chọn chức năng “Cập nhật nhân viên” trên menu.</p>" + getImageHTML("image002cnnv.png") + getPHTML(1)
+                    + "<b>Bước 2: </b>Thêm nhân viên.</p>" + getPHTML(2)
+                    + "<b>2.1: </b>Nhập thông tin của nhân viên cần thêm</p>" + getImageHTML("image004cnnv.png") + getPHTML(2)
+                    + "<b>2.2: </b>Chọn nút “Thêm nhân viên”.</p>" + getImageHTML("image006cnnv.png") + getPHTML(2)
+                    + "<b>2.3: </b>Hiển thị danh sách nhân viên sau khi cập nhật lên bảng lên bảng.</p>" + getImageHTML("image008cnnv.png") + getPHTML(1)
+                    + "<b>Bước 3: </b>Sửa nhân viên.</p>" + getPHTML(2)
+                    + "<b>3.1.: </b>Chọn nhân viên cần sửa thông tin.</p>" + getImageHTML("image010cnnv.png") + getPHTML(2)
+                    + "<b>3.2: </b>Sửa thông tin của nhân viên.</p>" + getImageHTML("image004cnnv.png") + getPHTML(2)
+                    + "<b>3.3: </b>Chọn nút “Sửa”.</p>" + getImageHTML("image012cnnv.png") + getPHTML(2)
+                    + "<b>3.4: </b>Hiển thị danh sách nhân viên sau khi cập nhật lên bảng.</p>" + getImageHTML("image008cnnv.png") + getPHTML(1)
+                    + "<b>Bước 4: </b>Chọn nút làm mới để reset dữ liệu.</p>" + getImageHTML("image014cnnv.png") + getPHTML(2)
+                    + "</div>" + "</html>";
+            txtArea.setText(html);
+        }else if (nodeSelected.equals(nodeCapNhatPhong)) {
+            txtArea.setContentType("text/html");
+            txtArea.setEditable(false);
+            txtArea.setBackground(Color.decode("#D7FFF6"));
+            String html = "<html>" + "<h1 style='text-align:center; font-size:20px '>Cập nhật phòng</h1>" + "<div>"
+                    + getPHTML(1)
+                    + "<b>Bước 1: </b>Chọn chức năng “Cập nhật phòng” trên menu.</p>" + getImageHTML("image004cnp.png") + getPHTML(1)
+                    + "<b>Bước 2: </b>Thêm phòng.</p>" + getPHTML(2)
+                    + "<b>2.1: </b>Nhập thông tin của phòng cần thêm</p>" + getImageHTML("image006cnp.png") + getPHTML(2)
+                    + "<b>2.2: </b>Chọn nút “Thêm phòng”.</p>" + getImageHTML("image008cnp.png") + getPHTML(2)
+                    + "<b>2.3: </b>Hiển thị danh sách phòng sau khi cập nhật lên bảng lên bảng.</p>" + getImageHTML("image010cnp.png") + getPHTML(1)
+                    + "<b>Bước 3: </b>Sửa phòng.</p>" + getPHTML(2)
+                    + "<b>3.1.: </b>Chọn phòng cần sửa thông tin.</p>" + getImageHTML("image012cnp.png") + getPHTML(2)
+                    + "<b>3.2: </b>Sửa thông tin của phòng.</p>" + getImageHTML("image006cnp.png") + getPHTML(2)
+                    + "<b>3.3: </b>Chọn nút “Sửa phòng”.</p>" + getImageHTML("image014cnp.png") + getPHTML(2)
+                    + "<b>3.4: </b>Hiển thị danh sách phòng sau khi cập nhật lên bảng.</p>" + getImageHTML("image010cnp.png") + getPHTML(1)
+                    + "<b>Bước 4: </b>Xóa phòng.</p>" + getPHTML(2)
+                    + "<b>4.1.: </b>Chọn phòng cần xóa thông tin.</p>" + getImageHTML("image012cnp.png") + getPHTML(2)
+                    + "<b>4.2: </b>Chọn nút “Xóa ”.</p>" + getImageHTML("image016cnp.png") + getPHTML(2)
+                    + "<b>4.3: </b>Hiển thị danh sách phòng sau khi cập nhật lên bảng.</p>" + getImageHTML("image010cnp.png") + getPHTML(1)
+                    + "<b>Bước 5: </b>Chọn nút làm mới để reset dữ liệu.</p>" + getImageHTML("image018cnp.png") + getPHTML(2)
+                    + "</div>" + "</html>";
+            txtArea.setText(html);
+        }else if (nodeSelected.equals(nodeCapNhatKhachHang)) {
+            txtArea.setContentType("text/html");
+            txtArea.setEditable(false);
+            txtArea.setBackground(Color.decode("#D7FFF6"));
+            String html = "<html>" + "<h1 style='text-align:center; font-size:20px '>Cập nhât khách hàng</h1>" + "<div>"
+                    + getPHTML(1)
+                    + "<b>Bước 1: </b>Chọn chức năng “Cập nhật khách hàng” trên menu.</p>" + getImageHTML("image004cnkh.png") + getPHTML(1)
+                    + "<b>Bước 2: </b>Thêm khách hàng.</p>" + getPHTML(2)
+                    + "<b>2.1: </b>Nhập thông tin của khách hàng cần thêm</p>" + getImageHTML("image006cnkh.png") + getPHTML(2)
+                    + "<b>2.2: </b>Chọn nút “Thêm khách hàng”.</p>" + getImageHTML("image008cnkh.png") + getPHTML(2)
+                    + "<b>2.3: </b>Hiển thị danh sách khách hàng sau khi cập nhật lên bảng lên bảng.</p>" + getImageHTML("image010cnkh.png") + getPHTML(1)
+                    + "<b>Bước 3: </b>Sửa khách hàng.</p>" + getPHTML(2)
+                    + "<b>3.1.: </b>Chọn khách hàng cần sửa thông tin.</p>" + getImageHTML("image012cnkh.png") + getPHTML(2)
+                    + "<b>3.2: </b>Sửa thông tin của khách hàng.</p>" + getImageHTML("image006cnkh.png") + getPHTML(2)
+                    + "<b>3.3: </b>Chọn nút “Sửa”.</p>" + getImageHTML("image014cnkh.png") + getPHTML(2)
+                    + "<b>3.4: </b>Hiển thị danh sách khách hàng sau khi cập nhật lên bảng.</p>" + getImageHTML("image010cnkh.png") + getPHTML(1)
+                    + "<b>Bước 4: </b>Chọn nút làm mới để reset dữ liệu.</p>" + getImageHTML("image016cnkh.png") + getPHTML(2)
+                    + "</div>" + "</html>";
+            txtArea.setText(html);
+        }else if (nodeSelected.equals(nodeLoaiDichvu)) {
+            txtArea.setContentType("text/html");
+            txtArea.setEditable(false);
+            txtArea.setBackground(Color.decode("#D7FFF6"));
+            String html = "<html>" + "<h1 style='text-align:center; font-size:20px '>Cập nhật dịch vụ</h1>" + "<div>"
+                    + getPHTML(1)
+                    + "<b>Bước 1: </b>Chọn chức năng “Cập nhật dịch vụ” trên menu.</p>" + getImageHTML("image004ldv.png") + getPHTML(1)
+                    + "<b>Bước 2: </b>Thêm dịch vụ.</p>" + getPHTML(2)
+                    + "<b>2.1: </b>Nhập thông tin của dịch vụ cần thêm</p>" + getImageHTML("image006ldv.png") + getPHTML(2)
+                    + "<b>2.2: </b>Chọn nút “Thêm ”.</p>" + getImageHTML("image008ldv.png") + getPHTML(2)
+                    + "<b>2.3: </b>Hiển thị danh sách dịch vụ sau khi cập nhật lên bảng lên bảng.</p>" + getImageHTML("image010ldv.png") + getPHTML(1)
+                    + "<b>Bước 3: </b>Sửa dịch vụ.</p>" + getPHTML(2)
+                    + "<b>3.1.: </b>Chọn dịch vụ cần sửa thông tin.</p>" + getImageHTML("image012ldv.png") + getPHTML(2)
+                    + "<b>3.2: </b>Sửa thông tin của dịch vụ.</p>" + getImageHTML("image006ldv.png") + getPHTML(2)
+                    + "<b>3.3: </b>Chọn nút “Sửa ”.</p>" + getImageHTML("image014ldv.png") + getPHTML(2)
+                    + "<b>3.4: </b>Hiển thị danh sách dịch vụ sau khi cập nhật lên bảng.</p>" + getImageHTML("image010ldv.png") + getPHTML(1)
+                    + "<b>Bước 4: </b>Xóa dịch vụ.</p>" + getPHTML(2)
+                    + "<b>4.1.: </b>Chọn dịch vụ cần xóa thông tin.</p>" + getImageHTML("image012ldv.png") + getPHTML(2)
+                    + "<b>4.2: </b>Chọn nút “Xóa ”.</p>" + getImageHTML("image016ldv.png") + getPHTML(2)
+                    + "<b>4.3: </b>Hiển thị danh sách dịch vụ sau khi cập nhật lên bảng.</p>" + getImageHTML("image010ldv.png") + getPHTML(1)
+                    + "<b>Bước 5: </b>Chọn nút làm mới để reset dữ liệu.</p>" + getImageHTML("image018ldv.png") + getPHTML(2)
+                    + "</div>" + "</html>";
+            txtArea.setText(html);
+        }else if (nodeSelected.equals(nodeCapNhatDichVu)) {
+            txtArea.setContentType("text/html");
+            txtArea.setEditable(false);
+            txtArea.setBackground(Color.decode("#D7FFF6"));
+            String html = "<html>" + "<h1 style='text-align:center; font-size:20px '>Loại dịch vụ</h1>" + "<div>"
+                    + getPHTML(1)
+                    + "<b>Bước 1: </b>Chọn chức năng “Loại dịch vụ” trên menu.</p>" + getImageHTML("image004cndv.png") + getPHTML(1)
+                    + "<b>Bước 2: </b>Thêm loại dịch vụ.</p>" + getPHTML(2)
+                    + "<b>2.1: </b>Nhập thông tin của loại dịch vụ cần thêm</p>" + getImageHTML("image006cndv.png") + getPHTML(2)
+                    + "<b>2.2: </b>Chọn nút “Thêm ”.</p>" + getImageHTML("image008cndv.png") + getPHTML(2)
+                    + "<b>2.3: </b>Hiển thị danh sách loại dịch vụ sau khi cập nhật lên bảng lên bảng.</p>" + getImageHTML("image010cndv.png") + getPHTML(1)
+                    + "<b>Bước 3: </b>Sửa loại dịch vụ.</p>" + getPHTML(2)
+                    + "<b>3.1.: </b>Chọn loại dịch vụ cần sửa thông tin.</p>" + getImageHTML("image012cndv.png") + getPHTML(2)
+                    + "<b>3.2: </b>Sửa thông tin của loại dịch vụ.</p>" + getImageHTML("image006cndv.png") + getPHTML(2)
+                    + "<b>3.3: </b>Chọn nút “Sửa ”.</p>" + getImageHTML("image014cndv.png") + getPHTML(2)
+                    + "<b>3.4: </b>Hiển thị danh sách loại dịch vụ sau khi cập nhật lên bảng.</p>" + getImageHTML("image010cndv.png") + getPHTML(1)
+                    + "<b>Bước 4: </b>Xóa loại dịch vụ.</p>" + getPHTML(2)
+                    + "<b>4.1.: </b>Chọn loại dịch vụ cần xóa thông tin.</p>" + getImageHTML("image012cndv.png") + getPHTML(2)
+                    + "<b>4.2: </b>Chọn nút “Xóa ”.</p>" + getImageHTML("image016cndv.png") + getPHTML(2)
+                    + "<b>4.3: </b>Hiển thị danh sách loại dịch vụ sau khi cập nhật lên bảng.</p>" + getImageHTML("image010cndv.png") + getPHTML(1)
+                    + "<b>Bước 5: </b>Chọn nút làm mới để reset dữ liệu.</p>" + getImageHTML("image018cndv.png") + getPHTML(2)
+                    + "</div>" + "</html>";
+            txtArea.setText(html);
+        }else if (nodeSelected.equals(nodeLoaiPhong)) {
+            txtArea.setContentType("text/html");
+            txtArea.setEditable(false);
+            txtArea.setBackground(Color.decode("#D7FFF6"));
+            String html = "<html>" + "<h1 style='text-align:center; font-size:20px '>Loại phòng</h1>" + "<div>"
+                    + getPHTML(1)
+                    + "<b>Bước 1: </b>Chọn chức năng “Loại phòng” trên menu.</p>" + getImageHTML("image004lp.png") + getPHTML(1)
+                    + "<b>Bước 2: </b>Thêm loại phòng.</p>" + getPHTML(2)
+                    + "<b>2.1: </b>Nhập thông tin của loại phòng cần thêm</p>" + getImageHTML("image006lp.png") + getPHTML(2)
+                    + "<b>2.2: </b>Chọn nút “Thêm ”.</p>" + getImageHTML("image008lp.png") + getPHTML(2)
+                    + "<b>2.3: </b>Hiển thị danh sách loại phòng sau khi cập nhật lên bảng lên bảng.</p>" + getImageHTML("image010lp.png") + getPHTML(1)
+                    + "<b>Bước 3: </b>Sửa loại phòng.</p>" + getPHTML(2)
+                    + "<b>3.1.: </b>Chọn loại phòng cần sửa thông tin.</p>" + getImageHTML("image012lp.png") + getPHTML(2)
+                    + "<b>3.2: </b>Sửa thông tin của loại phòng.</p>" + getImageHTML("image006lp.png") + getPHTML(2)
+                    + "<b>3.3: </b>Chọn nút “Sửa ”.</p>" + getImageHTML("image014lp.png") + getPHTML(2)
+                    + "<b>3.4: </b>Hiển thị danh sách loại phòng sau khi cập nhật lên bảng.</p>" + getImageHTML("image010lp.png") + getPHTML(1)
+                    + "<b>Bước 4: </b>Xóa loại phòng.</p>" + getPHTML(2)
+                    + "<b>4.1.: </b>Chọn loại phòng cần xóa thông tin.</p>" + getImageHTML("image012lp.png") + getPHTML(2)
+                    + "<b>4.2: </b>Chọn nút “Xóa ”.</p>" + getImageHTML("image016lp.png") + getPHTML(2)
+                    + "<b>4.3: </b>Hiển thị danh sách loại phòng sau khi cập nhật lên bảng.</p>" + getImageHTML("image010lp.png") + getPHTML(1)
+                    + "<b>Bước 5: </b>Chọn nút làm mới để reset dữ liệu.</p>" + getImageHTML("image018lp.png") + getPHTML(2)
+                    + "</div>" + "</html>";
+            txtArea.setText(html);
+        }
+
+
+
     }
 
     public String getPHTML(int x) {
