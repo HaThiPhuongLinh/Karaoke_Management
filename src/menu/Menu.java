@@ -2,6 +2,7 @@ package menu;
 
 import Entity.Account;
 import Entity.Staff;
+import UI.component.Dialog.DetailsOfStaff;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import menu.mode.LightDarkMode;
 
@@ -13,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
@@ -122,6 +124,12 @@ public class Menu extends JPanel implements ActionListener {
         header = new JLabel("StaffName");
         header.setFont(new Font("Arial", Font.BOLD, 22));
         header.setForeground(new Color(240, 240, 240));
+
+        header.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent evt) {
+                header.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            }
+        });
 
         scroll = new JScrollPane();
         panelMenu = new JPanel(new MenuItemLayout(this));

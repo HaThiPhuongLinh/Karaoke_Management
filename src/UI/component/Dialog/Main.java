@@ -14,6 +14,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.net.MalformedURLException;
 
 /**
  * Giao diện chính (main) gồm header, menu và body
@@ -45,6 +48,19 @@ public class Main extends JFrame {
         if (staffLogin != null) {
             menu.setHeader(staffLogin.getTenNhanVien());
         }
+
+        menu.header.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                try {
+                    DetailsOfStaff d = new DetailsOfStaff(staffLogin);
+                    d.setVisible(true);
+                } catch (MalformedURLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+
 
         PresetRoom presetRoom = PresetRoom.getInstance();
         presetRoom.setM(this);
