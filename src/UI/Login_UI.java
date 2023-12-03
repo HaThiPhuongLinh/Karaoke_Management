@@ -20,7 +20,7 @@ import java.awt.event.*;
  * Lần cập nhật cuối: 17/10/2023
  * Nội dung cập nhật: phân quyền nhân viên khi đăng nhập
  */
-public class Login_UI extends JFrame {
+public class  Login_UI extends JFrame {
     public static Menu menu;
     private final Border borderBottomFocus = BorderFactory.createMatteBorder(0, 0, 1, 0, Color.decode("#b775d5"));
     private final Border borderBottomFocusDark = BorderFactory.createMatteBorder(0, 0, 1, 0, Color.decode("#321a3d"));
