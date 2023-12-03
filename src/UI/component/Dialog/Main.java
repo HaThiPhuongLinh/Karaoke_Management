@@ -22,8 +22,8 @@ import java.net.MalformedURLException;
  * Giao diện chính (main) gồm header, menu và body
  * Người tham gia thiết kế: Hà Thị Phương Linh
  * Ngày tạo: 10/09/2023
- * Lần cập nhật cuối: 05/11/2023
- * Nội dung cập nhật: thêm menu listBill_UI
+ * Lần cập nhật cuối: 03/12/2023
+ * Nội dung cập nhật: thêm logo cho JFrame
  */
 public class Main extends JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -36,12 +36,14 @@ public class Main extends JFrame {
     private RoundPanel plnRound;
     private static Staff staffLogin = null;
     private RoomDAO roomDAO = new RoomDAO();
+    Image imageIcon = new ImageIcon(getClass().getResource("/images/logo11.png")).getImage();
 
     /**
      * Khởi tạo Main
      * @param staff: thông tin nhân viên đăng nhập
      */
     public Main(Staff staff) {
+        setIconImage(imageIcon);
         initComponents();
         staffLogin = staff;
 

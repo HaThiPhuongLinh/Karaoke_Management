@@ -12,13 +12,14 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
+import java.net.URL;
 
 /**
  * Giao diện đăng nhập
  * Người tham gia thiết kế: Hà Thị Phương Linh
  * Ngày tạo: 10/09/2023
- * Lần cập nhật cuối: 17/10/2023
- * Nội dung cập nhật: phân quyền nhân viên khi đăng nhập
+ * Lần cập nhật cuối: 03/12/2023
+ * Nội dung cập nhật: thêm logo cho JFrame
  */
 public class  Login_UI extends JFrame {
     public static Menu menu;
@@ -29,8 +30,10 @@ public class  Login_UI extends JFrame {
     private JLabel lblErrorMessage;
     private AccountDAO logInDAO = new AccountDAO();
     private StaffDAO staffDAO = new StaffDAO();
+    Image imageIcon = new ImageIcon(getClass().getResource("/images/logo11.png")).getImage();
 
     public Login_UI() {
+        setIconImage(imageIcon);
         setTitle("Login Form");
         setSize(800, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

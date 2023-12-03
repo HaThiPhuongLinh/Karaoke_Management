@@ -42,6 +42,7 @@ public class Support extends JDialog implements MouseListener {
         pnNorth.setBackground(Color.decode("#5F009D"));
         JLabel lblTaiLieu = new JLabel("Hướng Dẫn Sử Dụng Ứng Dụng");
         lblTaiLieu.setFont(new Font("Tahoma", Font.BOLD, 24));
+        lblTaiLieu.setForeground(Color.WHITE);
         pnNorth.add(lblTaiLieu);
 
         rootHDSD = new DefaultMutableTreeNode("Hướng dẫn sử dụng");
@@ -87,7 +88,6 @@ public class Support extends JDialog implements MouseListener {
             rootHDSD.add(nodeLoaiPhong);
             rootHDSD.add(nodeCapNhatDichVu);
             rootHDSD.add(nodeLoaiDichvu);
-            rootHDSD.add(nodeTimKiemHoaDon);
             rootHDSD.add(nodeThongKeDoanhThu);
             rootHDSD.add(nodeThongKeDichVu);
             rootHDSD.add(nodeThongKeKhachHang);
@@ -100,6 +100,7 @@ public class Support extends JDialog implements MouseListener {
         rootHDSD.add(nodeTimKiemDichVu);
         rootHDSD.add(nodeDatDichVu);
         rootHDSD.add(nodeLapHoaDon);
+        rootHDSD.add(nodeTimKiemHoaDon);
 
         tree.setRowHeight(35);
         tree.expandRow(0);
@@ -426,7 +427,7 @@ public class Support extends JDialog implements MouseListener {
                     + "<b>Bước 4: </b>Chọn nút làm mới để reset dữ liệu.</p>" + getImageHTML("image016cnkh.png") + getPHTML(2)
                     + "</div>" + "</html>";
             txtArea.setText(html);
-        }else if (nodeSelected.equals(nodeLoaiDichvu)) {
+        }else if (nodeSelected.equals(nodeCapNhatDichVu)) {
             txtArea.setContentType("text/html");
             txtArea.setEditable(false);
             txtArea.setBackground(Color.decode("#D7FFF6"));
@@ -449,7 +450,7 @@ public class Support extends JDialog implements MouseListener {
                     + "<b>Bước 5: </b>Chọn nút làm mới để reset dữ liệu.</p>" + getImageHTML("image018ldv.png") + getPHTML(2)
                     + "</div>" + "</html>";
             txtArea.setText(html);
-        }else if (nodeSelected.equals(nodeCapNhatDichVu)) {
+        }else if (nodeSelected.equals(nodeLoaiDichvu)) {
             txtArea.setContentType("text/html");
             txtArea.setEditable(false);
             txtArea.setBackground(Color.decode("#D7FFF6"));

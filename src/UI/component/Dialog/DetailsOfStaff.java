@@ -1,12 +1,6 @@
 package UI.component.Dialog;
 
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Font;
-import java.awt.GradientPaint;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -20,16 +14,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import javax.swing.border.Border;
 
 import Entity.Account;
@@ -53,8 +38,10 @@ public class DetailsOfStaff extends JFrame implements ActionListener {
   private Account account;
   public static Staff staffLogin = null;
   SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+  Image imageIcon = new ImageIcon(getClass().getResource("/images/logo11.png")).getImage();
 
   public DetailsOfStaff(Staff staff) throws MalformedURLException {
+    setIconImage(imageIcon);
     setSize(400, 420);
     setTitle("Thông tin nhân viên");
     setLocationRelativeTo(null);
