@@ -15,6 +15,7 @@ import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.Timestamp;
@@ -27,10 +28,10 @@ import java.util.Date;
 
 /**
  * Giao diện dùng để thống kê hóa đơn đã thanh toán
- * Người thiết kế Nguyễn Đình Dương
+ * Người thiết kế Nguyễn Đình Dương, Hà Thị Phương Linh
  * Ngày tạo:5/11/2023
- * Lần cập nhật cuối : 06/11/2023
- * Nội dung cập nhật : Sửa tổng tiền dịch vụ
+ * Lần cập nhật cuối : 11/12/2023
+ * Nội dung cập nhật : Sửa hiển thị bảng theo index giảm dần
  */
 public class ListBill_UI extends JPanel implements ActionListener, MouseListener, ItemListener {
     public static Staff staffLogin = null;
@@ -166,6 +167,11 @@ public class ListBill_UI extends JPanel implements ActionListener, MouseListener
         tblHD.getTableHeader().setForeground(Color.BLUE);
         Custom.getInstance().setCustomTable(tblHD);
 
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(modelTblHD);
+        tblHD.setRowSorter(sorter);
+        sorter.setSortKeys(java.util.List.of(new RowSorter.SortKey(0, SortOrder.DESCENDING)));
+        sorter.sort();
+
         panelDSDV.add(scrollPaneDV = new JScrollPane(tblHD, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
                 BorderLayout.CENTER);
         scrollPaneDV.setBounds(10, 20, 1220, 440);
@@ -217,7 +223,7 @@ public class ListBill_UI extends JPanel implements ActionListener, MouseListener
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         if (o.equals(btnThongKe)) {
-            modelTblHD.getDataVector().removeAllElements();
+            modelTblHD.setRowCount(0);
             try {
                 Date tuNgay = dpTuNgay.getFullDate();
                 Date denNgay = dpDenNgay.addOneDay();
@@ -225,7 +231,7 @@ public class ListBill_UI extends JPanel implements ActionListener, MouseListener
                 if (validData()) {
                     if (tuNgay.before(denNgay)) {
                         if (listBill == null || listBill.isEmpty() || listBill.size() <= 0) {
-                            JOptionPane.showMessageDialog(this, "Không tìm thấy thông tin thông kê");
+                            JOptionPane.showMessageDialog(this, "Không tìm thấy thông tin thống kê");
                         } else {
                             reloadHD(listBill);
                         }
@@ -239,8 +245,7 @@ public class ListBill_UI extends JPanel implements ActionListener, MouseListener
                 e2.printStackTrace();
             }
         } else if (o.equals(btnLamMoi)) {
-            modelTblHD.getDataVector().removeAllElements();
-            tblHD.removeAll();
+            modelTblHD.setRowCount(0);
             cmbLocTheo.setSelectedIndex(0);
             dpTuNgay.setValueToDay();
             dpDenNgay.setValueToDay();
@@ -254,7 +259,7 @@ public class ListBill_UI extends JPanel implements ActionListener, MouseListener
      * @param listBill:Danh sách hóa đơn cần load
      */
     public void reloadHD(ArrayList<Bill> listBill) {
-
+        modelTblHD.setRowCount(0);
         for (Bill bill : listBill) {
 
             if (bill.getTinhTrangHD() == 1) {
@@ -292,6 +297,7 @@ public class ListBill_UI extends JPanel implements ActionListener, MouseListener
                 modelTblHD.addRow(rowData);
 
                 txtSum.setText(df.format(sumRevenue()));
+
             }
         }
     }
@@ -367,8 +373,8 @@ public class ListBill_UI extends JPanel implements ActionListener, MouseListener
                 case "7 ngày gần nhất":
                     dpTuNgay.setActive(false);
                     dpDenNgay.setActive(false);
-                    modelTblHD.getDataVector().removeAllElements();
-                    tblHD.removeAll();
+                    modelTblHD.setRowCount(0);
+                    //tblHD.removeAll();
                     Date tuNgay = dpTuNgay.setDatesFromToday(Calendar.DAY_OF_MONTH, -6);
                     Date denNgay = null;
                     denNgay = dpDenNgay.getCurrentDatePlusOneDay();
@@ -378,8 +384,7 @@ public class ListBill_UI extends JPanel implements ActionListener, MouseListener
                 case "1 tháng gần nhất":
                     dpTuNgay.setActive(false);
                     dpDenNgay.setActive(false);
-                    modelTblHD.getDataVector().removeAllElements();
-                    tblHD.removeAll();
+                    modelTblHD.setRowCount(0);
                     Date tuNgay1 = dpTuNgay.setDatesFromToday(Calendar.MONTH, -1);
                     Date denNgay1 = null;
                     denNgay1 = dpDenNgay.getCurrentDatePlusOneDay();
@@ -389,8 +394,7 @@ public class ListBill_UI extends JPanel implements ActionListener, MouseListener
                 case "3 tháng gần nhất":
                     dpTuNgay.setActive(false);
                     dpDenNgay.setActive(false);
-                    modelTblHD.getDataVector().removeAllElements();
-                    tblHD.removeAll();
+                    modelTblHD.setRowCount(0);
                     Date tuNgay2 = dpTuNgay.setDatesFromToday(Calendar.MONTH, -2);
                     Date denNgay2 = null;
                     denNgay2 = dpDenNgay.getCurrentDatePlusOneDay();
@@ -400,8 +404,7 @@ public class ListBill_UI extends JPanel implements ActionListener, MouseListener
                 case "6 tháng gần nhất":
                     dpTuNgay.setActive(false);
                     dpDenNgay.setActive(false);
-                    modelTblHD.getDataVector().removeAllElements();
-                    tblHD.removeAll();
+                    modelTblHD.setRowCount(0);
                     Date tuNgay3 = dpTuNgay.setDatesFromToday(Calendar.MONTH, -5);
                     Date denNgay3 = null;
                     denNgay3 = dpDenNgay.getCurrentDatePlusOneDay();
@@ -411,8 +414,7 @@ public class ListBill_UI extends JPanel implements ActionListener, MouseListener
                 case "1 năm gần nhất":
                     dpTuNgay.setActive(false);
                     dpDenNgay.setActive(false);
-                    modelTblHD.getDataVector().removeAllElements();
-                    tblHD.removeAll();
+                    modelTblHD.setRowCount(0);
                     Date tuNgay4 = dpTuNgay.setDatesFromToday(Calendar.MONTH, -11);
                     Date denNgay4 = null;
                     denNgay4 = dpDenNgay.getCurrentDatePlusOneDay();

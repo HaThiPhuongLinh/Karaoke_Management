@@ -6,7 +6,6 @@ import Entity.Customer;
 import Entity.Staff;
 import UI.CustomUI.Custom;
 import UI.component.Dialog.DatePicker;
-import UI.component.Dialog.Main;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -26,10 +25,10 @@ import java.util.Date;
 
 /**
  * Giao diện dùng để quản lý khách hàng
- * Người thiết kế: Nguyễn Đình Dương
+ * Người thiết kế: Nguyễn Đình Dương, Hà Thị Phương Linh
  * Ngày tạo:9/10/2023
- * Lần cập nhật cuối : 29/11/2023
- * Nội dung cập nhật : sửa public cho biến txtSDTKH
+ * Lần cập nhật cuối : 11/11/2023
+ * Nội dung cập nhật : cập nhật tô đen dòng được chọn trong bảng
  */
 public class Customer_UI extends JPanel implements ActionListener, MouseListener {
     public static Staff staffLogin = null;
@@ -224,6 +223,14 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
     }
 
     /**
+     * Gán mã cho txMaKH
+     * @param makh: mã khách hàng cần gán
+     */
+    public void setMaKH(String makh) {
+        txtMaKH.setText(makh);
+    }
+
+    /**
      * Gán sdt cho txtSDTKH
      * @param sdt: SDT cần gán
      */
@@ -258,6 +265,45 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
             cmbGioiTinh.setSelectedIndex(1);
         }
     }
+
+    /**
+     * Tô đen dòng được chọn
+     */
+    public void setRowData() {
+        String selectedMaKH = txtMaKH.getText();
+
+        // Tìm chỉ số dòng trong bảng gốc (tblKH) dựa trên giá trị selectedMaKH
+        int rowIndexInOriginalTable = getRowIndexByValue(selectedMaKH);
+
+        if (rowIndexInOriginalTable != -1 && rowIndexInOriginalTable < tblKH.getRowCount()) {
+            // Chọn dòng trong bảng gốc
+            tblKH.setRowSelectionInterval(rowIndexInOriginalTable, rowIndexInOriginalTable);
+        } else {
+            System.out.println("Không tìm thấy dòng hoặc chỉ số nằm ngoài giới hạn!");
+        }
+    }
+
+    /**
+     * Tìm chỉ số dòng trong JTable (tblKH) dựa trên giá trị của một cột cụ thể.
+     *
+     * @param targetValue Giá trị cần tìm kiếm trong cột.
+     * @return Chỉ số dòng trong bảng hoặc -1 nếu không tìm thấy giá trị.
+     */
+    public int getRowIndexByValue(String targetValue) {
+        for (int i = 0; i < tblKH.getRowCount(); i++) {
+            // Lấy giá trị từ cột 1 (có thể thay đổi tùy theo cấu trúc của bảng)
+            Object value = tblKH.getValueAt(i, 1);
+
+            // So sánh giá trị cần tìm với giá trị của cột 1 trong từng dòng
+            if (targetValue.equals(value)) {
+                // Nếu giá trị được tìm thấy, trả về chỉ số dòng tương ứng
+                return i;
+            }
+        }
+        // Trả về -1 nếu không tìm thấy giá trị trong cột
+        return -1;
+    }
+
 
     /**
      * Gán ngày sinh cho dpNgaySinh từ một chuỗi
@@ -413,9 +459,14 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
                 Customer kh = new Customer(MaKH, tenKH, sdt, cccd, gt, ngaysinh);
                 try {
                     if (CustomerDAO.insert(kh)) {
+                        if (kh.isGioiTinh() == true) {
+                            gioiTinh = "Nam";
+                        } else {
+                            gioiTinh = "Nữ";
+                        }
                         String date = formatDate(kh.getNgaySinh());
                         modelTableKH.addRow(new Object[]{kh.getMaKhachHang(), kh.getTenKhachHang(), kh.getSoDienThoai(),
-                                kh.getCCCD(), gt, date});
+                                kh.getCCCD(), gioiTinh, date});
                         modelTableKH.fireTableDataChanged();
                         modelTableKH.getDataVector().removeAllElements();
                         loadKH();
@@ -429,7 +480,7 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
         } else if (o.equals(btnSua)) {
             if (txtTenKH.getText().equals("") || txtSDTKH.getText().equals("")
             ) {
-                JOptionPane.showMessageDialog(this, "Bạn phải nhập thông tin khách hàng");
+                JOptionPane.showMessageDialog(this, "Bạn phải chọn dòng cần sửa");
             } else if (validData()) {
                 String maKH = txtMaKH.getText().trim();
                 String tenKH = txtTenKH.getText().trim();
@@ -453,21 +504,27 @@ public class Customer_UI extends JPanel implements ActionListener, MouseListener
                 String date = formatDate(kh.getNgaySinh());
                 int row = tblKH.getSelectedRow();
                 boolean result = CustomerDAO.update(kh);
-                if (row > 0) {
+                if (row >= 0) {
                     if (result == true) {
+                        if (kh.isGioiTinh() == true) {
+                            gioiTinh = "Nam";
+                        } else {
+                            gioiTinh = "Nữ";
+                        }
                         modelTableKH.setValueAt(kh.getMaKhachHang(), row, 1);
                         modelTableKH.setValueAt(kh.getTenKhachHang(), row, 2);
                         modelTableKH.setValueAt(kh.getSoDienThoai(), row, 3);
                         modelTableKH.setValueAt(kh.getCCCD(), row, 4);
-                        modelTableKH.setValueAt(gt, row, 5);
+                        modelTableKH.setValueAt(gioiTinh, row, 5);
                         modelTableKH.setValueAt(date, row, 6);
                         modelTableKH.fireTableDataChanged();
                         modelTableKH.getDataVector().removeAllElements();
                         loadKH();
+                        tblKH.setRowSelectionInterval(row, row);
                         JOptionPane.showMessageDialog(this, "Cập nhật thành công");
                         reFresh();
                     } else {
-                        JOptionPane.showMessageDialog(this, "Lỗi: Cập nhật thất bại");
+                        JOptionPane.showMessageDialog(this, "Lỗi: Cập nhật thất bại!");
                     }
                 } else {
                     JOptionPane.showMessageDialog(this, "Bạn phải chọn dòng để sửa");

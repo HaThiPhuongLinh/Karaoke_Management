@@ -25,8 +25,8 @@ import java.util.Date;
  * Giao diện dùng để tìm kiếm nhân viên
  * Người thiết kế Nguyễn Đình Dương, Hà Thị Phương Linh
  * Ngày tạo: 7/10/2023
- * Lần cập nhật cuối: 29/11/2023
- * Nội dung cập nhật: cập nhật set giá trị các JTextField
+ * Lần cập nhật cuối: 11/12/2023
+ * Nội dung cập nhật: cập nhật chuyển đổi qua Staff_UI
  */
 public class SearchingStaff_UI extends JPanel implements ActionListener, MouseListener {
     public static Staff staffLogin = null;
@@ -41,7 +41,7 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
     private StaffDAO StaffDAO;
     private static Main m;
     boolean isRowSelected = false;
-    private String selectedGT, selectedTennv, selectedSDT, selectedCCCD, selectedBorn, selectedAdd, selectedCV, selectedTT, selectedTK;
+    private String selectedMaNV, selectedGT, selectedTennv, selectedSDT, selectedCCCD, selectedBorn, selectedAdd, selectedCV, selectedTT, selectedTK;
 
     public SearchingStaff_UI(Staff staff) {
         this.staffLogin = staff;
@@ -215,6 +215,7 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
                 int selectedRow = tblNV.getSelectedRow();
                 if (selectedRow != -1) {
                     isRowSelected = true;
+                    selectedMaNV = (String) modelTblNV.getValueAt(selectedRow, 0);
                     selectedTennv = (String) modelTblNV.getValueAt(selectedRow, 1);
                     selectedSDT = (String) modelTblNV.getValueAt(selectedRow, 2);
                     selectedCCCD = (String) modelTblNV.getValueAt(selectedRow, 3);
@@ -230,15 +231,18 @@ public class SearchingStaff_UI extends JPanel implements ActionListener, MouseLi
 
         btnCapNhat.addActionListener(e -> {
             if (isRowSelected) {
+                int selectedRow = tblNV.getSelectedRow();
                 Staff_UI staffUi = new Staff_UI(staffLogin);
+                staffUi.setMaNV(selectedMaNV);
                 staffUi.setTxtTenNV(selectedTennv);
                 staffUi.setTxtSDTNV(selectedSDT);
                 staffUi.setTxtCMNDNV(selectedCCCD);
                 staffUi.setCmbGioiTinh(selectedGT);
-                staffUi.setTxtDiaChi(selectedBorn);
+                staffUi.setTxtDiaChi(selectedAdd);
                 staffUi.setCmbChucVu(selectedCV);
                 staffUi.setCmbTinhTrang(selectedTT);
                 staffUi.setTxtTaiKhoan(selectedTK);
+                staffUi.setRowData();
                 try {
                     staffUi.setNgaySinh(selectedBorn);
                 } catch (ParseException ex) {

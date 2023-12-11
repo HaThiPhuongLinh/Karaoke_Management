@@ -25,10 +25,10 @@ import java.util.Date;
 
 /**
  * Giao diện dùng để quản lý nhân viên
- * Người thiết kế Nguyễn Đình Dương
+ * Người thiết kế Nguyễn Đình Dương, Hà Thị Phương Linh
  * Ngày tạo:9/10/2023
- * Lần cập nhật cuối : 29/11/2023
- * Nội dung cập nhật : cập nhật set giá trị các JTextField
+ * Lần cập nhật cuối : 11/12/2023
+ * Nội dung cập nhật : cập nhật tô đen dòng được chọn trong bảng
  */
 public class Staff_UI extends JPanel implements ActionListener, MouseListener {
     public static Staff staffLogin = null;
@@ -350,6 +350,53 @@ public class Staff_UI extends JPanel implements ActionListener, MouseListener {
         return sdf.format(date);
     }
 
+    /**
+     * Gán mã cho txMaNV
+     * @param manv: mã nhân viên cần gán
+     */
+    public void setMaNV(String manv) {
+        txtMaNV.setText(manv);
+    }
+    /**
+     * Tô đen dòng được chọn
+     */
+    public void setRowData() {
+        String selectedMaNV = txtMaNV.getText();
+
+        // Tìm chỉ số dòng trong bảng gốc (tblKH) dựa trên giá trị selectedMaNV
+        int rowIndexInOriginalTable = getRowIndexByValue(selectedMaNV);
+
+        if (rowIndexInOriginalTable != -1 && rowIndexInOriginalTable < tblNV.getRowCount()) {
+            // Chọn dòng trong bảng gốc
+            tblNV.setRowSelectionInterval(rowIndexInOriginalTable, rowIndexInOriginalTable);
+        } else {
+            System.out.println("Không tìm thấy dòng hoặc chỉ số nằm ngoài giới hạn!");
+        }
+    }
+
+    /**
+     * Tìm chỉ số dòng trong JTable (tblNV) dựa trên giá trị của một cột cụ thể.
+     *
+     * @param targetValue Giá trị cần tìm kiếm trong cột.
+     * @return Chỉ số dòng trong bảng hoặc -1 nếu không tìm thấy giá trị.
+     */
+    public int getRowIndexByValue(String targetValue) {
+        for (int i = 0; i < tblNV.getRowCount(); i++) {
+            // Lấy giá trị từ cột 1 (có thể thay đổi tùy theo cấu trúc của bảng)
+            Object value = tblNV.getValueAt(i, 0);
+
+            // So sánh giá trị cần tìm với giá trị của cột 1 trong từng dòng
+            if (targetValue.equals(value)) {
+                // Nếu giá trị được tìm thấy, trả về chỉ số dòng tương ứng
+                return i;
+            }
+        }
+        // Trả về -1 nếu không tìm thấy giá trị trong cột
+        return -1;
+    }
+
+
+
 
     /**
      * Tải danh sách nhân viên lên bảng
@@ -483,11 +530,14 @@ public class Staff_UI extends JPanel implements ActionListener, MouseListener {
                 Staff kh = new Staff(ma, ten, sdt, cccd, gt, ngaysinh, diachi, chucVu, trangthai, new Account(taikhoan));
 
                 if (StaffDAO.addStaff(kh)) {
+                    if (kh.isGioiTinh() == true) {
+                        gioiTinh = "Nam";
+                    } else {
+                        gioiTinh = "Nữ";
+                    }
                     String date = formatDate(kh.getNgaySinh());
                     modelTblNV.addRow(new Object[]{kh.getMaNhanVien(), kh.getTenNhanVien(), kh.getSoDienThoai(),
-                            kh.getCCCD(), gt, date, kh.getDiaChi(), kh.getChucVu(), kh.getTrangThai(), kh.getTaiKhoan().getTaiKhoan()});
-                    modelTblNV.fireTableDataChanged();
-                    modelTblNV.getDataVector().removeAllElements();
+                            kh.getCCCD(), gioiTinh, date, kh.getDiaChi(), kh.getChucVu(), kh.getTrangThai(), kh.getTaiKhoan().getTaiKhoan()});
                     loadNV();
                     JOptionPane.showMessageDialog(this, "Thêm nhân viên thành công");
                     reFresh();
@@ -495,7 +545,7 @@ public class Staff_UI extends JPanel implements ActionListener, MouseListener {
             }
         } else if (o.equals(btnSua)) {
             int row = tblNV.getSelectedRow();
-            if (row > 0) {
+            if (row >= 0) {
                 if (txtTenNV.getText().equals("") || txtSDTNV.getText().equals("") || txtCMNDNV.getText().equals("") || txtDiaChi.getText().equals("") || txtTaiKhoan.getText().equals("")) {
                     JOptionPane.showMessageDialog(this, "Bạn phải nhập thông tin nhân viên");
                 } else if (validData()) {
@@ -524,11 +574,16 @@ public class Staff_UI extends JPanel implements ActionListener, MouseListener {
                     Staff kh = new Staff(ma, ten, sdt, cccd, gt, ngaysinh, diachi, chucVu, trangthai, new Account(taikhoan));
                     boolean result = StaffDAO.updateStaff(kh, trangthai.trim().equalsIgnoreCase("Đã nghỉ"));
                     if (result == true) {
+                        if (kh.isGioiTinh() == true) {
+                            gioiTinh = "Nam";
+                        } else {
+                            gioiTinh = "Nữ";
+                        }
                         String date = formatDate(kh.getNgaySinh());
                         modelTblNV.setValueAt(kh.getMaNhanVien(), row, 0);
                         modelTblNV.setValueAt(kh.getTenNhanVien(), row, 1);
                         modelTblNV.setValueAt(kh.getSoDienThoai(), row, 2);
-                        modelTblNV.setValueAt(gt, row, 3);
+                        modelTblNV.setValueAt(gioiTinh, row, 3);
                         modelTblNV.setValueAt(kh.isGioiTinh(), row, 4);
                         modelTblNV.setValueAt(date, row, 5);
                         modelTblNV.setValueAt(kh.getDiaChi(), row, 6);
@@ -538,6 +593,7 @@ public class Staff_UI extends JPanel implements ActionListener, MouseListener {
                         modelTblNV.fireTableDataChanged();
                         modelTblNV.getDataVector().removeAllElements();
                         loadNV();
+                        tblNV.setRowSelectionInterval(row, row);
                         JOptionPane.showMessageDialog(this, "Cập nhật thành công");
                         reFresh();
                     }

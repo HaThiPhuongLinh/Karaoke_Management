@@ -6,7 +6,6 @@ import Entity.Customer;
 import Entity.Staff;
 import UI.CustomUI.Custom;
 import UI.component.Dialog.Main;
-import UI.component.Dialog.PresetRoom;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -24,22 +23,24 @@ import java.util.Date;
  * Giao diện dùng để tìm kiếm khách hàng
  * Người thiết kế: Nguyễn Đình Dương, Hà Thị Phương Linh
  * Ngày tạo:7/10/2023
- * Lần cập nhật cuối: 29/11/2023
+ * Lần cập nhật cuối: 11/12/2023
  * Nội dung cập nhật: cập nhật chuyển đổi qua Customer_UI
  */
 public class SearchingCustomer_UI extends JPanel implements ActionListener {
     public static Staff staffLogin = null;
     private static SearchingCustomer_UI instance;
     private JButton btnlamMoi;
-    private DefaultTableModel modelTblKH;
+    public DefaultTableModel modelTblKH;
     private JLabel lblBackground, lblTime, lblSearchbyName, lblSearchbyNumber, lblSearchbyCCCD;
     private JTextField txtSearchbyName, txtSearchbyNumber, txtSearchbyCCCD;
     private JPanel plnTime, pnlCusList, pnlCusControl;
     private JButton btnTim, btnCapNhat;
     private CustomerDAO CustomerDAO;
-    private String selectedGT, selectedTenKH, selectedSDT, selectedCCCD, selectedBorn;
+    private String selectedMaKH, selectedGT, selectedTenKH, selectedSDT, selectedCCCD, selectedBorn;
     private static Main m;
     boolean isRowSelected = false;
+    public  JTable tblC;
+    private String searchedMaKH;
 
     public SearchingCustomer_UI(Staff staff) {
         this.staffLogin = staff;;
@@ -154,15 +155,15 @@ public class SearchingCustomer_UI extends JPanel implements ActionListener {
         modelTblKH = new DefaultTableModel(colsKH, 0);
         JScrollPane scrollPaneKH;
 
-        JTable tblKH = new JTable(modelTblKH);
-        tblKH.setFont(new Font("Arial", Font.BOLD, 14));
-        tblKH.setBackground(new Color(255, 255, 255, 0));
-        tblKH.setForeground(new Color(255, 255, 255));
-        tblKH.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-        tblKH.getTableHeader().setForeground(Color.BLUE);
-        Custom.getInstance().setCustomTable(tblKH);
+        tblC = new JTable(modelTblKH);
+        tblC.setFont(new Font("Arial", Font.BOLD, 14));
+        tblC.setBackground(new Color(255, 255, 255, 0));
+        tblC.setForeground(new Color(255, 255, 255));
+        tblC.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
+        tblC.getTableHeader().setForeground(Color.BLUE);
+        Custom.getInstance().setCustomTable(tblC);
 
-        panelDSKH.add(scrollPaneKH = new JScrollPane(tblKH, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
+        panelDSKH.add(scrollPaneKH = new JScrollPane(tblC, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED),
                 BorderLayout.CENTER);
         scrollPaneKH.setBounds(10, 20, 1210, 380);
         scrollPaneKH.setOpaque(false);
@@ -178,11 +179,12 @@ public class SearchingCustomer_UI extends JPanel implements ActionListener {
         lblBackground.setBounds(0, 0, getWidth(), getHeight());
         add(lblBackground);
 
-        tblKH.getSelectionModel().addListSelectionListener(e -> {
+        tblC.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
-                int selectedRow = tblKH.getSelectedRow();
+                int selectedRow = tblC.getSelectedRow();
                 if (selectedRow != -1) {
                     isRowSelected = true;
+                    selectedMaKH = (String) modelTblKH.getValueAt(selectedRow, 1);
                     selectedTenKH = (String) modelTblKH.getValueAt(selectedRow, 2);
                     selectedSDT = (String) modelTblKH.getValueAt(selectedRow, 3);
                     selectedCCCD = (String) modelTblKH.getValueAt(selectedRow, 4);
@@ -195,10 +197,12 @@ public class SearchingCustomer_UI extends JPanel implements ActionListener {
         btnCapNhat.addActionListener(e -> {
             if (isRowSelected) {
                 Customer_UI customer_ui = new Customer_UI(staffLogin);
+                customer_ui.setMaKH(selectedMaKH);
                 customer_ui.setTenKH(selectedTenKH);
                 customer_ui.setSDT(selectedSDT);
                 customer_ui.setCMNDKH(selectedCCCD);
                 customer_ui.setGioiTinh(selectedGT);
+                customer_ui.setRowData();
                 try {
                     customer_ui.setNgaySinh(selectedBorn);
                 } catch (ParseException ex) {
@@ -226,6 +230,7 @@ public class SearchingCustomer_UI extends JPanel implements ActionListener {
         return instance;
     }
 
+
     public void setM(Main main) {
             this.m = main;
     }
@@ -238,7 +243,6 @@ public class SearchingCustomer_UI extends JPanel implements ActionListener {
         String time = sdf.format(new Date());
         lblTime.setText(time);
     }
-
 
     /**
      * hàm sử dụng định dạng "HH:mm:ss" để biểu diễn thời gian (giờ, phút và giây) của đối tượng date
@@ -352,7 +356,7 @@ public class SearchingCustomer_UI extends JPanel implements ActionListener {
             txtSearchbyNumber.setText("");
             txtSearchbyName.setText("");
             txtSearchbyCCCD.setText("");
-            modelTblKH.getDataVector().removeAllElements();
+            modelTblKH.setRowCount(0);
             loadKH();
         }
     }
