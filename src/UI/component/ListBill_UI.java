@@ -29,9 +29,9 @@ import java.util.Date;
 /**
  * Giao diện dùng để thống kê hóa đơn đã thanh toán
  * Người thiết kế Nguyễn Đình Dương, Hà Thị Phương Linh
- * Ngày tạo:5/11/2023
- * Lần cập nhật cuối : 11/12/2023
- * Nội dung cập nhật : Sửa hiển thị bảng theo index giảm dần
+ * Ngày tạo: 5/11/2023
+ * Lần cập nhật cuối : 14/12/2023
+ * Nội dung cập nhật : sửa thông tin hóa đơn được hiển thị (convertRowIndexToModel)
  */
 public class ListBill_UI extends JPanel implements ActionListener, MouseListener, ItemListener {
     public static Staff staffLogin = null;
@@ -434,13 +434,13 @@ public class ListBill_UI extends JPanel implements ActionListener, MouseListener
     public void mouseClicked(MouseEvent e) {
         Object o = e.getSource();
         if (o.equals(tblHD)) {
-            int row = tblHD.getSelectedRow();
-            //System.out.println("Đã nhấp chuột");
-            if (row != -1) {
-                String maHoaDon = modelTblHD.getValueAt(row, 0).toString();
-                //System.out.println("MaHoaDon được chọn: " + maHoaDon);
+            int viewRow = tblHD.getSelectedRow();
+            int modelRow = tblHD.convertRowIndexToModel(viewRow);
+
+            if (modelRow != -1) {
+                String maHoaDon = modelTblHD.getValueAt(modelRow, 0).toString();
                 Bill bill = billDAO.getBillByBillID(maHoaDon);
-                String maPhong = modelTblHD.getValueAt(row, 3).toString();
+                String maPhong = modelTblHD.getValueAt(modelRow, 3).toString();
 
                 String billId = bill.getMaHoaDon();
                 ArrayList<DetailsOfService> billInfoList = ctdv_dao.getDetailsOfServiceForBill(billId);

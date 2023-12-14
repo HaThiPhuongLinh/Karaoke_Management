@@ -258,7 +258,7 @@ public class BillDAO {
             conn = ConnectDB.getInstance().getConnection();
             String query = "SELECT * FROM HoaDon WHERE maPhong = ? AND tinhTrangHD = 0";
             stmt = conn.prepareStatement(query);
-            stmt.setString(1, roomID);
+            stmt.setString(1,  roomID);
 
             rs = stmt.executeQuery();
 

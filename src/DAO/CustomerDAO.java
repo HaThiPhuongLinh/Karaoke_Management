@@ -6,6 +6,7 @@ import Entity.ReservationForm;
 import Entity.Room;
 import Entity.TypeOfRoom;
 
+import javax.swing.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,9 +16,9 @@ import java.util.List;
  * <p>
  * Ngày tạo: 23/09/2023
  * <p>
- * Lần cập nhật cuối: 25/11/2023
+ * Lần cập nhật cuối: 14/12/2023
  * <p>
- * Nội dung cập nhật:  cập nhật chức năng tìm khách hàng không dấu
+ * Nội dung cập nhật:  cập nhật chức năng thêm khách hàng (trùng số điện thoại)
  */
 public class CustomerDAO {
     private static CustomerDAO instance = new CustomerDAO();
@@ -442,14 +443,31 @@ public class CustomerDAO {
      * @param kh:Khách hàng cần thêm
      * @return {@code boolean} :True or false
      */
-
     public boolean insert(Customer kh) throws SQLException {
         ConnectDB.getInstance();
         Connection con = ConnectDB.getConnection();
         PreparedStatement statement = null;
         int n = 0;
+
         try {
-            String sql = "insert into dbo.KhachHang (maKhachHang, tenKhachHang, soDienThoai, CCCD, gioiTinh,ngaySinh)" + "values (?,?,?,?,?,?)";
+            // Kiểm tra xem số điện thoại đã tồn tại hay chưa
+            String checkPhoneQuery = "SELECT COUNT(*) FROM KhachHang WHERE soDienThoai = ?";
+            statement = con.prepareStatement(checkPhoneQuery);
+            statement.setString(1, kh.getSoDienThoai());
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                int count = resultSet.getInt(1);
+
+                if (count > 0) {
+                    // Số điện thoại đã tồn tại, in ra thông báo
+                    JOptionPane.showMessageDialog(null,"Số điện thoại đã tồn tại trong hệ thống.");
+                    return false;
+                }
+            }
+
+            // Thêm thông tin khách hàng vào bảng KhachHang
+            String sql = "INSERT INTO dbo.KhachHang (maKhachHang, tenKhachHang, soDienThoai, CCCD, gioiTinh, ngaySinh) VALUES (?, ?, ?, ?, ?, ?)";
             statement = con.prepareStatement(sql);
             statement.setString(1, kh.getMaKhachHang());
             statement.setString(2, kh.getTenKhachHang());
@@ -464,12 +482,12 @@ public class CustomerDAO {
             try {
                 statement.close();
             } catch (SQLException e2) {
-                // TODO: handle exception
                 e2.printStackTrace();
             }
         }
         return n > 0;
     }
+
 
     /**
      * Xóa khách hàng

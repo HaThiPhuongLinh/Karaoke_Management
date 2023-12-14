@@ -136,6 +136,7 @@ public class Room_UI extends JPanel implements ActionListener, MouseListener {
         txtRoomID = new JTextField();
         txtRoomID.setBounds(195, 20, 311, 30);
         txtRoomID.setColumns(10);
+        txtRoomID.setEditable(false);
         pnlRoomControl.add(txtRoomID);
 
         JLabel labelViTri = new JLabel("Vị Trí:");

@@ -3,6 +3,7 @@ package DAO;
 import ConnectDB.ConnectDB;
 import Entity.Staff;
 
+import javax.swing.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,9 +13,9 @@ import java.util.List;
  * <p>
  * Ngày tạo: 23/09/2023
  * <p>
- * Lần cập nhật cuối: 25/11/2023
+ * Lần cập nhật cuối: 14/12/2023
  * <p>
- * Nội dung cập nhật: cập nhật chức năng tìm nhân viên không dấu
+ * Nội dung cập nhật: cập nhật chức năng thêm nhân viên (catch ex khi trùng tài khoản)
  */
 public class StaffDAO {
 
@@ -199,14 +200,22 @@ public class StaffDAO {
             stmt.setString(1, staff.getTaiKhoan().getTaiKhoan());
             ResultSet resultSet = stmt.executeQuery();
 
-            if (resultSet.next() && resultSet.getInt(1) == 0) {
-                // Tài khoản chưa tồn tại, thêm tài khoản mới
-                String insertAccountQuery = "INSERT INTO TaiKhoan (taiKhoan, matKhau, tinhTrang) VALUES (?, ?, ?)";
-                stmt = con.prepareStatement(insertAccountQuery);
-                stmt.setString(1, staff.getTaiKhoan().getTaiKhoan());
-                stmt.setString(2, "1"); // Mật khẩu mặc định là "1"
-                stmt.setBoolean(3, true);
-                stmt.executeUpdate();
+            if (resultSet.next()) {
+                int count = resultSet.getInt(1);
+
+                if (count > 0) {
+                    // Tài khoản đã tồn tại, in ra thông báo
+                    JOptionPane.showMessageDialog(null,"Tài khoản đã tồn tại trong hệ thống.");
+                    return false;
+                } else {
+                    // Tài khoản chưa tồn tại, thêm tài khoản mới
+                    String insertAccountQuery = "INSERT INTO TaiKhoan (taiKhoan, matKhau, tinhTrang) VALUES (?, ?, ?)";
+                    stmt = con.prepareStatement(insertAccountQuery);
+                    stmt.setString(1, staff.getTaiKhoan().getTaiKhoan());
+                    stmt.setString(2, "1"); // Mật khẩu mặc định là "1"
+                    stmt.setBoolean(3, true);
+                    stmt.executeUpdate();
+                }
             }
 
             // Thêm thông tin nhân viên vào bảng NhanVien
@@ -247,6 +256,7 @@ public class StaffDAO {
             }
         }
     }
+
 
     /**
      * Update nhân viên
