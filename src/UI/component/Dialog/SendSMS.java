@@ -11,9 +11,9 @@ import com.twilio.type.PhoneNumber;
  * Lần cập nhật cuối: 29/11/2023
  */
 public class SendSMS {
-    private static final String ACCOUNT_SID = "ACe4bd51360b9c8984b6780571ce8d15ab";
-    private static final String AUTH_TOKEN = "e29e082f6ddd50e803869d60df56af9e";
-    private static final String TWILIO_PHONE_NUMBER = "+17013544221";
+    private static final String ACCOUNT_SID = "AC4a660966f8ce839f876e62e9f4302604";
+    private static final String AUTH_TOKEN = "1ee4cc60e253db8d2c8c2da3db661cfc";
+    private static final String TWILIO_PHONE_NUMBER = "+12056724591";
 
     /**
      * Gửi SMS đến số điện thoại

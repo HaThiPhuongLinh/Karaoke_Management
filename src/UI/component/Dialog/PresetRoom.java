@@ -335,15 +335,15 @@ public class PresetRoom extends JFrame implements ActionListener, MouseListener 
             }
             JOptionPane.showMessageDialog(this, "Cho thuê phòng thành công");
 
-//            String customerPhoneNumber = txtPhone.getText().trim();
-//            sms.sendConfirmationSMS(
-//                    formatPhoneNumber(customerPhoneNumber),
-//                    lblCName2.getText(),
-//                    roomID.trim(),
-//                    room.getLoaiPhong().getTenLoaiPhong(),
-//                    selectedDateTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
-//                    selectedDateTime.format(DateTimeFormatter.ofPattern("HH:mm"))
-//            );
+            String customerPhoneNumber = txtPhone.getText().trim();
+            sms.sendConfirmationSMS(
+                    formatPhoneNumber(customerPhoneNumber),
+                    lblCName2.getText(),
+                    roomID.trim(),
+                    room.getLoaiPhong().getTenLoaiPhong(),
+                    selectedDateTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                    selectedDateTime.format(DateTimeFormatter.ofPattern("HH:mm"))
+            );
 
             ArrayList<Room> yourListOfRooms = roomDAO.getRoomList();
             main.LoadRoomList(yourListOfRooms);
